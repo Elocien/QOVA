@@ -8,16 +8,41 @@ package Course{
 
     class Course{
 
-        + int somevariable
+        - String name
+        - int Semester
+        - Type type
+        - bytes QRCode
+        - String optQuestion1
+        - String optQuestion2
+        - String optQuestion3
 
 ==
 
         'Constructor'
-        + Course(Survey survey, QRCode qrCode, ...)   
+        + Course(String name, int Semester, Type type, QRCode qrCode, String optQuestion1, String optQuestion2, String optQuestion3)
+        + Getter()       'for all attributes' 
+        + Setter()       'for all attributes' 
+        + getId()
 
     }
 
     class CourseController{
+       
+        - final CourseManagement courseManagement
+
+==
+
+        + CourseController(CourseManagement courseManagement) 
+        + String courseDetails(Model model, Long id)
+            'GetMapping method'
+        + String createCourse(Model model, CourseForm form)         
+            'PostMapping method to verify user input'                            
+        + String createCourseValidation(Model model, CourseForm form, BindingResult result)
+            'GetMapping method'
+        + String editCourse(Model model, CourseForm form, Long id)
+            'PostMapping method to validate user input'
+        + String editCourseValidation(Model model, CourseForm form, Long id, BindingResult result)
+
 
     }
 
@@ -25,42 +50,60 @@ package Course{
 
     }
 
-
-    class Survey{
-
-        - String optQues1
-        - String optQues2
-        - String optQues3
-
-==
-
-        + Survey(String optQues1, String optQues2, String optQues 3)
-
-        + String getOptQues1()
-        + String setOptQues1()
-
-        + Srting getOptQues2()
-        + String setOptQues2()
-
-        + String getOptQues3()
-        + String setOptQues3()
-
-    }
-
-    class SurveyForm{
+    class CourseForm{
         
-        - String optQues1
-        - String optQues2
-        - String optQues3
+        - String name
+        - int Semester
+        - Type type
+        - bytes QRCode
+        - String optQuestion1
+        - String optQuestion2
+        - String optQuestion3
 
 ==
-
+        + String getName()
+        + int getSemester()
+        + Type getType()
+        + bytes getQRCode()
         + String getOptQues1()
         + String getOptQues2()
         + String getOptQues3()
 
     }
 
+    enum Type {
+        LECTURE
+        TUTORIAL
+        SEMINAR
+    }
+
+
+    'Relations'
+    Type --* Course
+
+
+}
+
+package Users{
+    class User{
+
+    }
+
+    class UserController{
+
+    }
+
+    class UserManagement{
+
+    }
+
+    class UserForm{
+
+    }
+
+    class UserRepository{
+
+    }
 }
 
 @enduml
