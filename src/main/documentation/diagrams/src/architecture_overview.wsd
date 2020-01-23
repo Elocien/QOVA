@@ -1,0 +1,66 @@
+
+Du must dir 
+
+
+@startuml qovaArchitecture 
+
+package Course{
+
+    class Course{
+
+        + int somevariable
+
+==
+
+        'Constructor'
+        + Course(Survey survey, QRCode qrCode, ...)   
+
+    }
+
+    class CourseController{
+
+    }
+
+    class CourseManagement{
+
+    }
+
+
+    class Survey{
+
+        - String optQues1
+        - String optQues2
+        - String optQues3
+
+==
+
+        + Survey(String optQues1, String optQues2, String optQues 3)
+
+        + String getOptQues1()
+        + String setOptQues1()
+
+        + Srting getOptQues2()
+        + String setOptQues2()
+
+        + String getOptQues3()
+        + String setOptQues3()
+
+    }
+
+    class SurveyForm{
+        
+        - String optQues1
+        - String optQues2
+        - String optQues3
+
+==
+
+        + String getOptQues1()
+        + String getOptQues2()
+        + String getOptQues3()
+
+    }
+
+}
+
+@enduml
