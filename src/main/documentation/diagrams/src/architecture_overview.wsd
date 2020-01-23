@@ -42,6 +42,8 @@ package Course{
         + String editCourse(Model model, CourseForm form, Long id)
             'PostMapping method to validate user input'
         + String editCourseValidation(Model model, CourseForm form, Long id, BindingResult result)
+            'GetMapping method'
+        +String createSurvey(Model model)
 
 
     }
