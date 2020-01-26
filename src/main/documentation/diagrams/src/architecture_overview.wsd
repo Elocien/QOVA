@@ -26,13 +26,19 @@ package Course{
 
     }
 
+
+
+
+
     class CourseController{
        
         - final CourseManagement courseManagement
 
 ==
 
+            'Constructor'
         + CourseController(CourseManagement courseManagement) 
+            'GetMapping method'
         + String courseDetails(Model model, Long id)
             'GetMapping method'
         + String createCourse(Model model, CourseForm form)         
@@ -42,18 +48,35 @@ package Course{
         + String editCourse(Model model, CourseForm form, Long id)
             'PostMapping method to validate user input'
         + String editCourseValidation(Model model, CourseForm form, Long id, BindingResult result)
-            'GetMapping method'
+            'GetMapping method. Survey wird allein anhand lehrveranstaltung kreiert. QR code übergibt nur 
+            'lehrveranstaltug.
         +String createSurvey(Model model)
 
-
     }
+
+
+
+
 
     class CourseManagement{
+        - final CourseRepository courses
+
+==
+
+        + CourseManagement(CourseRepository courses)
+        + add(Course course)
+        + createCourse(CourseForm form)
+        + deleteCourse(Long id)                             'if needed
+        + updateCourse(Long id, CourseForm form)
+        + 
 
     }
 
-    class CourseForm{
-        
+
+
+
+    class CourseForm {
+    
         - String name
         - int Semester
         - Type type
@@ -73,6 +96,30 @@ package Course{
 
     }
 
+    class Survey {
+        'Not sure how to do this yet. Does this need the course and seperatly the optQuestions as 
+        'attributes? optQuestion can be asserted based on Course, but for the purposes of the DataForm 
+        'and repository these might need to be attributes. The other criteria i.e. the 5 questions that
+        'are standard might also have to be attributes, so that they can be saved correctly
+    }
+
+    class SurveyForm {
+        'All survey attributes'
+    }
+
+    interface CourseRepository {
+        'if filtern is necessary, methods are added here'
+    }
+
+    interface SurveyRepository {
+        'All findBy methods are added here. Will have to see how they want this filtered
+        
+        + Stream<Course>
+        + Iterable<Evaluation> findBy...
+
+
+    }
+
     enum Type {
         LECTURE
         TUTORIAL
@@ -86,6 +133,8 @@ package Course{
 
 }
 
+
+'User Package. Need to think about security and so forth
 package Users{
     class User{
 
