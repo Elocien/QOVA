@@ -16,6 +16,8 @@
 
 @startuml qovaArchitecture 
 
+
+
 package Course{
 
 
@@ -23,9 +25,8 @@ package Course{
 
 
     class Course{
-
+        
         - String name
-        - int Semester
         - Type type
         - bytes QRCode
         - String optQ1
@@ -38,7 +39,7 @@ package Course{
 ==
 
         'Constructor'
-        + Course(String name, int Semester, Type type, QRCode qrCode, String optQ1, String optQ2, String optQ3)
+        + Course(String name, Type type, QRCode qrCode, String optQ1, String optQ2, String optQ3)
         + Getter()       'for all attributes' 
         + Setter()       'for all attributes' 
         + getCourseId()
@@ -68,7 +69,7 @@ package Course{
             'PostMapping method to validate user input'
         + String editCourseValidation(Model model, CourseForm form, Long id, BindingResult result)
             'GetMapping method. Survey wird allein anhand lehrveranstaltung kreiert. QR code übergibt nur 
-            'lehrveranstaltug und typ (VL, SEM, TUT).
+            'course.
         +String createSurvey(Model model, Long CourseId, Type type)
 
 
@@ -132,11 +133,14 @@ package Course{
         - int optQ1
         - int optQ2
         - int optQ3
+        - String textResponse
+        - LocalDateTime submissionDateTime
         - Course course          
 
 ==
-
+        + survey(attributes)
         + Getter()     'for all attributes'
+        + Setter()     'for all attributes'
 
     }
 
@@ -154,6 +158,8 @@ package Course{
         - int optQ1
         - int optQ2
         - int optQ3
+        - String textResponse
+        - localDateTime submissionDateTime
 
 ==
 
@@ -165,18 +171,20 @@ package Course{
         + int getOptQ1()
         + int getOptQ2()
         + int getOptQ3()
+        + String getTextResponse()
+        + localDateTime getSubmissionDateTime()
 
     }
 
     interface CourseRepository {
-        'if filtern is necessary, methods are added here'
+        'if filtern is necessary, methods are added here' 
     }
 
     interface SurveyRepository {
         'All findBy methods are added here. Will have to see how they want this filtered
         
         + Stream<Course>
-        + Iterable<Evaluation> findBy...
+        + Iterable<Evaluation> findByDateTime()
 
 
     }
