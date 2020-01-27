@@ -1,10 +1,28 @@
 
-Du must dir 
+' -------------------------------------------- Questions and TO-DO ---------------------------------------------
 
+
+'Find out how to randomise id's in spring and have them be alphanumerical'
+
+'Have to think about how we stucture courses. Course is a concrete instance of either Tut, VL or Sem, so there has to
+'be a level above. What is level above called, is this a seperate package?
+
+'Should Course and Survey be in seperate Packages?'
+
+'Müssen wir das Jahr abspecihern, damit ein kurs im nächsten jahr wieder unter dem gleichen namen erstellt werden kann
+'Weil eigentlich darf es im gleichen Jahr/Sem nicht zweimal das gleiche fach geben...'
+
+' --------------------------------------------------------------------------------------------------------------
 
 @startuml qovaArchitecture 
 
 package Course{
+
+    class 
+
+
+
+
 
     class Course{
 
@@ -12,19 +30,26 @@ package Course{
         - int Semester
         - Type type
         - bytes QRCode
-        - String optQuestion1
-        - String optQuestion2
-        - String optQuestion3
+        - String optQ1
+        - String optQ2
+        - String optQ3
 
+        ' + Long UserId?            Die würde dann beim erstellen mitgegeben werden, damit man dann einen kurs immer
+        '                           einen besitzer zuweisen kann. Weiß aber nicht wie das mit den schibole login dann 
+        '                           in der realität aussieht...
 ==
 
         'Constructor'
-        + Course(String name, int Semester, Type type, QRCode qrCode, String optQuestion1, String optQuestion2, String optQuestion3)
+        + Course(String name, int Semester, Type type, QRCode qrCode, String optQ1, String optQ2, String optQ3)
         + Getter()       'for all attributes' 
         + Setter()       'for all attributes' 
-        + getId()
+        + getCourseId()
 
     }
+
+
+
+
 
     class CourseController{
        
@@ -32,44 +57,129 @@ package Course{
 
 ==
 
+            'Constructor'
         + CourseController(CourseManagement courseManagement) 
-        + String courseDetails(Model model, Long id)
+            'GetMapping method'
+        + String courseDetails(Model model, Long CourseId)
             'GetMapping method'
         + String createCourse(Model model, CourseForm form)         
             'PostMapping method to verify user input'                            
         + String createCourseValidation(Model model, CourseForm form, BindingResult result)
             'GetMapping method'
-        + String editCourse(Model model, CourseForm form, Long id)
+        + String editCourse(Model model, CourseForm form, Long CourseId)
             'PostMapping method to validate user input'
         + String editCourseValidation(Model model, CourseForm form, Long id, BindingResult result)
-            'GetMapping method'
-        +String createSurvey(Model model)
+            'GetMapping method. Survey wird allein anhand lehrveranstaltung kreiert. QR code übergibt nur 
+            'lehrveranstaltug und typ (VL, SEM, TUT).
+        +String createSurvey(Model model, Long CourseId, Type type)
 
 
     }
+
+
+
+
 
     class CourseManagement{
+        - final CourseRepository courses
+
+==
+
+        + CourseManagement(CourseRepository courses)
+        + add(Course course)
+        + createCourse(CourseForm form)
+        + deleteCourse(Long CourseId)                             'if needed
+        + updateCourse(Long CourseId, CourseForm form)
+        + 
 
     }
 
-    class CourseForm{
-        
+
+
+
+    class CourseForm {
+    
         - String name
         - int Semester
         - Type type
         - bytes QRCode
-        - String optQuestion1
-        - String optQuestion2
-        - String optQuestion3
+        - String optQ1
+        - String optQ2
+        - String optQ3
 
 ==
         + String getName()
         + int getSemester()
         + Type getType()
         + bytes getQRCode()
-        + String getOptQues1()
-        + String getOptQues2()
-        + String getOptQues3()
+        + String getOptQ1()
+        + String getOptQ2()
+        + String getOptQ3()
+
+    }
+
+
+
+
+
+    class Survey {
+
+        'sind hier ints, da dies die bewertungen sind die rauskommen, nicht die fragen selbst. Wir gehen davon aus das 
+        '1-5 standatisiert sind über alle fächer
+        - int Q1
+        - int Q2
+        - int Q3
+        - int Q4
+        - int Q5
+        - int optQ1
+        - int optQ2
+        - int optQ3
+        - Course course          
+
+==
+
+        + Getter()     'for all attributes'
+
+    }
+
+
+
+
+
+    class SurveyForm {
+
+        - int Q1
+        - int Q2
+        - int Q3
+        - int Q4
+        - int Q5
+        - int optQ1
+        - int optQ2
+        - int optQ3
+
+==
+
+        + int getQ1()
+        + int getQ2()
+        + int getQ3()
+        + int getQ4()
+        + int getQ5()
+        + int getOptQ1()
+        + int getOptQ2()
+        + int getOptQ3()
+
+    }
+
+    interface CourseRepository {
+        'if filtern is necessary, methods are added here'
+    }
+
+    interface SurveyRepository {
+        'All findBy methods are added here. Will have to see how they want this filtered
+        
+        + Stream<Course>
+        + Iterable<Evaluation> findBy...
+
 
     }
 
@@ -86,6 +196,8 @@ package Course{
 
 }
 
+
+'User Package. Need to think about security and so forth
 package Users{
     class User{
 
