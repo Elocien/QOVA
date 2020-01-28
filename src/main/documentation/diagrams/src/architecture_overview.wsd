@@ -99,7 +99,6 @@ package Course{
     class CourseForm {
     
         - String name
-        - int Semester
         - Type type
         - bytes QRCode
         - String optQ1
@@ -108,7 +107,6 @@ package Course{
 
 ==
         + String getName()
-        + int getSemester()
         + Type getType()
         + bytes getQRCode()
         + String getOptQ1()
