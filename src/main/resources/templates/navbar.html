@@ -1,0 +1,63 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/resources/images/favicon-32.png}">
+    <!-- JavaScript and jQuery added -->
+    <script th:src="@{/resources/jsbootstrap/jquerymin.js}" src="../static/resources/jsbootstrap/jquerymin.js" type="text/javascript"></script>
+    <script th:src="@{/resources/jsbootstrap/bootstrapmin.js}" src="../static/resources/jsbootstrap/bootstrapmin.js" type="text/javascript"></script>
+
+    <!-- Bootstrap CSS -->
+    <link th:href="@{/resources/css/bootstrap.css}" rel="stylesheet"
+          href="../static/resources/css/bootstrap.css" type="text/css"/>
+    <link rel="stylesheet" th:href="@{/resources/font-awesome/css/all.min.css}" href="../static/resources/font-awesome/css/all.min.css">
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/navigation.css}"  href="../static/resources/css/navigation.css" />
+</head>
+<body>
+<nav th:fragment="navigation" class="navbar navbar-expand-lg bg-dark">
+    <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/catalog}">Katalog</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/staff}" sec:authorize="hasRole('ADMIN')">Mitarbeiterverwaltung</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/calendar}" sec:authorize="hasRole('TEILZEIT')">Kalender</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/accounting}" sec:authorize="hasRole('ADMIN')">Abrechnung</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/patient}" sec:authorize="hasRole('TEILZEIT')">Patientenliste</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/healthinsurance}" sec:authorize="hasRole('TEILZEIT')">Krankenkassen</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/profile}" sec:authorize="hasRole('TEILZEIT')">Profil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" th:href="@{/homevisit}" sec:authorize="hasRole('TEILZEIT') || hasRole('VOLLZEIT')">Hausbesuche</a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item" sec:authorize="isAnonymous()"><a class="btn btn-outline-secondary" id="loginbtn" href="login.html" th:href="@{/login}">Login</a></li>
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <form action="#" id ="logoutForm" th:action="@{/logout}" method="post">
+                    <button class="btn btn-outline-danger" id="logoutbtn" type="submit"><span class="fas fa-sign-out-alt"></span>Ausloggen</button>
+                    <!--<a href="#" onclick="document.getElementById('logoutForm').submit()">Ausloggen</a>-->
+                </form>
+            </li>
+        </ul>
+    </div>
+</nav>
+</body>
+</html>
