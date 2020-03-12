@@ -2,13 +2,13 @@ package qova.course;
 
 import javax.validation.constraints.NotNull;
 
-public class courseForm{
+public class CourseForm {
 
     @NotNull
     private String name;
 
     @NotNull
-    private courseType type;
+    private CourseType type;
 
     //@NotNull
     //private ___ qrcode
@@ -17,7 +17,7 @@ public class courseForm{
     private String optQ2;
     private String optQ3;
 
-    public courseForm(String name, courseType type, String optQ1, String optQ2, String optQ3){
+    public CourseForm(String name, CourseType type, String optQ1, String optQ2, String optQ3){
         this.name = name;
         this.type = type;
         this.optQ1 = optQ1;
@@ -30,7 +30,7 @@ public class courseForm{
         return this.name;
     }
 
-    public courseType getType(){
+    public CourseType getType(){
         return this.type;
     }
 

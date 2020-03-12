@@ -1,6 +1,6 @@
 package qova.course;
 
-public enum courseType{
+public enum CourseType {
     LECTURE, TUTORIAL, SEMINAR;
 
 }

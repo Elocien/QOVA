@@ -2,11 +2,11 @@ package qova.course;
 
 import java.util.Objects;
 
-public class courseManagement {
+public class CourseManagement {
     
-    private final courseRepository courses;
+    private final CourseRepository courses;
 
-    public courseManagement(courseRepository courses){
+    public CourseManagement(CourseRepository courses){
         this.courses = Objects.requireNonNull(courses);
     }
 

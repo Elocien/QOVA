@@ -1,7 +1,5 @@
 package qova.course;
 
-import lombok.NoArgsConstructor;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,7 +13,7 @@ public class Course {
     private long id;
 
     private String name;
-    private courseType type;
+    private CourseType type;
     //private ___ qrcode;
     private String optQ1;
     private String optQ2;
@@ -27,7 +25,7 @@ public class Course {
 	protected Course() {
     }
     
-    public Course(String name, courseType type, String optQ1, String optQ2, String optQ3){
+    public Course(String name, CourseType type, String optQ1, String optQ2, String optQ3){
         this.name = name;
         this.type = type;
         this.optQ1 = optQ1;
@@ -44,11 +42,11 @@ public class Course {
         this.name = name;
     }
 
-    public courseType getType(){
+    public CourseType getType(){
         return this.type;
     }
 
-    public void setType(courseType type){
+    public void setType(CourseType type){
         this.type = type;
     }
 
