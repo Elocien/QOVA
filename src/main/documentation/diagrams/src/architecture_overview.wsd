@@ -18,20 +18,20 @@
 
 
 
-package Course{
+package course{
 
 
 
 
 
-    class Course{
+    class course{
         
         - String name
         - Type type
         - bytes QRCode
-        - String optQ1
-        - String optQ2
-        - String optQ3
+        - Discipline discipline
+        - int Semester 
+        - OptQuestion optQ 
 
         ' + Long UserId?            Die würde dann beim erstellen mitgegeben werden, damit man dann einen kurs immer
         '                           einen besitzer zuweisen kann. Weiß aber nicht wie das mit den schibole login dann 
@@ -50,7 +50,7 @@ package Course{
 
 
 
-    class CourseController{
+    class courseController{
        
         - final CourseManagement courseManagement
 
@@ -79,7 +79,7 @@ package Course{
 
 
 
-    class CourseManagement{
+    class courseManagement{
         - final CourseRepository courses
 
 ==
@@ -96,7 +96,7 @@ package Course{
 
 
 
-    class CourseForm {
+    class courseForm {
     
         - String name
         - Type type
@@ -119,7 +119,7 @@ package Course{
 
 
 
-    class Survey {
+    class survey {
 
         'sind hier ints, da dies die bewertungen sind die rauskommen, nicht die fragen selbst. Wir gehen davon aus das 
         '1-5 standatisiert sind über alle fächer
@@ -146,7 +146,7 @@ package Course{
 
 
 
-    class SurveyForm {
+    class surveyForm {
 
         - int Q1
         - int Q2
@@ -174,11 +174,11 @@ package Course{
 
     }
 
-    interface CourseRepository {
+    interface courseRepository {
         'if filtern is necessary, methods are added here' 
     }
 
-    interface SurveyRepository {
+    interface surveyRepository {
         'All findBy methods are added here. Will have to see how they want this filtered
         
         + Stream<Course>
@@ -187,15 +187,37 @@ package Course{
 
     }
 
-    enum Type {
+    enum courseType {
         LECTURE
         TUTORIAL
         SEMINAR
     }
 
+    enum courseDiscipline {
+        MEDICINE
+        COMPUTER SCIENCE
+        'usw.'
+    }
+
+
+
+    'optQuestion definition
+    class optQuestion {
+        - questionType type
+        - 
+
+    }
+
+
+
+    enum questionType {
+        MULTIPLE_CHOICE
+        TEXTRESPONSE
+        LINEAR_SCALE
+    }
 
     'Relations'
-    Type --* Course
+    courseType --* course
 
 
 }
