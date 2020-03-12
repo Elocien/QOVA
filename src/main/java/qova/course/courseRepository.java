@@ -7,6 +7,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 
 
-public interface courseRepository extends CrudRepository<course, Long> {
+public interface courseRepository extends CrudRepository<Course, Long> {
 
 }

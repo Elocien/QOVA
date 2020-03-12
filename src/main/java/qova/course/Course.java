@@ -1,6 +1,19 @@
 package qova.course;
 
-public class course{
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+@Entity
+public class Course {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
     private String name;
     private courseType type;
     //private ___ qrcode;
@@ -11,10 +24,10 @@ public class course{
 
     //Needed for JPA purposes
     @SuppressWarnings("unused")
-	private course() {
+	protected Course() {
     }
     
-    public course(String name, courseType type, String optQ1, String optQ2, String optQ3){
+    public Course(String name, courseType type, String optQ1, String optQ2, String optQ3){
         this.name = name;
         this.type = type;
         this.optQ1 = optQ1;

@@ -10,7 +10,7 @@ public class courseManagement {
         this.courses = Objects.requireNonNull(courses);
     }
 
-    public void addCourse(course course){
+    public void addCourse(Course course){
         courses.save(course);
     }
 
