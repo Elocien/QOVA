@@ -17,45 +17,34 @@
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/navigation.css}"  href="../static/resources/css/navigation.css" />
 </head>
 <body>
-<nav th:fragment="navigation" class="navbar navbar-expand-lg bg-dark">
+<nav th:fragment="navigation" class="navbar navbar-expand-lg navbar-light bg-light">
     <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav mr-auto">
+            <a class="navbar-brand" href="#">
+                <img th:src="@{/resources/img/qova_logo.png}" alt="">
+            </a>
+            <button class="btn btn-sm btn-outline-secondary" type="button"th:text="#{navbar.create}" th:href="@{/catalog}">Smaller button</button>
             <li class="nav-item">
-                <a class="nav-link" th:href="@{/catalog}">Katalog</a>
+                <a class="nav-link" th:text="#{navbar.course}" th:href="@{/staff}" sec:authorize="hasRole('ADMIN')">Mitarbeiterverwaltung</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:href="@{/staff}" sec:authorize="hasRole('ADMIN')">Mitarbeiterverwaltung</a>
+                <a class="nav-link" th:text="#{navbar.results}" th:href="@{/calendar}" sec:authorize="hasRole('TEILZEIT')">Kalender</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:href="@{/calendar}" sec:authorize="hasRole('TEILZEIT')">Kalender</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/accounting}" sec:authorize="hasRole('ADMIN')">Abrechnung</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/patient}" sec:authorize="hasRole('TEILZEIT')">Patientenliste</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/healthinsurance}" sec:authorize="hasRole('TEILZEIT')">Krankenkassen</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/profile}" sec:authorize="hasRole('TEILZEIT')">Profil</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/homevisit}" sec:authorize="hasRole('TEILZEIT') || hasRole('VOLLZEIT')">Hausbesuche</a>
+                <a class="nav-link" th:text="#{navbar.account}" th:href="@{/accounting}" sec:authorize="hasRole('ADMIN')">Abrechnung</a>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">
-            <li class="nav-item" sec:authorize="isAnonymous()"><a class="btn btn-outline-secondary" id="loginbtn" href="login.html" th:href="@{/login}">Login</a></li>
-            <li class="nav-item" sec:authorize="isAuthenticated()">
+            <li class="nav-item" sec:authorize="isAnonymous()"><a class="btn btn-outline-secondary" id="loginbtn" href="login.html" th:text="#{navbar.login}" th:href="@{/login}">Login</a></li>
+            <!-- <li class="nav-item" sec:authorize="isAuthenticated()">
                 <form action="#" id ="logoutForm" th:action="@{/logout}" method="post">
                     <button class="btn btn-outline-danger" id="logoutbtn" type="submit"><span class="fas fa-sign-out-alt"></span>Ausloggen</button>
-                    <!--<a href="#" onclick="document.getElementById('logoutForm').submit()">Ausloggen</a>-->
+                    <a href="#" onclick="document.getElementById('logoutForm').submit()">Ausloggen</a>
                 </form>
-            </li>
+            </li> -->
         </ul>
     </div>
 </nav>
