@@ -14,23 +14,29 @@
 	<div th:include="navbar"></div>
 	<div class="container-fluid">
 		<div class="p-3 mb-2 bg-dark text-white">
-			<div class="container w-100 h-100">
+			<div class="container w-100 h-100 ">
 				<div class="row justify-content-center align-items-center h-100">
 				 	<div class="card mb-4">
 					 	<div class="card-header">
-							<h3 th:text="#{buttons.login}">TITLE</h3>
+							<font color="#727272"> 
+								<h3 th:text="#{home.login}">TITLE</h3>
+							</font>
 					 	</div>
 					 	<div class="card-body">
-						 	<form class="form" method="post" th:action="@{/login}">
-							 	<div class="form-group">
-								 	<label for="username" th:text="#{users.email}">MAIL</label>
-								 	<input id="username" name="username" type="text" class="form-control" required />
-							 	</div>
-							 	<div class="form-group">
-								 	<label for="password" th:text="#{users.password}">PASSWORD</label>
-								 	<input id="password" name="password" type="password" class="form-control" required />
-							 	</div>
-							 	<button type="submit" class="btn btn-primary btn-lg float-right" th:text="#{buttons.login}">LOGIN</button>
+							 <form class="form" method="post" th:action="@{/login}">
+								<div class="form-group">
+									<font color="#727272"> 
+										<label for="username" th:text="#{home.email}">MAIL</label>
+										<input id="username" name="username" type="text" class="form-control" required />
+									</font>
+								</div>
+								<div class="form-group">
+									<font color="#727272"> 
+										<label for="password" th:text="#{home.password}">PASSWORD</label>
+										<input id="password" name="password" type="password" class="form-control" required />
+									</font>
+								</div>
+							 	<button type="submit" class="btn btn-primary btn-lg float-right" th:text="#{home.login}">LOGIN</button>
 						 	</form>
 					 	</div>
 				 	</div>

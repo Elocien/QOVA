@@ -10,15 +10,15 @@
   }
   
   .navbar li a, .navbar .navbar-brand {
-    color: rgb(190, 39, 39) !important;
+    color: #6699cc !important;
   }
   
   .navbar-nav li a:hover, .navbar-nav li.active a {
-    color: #6699cc !important;
+    color: #000000 !important;
     background-color: #fff !important;
   }
   
   .navbar-default .navbar-toggle {
     border-color: transparent;
-    color: rgb(207, 28, 28) !important;
+    color: #6699cc !important;
   }
