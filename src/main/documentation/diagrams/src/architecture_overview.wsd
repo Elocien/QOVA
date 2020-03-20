@@ -29,9 +29,9 @@ package course{
         - String name
         - Type type
         - bytes QRCode
-        - Discipline discipline
+        - Discipline discipline     'KP ob man das braucht'
         - int Semester 
-        - OptQuestion optQ 
+        - survey Survey
 
         ' + Long UserId?            Die würde dann beim erstellen mitgegeben werden, damit man dann einen kurs immer
         '                           einen besitzer zuweisen kann. Weiß aber nicht wie das mit den schibole login dann 
@@ -39,7 +39,7 @@ package course{
 ==
 
         'Constructor'
-        + Course(String name, Type type, QRCode qrCode, String optQ1, String optQ2, String optQ3)
+        + Course(String name, Type type, QRCode qrCode, )
         + Getter()       'for all attributes' 
         + Setter()       'for all attributes' 
         + getCourseId()
@@ -101,17 +101,12 @@ package course{
         - String name
         - Type type
         - bytes QRCode
-        - String optQ1
-        - String optQ2
-        - String optQ3
+        -
 
 ==
         + String getName()
         + Type getType()
         + bytes getQRCode()
-        + String getOptQ1()
-        + String getOptQ2()
-        + String getOptQ3()
 
     }
 
@@ -130,7 +125,7 @@ package course{
         - int Q5
         - int optQ1
         - int optQ2
-        - int optQ3
+        - int optQ3Q
         - String textResponse
         - LocalDateTime submissionDateTime
         - Course course          
