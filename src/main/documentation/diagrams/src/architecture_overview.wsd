@@ -27,11 +27,14 @@ package course{
     class course{
         
         - String name
-        - Type type
+        - courseType type           'LECTURE, TUTORIAL, SEMINAR'
+        - courseFaculty         'Welche Fakultät'
         - bytes QRCode
         - Discipline discipline     'KP ob man das braucht'
-        - int Semester 
         - survey Survey
+        - int course_amount         'Wie viele von dieser LV gibt es. Studenten müssen dann angeben in welchem sie waren'
+        - int Semester              'Welches Semester belegt dieses fach'
+
 
         ' + Long UserId?            Die würde dann beim erstellen mitgegeben werden, damit man dann einen kurs immer
         '                           einen besitzer zuweisen kann. Weiß aber nicht wie das mit den schibole login dann 
@@ -115,18 +118,7 @@ package course{
 
 
     class survey {
-
-        'sind hier ints, da dies die bewertungen sind die rauskommen, nicht die fragen selbst. Wir gehen davon aus das 
-        '1-5 standatisiert sind über alle fächer
-        - int Q1
-        - int Q2
-        - int Q3
-        - int Q4
-        - int Q5
-        - int optQ1
-        - int optQ2
-        - int optQ3Q
-        - String textResponse
+        'todo'
         - LocalDateTime submissionDateTime
         - Course course          
 
@@ -142,29 +134,12 @@ package course{
 
 
     class surveyForm {
-
-        - int Q1
-        - int Q2
-        - int Q3
-        - int Q4
-        - int Q5
-        - int optQ1
-        - int optQ2
-        - int optQ3
-        - String textResponse
+        'todo'
         - localDateTime submissionDateTime
 
 ==
 
-        + int getQ1()
-        + int getQ2()
-        + int getQ3()
-        + int getQ4()
-        + int getQ5()
-        + int getOptQ1()
-        + int getOptQ2()
-        + int getOptQ3()
-        + String getTextResponse()
+        'todo'
         + localDateTime getSubmissionDateTime()
 
     }
@@ -188,27 +163,21 @@ package course{
         SEMINAR
     }
 
-    enum courseDiscipline {
+    enum courseFaculty {
         MEDICINE
-        COMPUTER SCIENCE
+        COMPUTER_SCIENCE
         'usw.'
     }
 
-
-
-    'optQuestion definition
-    class optQuestion {
-        - questionType type
-        - 
-
-    }
+    enum 
 
 
 
     enum questionType {
         MULTIPLE_CHOICE
         TEXTRESPONSE
-        LINEAR_SCALE
+        DROP_DOWN
+        YES_NO
     }
 
     'Relations'
