@@ -23,26 +23,25 @@ package course{
 
 
 
-
+    'Finalised'
     class course{
         
         - String name
-        - courseType type           'LECTURE, TUTORIAL, SEMINAR'
-        - courseFaculty         'Welche Fakultät'
+        - CourseType type                       'LECTURE, TUTORIAL, SEMINAR'
         - bytes QRCode
-        - Discipline discipline     'KP ob man das braucht'
         - survey Survey
-        - int course_amount         'Wie viele von dieser LV gibt es. Studenten müssen dann angeben in welchem sie waren'
-        - int Semester              'Welches Semester belegt dieses fach'
+        - int classTotal                        'Wie viele von dieser LV gibt es. Studenten müssen dann angeben in welchem sie waren'
+        - int semester                          'Welches Semester belegt dieses fach'
+        - CourseFaculty courseFaculty           'Welche Fakultät'
 
 
-        ' + Long UserId?            Die würde dann beim erstellen mitgegeben werden, damit man dann einen kurs immer
-        '                           einen besitzer zuweisen kann. Weiß aber nicht wie das mit den schibole login dann 
-        '                           in der realität aussieht...
+        ' + Long UserId?                    Die würde dann beim erstellen mitgegeben werden, damit man dann einen kurs immer
+        '                                   einen besitzer zuweisen kann. Weiß aber nicht wie das mit den schibole login dann 
+        '                                   in der realität aussieht...
 ==
 
         'Constructor'
-        + Course(String name, Type type, QRCode qrCode, )
+        + Course(String name, courseType type, QRCode qrCode, )
         + Getter()       'for all attributes' 
         + Setter()       'for all attributes' 
         + getCourseId()
@@ -52,7 +51,7 @@ package course{
 
 
 
-
+    'In Progress'
     class courseController{
        
         - final CourseManagement courseManagement
@@ -81,13 +80,13 @@ package course{
 
 
 
-
+    'In Progress'
     class courseManagement{
         - final CourseRepository courses
 
 ==
 
-        + CourseManagement(CourseRepository courses)
+        + CourseManagement()
         + add(Course course)
         + createCourse(CourseForm form)
         + deleteCourse(Long CourseId)                             'if needed

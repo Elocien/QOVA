@@ -15,9 +15,10 @@ public class Course {
     private String name;
     private CourseType type;
     //private ___ qrcode;
-    private String optQ1;
-    private String optQ2;
-    private String optQ3;
+    private Survey survey;
+    private int classTotal;
+    private int semester;
+    private CourseFaculty faculty;
 
 
     //Needed for JPA purposes
@@ -25,13 +26,28 @@ public class Course {
 	protected Course() {
     }
     
-    public Course(String name, CourseType type, String optQ1, String optQ2, String optQ3){
+    /**
+     * Instance of a Course (meaning a Subject [DE Lehrveranstaltung])
+     * 
+     * @param name              Name of the course
+     * @param type              Enum which is either: Lecture, Tutorial or Seminar
+     * @param survey            An {@linkplain Survey} Object containg the questions
+     * @param classTotal        How many different tutorial-/seminar groups exist
+     * @param semester          What semester is the Subject taken by students
+     * @param faculty           Enum defining which faculty the subject belongs to 
+     */
+    public Course(String name, CourseType type, Survey survey, int classTotal, int semester, CourseFaculty faculty){
         this.name = name;
         this.type = type;
-        this.optQ1 = optQ1;
-        this.optQ2 = optQ2;
-        this.optQ3 = optQ3;
         //this.qrcode = qrcode
+        this.survey = survey;
+        this.classTotal = classTotal;
+        this.semester = semester;
+        this.faculty=faculty;
+    }
+
+    public long getId(){
+        return this.id;
     }
 
     public String getName(){
@@ -58,29 +74,35 @@ public class Course {
     //    this.qrcode = qrcode;
     //}
 
-    public String getOptQ1(){
-        return this.optQ1;
+    public Survey getSurvey(){
+        return this.survey;
     }
 
-    public void setOptQ1(String optQ1){
-        this.optQ1 = optQ1;
+    public void setSurvey(Survey survey){
+        this.survey = survey;
     }
 
-    public String getOptQ2(){
-        return this.optQ2;
+    public int getAmount(){
+        return this.classTotal;
     }
 
-    public void setOptQ2(String optQ2){
-        this.optQ2 = optQ2;
+    public void setAmount(int classTotal){
+        this.classTotal = classTotal;
     }
 
-    public String getOptQ3(){
-        return this.optQ3;
+    public int getSemester(){
+        return this.semester;
     }
 
-    public void setOptQ3(String optQ3){
-        this.optQ3 = optQ3;
+    public void setSemester(int semester){
+        this.semester = semester;
     }
-   
 
+    public CourseFaculty getFaculty(){
+        return this.faculty;
+    }
+
+    public void setFaculty(CourseFaculty faculty){
+        this.faculty = faculty;
+    }
 }

@@ -13,17 +13,28 @@ public class CourseForm {
     //@NotNull
     //private ___ qrcode
 
-    private String optQ1;
-    private String optQ2;
-    private String optQ3;
+    @NotNull
+    private Survey survey;
 
-    public CourseForm(String name, CourseType type, String optQ1, String optQ2, String optQ3){
+    @NotNull
+    private int classTotal;
+
+    @NotNull
+    private int semester;
+
+    @NotNull
+    private CourseFaculty faculty;
+
+
+
+    public CourseForm(String name, CourseType type, Survey survey, int classTotal, int semester, CourseFaculty faculty){
         this.name = name;
         this.type = type;
-        this.optQ1 = optQ1;
-        this.optQ2 = optQ2;
-        this.optQ3 = optQ3;
         //this.qrcode = qrcode
+        this.survey = survey;
+        this.classTotal = classTotal;
+        this.semester = semester;
+        this.faculty=faculty;
     }
 
     public String getName(){
@@ -34,21 +45,24 @@ public class CourseForm {
         return this.type;
     }
 
-    public String getOptQ1(){
-        return this.optQ1;
+    // public ___ getQrcode(){
+    //    return this.qrcode
+    //}
+
+    public Survey getSurvey(){
+        return this.survey;
     }
 
-    public String getOptQ2(){
-        return this.optQ2;
+    public int getAmount(){
+        return this.classTotal;
     }
 
-    public String getOptQ3(){
-        return this.optQ3;
+    public int getSemester(){
+        return this.semester;
     }
 
-    
+    public CourseFaculty getFaculty(){
+        return this.faculty;
+    }
 
-
-
-    
 }
