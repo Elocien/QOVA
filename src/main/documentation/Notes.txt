@@ -1,2 +1,8 @@
 Regex to check email:
 [A-Za-z0-9](([_\.\-]?[a-zA-Z0-9]+)*)@([A-Za-z0-9]+)(([\.\-]?[a-zA-Z0-9]+)*)\.([A-Za-z]{2,})
+
+
+
+TODO:
+Implement PDF generator and try to generate a pdf using a loop which
+iterates through an array

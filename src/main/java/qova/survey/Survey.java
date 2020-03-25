@@ -1,4 +1,4 @@
-package qova.course;
+package qova.survey;
 
 import java.time.LocalDateTime;
 

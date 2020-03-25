@@ -117,9 +117,8 @@ package course{
 
 
     class survey {
-        'todo'
-        - LocalDateTime submissionDateTime
-        - Course course          
+        - LocalDateTime submissionDateTime     
+        - 
 
 ==
         + survey(attributes)
@@ -156,27 +155,25 @@ package course{
 
     }
 
-    enum courseType {
+    enum CourseType {
         LECTURE
         TUTORIAL
         SEMINAR
     }
 
-    enum courseFaculty {
+    enum CourseFaculty {
         MEDICINE
         COMPUTER_SCIENCE
         'usw.'
     }
 
-    enum 
 
 
-
-    enum questionType {
+    enum SurveyQuestionType {
         MULTIPLE_CHOICE
-        TEXTRESPONSE
+        TEXT_RESPONSE
+        BINARY
         DROP_DOWN
-        YES_NO
     }
 
     'Relations'

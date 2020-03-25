@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
 
+import qova.survey.Survey;
+
 @Entity
 public class Course {
 
@@ -13,7 +15,6 @@ public class Course {
 
     private String name;
     private CourseType type;
-
 
     //private ___ qrcode;
 
@@ -29,6 +30,8 @@ public class Course {
     @SuppressWarnings("unused")
 	protected Course() {
     }
+    
+
     
     /**
      * Instance of a Course (meaning a Subject [DE Lehrveranstaltung])

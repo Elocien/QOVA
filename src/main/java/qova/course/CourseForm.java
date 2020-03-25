@@ -1,10 +1,13 @@
 package qova.course;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+
+import qova.survey.Survey;
 
 public class CourseForm {
 
-    @NotNull
+    @NotEmpty
     private String name;
 
     @NotNull
