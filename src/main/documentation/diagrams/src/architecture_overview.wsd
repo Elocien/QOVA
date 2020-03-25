@@ -16,26 +16,28 @@
 
 @startuml qovaArchitecture 
 
-package Course{
 
+package course{
 
-    class Course{
-
+    'Finalised'
+    class course{
+        
         - String name
-        - int Semester
-        - Type type
+        - CourseType type                       'LECTURE, TUTORIAL, SEMINAR'
         - bytes QRCode
-        - String optQ1
-        - String optQ2
-        - String optQ3
+        - survey Survey
+        - int classTotal                        'Wie viele von dieser LV gibt es. Studenten müssen dann angeben in welchem sie waren'
+        - int semester                          'Welches Semester belegt dieses fach'
+        - CourseFaculty courseFaculty           'Welche Fakultät'
 
-        ' + Long UserId?            Die würde dann beim erstellen mitgegeben werden, damit man dann einen kurs immer
-        '                           einen besitzer zuweisen kann. Weiß aber nicht wie das mit den schibole login dann 
-        '                           in der realität aussieht...
+
+        ' + Long UserId?                    Die würde dann beim erstellen mitgegeben werden, damit man dann einen kurs immer
+        '                                   einen besitzer zuweisen kann. Weiß aber nicht wie das mit den schibole login dann 
+        '                                   in der realität aussieht...
 ==
 
         'Constructor'
-        + Course(String name, int Semester, Type type, QRCode qrCode, String optQ1, String optQ2, String optQ3)
+        + Course(String name, courseType type, QRCode qrCode, )
         + Getter()       'for all attributes' 
         + Setter()       'for all attributes' 
         + getCourseId()
@@ -45,8 +47,8 @@ package Course{
 
 
 
-
-    class CourseController{
+    'In Progress'
+    class courseController{
        
         - final CourseManagement courseManagement
 
@@ -65,7 +67,7 @@ package Course{
             'PostMapping method to validate user input'
         + String editCourseValidation(Model model, CourseForm form, Long id, BindingResult result)
             'GetMapping method. Survey wird allein anhand lehrveranstaltung kreiert. QR code übergibt nur 
-            'lehrveranstaltug und typ (VL, SEM, TUT).
+            'course.
         +String createSurvey(Model model, Long CourseId, Type type)
 
 
@@ -74,13 +76,13 @@ package Course{
 
 
 
-
-    class CourseManagement{
+    'In Progress'
+    class courseManagement{
         - final CourseRepository courses
 
 ==
 
-        + CourseManagement(CourseRepository courses)
+        + CourseManagement()
         + add(Course course)
         + createCourse(CourseForm form)
         + deleteCourse(Long CourseId)                             'if needed
@@ -92,24 +94,17 @@ package Course{
 
 
 
-    class CourseForm {
+    class courseForm {
     
         - String name
-        - int Semester
         - Type type
         - bytes QRCode
-        - String optQ1
-        - String optQ2
-        - String optQ3
+        -
 
 ==
         + String getName()
-        + int getSemester()
         + Type getType()
         + bytes getQRCode()
-        + String getOptQ1()
-        + String getOptQ2()
-        + String getOptQ3()
 
     }
 
@@ -117,23 +112,15 @@ package Course{
 
 
 
-    class Survey {
-
-        'sind hier ints, da dies die bewertungen sind die rauskommen, nicht die fragen selbst. Wir gehen davon aus das 
-        '1-5 standatisiert sind über alle fächer
-        - int Q1
-        - int Q2
-        - int Q3
-        - int Q4
-        - int Q5
-        - int optQ1
-        - int optQ2
-        - int optQ3
+    class survey {
+        'todo'
+        - LocalDateTime submissionDateTime
         - Course course          
 
 ==
-
+        + survey(attributes)
         + Getter()     'for all attributes'
+        + Setter()     'for all attributes'
 
     }
 
@@ -141,52 +128,55 @@ package Course{
 
 
 
-    class SurveyForm {
-
-        - int Q1
-        - int Q2
-        - int Q3
-        - int Q4
-        - int Q5
-        - int optQ1
-        - int optQ2
-        - int optQ3
+    class surveyForm {
+        'todo'
+        - localDateTime submissionDateTime
 
 ==
 
-        + int getQ1()
-        + int getQ2()
-        + int getQ3()
-        + int getQ4()
-        + int getQ5()
-        + int getOptQ1()
-        + int getOptQ2()
-        + int getOptQ3()
+        'todo'
+        + localDateTime getSubmissionDateTime()
 
     }
 
-    interface CourseRepository {
-        'if filtern is necessary, methods are added here'
+    interface courseRepository {
+        'if filtern is necessary, methods are added here' 
     }
 
-    interface SurveyRepository {
+    interface surveyRepository {
         'All findBy methods are added here. Will have to see how they want this filtered
         
         + Stream<Course>
-        + Iterable<Evaluation> findBy...
+        + Iterable<Evaluation> findByDateTime()
 
 
     }
 
-    enum Type {
+    enum courseType {
         LECTURE
         TUTORIAL
         SEMINAR
     }
 
+    enum courseFaculty {
+        MEDICINE
+        COMPUTER_SCIENCE
+        'usw.'
+    }
+
+    enum 
+
+
+
+    enum questionType {
+        MULTIPLE_CHOICE
+        TEXTRESPONSE
+        DROP_DOWN
+        YES_NO
+    }
 
     'Relations'
-    Type --* Course
+    courseType --* course
 
 
 }
