@@ -4,18 +4,22 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Course {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
+    private @Id @GeneratedValue(strategy = GenerationType.AUTO) long id;
 
     private String name;
     private CourseType type;
+
+
     //private ___ qrcode;
+
+    @OneToOne
     private Survey survey;
+
     private int classTotal;
     private int semester;
     private CourseFaculty faculty;
@@ -40,7 +44,7 @@ public class Course {
         this.name = name;
         this.type = type;
         //this.qrcode = qrcode
-        this.survey = survey;
+        // this.survey = survey;
         this.classTotal = classTotal;
         this.semester = semester;
         this.faculty=faculty;
