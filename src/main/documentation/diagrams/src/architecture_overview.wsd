@@ -17,11 +17,7 @@
 @startuml qovaArchitecture 
 
 
-
 package course{
-
-
-
 
     'Finalised'
     class course{
