@@ -1,5 +1,7 @@
 package qova.course;
 
+import qova.course.CourseManagement;
+
 
 import lombok.Data;
 import org.springframework.stereotype.Controller;
