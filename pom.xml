@@ -98,11 +98,6 @@
 			<version>RELEASE</version>
 			<type>pom</type>
 		</dependency>
-		<dependency>
-			<groupId>org.javatuples</groupId>
-			<artifactId>javatuples</artifactId>
-			<version>1.2</version>
-		</dependency>
 	</dependencies>
 
 	<build>

@@ -20,12 +20,12 @@
 package course{
 
     'Finalised'
-    class course{
+    class Course{
         
         - String name
         - CourseType type                       'LECTURE, TUTORIAL, SEMINAR'
         - bytes QRCode
-        - survey Survey
+        - Survey survey
         - int classTotal                        'Wie viele von dieser LV gibt es. Studenten müssen dann angeben in welchem sie waren'
         - int semester                          'Welches Semester belegt dieses fach'
         - CourseFaculty courseFaculty           'Welche Fakultät'
@@ -48,7 +48,7 @@ package course{
 
 
     'In Progress'
-    class courseController{
+    class CourseController{
        
         - final CourseManagement courseManagement
 
@@ -77,7 +77,7 @@ package course{
 
 
     'In Progress'
-    class courseManagement{
+    class CourseManagement{
         - final CourseRepository courses
 
 ==
@@ -94,17 +94,24 @@ package course{
 
 
 
-    class courseForm {
+    class CourseForm {
     
         - String name
-        - Type type
+        - CourseType type                       
         - bytes QRCode
-        -
+        - Survey survey
+        - int classTotal                        
+        - int semester                          
+        - CourseFaculty courseFaculty           
 
 ==
         + String getName()
         + Type getType()
         + bytes getQRCode()
+        + Survey getSurvey()
+        + int getClassTotal()
+        + int getSemester()
+        + CourseFaculty getCourseFaculty()
 
     }
 
@@ -112,37 +119,55 @@ package course{
 
 
 
-    class survey {
-        - LocalDateTime submissionDateTime     
-        - 
+    class Survey {
+        -  
 
 ==
-        + survey(attributes)
+        + Survey(attributes)
         + Getter()     'for all attributes'
         + Setter()     'for all attributes'
 
     }
 
-
-
-
-
-    class surveyForm {
+    class SurveyForm {
         'todo'
-        - localDateTime submissionDateTime
+        - 
 
 ==
 
         'todo'
-        + localDateTime getSubmissionDateTime()
+        + 
 
     }
 
-    interface courseRepository {
+
+
+
+    class MultipleChoice {
+
+    }
+
+    class TextResponse{
+
+    }
+
+    class BinaryAnswer{
+
+    }
+
+    class DropDown{
+
+    }
+
+
+
+
+
+    interface CourseRepository {
         'if filtern is necessary, methods are added here' 
     }
 
-    interface surveyRepository {
+    interface SurveyRepository {
         'All findBy methods are added here. Will have to see how they want this filtered
         
         + Stream<Course>
@@ -151,10 +176,19 @@ package course{
 
     }
 
+
+
+
+
+
+
+
+
     enum CourseType {
         LECTURE
         TUTORIAL
         SEMINAR
+        'comment'
     }
 
     enum CourseFaculty {
@@ -164,16 +198,16 @@ package course{
     }
 
 
-
-    enum SurveyQuestionType {
-        MULTIPLE_CHOICE
-        TEXT_RESPONSE
-        BINARY
-        DROP_DOWN
-    }
-
     'Relations'
-    courseType --* course
+    CourseType --* Course
+    CourseFaculty --* Course
+    Course --> CourseManagement
+    CourseRepository --> CourseManagement
+    CourseManagement --> CourseController
+    CourseForm --> Course
+
+    Survey --> Course
+    SurveyForm --> Survey
 
 
 }

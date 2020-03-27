@@ -10,18 +10,19 @@ import com.itextpdf.layout.element.List;
 import com.itextpdf.layout.element.ListItem;
 import com.itextpdf.layout.element.Paragraph;
 
-import org.javatuples.Pair;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.time.format.TextStyle;
+import java.util.HashMap;
+import java.util.Map;
  
 /**
  * Simple Hello World example.
  */
 public class PDFGenerator {
     
-    public static final String DEST = "src/main/resources/helloworld.pdf";
+    public static final String DEST = "src/main/resources/test.pdf";
     
     public static void main(String args[]) throws IOException {
         File file = new File(DEST);
@@ -32,11 +33,11 @@ public class PDFGenerator {
     public void createPdf(String dest) throws IOException {
 
         //Test iteration through arraylist
-        Pair<String, Integer> tuple1 = new Pair<String, Integer>("text response", 1);
-        Pair<String, Integer> tuple2 = new Pair<String, Integer>("more text", 2);
-        ArrayList<Pair> a = new ArrayList<Pair>();
-        a.add(tuple1);
-        a.add(tuple2);
+        Map<String, String> a = new HashMap<>();
+        a.put("1", "Some response");
+        a.put("2", "this is a text response");
+        
+        
 
         //Initialize PDF writer
         PdfWriter writer = new PdfWriter(dest);
@@ -63,10 +64,9 @@ public class PDFGenerator {
 
 
         //TODO
-
-        for (int counter = 0; counter < a.size(); counter++) { 		      
-            // list.add(new ListItem((a.get(counter)).getValue0());
-        }   		
+        for (String i : a.values()) {
+            document.add(new Paragraph(i));
+        }		
 
 
 
@@ -77,10 +77,6 @@ public class PDFGenerator {
         document.add(list);
 
 
-
-
-        //Add paragraph to the document
-        // document.add(new Paragraph("Hello World!"));
  
         //Close document
         document.close();
