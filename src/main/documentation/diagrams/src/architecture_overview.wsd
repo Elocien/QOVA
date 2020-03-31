@@ -120,7 +120,7 @@ package course{
 
 
     class Survey {
-        -  
+        -     'position, question text, container for response
 
 ==
         + Survey(attributes)

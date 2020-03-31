@@ -13,12 +13,14 @@ public class BinaryAnswer{
     @ManyToOne
     private Course course;
 
+    private boolean answer;             //---true--- if yes/ja      and       ---false--- if no/nein
+
+
 
     public BinaryAnswer(int position, Date dateTime, Course course){
         this.position = position;
         this.dateTime = dateTime;
         this.course = course;
-
     }
 
 
