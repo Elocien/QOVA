@@ -14,4 +14,10 @@ public class CourseController {
     public String welcome (){
         return "home";
     }
+
+    @GetMapping("/1")
+    public String welcome2 () {return "questioneditor";}
+
+    @GetMapping("/2")
+    public String welcome3 () {return "questioneditor2";}
 }

@@ -1,0 +1,122 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/questioneditor.css}" />
+    <title th:text="#{home.title}">TITLE</title>
+</head>
+<body>
+<div th:include="navbar"></div>
+<h1 id="Name">
+    Fragen für den Fragebogen
+</h1>
+<div class="column left">
+    <button onclick="addYNQuestion()">Füge eine Ja-Nein-Frage hinzu</button>
+    <button onclick="addYNQuestion()">Bla Bla Bla</button>
+    <button onclick="addYNQuestion()">Bla Bla Bla</button>
+    <button onclick="addYNQuestion()">Bla Bla Bla</button>
+    <button onclick="addYNQuestion()">Bla Bla Bla</button>
+</div>
+
+<div class="column right" id="questionnaire">
+
+</div>
+
+<script>
+    var count = 1;
+
+    function addYNQuestion(){
+            <!--All in one division-->
+            var x = document.createElement("DIV");
+            x.className = "Question YN";
+            x.setAttribute("id",count);
+
+            <!--Question-Count-->
+            var z = document.createElement("DIV");
+            z.className = "QuestionCount";
+            z.innerHTML=count+".";
+
+
+            <!--Buttons Delete-->
+            var btn_d = document.createElement("BUTTON");
+            btn_d.className = "Button_Delete";
+            btn_d.innerHTML = "Delete Question";
+            btn_d.setAttribute("onclick","deleteQuestion("+ count+")");
+
+
+
+            <!--Textarea for the question input-->
+            var x1 = document.createElement("TEXTAREA");
+            var t1 = document.createTextNode("Frage");
+
+
+            x.appendChild(z);
+            x.appendChild(btn_d);
+            x1.append(t1);
+            x.appendChild(x1);
+            count +=1;
+
+            document.getElementById("questionnaire").appendChild(x);
+
+    }
+
+    function deleteQuestion(t) {
+        <!--Löschen der ausgewählten Frage -->
+        var questionlist = document.getElementsByClassName("Question");
+        for (i=0;i<questionlist.length;i++) {
+            var x = Number(questionlist[i].id);
+            if (x === t) {
+                questionlist[i].remove();
+                i -=1;
+            }
+            if (x > t) {
+                y = x - 1;
+                questionlist[i].id = y;
+                var children = questionlist[i].children;
+                for (j = 0; j < children.length; j++) {
+                    if (children[j].className == "QuestionCount") {
+                        children[j].innerHTML = y + ".";
+                    }
+                    if (children[j].className == "Button_Delete") {
+                        children[j].setAttribute("onclick", "deleteQuestion(" + y + ")");
+                    }
+                }
+
+            }
+        }
+
+
+
+            /*
+            else if(x>t){
+                y = x-1
+                questionlist[i].id =y;
+                var children = questionlist[i].children;
+                for (i=0;i<children.length;i++){
+                    if (children[i].className == "QuestionCount"){
+                        children[i].innerHTML = y+"."
+                    }
+                    if (children[i].className == "Button_Delete"){
+                        children[i].setAttribute("onclick","deleteQuestion("+ y+")");
+                    }
+                }
+
+            }
+
+             */
+
+
+        <!--Alle darauffolgendne Fragen müssen um ein veringert werden in ID, QuestionCount, Delet Button -->
+
+    }
+
+
+</script>
+</body>
+</html>
