@@ -1,7 +1,5 @@
 package qova.survey;
 
-import java.time.LocalDateTime;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -13,17 +11,25 @@ public class Survey {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private int question;
+    private String questions[];
 
     //Needed for JPA puposes
     @SuppressWarnings("unused")
 	private Survey() {
     }
     
-    public Survey(int question){
-        this.question = question;
+    public Survey(String[] questions){
+        this.questions = questions;
     }
 
+    
+    public String[] getQuestions() {
+        return this.questions;
+    }
+
+    public void setQuestions(String[] questions){
+        this.questions = questions;
+    }
 
 
 }

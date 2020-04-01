@@ -120,12 +120,12 @@ package course{
 
 
     class Survey {
-        -     'position, question text, container for response
+        - String questions[]
 
 ==
-        + Survey(attributes)
-        + Getter()     'for all attributes'
-        + Setter()     'for all attributes'
+        + Survey(String[] questions)
+        + getQuestions()
+        + setQuestions()
 
     }
 
