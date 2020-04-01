@@ -45,19 +45,45 @@
 
             <!--Buttons Delete-->
             var btn_d = document.createElement("BUTTON");
-            btn_d.className = "Button_Delete";
+            btn_d.className = "Button Delete";
             btn_d.innerHTML = "Delete Question";
             btn_d.setAttribute("onclick","deleteQuestion("+ count+")");
+
+            <!-- Button to move upwards/downwards-->
+            if (count >1) {
+                var btn_up = document.createElement("Button");
+                btn_up.className = "Button UP";
+                btn_up.innerHTML = "Push Question Up";
+                btn_up.setAttribute("onclick","pushup("+count+")");
+
+            }
+            var btn_down = document.createElement("Button");
+            btn_down.className="Button DOWN";
+            btn_down.innerHTML="Push Question Down";
+            btn_down.setAttribute("onclick","pushdown("+(count-1)+")");
+            var questions = document.getElementById("questionnaire").children;
+            for (i=0; i<questions.length;i++){
+                var y = Number(questions[i].id);
+                if (y===count-1 ){
+                    if(checkQuestionsforBtnDown(questions[i].children)=== false) {
+                        questions[i].append(btn_down);
+                    }
+
+                }
+            }
 
 
 
             <!--Textarea for the question input-->
             var x1 = document.createElement("TEXTAREA");
-            var t1 = document.createTextNode("Frage");
+            var t1 = document.createTextNode("Fragentext");
 
 
             x.appendChild(z);
             x.appendChild(btn_d);
+            if (count>1){
+                x.appendChild(btn_up);
+            }
             x1.append(t1);
             x.appendChild(x1);
             count +=1;
@@ -69,50 +95,58 @@
     function deleteQuestion(t) {
         <!--Löschen der ausgewählten Frage -->
         var questionlist = document.getElementsByClassName("Question");
+        debugger;
         for (i=0;i<questionlist.length;i++) {
             var x = Number(questionlist[i].id);
             if (x === t) {
                 questionlist[i].remove();
                 i -=1;
+                count -=1;
+                if (x === count){
+                    var children = questionlist[i].children;
+                    for (j =0;j<children.length;j++){
+                        if (children[j].className === "Button DOWN"){
+                            questionlist[i].removeChild(children[j]);
+                        }
+                    }
+                }
             }
             if (x > t) {
                 y = x - 1;
                 questionlist[i].id = y;
                 var children = questionlist[i].children;
                 for (j = 0; j < children.length; j++) {
-                    if (children[j].className == "QuestionCount") {
+                    debugger;
+                    if (children[j].className === "QuestionCount") {
                         children[j].innerHTML = y + ".";
                     }
-                    if (children[j].className == "Button_Delete") {
+                    else if (children[j].className === "Button Delete") {
                         children[j].setAttribute("onclick", "deleteQuestion(" + y + ")");
                     }
+                    else if (y ===1 && children[j].className === "Button UP"){
+                        questionlist[i].removeChild(children[j]);
+                    }
                 }
 
+            }
+
+        }
+    }
+
+    function checkQuestionsforBtnDown (t){
+        for (i2=0;i2<t.length;i2++){
+            if (t[i2].className == "Button DOWN"){
+                return true;
             }
         }
+        return false;
+    }
 
+    function pushup(){
 
+    }
 
-            /*
-            else if(x>t){
-                y = x-1
-                questionlist[i].id =y;
-                var children = questionlist[i].children;
-                for (i=0;i<children.length;i++){
-                    if (children[i].className == "QuestionCount"){
-                        children[i].innerHTML = y+"."
-                    }
-                    if (children[i].className == "Button_Delete"){
-                        children[i].setAttribute("onclick","deleteQuestion("+ y+")");
-                    }
-                }
-
-            }
-
-             */
-
-
-        <!--Alle darauffolgendne Fragen müssen um ein veringert werden in ID, QuestionCount, Delet Button -->
+    function pushdown(){
 
     }
 

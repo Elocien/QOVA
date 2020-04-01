@@ -6,7 +6,7 @@
 }
 
 .column.right {
-    width: 80%
+    width: 80%;
 }
 
 
@@ -16,7 +16,7 @@
 
 }
 
-.Button_Delete {
+.Button {
     background-color: #f44336;
     float: right;
     border: none;
@@ -24,4 +24,5 @@
     color: white;
     text-align: center;
     padding: 10px 15px;
+    margin-left: 10px ;
 }
