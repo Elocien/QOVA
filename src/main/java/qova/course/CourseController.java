@@ -2,6 +2,7 @@ package qova.course;
 
 import java.util.Objects;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -13,6 +14,7 @@ public class CourseController {
     // private final CourseManagement courseManagement;
     private final SurveyManagement surveyManagement;
 
+    @Autowired
 	CourseController(SurveyManagement surveyManagement) {
         // this.courseManagement = Objects.requireNonNull(courseManagement);
         this.surveyManagement = surveyManagement;
