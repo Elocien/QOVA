@@ -1,19 +1,30 @@
 package qova.course;
 
-import qova.course.CourseManagement;
-
+import java.util.Objects;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+
+import qova.survey.SurveyManagement;
 
 @Controller
 public class CourseController {
 
+    // // private final CourseManagement courseManagement;
+    // private final SurveyManagement surveyManagement;
+
+	// CourseController(SurveyManagement surveyManagement) {
+    //     // this.courseManagement = Objects.requireNonNull(courseManagement);
+    //     this.surveyManagement = surveyManagement;
+	// }
+
+
     @GetMapping("/")
     public String welcome (){
+        // surveyManagement.createSurvey();
         return "home";
     }
+
 
     @GetMapping("/1")
     public String welcome2 () {return "questioneditor";}
