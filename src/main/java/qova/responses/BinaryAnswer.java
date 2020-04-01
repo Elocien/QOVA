@@ -1,4 +1,4 @@
-package qova.Responses;
+package qova.responses;
 
 import java.util.Date;
 
@@ -10,36 +10,33 @@ import javax.persistence.ManyToOne;
 
 import qova.course.Course;
 
-
 @Entity
-public class TextResponse{
-    
-    //--------------------------------------
+public class BinaryAnswer{
 
     private @Id @GeneratedValue(strategy = GenerationType.AUTO) long id;
-
     private Date dateTime;
 
     @ManyToOne
     private Course course;
 
-    private String response;
-
-
-    //--------------------------------------
-
+    private Boolean answer;             //---true--- if yes/ja      and       ---false--- if no/nein
 
     //Needed for JPA puposes
     @SuppressWarnings("unused")
-	private TextResponse() {
+	private BinaryAnswer() {
     }
 
-
-    //--------------------------------------------------------------------------
-    public TextResponse(Date dateTime, Course course, String response){
+    /**
+     * The BinaryAnswer class contains responses to yes/no questions
+     * 
+     * @param position 
+     * @param dateTime
+     * @param course
+     */
+    public BinaryAnswer(Date dateTime, Course course, Boolean answer){
         this.dateTime = dateTime;
         this.course = course;
-        this.response = response;
+        this.answer = answer;
     }
 
     public Date getDateTime(){
@@ -58,16 +55,12 @@ public class TextResponse{
         this.course = course;
     }
 
-    public String getResponse(){
-        return this.response;
+    public Boolean getAnswer(){
+        return this.answer;
     }
 
-    public void setResponse(String response){
-        this.response = response;
+    public void setAnswer(Boolean answer){
+        this.answer = answer;
     }
-
-
-    
-
 
 }

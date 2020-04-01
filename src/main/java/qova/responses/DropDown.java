@@ -1,4 +1,4 @@
-package qova.Responses;
+package qova.responses;
 
 import java.util.Date;
 
@@ -10,9 +10,8 @@ import javax.persistence.ManyToOne;
 
 import qova.course.Course;
 
-
 @Entity
-public class MultipleChoice{
+public class DropDown{
 
     private @Id @GeneratedValue(strategy = GenerationType.AUTO) long id;
 
@@ -28,24 +27,22 @@ public class MultipleChoice{
     private Boolean answer3;
     private Boolean answer4;
     private Boolean answer5;
-    private Boolean answer6;
-    private Boolean answer7;
-    private Boolean answer8;
-    private Boolean answer9;
-    private Boolean answer10;
 
 
     //Needed for JPA puposes
     @SuppressWarnings("unused")
-	private MultipleChoice() {
+	private DropDown() {
     }
 
-
-    public MultipleChoice(Date dateTime, Course course, int responsePossiblilites, Boolean answer1, Boolean answer2, Boolean answer3, Boolean answer4, Boolean answer5, 
-            Boolean answer6, Boolean answer7, Boolean answer8, Boolean answer9, Boolean answer10){
+    public DropDown(Date dateTime, Course course, int responsePossiblilites, Boolean answer1, Boolean answer2, Boolean answer3, Boolean answer4, Boolean answer5){
         this.dateTime = dateTime;
         this.course = course;
-        
+        this.responsePossiblilites = responsePossiblilites;
+        this.answer1 = answer1;
+        this.answer1 = answer2;
+        this.answer1 = answer3;
+        this.answer1 = answer4;
+        this.answer1 = answer5;
     }
 
     public Date getDateTime(){
@@ -111,47 +108,5 @@ public class MultipleChoice{
     public void setAnswer5(Boolean answer){
         this.answer5 = answer;
     }
-
-    public Boolean getAnswer6(){
-        return this.answer6;
-    }
-
-    public void setAnswer6(Boolean answer){
-        this.answer6 = answer;
-    }
-
-    public Boolean getAnswer7(){
-        return this.answer7;
-    }
-
-    public void setAnswer7(Boolean answer){
-        this.answer7 = answer;
-    }
-
-    public Boolean getAnswer8(){
-        return this.answer8;
-    }
-
-    public void setAnswer8(Boolean answer){
-        this.answer8 = answer;
-    }
-
-    public Boolean getAnswer9(){
-        return this.answer9;
-    }
-
-    public void setAnswer9(Boolean answer){
-        this.answer9 = answer;
-    }
-
-    public Boolean getAnswer10(){
-        return this.answer10;
-    }
-
-    public void setAnswer10(Boolean answer){
-        this.answer10 = answer;
-    }
-    
-
 
 }
