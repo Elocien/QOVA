@@ -23,15 +23,15 @@ public class SurveyRepository {
     
     }
 
-    public int insert(Survey survey) {
+    // public int insert(Survey survey) {
 
-        return jdbcTemplate.update("insert into survey (id, questions) " + "values(?,  ?)",
+    //     return jdbcTemplate.update("insert into survey (id, questions) " + "values(?,  ?)",
     
-            new Object[] {
+    //         new Object[] {
     
-                survey.getId(), survey.getQuestions()
+    //             survey.getId(), survey.getQuestions()
     
-            });
+    //         });
     
-    }
+    // }
 }

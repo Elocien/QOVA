@@ -3,6 +3,7 @@ Regex to check email:
 
 
 
-TODO:
-Implement PDF generator and try to generate a pdf using a loop which
-iterates through an array
+DB Password: 
+QOVA2020
+
+
