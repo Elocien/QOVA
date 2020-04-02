@@ -12,7 +12,9 @@ import java.util.Objects;
 public class SurveyManagement {
     
     private final SurveyRepository surveys;
+    
 
+    //test attributes
     private String[] questions;
     
 
@@ -20,11 +22,11 @@ public class SurveyManagement {
         this.surveys = Objects.requireNonNull(surveys);
     }
 
-    public Survey createSurvey(){
+    // public Survey createSurvey(){
 
-        
+    //     Survey test = new Survey(questions);
 
-        return surveys.save(new Survey(questions));
-    }
+    //     return 
+    // }
    
 }

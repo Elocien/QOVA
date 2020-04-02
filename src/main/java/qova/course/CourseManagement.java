@@ -11,12 +11,12 @@ import java.util.Objects;
 @Transactional
 public class CourseManagement {
     
+    private final CourseRepository courses;
     // private final CourseRepository courses;
-    private final CRUDCourseRepositoryTest coursesCRUD;
     
     @Autowired
-    public CourseManagement(CRUDCourseRepositoryTest coursesCRUD){
-        this.coursesCRUD = Objects.requireNonNull(coursesCRUD);
+    public CourseManagement(CourseRepository courses){
+        this.courses = Objects.requireNonNull(courses);
     }
 
     // public Course createCourse(){
