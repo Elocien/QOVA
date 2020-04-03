@@ -22,6 +22,9 @@ public class Survey {
         this.questions = questions;
     }
 
+    public long getId(){
+        return this.id;
+    }
     
     public String[] getQuestions() {
         return this.questions;
