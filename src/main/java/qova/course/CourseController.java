@@ -31,4 +31,7 @@ public class CourseController {
 
     @GetMapping("/2")
     public String welcome3 () {return "questioneditor2";}
+
+    @GetMapping("/3")
+    public String welcome4 () {return "questioneditor3";}
 }

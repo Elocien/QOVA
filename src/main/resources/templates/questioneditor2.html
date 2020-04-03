@@ -17,8 +17,8 @@
     Fragen für den Fragebogen
 </h1>
 <div class="column left">
-    <button onclick="addYNQuestion()">Füge eine Ja-Nein-Frage hinzu</button>
-    <button onclick="addYNQuestion()">Bla Bla Bla</button>
+    <button class="Button NewQuestion" onclick="addYNQuestion()">Füge eine Ja-Nein-Frage hinzu</button>
+    <button class="Button NewQuestion" onclick="addYNQuestion()">Bla Bla Bla</button>
     <button onclick="addYNQuestion()">Bla Bla Bla</button>
     <button onclick="addYNQuestion()">Bla Bla Bla</button>
     <button onclick="addYNQuestion()">Bla Bla Bla</button>
@@ -95,7 +95,6 @@
     function deleteQuestion(t) {
         <!--Löschen der ausgewählten Frage -->
         var questionlist = document.getElementsByClassName("Question");
-        debugger;
         for (i=0;i<questionlist.length;i++) {
             var x = Number(questionlist[i].id);
             if (x === t) {
@@ -114,9 +113,8 @@
             if (x > t) {
                 y = x - 1;
                 questionlist[i].id = y;
-                var children = questionlist[i].children;
+                children = questionlist[i].children;
                 for (j = 0; j < children.length; j++) {
-                    debugger;
                     if (children[j].className === "QuestionCount") {
                         children[j].innerHTML = y + ".";
                     }
@@ -125,6 +123,12 @@
                     }
                     else if (y ===1 && children[j].className === "Button UP"){
                         questionlist[i].removeChild(children[j]);
+                    }
+                    else if (children[j].className === "Button UP"){
+                        children[j].setAttribute("onclick","pushup("+y+")")
+                    }
+                    else if (children[j].className === "Button DOWN"){
+                        children[j].setAttribute("onclick","pushdown("+y+")")
                     }
                 }
 
@@ -135,18 +139,29 @@
 
     function checkQuestionsforBtnDown (t){
         for (i2=0;i2<t.length;i2++){
-            if (t[i2].className == "Button DOWN"){
+            if (t[i2].className === "Button DOWN"){
                 return true;
             }
         }
         return false;
     }
 
-    function pushup(){
-
+    function pushup(a){
+        swapposition((a-1),a);
     }
 
-    function pushdown(){
+    function pushdown(a2){
+        swapposition(a2,(a2+1));
+    }
+
+    function swapposition(a3,a4){
+        debugger;
+        var copyquestion1 = document.getElementsByClassName("Question")[0];
+        var copyquestion2 = document.getElementsByClassName("Question")[1].cloneNode(true);
+        document.getElementById("questionnaire").appendChild(copyquestion1);
+        document.getElementsByClassName("Question")[1] = copyquestion1;
+        document.getElementsByClassName("Question")[0] = copyquestion2;
+
 
     }
 
