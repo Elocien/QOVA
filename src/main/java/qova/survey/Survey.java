@@ -11,26 +11,30 @@ public class Survey {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private String questions[];
+    private String questions;
 
-    //Needed for JPA puposes
-    @SuppressWarnings("unused")
-	private Survey() {
-    }
+    // //Needed for JPA puposes
+    // @SuppressWarnings("unused")
+	// private Survey() {
+    // }
     
-    public Survey(String[] questions){
-        this.questions = questions;
-    }
+    // public Survey(String questions){
+    //     this.questions = questions;
+    // }
 
     public long getId(){
         return this.id;
     }
+
+    public void setId(Integer id) {
+        this.id = id;
+      }    
     
-    public String[] getQuestions() {
+    public String getQuestions() {
         return this.questions;
     }
 
-    public void setQuestions(String[] questions){
+    public void setQuestions(String questions){
         this.questions = questions;
     }
 

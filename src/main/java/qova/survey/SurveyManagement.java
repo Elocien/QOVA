@@ -15,7 +15,7 @@ public class SurveyManagement {
     
 
     //test attributes
-    private String[] questions;
+    private String questions;
     
 
     public SurveyManagement(SurveyRepository surveys){
@@ -24,9 +24,9 @@ public class SurveyManagement {
 
     // public Survey createSurvey(){
 
-    //     Survey test = new Survey(questions);
+    //     Survey testSurvey = new Survey(questions);
 
-    //     return 
+    //     return surveys.save(new Survey(questions));
     // }
    
 }
