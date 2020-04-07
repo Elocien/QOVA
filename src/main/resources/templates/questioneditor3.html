@@ -1,0 +1,194 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/questioneditor.css}" />
+    <title th:text="#{home.title}">TITLE</title>
+</head>
+<body>
+<div th:include="navbar"></div>
+<h1 id="Name">
+    Fragen für den Fragebogen
+</h1>
+<div class="column left">
+    <button class="Button NewQuestion" onclick="addYesNoQuestion()">Füge eine Ja-Nein-Frage hinzu</button>
+    <button class="Button NewQuestion" onclick="addMultipleChoiceQuestion()">Füge eine Multiple Choice Frage hinzu</button>
+</div>
+
+<div class="column right" id="questionnaire">
+
+</div>
+
+<script>
+    const questionnaire = [];
+
+    function addYesNoQuestion() {
+        saveInputs();
+        const yesnoQuestion = {
+            type: "YesNo",
+            question: "Frage"
+        };
+        questionnaire.push(yesnoQuestion);
+        renderall();
+    }
+
+    function addMultipleChoiceQuestion(){
+        saveInputs();
+        const multiplechoiceQuestion = {
+            type: "MultipleChoice",
+            question: "Frage",
+            answers: []
+        };
+        questionnaire.push(multiplechoiceQuestion);
+        renderall();
+
+    }
+
+
+    
+    function renderall(){
+        clearquestionnaire();
+        questionnaire.forEach(renderquestionnaireelement);
+
+
+    }
+
+    function renderquestionnaireelement (value, index, array){
+        const x = document.createElement("DIV");
+        if (value.type === "YesNo"){
+
+            <!--Create a html section for a YesNo-Question -->
+            x.className = "Question YesNo";
+            x.setAttribute("id",index);
+
+            <!--Textarea for the question input-->
+            const x1 = document.createElement("TEXTAREA");
+            x1.className = ("Textarea Question");
+            x1.defaultValue = value.question;
+
+            x.appendChild(x1);
+        }
+        else if (value.type === "MultipleChoice"){
+
+            <!--Create a html section for a MultipleChoice-Question -->
+            x.className = "Question MultipleChoice";
+            x.setAttribute("id",index);
+
+            <!--Textarea for the question input-->
+            const x1 = document.createElement("TEXTAREA");
+            x1.className = ("Textarea Question");
+            x1.defaultValue = value.question;
+            x.appendChild(x1);
+
+            for ( let i =0;i<value.answers.length;i++){
+                const x2 =document.createElement("TEXTAREA");
+                x2.className = ("Textarea Answers");
+                x2.defaultValue = value.answers[i];
+                x.appendChild(x2);
+
+            }
+
+            x.appendChild(createButtonnewAnswer(index));
+
+        }
+
+        <!--Buttons Delete-->
+        x.appendChild(createButtonDelete(index));
+        <!--Button PushDown PushUp -->
+        if (index > 0) {
+            x.appendChild(createButtonUp(index));
+        }
+        <!-- array.lastChild === array[index]-->
+        if (index+1 !== array.length && array.length >1){
+            x.appendChild(createButtonDown(index));
+        }
+
+        document.getElementById("questionnaire").appendChild(x);
+
+    }
+    
+    function clearquestionnaire() {
+        const questionnaire = document.getElementById("questionnaire");
+        while (questionnaire.firstChild){
+            questionnaire.removeChild(questionnaire.lastChild);
+        }
+
+    }
+
+    function saveInputs() {
+        const textareas = document.getElementsByClassName("Textarea Question");
+        for (let i=0;i<textareas.length;i++){
+            const questionid = textareas[i].parentElement.id;
+            questionnaire[questionid].question = textareas[i].value;
+
+        }
+
+    }
+
+    function createButtonDelete (index){
+        const btn_d = document.createElement("BUTTON");
+        btn_d.className = "Button Delete";
+        btn_d.innerHTML = "Delete Question";
+        btn_d.setAttribute("onclick","deleteQuestion("+ index+")");
+        return btn_d;
+
+    }
+
+    function createButtonUp(index) {
+        const btn_up = document.createElement("Button");
+        btn_up.className = "Button UP";
+        btn_up.innerHTML = "Push Question Up";
+        btn_up.setAttribute("onclick","pushQuestionUp("+index+")");
+        return btn_up;
+    }
+
+    function createButtonDown(index) {
+        const btn_down = document.createElement("Button");
+        btn_down.className="Button DOWN";
+        btn_down.innerHTML="Push Question Down";
+        btn_down.setAttribute("onclick","pushQuestionDown("+index+")");
+        return btn_down;
+
+    }
+
+    function createButtonnewAnswer(index){
+        const btn_newAnswer = document.createElement("Button");
+        btn_newAnswer.className="Button NewAnswer";
+        btn_newAnswer.innerHTML="Add new Answer";
+        return btn_newAnswer;
+    }
+
+    function deleteQuestion(index) {
+        saveInputs();
+        questionnaire.splice(index,1);
+        renderall();
+    }
+
+    function pushQuestionUp(index){
+        saveInputs();
+        const predecessor = index -1;
+        const question = questionnaire[index];
+        questionnaire[index]= questionnaire[predecessor];
+        questionnaire[predecessor]=question;
+        renderall();
+    }
+
+    function pushQuestionDown(index) {
+        saveInputs();
+        const predecessor = index +1;
+        const question = questionnaire[index];
+        questionnaire[index]= questionnaire[predecessor];
+        questionnaire[predecessor]=question;
+        renderall();
+
+    }
+
+</script>
+</body>
+</html>
