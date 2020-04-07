@@ -58,14 +58,17 @@ public class CourseController {
 
     @GetMapping("/1")
     public String welcome2 () {
-        surveyManagement.createSurvey();
         return "questioneditor";
     }
 
     @GetMapping("/2")
     public String welcome3 () {
-        surveyManagement.deleteSurvey();
         return "questioneditor2";
+    }
+
+    @GetMapping("/3")
+    public String welcome4(){
+        return "questioneditor3";
     }
 }
 
