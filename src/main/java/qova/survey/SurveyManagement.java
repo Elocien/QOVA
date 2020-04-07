@@ -15,18 +15,23 @@ public class SurveyManagement {
     
 
     //test attributes
-    private String questions;
+    private String questions = "lul";
+    private Long id = 2L;
     
 
     public SurveyManagement(SurveyRepository surveys){
         this.surveys = Objects.requireNonNull(surveys);
     }
 
-    // public Survey createSurvey(){
+    public void createSurvey(){
+        Survey n = new Survey();
+        n.setQuestions(questions);
+        surveys.save(n);
+    }
 
-    //     Survey testSurvey = new Survey(questions);
-
-    //     return surveys.save(new Survey(questions));
-    // }
+    public void deleteSurvey(){
+        surveys.deleteById(id);
+        id++;
+    }
    
 }
