@@ -12,26 +12,28 @@ import java.util.Objects;
 public class CourseManagement {
     
     private final CourseRepository courses;
-    // private final CourseRepository courses;
+
+    //test attributes
+    private Long id = 1L;
     
     @Autowired
     public CourseManagement(CourseRepository courses){
         this.courses = Objects.requireNonNull(courses);
     }
 
-    // public Course createCourse(){
-    //     // Objects.requireNonNull(form);
+    public void createCourse(){
+        Course n = new Course();
+        n.setName("testname");
+        n.setType(CourseType.LECTURE);
+        n.setClassTotal(10);
+        n.setSemester(6);
+        n.setFaculty(CourseFaculty.COMPUTER_SCIENCE);
+        courses.save(n);
+    }
 
-    //     var name = "test";
-    //     var type = CourseType.LECTURE;
-    //     var survey = null;
-    //     var classTotal = 2;
-    //     var semester = 5;
-    //     var faculty = CourseFaculty.COMPUTER_SCIENCE;
-
-
-
-    //     return coursesCRUD.save(new Course());
-    // }
+    public void deleteSurvey(){
+        courses.deleteById(id);
+        id++;
+    }
    
 }

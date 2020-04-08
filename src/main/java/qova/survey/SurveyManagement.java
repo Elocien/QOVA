@@ -15,8 +15,8 @@ public class SurveyManagement {
     
 
     //test attributes
-    private String questions = "lul";
-    private Long id = 2L;
+    private String[] questions = {"SurveyManagementTest1", "SurveyManagementTest2"};
+    private Long id = 1L;
     
 
     public SurveyManagement(SurveyRepository surveys){

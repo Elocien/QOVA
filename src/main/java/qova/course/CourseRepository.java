@@ -1,27 +1,13 @@
 package qova.course;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.jdbc.core.JdbcTemplate;
+import qova.course.Course;
+
 import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.CrudRepository;
 
 @Repository
-public class CourseRepository {
+public interface CourseRepository extends CrudRepository <Course, Long> {
    
-    @Autowired
-    JdbcTemplate jdbcTemplate;
-
-    public Course findById(long id) {
-
-        return jdbcTemplate.queryForObject("select * from Course where id=?", new Object[] {
-    
-                id
-    
-            },
-    
-            new BeanPropertyRowMapper < Course > (Course.class));
-    
-    }
 }
 
 

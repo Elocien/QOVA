@@ -4,6 +4,7 @@ import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,9 +41,8 @@ public class CourseController {
     }
 
     @PostMapping(path="/add") // Map ONLY POST Requests
-    public @ResponseBody String addNewSurvey (@RequestParam String questions) {
+    public @ResponseBody String addNewSurvey (@RequestParam String[] questions) {
         // @ResponseBody means the returned String is the response, not a view name
-        // @RequestParam means it is a parameter from the GET or POST request
 
         Survey n = new Survey();
         n.setQuestions(questions);
@@ -54,6 +54,18 @@ public class CourseController {
     public @ResponseBody Iterable<Survey> getAllSurveys() {
         // This returns a JSON or XML with the users
         return surveyRepository.findAll();
+    }
+
+    @GetMapping("/")
+    public String welcome () {
+        courseManagement.createCourse();
+        return "home";
+    }
+
+    @GetMapping("/courses")
+    public String courses (Model model) {
+        model.addAttribute("courseList", courseRepository.findAll());
+        return "courses";
     }
 
     @GetMapping("/1")
