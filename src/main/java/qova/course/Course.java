@@ -5,13 +5,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import qova.survey.Survey;
 
+// import java.awt.image.BufferedImage;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import qova.IdGenerator;
 
-import qova.survey.Survey;
 
 @Entity
 public class Course {
@@ -23,7 +24,7 @@ public class Course {
     private String name;
     private CourseType type;
 
-    //private ___ qrcode;
+    // private BufferedImage qrcode;
 
     @OneToOne
     private Survey survey;
@@ -53,8 +54,8 @@ public class Course {
     public Course(String name, CourseType type, Survey survey, int classTotal, int semester, CourseFaculty faculty){
         this.name = name;
         this.type = type;
-        //this.qrcode = qrcode
-        // this.survey = survey;
+        // this.qrcode = qrcode;
+        this.survey = survey;
         this.classTotal = classTotal;
         this.semester = semester;
         this.faculty=faculty;
@@ -80,13 +81,13 @@ public class Course {
         this.type = type;
     }
 
-    // public ___ getQrcode(){
+    // public BufferedImage getQrcode(){
     //    return this.qrcode
-    //}
+    // }
 
-    //public void setQrcode(___ qrcode){
+    // public void setQrcode(BufferedImage qrcode){
     //    this.qrcode = qrcode;
-    //}
+    // }
 
     public Survey getSurvey(){
         return this.survey;
@@ -122,7 +123,7 @@ public class Course {
 }
 
 
-
+//id generator for courses
 
 //@Id
 // @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_gen")

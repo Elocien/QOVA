@@ -40,22 +40,6 @@ public class CourseController {
 
     }
 
-    @PostMapping(path="/add") // Map ONLY POST Requests
-    public @ResponseBody String addNewSurvey (@RequestParam String[] questions) {
-        // @ResponseBody means the returned String is the response, not a view name
-
-        Survey n = new Survey();
-        n.setQuestions(questions);
-        surveyRepository.save(n);
-        return "Saved";
-    }
-
-    @GetMapping(path="/all")
-    public @ResponseBody Iterable<Survey> getAllSurveys() {
-        // This returns a JSON or XML with the users
-        return surveyRepository.findAll();
-    }
-
     @GetMapping("/")
     public String welcome () {
         courseManagement.createCourse();

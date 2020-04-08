@@ -13,14 +13,14 @@ public class Survey {
 
     private String[] questions;
 
-    // //Needed for JPA puposes
-    // @SuppressWarnings("unused")
-	// private Survey() {
-    // }
+    //Needed for JPA puposes
+    @SuppressWarnings("unused")
+	protected Survey() {
+    }
     
-    // public Survey(String questions){
-    //     this.questions = questions;
-    // }
+    public Survey(String[] questions){
+        this.questions = questions;
+    }
 
     public long getId(){
         return this.id;
