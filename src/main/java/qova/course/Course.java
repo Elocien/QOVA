@@ -1,5 +1,6 @@
 package qova.course;
 
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,7 +25,7 @@ public class Course {
     private String name;
     private CourseType type;
 
-    // private BufferedImage qrcode;
+
 
     @OneToOne
     private Survey survey;
@@ -54,7 +55,6 @@ public class Course {
     public Course(String name, CourseType type, Survey survey, int classTotal, int semester, CourseFaculty faculty){
         this.name = name;
         this.type = type;
-        // this.qrcode = qrcode;
         this.survey = survey;
         this.classTotal = classTotal;
         this.semester = semester;
@@ -80,14 +80,6 @@ public class Course {
     public void setType(CourseType type){
         this.type = type;
     }
-
-    // public BufferedImage getQrcode(){
-    //    return this.qrcode
-    // }
-
-    // public void setQrcode(BufferedImage qrcode){
-    //    this.qrcode = qrcode;
-    // }
 
     public Survey getSurvey(){
         return this.survey;

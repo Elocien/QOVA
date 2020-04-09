@@ -2,6 +2,7 @@ package qova.course;
 
 import java.util.Objects;
 
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -51,6 +52,31 @@ public class CourseController {
         model.addAttribute("courseList", courseRepository.findAll());
         return "courses";
     }
+
+    @GetMapping("/course/details")
+    public String courseDetails(Model model, @RequestParam(required = false) Long id) throws Exception{
+        
+        //redirect 
+        if (id == null) {
+			return "redirect:../courses";
+        }
+        
+        //fetch course and go to details if present
+        Optional<Course> course = courseRepository.findById(id);
+        if (course.isPresent()){
+            model.addAttribute("course", course.get());
+            model.addAttribute("qrcode", courseManagement.generateQRCode(course.get()));
+            return "courseDetails";
+        } else {
+			return "redirect:../courses";
+		}
+    }
+
+    @PostMapping("/courses/delete")
+	public String courseDelete(@RequestParam Long id) {
+		courseManagement.deleteCourse(id);
+		return "redirect:../courses";
+	}
 
     @GetMapping("/1")
     public String welcome2 () {
