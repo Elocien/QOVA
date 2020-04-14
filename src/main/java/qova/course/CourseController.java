@@ -3,10 +3,15 @@ package qova.course;
 import java.util.Objects;
 
 import java.util.Optional;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -43,7 +48,6 @@ public class CourseController {
 
     @GetMapping("/")
     public String welcome () {
-        courseManagement.createCourse();
         return "home";
     }
 
@@ -72,12 +76,43 @@ public class CourseController {
 		}
     }
 
+
+    
+    
+    
+    @GetMapping("course/create")
+	public String createCourse(Model model, CourseForm form) {
+
+		model.addAttribute("form", form);
+		return "courseCreate";
+	}
+
+	@PostMapping("course/create")
+	public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
+			BindingResult result) {
+
+
+		if (result.hasErrors()) {
+			return createCourse(model, form);
+		}
+
+		courseManagement.createCourse(form);
+		return "redirect:../courses";
+	}
+
+
+    
+    
     @PostMapping("/courses/delete")
 	public String courseDelete(@RequestParam Long id) {
 		courseManagement.deleteCourse(id);
 		return "redirect:../courses";
 	}
 
+    
+    
+    
+    
     @GetMapping("/1")
     public String welcome2 () {
         return "questioneditor";

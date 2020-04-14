@@ -13,11 +13,8 @@ public class CourseForm {
     @NotNull
     private CourseType type;
 
-    //@NotNull
-    //private ___ qrcode
-
-    @NotNull
-    private Survey survey;
+    private String[] questions = new String[20];
+    private Survey survey = new Survey(questions);
 
     @NotNull
     private int classTotal;
@@ -33,7 +30,6 @@ public class CourseForm {
     public CourseForm(String name, CourseType type, Survey survey, int classTotal, int semester, CourseFaculty faculty){
         this.name = name;
         this.type = type;
-        //this.qrcode = qrcode
         this.survey = survey;
         this.classTotal = classTotal;
         this.semester = semester;
@@ -48,15 +44,11 @@ public class CourseForm {
         return this.type;
     }
 
-    // public ___ getQrcode(){
-    //    return this.qrcode
-    //}
-
     public Survey getSurvey(){
         return this.survey;
     }
 
-    public int getAmount(){
+    public int getClassTotal(){
         return this.classTotal;
     }
 
