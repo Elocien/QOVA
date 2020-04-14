@@ -1,13 +1,11 @@
-package qova.course;
+package qova.survey;
 
-import qova.course.Course;
+import qova.survey.Survey;
 
 import org.springframework.stereotype.Repository;
 import org.springframework.data.repository.CrudRepository;
 
 @Repository
-public interface CourseRepository extends CrudRepository <Course, Long> {
+public interface SurveyRepository extends CrudRepository <Survey, Long> {
    
 }
-
-

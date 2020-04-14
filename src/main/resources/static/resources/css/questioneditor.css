@@ -1,0 +1,46 @@
+*{
+    box-sizing: border-box;
+}
+
+.column {
+    float: left;
+}
+.column.left {
+    width: 25%;
+    height: 100%;
+}
+
+.column.right {
+    width: 60%;
+}
+
+
+.Question.YesNo {
+    margin-top: 20px;
+    margin-bot: 20px;
+
+}
+
+.Textarea {
+}
+
+.Button {
+    background-color: #f44336;
+    float: right;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    text-align: center;
+    padding: 10px 15px;
+    margin-left: 10px ;
+}
+
+.Button.NewAnswer {
+    float: left;
+}
+
+.Button.NewQuestion {
+    float: left;
+    margin-left: 30px;
+    margin-top: 10px;
+}

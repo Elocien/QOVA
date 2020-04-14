@@ -1,21 +1,31 @@
 package qova.course;
 
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
+import qova.survey.Survey;
+
+// import java.awt.image.BufferedImage;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
+import qova.IdGenerator;
+
 
 @Entity
 public class Course {
 
-    private @Id @GeneratedValue(strategy = GenerationType.AUTO) long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     private String name;
     private CourseType type;
 
 
-    //private ___ qrcode;
 
     @OneToOne
     private Survey survey;
@@ -30,6 +40,8 @@ public class Course {
 	protected Course() {
     }
     
+
+    
     /**
      * Instance of a Course (meaning a Subject [DE Lehrveranstaltung])
      * 
@@ -43,14 +55,13 @@ public class Course {
     public Course(String name, CourseType type, Survey survey, int classTotal, int semester, CourseFaculty faculty){
         this.name = name;
         this.type = type;
-        //this.qrcode = qrcode
-        // this.survey = survey;
+        this.survey = survey;
         this.classTotal = classTotal;
         this.semester = semester;
         this.faculty=faculty;
     }
 
-    public long getId(){
+    public Long getId(){
         return this.id;
     }
 
@@ -70,14 +81,6 @@ public class Course {
         this.type = type;
     }
 
-    // public ___ getQrcode(){
-    //    return this.qrcode
-    //}
-
-    //public void setQrcode(___ qrcode){
-    //    this.qrcode = qrcode;
-    //}
-
     public Survey getSurvey(){
         return this.survey;
     }
@@ -86,11 +89,11 @@ public class Course {
         this.survey = survey;
     }
 
-    public int getAmount(){
+    public int getClassTotal(){
         return this.classTotal;
     }
 
-    public void setAmount(int classTotal){
+    public void setClassTotal(int classTotal){
         this.classTotal = classTotal;
     }
 
@@ -110,3 +113,17 @@ public class Course {
         this.faculty = faculty;
     }
 }
+
+
+//id generator for courses
+
+//@Id
+// @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_gen")
+// @GenericGenerator(
+//     name = "custom_gen", 
+//     strategy = "qova.IdGenerator", 
+//     parameters = {
+//         @Parameter(name = IdGenerator.INCREMENT_PARAM, value = "50"),
+//         @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "c"),
+//         @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
+// private String id;

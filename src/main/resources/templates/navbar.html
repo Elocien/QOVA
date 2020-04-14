@@ -28,13 +28,13 @@
             </a>
             <button class="btn btn-sm btn-outline-secondary" type="button"th:text="#{navbar.create}" th:href="@{/catalog}">Smaller button</button>
             <li class="nav-item">
-                <a class="nav-link" th:text="#{navbar.course}" th:href="@{/staff}" sec:authorize="hasRole('ADMIN')">Mitarbeiterverwaltung</a>
+                <a class="nav-link" th:text="#{navbar.course}" th:href="@{/courses}" <!--sec:authorize="hasRole('ADMIN')"-->>Mitarbeiterverwaltung</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:text="#{navbar.results}" th:href="@{/calendar}" sec:authorize="hasRole('TEILZEIT')">Kalender</a>
+                <a class="nav-link" th:text="#{navbar.results}" th:href="@{/results}" sec:authorize="hasRole('TEILZEIT')">Kalender</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" th:text="#{navbar.account}" th:href="@{/accounting}" sec:authorize="hasRole('ADMIN')">Abrechnung</a>
+                <a class="nav-link" th:text="#{navbar.account}" th:href="@{/account}" sec:authorize="hasRole('ADMIN')">Abrechnung</a>
             </li>
         </ul>
         <ul class="navbar-nav ml-auto">

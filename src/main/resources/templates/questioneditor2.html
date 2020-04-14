@@ -1,0 +1,171 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/questioneditor.css}" />
+    <title th:text="#{home.title}">TITLE</title>
+</head>
+<body>
+<div th:include="navbar"></div>
+<h1 id="Name">
+    Fragen für den Fragebogen
+</h1>
+<div class="column left">
+    <button class="Button NewQuestion" onclick="addYNQuestion()">Füge eine Ja-Nein-Frage hinzu</button>
+    <button class="Button NewQuestion" onclick="addYNQuestion()">Bla Bla Bla</button>
+    <button onclick="addYNQuestion()">Bla Bla Bla</button>
+    <button onclick="addYNQuestion()">Bla Bla Bla</button>
+    <button onclick="addYNQuestion()">Bla Bla Bla</button>
+</div>
+
+<div class="column right" id="questionnaire">
+
+</div>
+
+<script>
+    var count = 1;
+
+    function addYNQuestion(){
+            <!--All in one division-->
+            var x = document.createElement("DIV");
+            x.className = "Question YN";
+            x.setAttribute("id",count);
+
+            <!--Question-Count-->
+            var z = document.createElement("DIV");
+            z.className = "QuestionCount";
+            z.innerHTML=count+".";
+
+
+            <!--Buttons Delete-->
+            var btn_d = document.createElement("BUTTON");
+            btn_d.className = "Button Delete";
+            btn_d.innerHTML = "Delete Question";
+            btn_d.setAttribute("onclick","deleteQuestion("+ count+")");
+
+            <!-- Button to move upwards/downwards-->
+            if (count >1) {
+                var btn_up = document.createElement("Button");
+                btn_up.className = "Button UP";
+                btn_up.innerHTML = "Push Question Up";
+                btn_up.setAttribute("onclick","pushup("+count+")");
+
+            }
+            var btn_down = document.createElement("Button");
+            btn_down.className="Button DOWN";
+            btn_down.innerHTML="Push Question Down";
+            btn_down.setAttribute("onclick","pushdown("+(count-1)+")");
+            var questions = document.getElementById("questionnaire").children;
+            for (i=0; i<questions.length;i++){
+                var y = Number(questions[i].id);
+                if (y===count-1 ){
+                    if(checkQuestionsforBtnDown(questions[i].children)=== false) {
+                        questions[i].append(btn_down);
+                    }
+
+                }
+            }
+
+
+
+            <!--Textarea for the question input-->
+            var x1 = document.createElement("TEXTAREA");
+            var t1 = document.createTextNode("Fragentext");
+
+
+            x.appendChild(z);
+            x.appendChild(btn_d);
+            if (count>1){
+                x.appendChild(btn_up);
+            }
+            x1.append(t1);
+            x.appendChild(x1);
+            count +=1;
+
+            document.getElementById("questionnaire").appendChild(x);
+
+    }
+
+    function deleteQuestion(t) {
+        <!--Löschen der ausgewählten Frage -->
+        var questionlist = document.getElementsByClassName("Question");
+        for (i=0;i<questionlist.length;i++) {
+            var x = Number(questionlist[i].id);
+            if (x === t) {
+                questionlist[i].remove();
+                i -=1;
+                count -=1;
+                if (x === count){
+                    var children = questionlist[i].children;
+                    for (j =0;j<children.length;j++){
+                        if (children[j].className === "Button DOWN"){
+                            questionlist[i].removeChild(children[j]);
+                        }
+                    }
+                }
+            }
+            if (x > t) {
+                y = x - 1;
+                questionlist[i].id = y;
+                children = questionlist[i].children;
+                for (j = 0; j < children.length; j++) {
+                    if (children[j].className === "QuestionCount") {
+                        children[j].innerHTML = y + ".";
+                    }
+                    else if (children[j].className === "Button Delete") {
+                        children[j].setAttribute("onclick", "deleteQuestion(" + y + ")");
+                    }
+                    else if (y ===1 && children[j].className === "Button UP"){
+                        questionlist[i].removeChild(children[j]);
+                    }
+                    else if (children[j].className === "Button UP"){
+                        children[j].setAttribute("onclick","pushup("+y+")")
+                    }
+                    else if (children[j].className === "Button DOWN"){
+                        children[j].setAttribute("onclick","pushdown("+y+")")
+                    }
+                }
+
+            }
+
+        }
+    }
+
+    function checkQuestionsforBtnDown (t){
+        for (i2=0;i2<t.length;i2++){
+            if (t[i2].className === "Button DOWN"){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    function pushup(a){
+        swapposition((a-1),a);
+    }
+
+    function pushdown(a2){
+        swapposition(a2,(a2+1));
+    }
+
+    function swapposition(a3,a4){
+        debugger;
+        var copyquestion1 = document.getElementsByClassName("Question")[0];
+        var copyquestion2 = document.getElementsByClassName("Question")[1].cloneNode(true);
+        document.getElementById("questionnaire").appendChild(copyquestion1);
+        document.getElementsByClassName("Question")[1] = copyquestion1;
+        document.getElementsByClassName("Question")[0] = copyquestion2;
+
+
+    }
+
+
+</script>
+</body>
+</html>
