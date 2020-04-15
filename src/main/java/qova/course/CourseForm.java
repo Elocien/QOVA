@@ -3,7 +3,6 @@ package qova.course;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-import qova.survey.Survey;
 
 public class CourseForm {
 
@@ -13,9 +12,8 @@ public class CourseForm {
     @NotNull
     private CourseType type;
 
-    private String[] questions = new String[20];
-    private Survey survey = new Survey(questions);
-
+    private String[] survey = new String[100];
+    
     @NotNull
     private int classTotal;
 
@@ -27,7 +25,7 @@ public class CourseForm {
 
 
 
-    public CourseForm(String name, CourseType type, Survey survey, int classTotal, int semester, CourseFaculty faculty){
+    public CourseForm(String name, CourseType type, String[] survey, int classTotal, int semester, CourseFaculty faculty){
         this.name = name;
         this.type = type;
         this.survey = survey;
@@ -44,7 +42,7 @@ public class CourseForm {
         return this.type;
     }
 
-    public Survey getSurvey(){
+    public String[] getSurvey(){
         return this.survey;
     }
 

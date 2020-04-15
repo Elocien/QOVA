@@ -61,13 +61,13 @@ public class CourseManagement {
         }
     }
 
-    // public void updateCourseSurvey(Long id, SurveyForm form){
-    //     Optional<Course> crs = courses.findById(id);
-    //     if (crs.isPresent()){
-    //         Course course = crs.get();
-            
-    //     }
-    // }
+    public void updateCourseSurvey(Long id, CourseForm form){
+        Optional<Course> crs = courses.findById(id);
+        if (crs.isPresent()){
+            Course course = crs.get();
+            course.setSurvey(form.getSurvey());
+        }
+    }
     
     
     public static BufferedImage generateQRCode(Course course) throws Exception {

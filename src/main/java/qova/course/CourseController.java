@@ -16,20 +16,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import qova.survey.Survey;
-import qova.survey.SurveyManagement;
-import qova.survey.SurveyRepository;
-
 
 
 @Controller // This means that this class is a Controller
 public class CourseController {
 
-    @Autowired
-    private final SurveyRepository surveyRepository;
-
-    @Autowired
-    private final SurveyManagement surveyManagement;
 
     @Autowired
     private final CourseManagement courseManagement;
@@ -38,11 +29,9 @@ public class CourseController {
     private final CourseRepository courseRepository;
 
     @Autowired
-    CourseController(CourseManagement courseManagement, CourseRepository courseRepository, SurveyManagement surveyManagement, SurveyRepository surveyRepository) {
+    CourseController(CourseManagement courseManagement, CourseRepository courseRepository) {
         this.courseManagement = Objects.requireNonNull(courseManagement);
         this.courseRepository = Objects.requireNonNull(courseRepository);
-        this.surveyManagement = Objects.requireNonNull(surveyManagement);
-        this.surveyRepository = Objects.requireNonNull(surveyRepository);
 
     }
 

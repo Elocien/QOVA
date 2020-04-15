@@ -6,7 +6,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToOne;
-import qova.survey.Survey;
 
 // import java.awt.image.BufferedImage;
 
@@ -25,10 +24,7 @@ public class Course {
     private String name;
     private CourseType type;
 
-
-
-    @OneToOne
-    private Survey survey;
+    private String[] survey;
 
     private int classTotal;
     private int semester;
@@ -52,7 +48,7 @@ public class Course {
      * @param semester          What semester is the Subject taken by students
      * @param faculty           Enum defining which faculty the subject belongs to 
      */
-    public Course(String name, CourseType type, Survey survey, int classTotal, int semester, CourseFaculty faculty){
+    public Course(String name, CourseType type, String[] survey, int classTotal, int semester, CourseFaculty faculty){
         this.name = name;
         this.type = type;
         this.survey = survey;
@@ -81,11 +77,11 @@ public class Course {
         this.type = type;
     }
 
-    public Survey getSurvey(){
+    public String[] getSurvey(){
         return this.survey;
     }
 
-    public void setSurvey(Survey survey){
+    public void setSurvey(String[] survey){
         this.survey = survey;
     }
 

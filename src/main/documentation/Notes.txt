@@ -38,3 +38,10 @@ cd '/usr/mysql-test' ; perl mysql-test-run.pl
 IMPORTANT:      sudo systemctl start mariadb
 
 -------------------------------------------------
+
+
+medienzentrum@​tu-dresden.de
+
+internes Medizin projekt röder
+
+wegen server
