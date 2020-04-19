@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/questioneditor.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <title th:text="#{home.title}">TITLE</title>
 </head>
 <body>
@@ -19,6 +20,7 @@
 <div class="column left">
     <button class="Button NewQuestion" onclick="addYesNoQuestion()">Füge eine Ja-Nein-Frage hinzu</button>
     <button class="Button NewQuestion" onclick="addMultipleChoiceQuestion()">Füge eine Multiple Choice Frage hinzu</button>
+    <button class="Button NewQuestion" onclick="addFreeTextQuestion()">Füge eine Freitext Frage</button>
 </div>
 
 <div class="column right" id="questionnaire">
@@ -50,6 +52,17 @@
 
     }
 
+    function addFreeTextQuestion() {
+        saveInputs();
+        const freetextQuestion={
+            type: "FreeText",
+            question: "Frage",
+        };
+        questionnaire.push(freetextQuestion);
+        renderall();
+
+    }
+
 
     
     function renderall(){
@@ -73,6 +86,42 @@
             x1.defaultValue = value.question;
 
             x.appendChild(x1);
+
+            <!--Buttons Delete-->
+            x.appendChild(createButtonDelete(index));
+            <!--Button PushDown PushUp -->
+            if (index > 0) {
+                x.appendChild(createButtonUp(index));
+            }
+            <!-- array.lastChild === array[index]-->
+            if (index+1 !== array.length && array.length >1){
+                x.appendChild(createButtonDown(index));
+            }
+        }
+        else if (value.type ==="FreeText"){
+
+            <!--Create a html section for a YesNo-Question -->
+            x.className = "Question FreeText";
+            x.setAttribute("id",index);
+
+            <!--Textarea for the question input-->
+            const x1 = document.createElement("TEXTAREA");
+            x1.className = ("Textarea Question");
+            x1.defaultValue = value.question;
+
+            x.appendChild(x1);
+
+            <!--Buttons Delete-->
+            x.appendChild(createButtonDelete(index));
+            <!--Button PushDown PushUp -->
+            if (index > 0) {
+                x.appendChild(createButtonUp(index));
+            }
+            <!-- array.lastChild === array[index]-->
+            if (index+1 !== array.length && array.length >1){
+                x.appendChild(createButtonDown(index));
+            }
+
         }
         else if (value.type === "MultipleChoice"){
 
@@ -86,29 +135,35 @@
             x1.defaultValue = value.question;
             x.appendChild(x1);
 
+            <!--Buttons Delete-->
+            x.appendChild(createButtonDelete(index));
+            <!--Button PushDown PushUp -->
+            if (index > 0) {
+                x.appendChild(createButtonUp(index));
+            }
+            <!-- array.lastChild === array[index]-->
+            if (index+1 !== array.length && array.length >1){
+                x.appendChild(createButtonDown(index));
+            }
+
+            const answer_div = document.createElement("DIV");
+            answer_div.className = "Answer";
+            x.appendChild(answer_div);
+
             for ( let i =0;i<value.answers.length;i++){
                 const x2 =document.createElement("TEXTAREA");
                 x2.className = ("Textarea Answers");
                 x2.defaultValue = value.answers[i];
-                x.appendChild(x2);
+                x2.setAttribute("id",i.toString());
+                answer_div.appendChild(x2);
 
             }
 
             x.appendChild(createButtonnewAnswer(index));
 
-        }
 
-        <!--Buttons Delete-->
-        x.appendChild(createButtonDelete(index));
-        <!--Button PushDown PushUp -->
-        if (index > 0) {
-            x.appendChild(createButtonUp(index));
-        }
-        <!-- array.lastChild === array[index]-->
-        if (index+1 !== array.length && array.length >1){
-            x.appendChild(createButtonDown(index));
-        }
 
+        }
         document.getElementById("questionnaire").appendChild(x);
 
     }
@@ -122,10 +177,18 @@
     }
 
     function saveInputs() {
-        const textareas = document.getElementsByClassName("Textarea Question");
-        for (let i=0;i<textareas.length;i++){
-            const questionid = textareas[i].parentElement.id;
-            questionnaire[questionid].question = textareas[i].value;
+        const textareas_question = document.getElementsByClassName("Textarea Question");
+        for (let i=0;i<textareas_question.length;i++){
+            const questionid = textareas_question[i].parentElement.id;
+            questionnaire[questionid].question = textareas_question[i].value;
+
+        }
+
+        const textareas_answer = document.getElementsByClassName("Textarea Answers");
+        for (let i=0;i<textareas_answer.length;i++){
+            const questionid = textareas_answer[i].parentElement.parentElement.id;
+            const answerid = textareas_answer[i].id;
+            questionnaire[questionid].answers[answerid] = textareas_answer[i].value;
 
         }
 
@@ -133,8 +196,7 @@
 
     function createButtonDelete (index){
         const btn_d = document.createElement("BUTTON");
-        btn_d.className = "Button Delete";
-        btn_d.innerHTML = "Delete Question";
+        btn_d.className = "Button Delete fa fa-trash";
         btn_d.setAttribute("onclick","deleteQuestion("+ index+")");
         return btn_d;
 
@@ -142,16 +204,14 @@
 
     function createButtonUp(index) {
         const btn_up = document.createElement("Button");
-        btn_up.className = "Button UP";
-        btn_up.innerHTML = "Push Question Up";
+        btn_up.className = "Button UP fa fa-arrow-up";
         btn_up.setAttribute("onclick","pushQuestionUp("+index+")");
         return btn_up;
     }
 
     function createButtonDown(index) {
         const btn_down = document.createElement("Button");
-        btn_down.className="Button DOWN";
-        btn_down.innerHTML="Push Question Down";
+        btn_down.className="Button DOWN fa fa-arrow-down";
         btn_down.setAttribute("onclick","pushQuestionDown("+index+")");
         return btn_down;
 
@@ -161,6 +221,8 @@
         const btn_newAnswer = document.createElement("Button");
         btn_newAnswer.className="Button NewAnswer";
         btn_newAnswer.innerHTML="Add new Answer";
+        btn_newAnswer.setAttribute("onclick","addnewAnswer("+index+")");
+
         return btn_newAnswer;
     }
 
@@ -187,6 +249,12 @@
         questionnaire[predecessor]=question;
         renderall();
 
+    }
+
+    function addnewAnswer(index){
+        saveInputs();
+        questionnaire[index].answers.push("Answer");
+        renderall();
     }
 
 </script>
