@@ -141,12 +141,6 @@
             title.className = ("Title");
             x.appendChild(title);
 
-            <!--Textarea for the question input-->
-            const x1 = document.createElement("TEXTAREA");
-            x1.className = ("Textarea Question");
-            x1.defaultValue = value.question;
-
-            x.appendChild(x1);
 
             <!--Buttons Delete-->
             x.appendChild(createButtonDelete(index));
@@ -158,6 +152,12 @@
             if (index+1 !== array.length && array.length >1){
                 x.appendChild(createButtonDown(index));
             }
+            <!--Textarea for the question input-->
+            const x1 = document.createElement("TEXTAREA");
+            x1.className = ("Textarea Question");
+            x1.defaultValue = value.question;
+
+            x.appendChild(x1);
 
         }
         else if (value.type === "SingleChoice"){
@@ -171,11 +171,6 @@
             title.className = ("Title");
             x.appendChild(title);
 
-            <!--Textarea for the question input-->
-            const x1 = document.createElement("TEXTAREA");
-            x1.className = ("Textarea Question");
-            x1.defaultValue = value.question;
-            x.appendChild(x1);
 
             <!--Buttons Delete-->
             x.appendChild(createButtonDelete(index));
@@ -187,6 +182,12 @@
             if (index+1 !== array.length && array.length >1){
                 x.appendChild(createButtonDown(index));
             }
+
+            <!--Textarea for the question input-->
+            const x1 = document.createElement("TEXTAREA");
+            x1.className = ("Textarea Question");
+            x1.defaultValue = value.question;
+            x.appendChild(x1);
 
             const answer_div = document.createElement("DIV");
             answer_div.className = "Answer";
@@ -218,12 +219,6 @@
             title.className = ("Title");
             x.appendChild(title);
 
-            <!--Textarea for the question input-->
-            const x1 = document.createElement("TEXTAREA");
-            x1.className = ("Textarea Question");
-            x1.defaultValue = value.question;
-            x.appendChild(x1);
-
             <!--Buttons Delete-->
             x.appendChild(createButtonDelete(index));
             <!--Button PushDown PushUp -->
@@ -234,6 +229,12 @@
             if (index+1 !== array.length && array.length >1){
                 x.appendChild(createButtonDown(index));
             }
+
+            <!--Textarea for the question input-->
+            const x1 = document.createElement("TEXTAREA");
+            x1.className = ("Textarea Question");
+            x1.defaultValue = value.question;
+            x.appendChild(x1);
 
             const answer_div = document.createElement("DIV");
             answer_div.className = "Answer";
@@ -265,11 +266,6 @@
             title.className = ("Title");
             x.appendChild(title);
 
-            <!--Textarea for the question input-->
-            const x1 = document.createElement("TEXTAREA");
-            x1.className = ("Textarea Question");
-            x1.defaultValue = value.question;
-            x.appendChild(x1);
 
             <!--Buttons Delete-->
             x.appendChild(createButtonDelete(index));
@@ -281,6 +277,12 @@
             if (index+1 !== array.length && array.length >1){
                 x.appendChild(createButtonDown(index));
             }
+
+            <!--Textarea for the question input-->
+            const x1 = document.createElement("TEXTAREA");
+            x1.className = ("Textarea Question");
+            x1.defaultValue = value.question;
+            x.appendChild(x1);
 
             const answer_div = document.createElement("DIV");
             answer_div.className = "Answer";
