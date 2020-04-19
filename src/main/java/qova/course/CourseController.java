@@ -1,5 +1,6 @@
 package qova.course;
 
+import java.util.Base64;
 import java.util.Objects;
 
 import java.util.Optional;
@@ -7,15 +8,19 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.awt.image.BufferedImage;
 
 
 @Controller // This means that this class is a Controller
@@ -58,7 +63,11 @@ public class CourseController {
         Optional<Course> course = courseRepository.findById(id);
         if (course.isPresent()){
             model.addAttribute("course", course.get());
-            model.addAttribute("qrcode", courseManagement.generateQRCode(course.get()));
+
+
+            //send byte array to model
+            model.addAttribute("image", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage((course.get().getName()))));
+            
             return "courseDetails";
         } else {
 			return "redirect:../courses";
