@@ -45,8 +45,9 @@
 
 .Textarea.Question{
     width: 600px;
-    padding: 12px 20px;
+    padding: 5px 5px;
     margin: 15px 15px;
+    margin-bottom: 35px;
     border:none;
     border-radius: 0px;
     border-bottom: 2px solid black;
@@ -62,6 +63,14 @@
     border-bottom: 2px solid grey;
     height: 35px;
     min-height: 35px;
+}
+
+.Title {
+    color: gray;
+    margin-left: 20px;
+    margin-top: 8px;
+    width: 300px;
+    float: left;
 }
 
 .Button {

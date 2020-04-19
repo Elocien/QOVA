@@ -19,8 +19,10 @@
 </h1>
 <div class="column left">
     <button class="Button NewQuestion" onclick="addYesNoQuestion()">Füge eine Ja-Nein-Frage hinzu</button>
-    <button class="Button NewQuestion" onclick="addMultipleChoiceQuestion()">Füge eine Multiple Choice Frage hinzu</button>
-    <button class="Button NewQuestion" onclick="addFreeTextQuestion()">Füge eine Freitext Frage</button>
+    <button class="Button NewQuestion" onclick="addMultipleChoiceQuestion()">Füge eine Multiple-Choice-Frage hinzu</button>
+    <button class="Button NewQuestion" onclick="addFreeTextQuestion()">Füge eine Frei-Text-Frage</button>
+    <button class="Button NewQuestion" onclick="addSingleChoiceQuestion()">Füge eine Single-Choice-Frage hinzu</button>
+    <button class="Button NewQuestion" onclick="addDropDownQuestion()"> Füge eine DropDown-Frage hinzu</button>
 </div>
 
 <div class="column right" id="questionnaire">
@@ -52,6 +54,28 @@
 
     }
 
+    function addDropDownQuestion() {
+        saveInputs();
+        const dropdownQuestion = {
+            type: "DropDown",
+            question: "Frage",
+            answers: []
+        };
+        questionnaire.push(dropdownQuestion);
+        renderall();
+    }
+
+    function addSingleChoiceQuestion() {
+        saveInputs();
+        const singlechoiceQuestion = {
+            type: "SingleChoice",
+            question: "Frage",
+            answers: []
+        };
+        questionnaire.push(singlechoiceQuestion);
+        renderall();
+    }
+
     function addFreeTextQuestion() {
         saveInputs();
         const freetextQuestion={
@@ -80,12 +104,11 @@
             x.className = "Question YesNo";
             x.setAttribute("id",index);
 
-            <!--Textarea for the question input-->
-            const x1 = document.createElement("TEXTAREA");
-            x1.className = ("Textarea Question");
-            x1.defaultValue = value.question;
+            const title = document.createElement("DIV");
+            title.innerHTML = "Ja-Nein Frage";
+            title.className = ("Title");
+            x.appendChild(title);
 
-            x.appendChild(x1);
 
             <!--Buttons Delete-->
             x.appendChild(createButtonDelete(index));
@@ -97,6 +120,14 @@
             if (index+1 !== array.length && array.length >1){
                 x.appendChild(createButtonDown(index));
             }
+
+
+            <!--Textarea for the question input-->
+            const x1 = document.createElement("TEXTAREA");
+            x1.className = ("Textarea Question");
+            x1.defaultValue = value.question;
+            x.appendChild(x1);
+
         }
         else if (value.type ==="FreeText"){
 
@@ -104,6 +135,12 @@
             x.className = "Question FreeText";
             x.setAttribute("id",index);
 
+
+            const title = document.createElement("DIV");
+            title.innerHTML = "Frei-Text Frage";
+            title.className = ("Title");
+            x.appendChild(title);
+
             <!--Textarea for the question input-->
             const x1 = document.createElement("TEXTAREA");
             x1.className = ("Textarea Question");
@@ -123,11 +160,110 @@
             }
 
         }
+        else if (value.type === "SingleChoice"){
+
+            <!--Create a html section for a SingleChoice-Question -->
+            x.className = "Question SingleChoice";
+            x.setAttribute("id",index);
+
+            const title = document.createElement("DIV");
+            title.innerHTML = "Single-Choice Frage";
+            title.className = ("Title");
+            x.appendChild(title);
+
+            <!--Textarea for the question input-->
+            const x1 = document.createElement("TEXTAREA");
+            x1.className = ("Textarea Question");
+            x1.defaultValue = value.question;
+            x.appendChild(x1);
+
+            <!--Buttons Delete-->
+            x.appendChild(createButtonDelete(index));
+            <!--Button PushDown PushUp -->
+            if (index > 0) {
+                x.appendChild(createButtonUp(index));
+            }
+            <!-- array.lastChild === array[index]-->
+            if (index+1 !== array.length && array.length >1){
+                x.appendChild(createButtonDown(index));
+            }
+
+            const answer_div = document.createElement("DIV");
+            answer_div.className = "Answer";
+            x.appendChild(answer_div);
+
+            for ( let i =0;i<value.answers.length;i++){
+                const x2 =document.createElement("TEXTAREA");
+                x2.className = ("Textarea Answers");
+                x2.defaultValue = value.answers[i];
+                x2.setAttribute("id",i.toString());
+                answer_div.appendChild(x2);
+
+            }
+
+            x.appendChild(createButtonnewAnswer(index));
+
+
+
+        }
+
+        else if (value.type === "DropDown"){
+
+            <!--Create a html section for a DropDown-Question -->
+            x.className = "Question DropDown";
+            x.setAttribute("id",index);
+
+            const title = document.createElement("DIV");
+            title.innerHTML = "Drop-Down Frage";
+            title.className = ("Title");
+            x.appendChild(title);
+
+            <!--Textarea for the question input-->
+            const x1 = document.createElement("TEXTAREA");
+            x1.className = ("Textarea Question");
+            x1.defaultValue = value.question;
+            x.appendChild(x1);
+
+            <!--Buttons Delete-->
+            x.appendChild(createButtonDelete(index));
+            <!--Button PushDown PushUp -->
+            if (index > 0) {
+                x.appendChild(createButtonUp(index));
+            }
+            <!-- array.lastChild === array[index]-->
+            if (index+1 !== array.length && array.length >1){
+                x.appendChild(createButtonDown(index));
+            }
+
+            const answer_div = document.createElement("DIV");
+            answer_div.className = "Answer";
+            x.appendChild(answer_div);
+
+            for ( let i =0;i<value.answers.length;i++){
+                const x2 =document.createElement("TEXTAREA");
+                x2.className = ("Textarea Answers");
+                x2.defaultValue = value.answers[i];
+                x2.setAttribute("id",i.toString());
+                answer_div.appendChild(x2);
+
+            }
+
+            x.appendChild(createButtonnewAnswer(index));
+
+
+
+        }
+
         else if (value.type === "MultipleChoice"){
 
             <!--Create a html section for a MultipleChoice-Question -->
             x.className = "Question MultipleChoice";
             x.setAttribute("id",index);
+
+            const title = document.createElement("DIV");
+            title.innerHTML = "Multiple-Choice Frage";
+            title.className = ("Title");
+            x.appendChild(title);
 
             <!--Textarea for the question input-->
             const x1 = document.createElement("TEXTAREA");
