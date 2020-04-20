@@ -23,11 +23,13 @@
     <button class="Button NewQuestion" onclick="addFreeTextQuestion()">Füge eine Frei-Text-Frage</button>
     <button class="Button NewQuestion" onclick="addSingleChoiceQuestion()">Füge eine Single-Choice-Frage hinzu</button>
     <button class="Button NewQuestion" onclick="addDropDownQuestion()"> Füge eine DropDown-Frage hinzu</button>
+    <button class="Button NewQuestion" onclick="getJson()">Fragebogen abschicken</button>
+    <div class="Json" id="json"></div>
 </div>
 
 <div class="column right" id="questionnaire">
-
 </div>
+
 
 <script>
     const questionnaire = [];
@@ -83,6 +85,14 @@
             question: "Frage",
         };
         questionnaire.push(freetextQuestion);
+        renderall();
+
+    }
+
+    function getJson() {
+        debugger;
+        saveInputs();
+        document.getElementById("json").innerHTML= JSON.stringify(questionnaire);
         renderall();
 
     }
