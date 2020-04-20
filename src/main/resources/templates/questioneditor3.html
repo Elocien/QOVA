@@ -122,6 +122,8 @@
 
             <!--Buttons Delete-->
             x.appendChild(createButtonDelete(index));
+
+            x.appendChild(createButtonCopy(index));
             <!--Button PushDown PushUp -->
             if (index > 0) {
                 x.appendChild(createButtonUp(index));
@@ -154,6 +156,9 @@
 
             <!--Buttons Delete-->
             x.appendChild(createButtonDelete(index));
+
+            x.appendChild(createButtonCopy(index));
+
             <!--Button PushDown PushUp -->
             if (index > 0) {
                 x.appendChild(createButtonUp(index));
@@ -184,6 +189,9 @@
 
             <!--Buttons Delete-->
             x.appendChild(createButtonDelete(index));
+
+            x.appendChild(createButtonCopy(index));
+
             <!--Button PushDown PushUp -->
             if (index > 0) {
                 x.appendChild(createButtonUp(index));
@@ -231,6 +239,9 @@
 
             <!--Buttons Delete-->
             x.appendChild(createButtonDelete(index));
+
+            x.appendChild(createButtonCopy(index));
+
             <!--Button PushDown PushUp -->
             if (index > 0) {
                 x.appendChild(createButtonUp(index));
@@ -279,6 +290,9 @@
 
             <!--Buttons Delete-->
             x.appendChild(createButtonDelete(index));
+
+            x.appendChild(createButtonCopy(index));
+
             <!--Button PushDown PushUp -->
             if (index > 0) {
                 x.appendChild(createButtonUp(index));
@@ -403,6 +417,22 @@
         saveInputs();
         questionnaire[index].answers.push("Answer");
         renderall();
+    }
+
+    function createButtonCopy(index) {
+        const btn_copy = document.createElement("Button");
+        btn_copy.className="Button DOWN fa fa-clone";
+        btn_copy.setAttribute("onclick","copyQuestion("+index+")");
+        return btn_copy;
+
+    }
+
+    function copyQuestion(index) {
+        saveInputs();
+        questionnaire.push(questionnaire[index]);
+
+        renderall();
+
     }
 
 </script>
