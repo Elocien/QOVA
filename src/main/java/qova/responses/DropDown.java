@@ -27,6 +27,11 @@ public class DropDown{
     private Boolean answer3;
     private Boolean answer4;
     private Boolean answer5;
+    private Boolean answer6;
+    private Boolean answer7;
+    private Boolean answer8;
+    private Boolean answer9;
+    private Boolean answer10;
 
 
     //Needed for JPA puposes
@@ -34,7 +39,7 @@ public class DropDown{
 	private DropDown() {
     }
 
-    public DropDown(Date dateTime, Course course, int responsePossiblilites, Boolean answer1, Boolean answer2, Boolean answer3, Boolean answer4, Boolean answer5){
+    public DropDown(Date dateTime, Course course, int responsePossiblilites, Boolean answer1, Boolean answer2, Boolean answer3, Boolean answer4, Boolean answer5, Boolean answer6, Boolean answer7, Boolean answer8, Boolean answer9, Boolean answer10){
         this.dateTime = dateTime;
         this.course = course;
         this.responsePossiblilites = responsePossiblilites;
@@ -43,6 +48,11 @@ public class DropDown{
         this.answer1 = answer3;
         this.answer1 = answer4;
         this.answer1 = answer5;
+        this.answer1 = answer6;
+        this.answer1 = answer7;
+        this.answer1 = answer8;
+        this.answer1 = answer9;
+        this.answer1 = answer10;
     }
 
     public Date getDateTime(){
@@ -109,4 +119,46 @@ public class DropDown{
         this.answer5 = answer;
     }
 
+
+    public Boolean getAnswer6(){
+        return this.answer6;
+    }
+
+    public void setAnswer6(Boolean answer){
+        this.answer6 = answer;
+    }
+
+    public Boolean getAnswer7(){
+        return this.answer7;
+    }
+
+    public void setAnswer7(Boolean answer){
+        this.answer7 = answer;
+    }
+
+    public Boolean getAnswer8(){
+        return this.answer8;
+    }
+
+    public void setAnswer8(Boolean answer){
+        this.answer8 = answer;
+    }
+
+    public Boolean getAnswer9(){
+        return this.answer9;
+    }
+
+    public void setAnswer9(Boolean answer){
+        this.answer9 = answer;
+    }
+
+    public Boolean getAnswer10(){
+        return this.answer10;
+    }
+
+    public void setAnswer10(Boolean answer){
+        this.answer10 = answer;
+    }
+
+    
 }
