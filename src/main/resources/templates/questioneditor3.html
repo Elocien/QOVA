@@ -98,7 +98,7 @@
     }
 
 
-    
+
     function renderall(){
         clearquestionnaire();
         questionnaire.forEach(renderquestionnaireelement);
@@ -212,11 +212,15 @@
             x.appendChild(answer_div);
 
             for ( let i =0;i<value.answers.length;i++){
+                const answeroption = document.createElement("DIV");
+                answeroption.className= ("Answer Option");
                 const x2 =document.createElement("TEXTAREA");
                 x2.className = ("Textarea Answers");
                 x2.defaultValue = value.answers[i];
                 x2.setAttribute("id",i.toString());
-                answer_div.appendChild(x2);
+                answeroption.appendChild(x2);
+                answeroption.appendChild(createButtonDeleteAnswer(index,i));
+                answer_div.appendChild(answeroption);
 
             }
 
@@ -262,11 +266,15 @@
             x.appendChild(answer_div);
 
             for ( let i =0;i<value.answers.length;i++){
+                const answeroption = document.createElement("DIV");
+                answeroption.className= ("Answer Option");
                 const x2 =document.createElement("TEXTAREA");
                 x2.className = ("Textarea Answers");
                 x2.defaultValue = value.answers[i];
                 x2.setAttribute("id",i.toString());
-                answer_div.appendChild(x2);
+                answeroption.appendChild(x2);
+                answeroption.appendChild(createButtonDeleteAnswer(index,i));
+                answer_div.appendChild(answeroption);
 
             }
 
@@ -313,11 +321,15 @@
             x.appendChild(answer_div);
 
             for ( let i =0;i<value.answers.length;i++){
+                const answeroption = document.createElement("DIV");
+                answeroption.className= ("Answer Option");
                 const x2 =document.createElement("TEXTAREA");
                 x2.className = ("Textarea Answers");
                 x2.defaultValue = value.answers[i];
                 x2.setAttribute("id",i.toString());
-                answer_div.appendChild(x2);
+                answeroption.appendChild(x2);
+                answeroption.appendChild(createButtonDeleteAnswer(index,i));
+                answer_div.appendChild(answeroption);
 
             }
 
@@ -329,7 +341,7 @@
         document.getElementById("questionnaire").appendChild(x);
 
     }
-    
+
     function clearquestionnaire() {
         const questionnaire = document.getElementById("questionnaire");
         while (questionnaire.firstChild){
@@ -348,7 +360,7 @@
 
         const textareas_answer = document.getElementsByClassName("Textarea Answers");
         for (let i=0;i<textareas_answer.length;i++){
-            const questionid = textareas_answer[i].parentElement.parentElement.id;
+            const questionid = textareas_answer[i].parentElement.parentElement.parentElement.id;
             const answerid = textareas_answer[i].id;
             questionnaire[questionid].answers[answerid] = textareas_answer[i].value;
 
@@ -427,10 +439,23 @@
 
     }
 
+    function createButtonDeleteAnswer(index, answerindex) {
+        const btn_deleteAnswer = document.createElement("Button");
+        btn_deleteAnswer.className = "Button DeleteAnswer fa fa-times";
+        btn_deleteAnswer.setAttribute("onclick","deleteanswer("+index+","+answerindex+")");
+        return btn_deleteAnswer;
+    }
+
+    function deleteanswer(indexq,indexa) {
+        saveInputs();
+        questionnaire[indexq].answers.splice(indexa,1);
+        renderall();
+
+    }
+
     function copyQuestion(index) {
         saveInputs();
         questionnaire.push(questionnaire[index]);
-
         renderall();
 
     }
