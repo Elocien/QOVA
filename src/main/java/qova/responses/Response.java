@@ -12,7 +12,7 @@ import qova.course.Course;
 
 
 @Entity
-public class MultipleChoice{
+public class Response {
 
     private @Id @GeneratedValue(strategy = GenerationType.AUTO) long id;
 
@@ -21,7 +21,21 @@ public class MultipleChoice{
     @ManyToOne
     private Course course;
 
-    private int responsePossiblilites;
+    private ResponseType responseType;
+
+
+
+    //For text response
+    private String textResponse;
+
+
+    //For binary response
+    private Boolean binaryAnswer;    //---true--- if yes/ja      and       ---false--- if no/nein 
+
+
+
+    //For Drop Down and Multiple Choice
+    private int responsePossiblilites;  //defines how many responses were set by survey author
 
     private Boolean answer1;
     private Boolean answer2;
@@ -37,15 +51,32 @@ public class MultipleChoice{
 
     //Needed for JPA puposes
     @SuppressWarnings("unused")
-	private MultipleChoice() {
+	private Response() {
     }
 
-
-    public MultipleChoice(Date dateTime, Course course, int responsePossiblilites, Boolean answer1, Boolean answer2, Boolean answer3, Boolean answer4, Boolean answer5, 
-            Boolean answer6, Boolean answer7, Boolean answer8, Boolean answer9, Boolean answer10){
+    public Response(Date dateTime, Course course, int responsePossiblilites, ResponseType responseType, String textResponse, Boolean binaryAnswer, Boolean answer1, Boolean answer2, Boolean answer3, Boolean answer4, Boolean answer5, Boolean answer6, Boolean answer7, Boolean answer8, Boolean answer9, Boolean answer10){
         this.dateTime = dateTime;
         this.course = course;
-        
+        this.responseType = responseType;
+
+        //Text response
+        this.textResponse = textResponse;
+
+        //Binary repsonse
+        this.binaryAnswer = binaryAnswer;
+
+        //Drop down and Multiple Choice
+        this.responsePossiblilites = responsePossiblilites;
+        this.answer1 = answer1;
+        this.answer1 = answer2;
+        this.answer1 = answer3;
+        this.answer1 = answer4;
+        this.answer1 = answer5;
+        this.answer1 = answer6;
+        this.answer1 = answer7;
+        this.answer1 = answer8;
+        this.answer1 = answer9;
+        this.answer1 = answer10;
     }
 
     public Date getDateTime(){
@@ -64,6 +95,51 @@ public class MultipleChoice{
         this.course = course;
     }
 
+    public ResponseType getResponseType(){
+        return this.responseType;
+    }
+
+    public void setResponseType(ResponseType type){
+        this.responseType = type;
+    }
+
+
+
+
+
+    //Text response
+    public String gettextResponse(){
+        return this.textResponse;
+    }
+
+    public void settextResponse(String response){
+        this.textResponse = response;
+    }
+
+
+
+
+
+
+    
+    
+    //Binary response
+    public Boolean getBinaryAnswer(){
+        return this.binaryAnswer;
+    }
+
+    public void setBinaryAnswer(Boolean answer){
+        this.binaryAnswer = answer;
+    }
+
+
+
+
+
+
+
+
+    //Drop Down and Multiple Choice
     public int getResponsePossibilities(){
         return this.responsePossiblilites;
     }
@@ -112,6 +188,7 @@ public class MultipleChoice{
         this.answer5 = answer;
     }
 
+
     public Boolean getAnswer6(){
         return this.answer6;
     }
@@ -151,7 +228,5 @@ public class MultipleChoice{
     public void setAnswer10(Boolean answer){
         this.answer10 = answer;
     }
-    
-
 
 }
