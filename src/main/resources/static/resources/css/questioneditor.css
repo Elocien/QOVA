@@ -11,77 +11,17 @@
 }
 
 .column.right {
-    display: flex;
-    flex-direction: column;
-    width: 900px;
-    margin:auto;
-}
-
-.Question {
-    border: 1px solid #dadce0;
-    border-radius: 8px;
-    margin-top: 20px;
+    width: 60%;
 }
 
 
 .Question.YesNo {
-}
+    margin-top: 20px;
+    margin-bot: 20px;
 
-.Question.MultipleChoice{
-}
-
-
-.Answer {
-    width: 850px;
-    display: flex;
-    flex-direction: column;
-    margin-left: 40px;
-}
-
-.Answer.Option {
-    display: initial;
-    margin-left: 0px;
-}
-
-.Answer.Option:hover Button.ButtonAnswer {
-    display: block;
 }
 
 .Textarea {
-    float: left;
-    resize: vertical;
-    min-height: 40px;
-}
-
-.Textarea.Question{
-    width: 600px;
-    padding: 5px 5px;
-    margin: 15px 15px;
-    margin-bottom: 35px;
-    border:none;
-    border-radius: 0px;
-    border-bottom: 2px solid black;
-    height: 75px;
-}
-
-.Textarea.Answers {
-    width: 480px;
-    padding: 3px 10px;
-    margin: 5px 5px;
-    border:none;
-    border-radius: 0px;
-    border-bottom: 2px solid grey;
-    height: 35px;
-    min-height: 35px;
-    float: left;
-}
-
-.Title {
-    color: gray;
-    margin-left: 20px;
-    margin-top: 8px;
-    width: 300px;
-    float: left;
 }
 
 .Button {
@@ -92,19 +32,11 @@
     color: white;
     text-align: center;
     padding: 10px 15px;
-    margin-right: 8px ;
-    margin-top: 8px;
-}
-
-.Button:hover{
-    opacity: 0.7;
+    margin-left: 10px ;
 }
 
 .Button.NewAnswer {
     float: left;
-    margin-left: 43px;
-    margin-bottom: 15px;
-
 }
 
 .Button.NewQuestion {
@@ -112,17 +44,3 @@
     margin-left: 30px;
     margin-top: 10px;
 }
-
-.Button.ButtonAnswer {
-    display: none;
-    float: left;
-    margin-left: 20px;
-    color: #f44336;
-    background-color: transparent;
-    border: none;
-    padding: 0;
-    padding-top: 5px;
-    font-size: 25px;
-
-}
-

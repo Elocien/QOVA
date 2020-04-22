@@ -2,51 +2,53 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="icon" type="image/png" sizes="32x32" th:href="@{/resources/images/favicon-32.png}">
+
     <!-- JavaScript and jQuery added -->
     <script th:src="@{/resources/jsbootstrap/jquerymin.js}" src="../static/resources/jsbootstrap/jquerymin.js" type="text/javascript"></script>
     <script th:src="@{/resources/jsbootstrap/bootstrapmin.js}" src="../static/resources/jsbootstrap/bootstrapmin.js" type="text/javascript"></script>
 
     <!-- Bootstrap CSS -->
-    <link th:href="@{/resources/css/bootstrap.css}" rel="stylesheet"
-          href="../static/resources/css/bootstrap.css" type="text/css"/>
-    <link rel="stylesheet" th:href="@{/resources/font-awesome/css/all.min.css}" href="../static/resources/font-awesome/css/all.min.css">
-    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/navigation.css}"  href="../static/resources/css/navigation.css" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}"/>
+
 </head>
+
 <body>
-<nav th:fragment="navigation" class="navbar navbar-expand-lg navbar-light bg-light">
-    <button class="navbar-toggler navbar-dark" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav mr-auto">
-            <a class="navbar-brand" href="#">
-                <img th:src="@{/resources/img/qova_logo.png}" alt="">
-            </a>
-            <button class="btn btn-sm btn-outline-secondary" type="button"th:text="#{navbar.create}" th:href="@{/catalog}">Smaller button</button>
-            <li class="nav-item">
-                <a class="nav-link" th:text="#{navbar.course}" th:href="@{/courses}" <!--sec:authorize="hasRole('ADMIN')"-->>Mitarbeiterverwaltung</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:text="#{navbar.results}" th:href="@{/results}" sec:authorize="hasRole('TEILZEIT')">Kalender</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:text="#{navbar.account}" th:href="@{/account}" sec:authorize="hasRole('ADMIN')">Abrechnung</a>
-            </li>
-        </ul>
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item" sec:authorize="isAnonymous()"><a class="btn btn-outline-secondary" id="loginbtn" href="login.html" th:text="#{navbar.login}" th:href="@{/login}">Login</a></li>
-            <!-- <li class="nav-item" sec:authorize="isAuthenticated()">
-                <form action="#" id ="logoutForm" th:action="@{/logout}" method="post">
-                    <button class="btn btn-outline-danger" id="logoutbtn" type="submit"><span class="fas fa-sign-out-alt"></span>Ausloggen</button>
-                    <a href="#" onclick="document.getElementById('logoutForm').submit()">Ausloggen</a>
-                </form>
-            </li> -->
-        </ul>
+<nav th:fragment="navigation">
+    <div class="navbar navbar-expand-lg">
+
+        <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
+            <ul class="navbar-nav mr-auto">
+                <a class="navbar-brand" href="/"><img class="nav-bar-icon" src="https://cdn.discordapp.com/attachments/599967045219647492/702526899917815868/qova_logo.png" alt="Logo"/></a>
+                <!--<li class="nav-item"><a class="nav-link disabled">QOVA</a></li>-->
+            </ul>
+        </div>
+
+        <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
+            <ul class="navbar-nav ml-auto">
+                
+                <li class="nav-item"><a class="nav-link link_to_page" th:text="#{navbar.course_managment}" th:href="@{/courses}" <!--sec:authorize="hasRole('ADMIN')"-->>course managment</a></li>
+
+                <li class="nav-item"><a class="nav-link link_to_page" th:text="#{navbar.results}" th:href="@{/results}" sec:authorize="hasRole('TEILZEIT')">survey results</a></li>
+
+                <li class="nav-item"><a class="nav-link link_to_page" th:text="#{navbar.account}" th:href="@{/account}" sec:authorize="hasRole('ADMIN')">accounting</a></li>
+
+                <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link link_to_page" id="loginbtn" href="login.html" th:text="#{navbar.login}" th:href="@{/login}">Login</a></li>
+                <!-- <li class="nav-item" sec:authorize="isAuthenticated()">
+                    <form action="#" id ="logoutForm" th:action="@{/logout}" method="post">
+                        <button class="btn btn-outline-danger" id="logoutbtn" type="submit"><span class="fas fa-sign-out-alt"></span>Ausloggen</button>
+                        <a href="#" onclick="document.getElementById('logoutForm').submit()">Ausloggen</a>
+                    </form>
+                </li> -->
+            </ul>
+        </div>
+
     </div>
 </nav>
 </body>
+
 </html>
