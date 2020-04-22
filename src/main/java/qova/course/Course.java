@@ -16,9 +16,19 @@ import qova.IdGenerator;
 @Entity
 public class Course {
 
+ 
+
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_gen")
+    @GenericGenerator(
+        name = "custom_gen", 
+        strategy = "qova.IdGenerator", 
+        parameters = {
+            @Parameter(name = IdGenerator.INCREMENT_PARAM, value = "113"),
+            @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "c"),
+            @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%015d") })
+    private String id;
 
     private String name;
     private CourseType type;
@@ -56,7 +66,7 @@ public class Course {
         this.faculty=faculty;
     }
 
-    public Long getId(){
+    public String getId(){
         return this.id;
     }
 
@@ -109,16 +119,3 @@ public class Course {
     }
 }
 
-
-//id generator for courses
-
-//@Id
-// @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_gen")
-// @GenericGenerator(
-//     name = "custom_gen", 
-//     strategy = "qova.IdGenerator", 
-//     parameters = {
-//         @Parameter(name = IdGenerator.INCREMENT_PARAM, value = "50"),
-//         @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "c"),
-//         @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
-// private String id;

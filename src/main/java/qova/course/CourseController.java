@@ -47,7 +47,7 @@ public class CourseController {
     }
 
     @GetMapping("/course/details")
-    public String courseDetails(Model model, @RequestParam(required = false) Long id) throws Exception{
+    public String courseDetails(Model model, @RequestParam(required = false) String id) throws Exception{
         
         //redirect 
         if (id == null) {
@@ -97,7 +97,7 @@ public class CourseController {
     
     
     @PostMapping("/courses/delete")
-	public String courseDelete(@RequestParam Long id) {
+	public String courseDelete(@RequestParam String id) {
 		courseManagement.deleteCourse(id);
 		return "redirect:../courses";
 	}
@@ -119,6 +119,18 @@ public class CourseController {
     @GetMapping("/3")
     public String welcome4(){
         return "questioneditor3";
+    }
+
+
+
+
+
+
+
+    @GetMapping("/create")
+    public String createTest(){
+        courseManagement.TestCreateCourse();
+        return "home";
     }
 }
 

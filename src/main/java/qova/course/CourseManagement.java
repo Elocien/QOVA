@@ -11,11 +11,8 @@ import com.google.zxing.qrcode.QRCodeWriter;
 
 import javax.transaction.Transactional;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -24,9 +21,6 @@ import java.util.Optional;
 public class CourseManagement {
 
     private final CourseRepository courses;
-
-    // test attributes
-    private Long id = 1L;
 
     @Autowired
     public CourseManagement(CourseRepository courses) {
@@ -47,11 +41,11 @@ public class CourseManagement {
     }
 
 
-    public void deleteCourse(Long id) {
+    public void deleteCourse(String id) {
         courses.deleteById(id);
     }
 
-    public void updateCourseDetails(Long id, CourseForm form){
+    public void updateCourseDetails(String id, CourseForm form){
         Optional<Course> crs = courses.findById(id);
         if (crs.isPresent()){
             Course course = crs.get();
@@ -64,23 +58,13 @@ public class CourseManagement {
         }
     }
 
-    public void updateCourseSurvey(Long id, CourseForm form){
+    public void updateCourseSurvey(String id, CourseForm form){
         Optional<Course> crs = courses.findById(id);
         if (crs.isPresent()){
             Course course = crs.get();
             course.setSurvey(form.getSurvey());
         }
     }
-    
-    
-    //baeldung version 
-
-    // public static BufferedImage generateQRCode(String barcodeText) throws Exception {
-    //     QRCodeWriter barcodeWriter = new QRCodeWriter();
-    //     BitMatrix bitMatrix = barcodeWriter.encode(barcodeText, BarcodeFormat.QR_CODE, 200, 200);
-     
-    //     return MatrixToImageWriter.toBufferedImage(bitMatrix);
-    // }
 
 
     //callicoder version
@@ -93,5 +77,17 @@ public class CourseManagement {
         MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream);
         byte[] pngData = pngOutputStream.toByteArray(); 
         return pngData;
+    }
+
+
+    public void TestCreateCourse(){
+        var name = "test";
+        var type = CourseType.LECTURE;
+        String[] survey = {"test 1, test 2"};
+        var classTotal = 10;
+        var semester = 3;
+        var faculty = CourseFaculty.CHEMISTRY;
+
+        courses.save(new Course(name, type, survey, classTotal, semester, faculty));
     }
 }
