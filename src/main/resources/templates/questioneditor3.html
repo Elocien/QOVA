@@ -219,8 +219,15 @@
                 x2.defaultValue = value.answers[i];
                 x2.setAttribute("id",i.toString());
                 answeroption.appendChild(x2);
+                if (i > 0) {
+                    answeroption.appendChild(createButtonUpAnswer(index,i));
+                }
+                if (i+1 !== value.answers.length && value.answers.length >1){
+                    answeroption.appendChild(createButtonDownAnswer(index,i));
+                }
                 answeroption.appendChild(createButtonDeleteAnswer(index,i));
                 answer_div.appendChild(answeroption);
+
 
             }
 
@@ -273,6 +280,12 @@
                 x2.defaultValue = value.answers[i];
                 x2.setAttribute("id",i.toString());
                 answeroption.appendChild(x2);
+                if (i > 0) {
+                    answeroption.appendChild(createButtonUpAnswer(index,i));
+                }
+                if (i+1 !== value.answers.length && value.answers.length >1){
+                    answeroption.appendChild(createButtonDownAnswer(index,i));
+                }
                 answeroption.appendChild(createButtonDeleteAnswer(index,i));
                 answer_div.appendChild(answeroption);
 
@@ -328,6 +341,12 @@
                 x2.defaultValue = value.answers[i];
                 x2.setAttribute("id",i.toString());
                 answeroption.appendChild(x2);
+                if (i > 0) {
+                    answeroption.appendChild(createButtonUpAnswer(index,i));
+                }
+                if (i+1 !== value.answers.length && value.answers.length >1){
+                    answeroption.appendChild(createButtonDownAnswer(index,i));
+                }
                 answeroption.appendChild(createButtonDeleteAnswer(index,i));
                 answer_div.appendChild(answeroption);
 
@@ -441,9 +460,44 @@
 
     function createButtonDeleteAnswer(index, answerindex) {
         const btn_deleteAnswer = document.createElement("Button");
-        btn_deleteAnswer.className = "Button DeleteAnswer fa fa-times";
+        btn_deleteAnswer.className = "Button ButtonAnswer fa fa-times";
         btn_deleteAnswer.setAttribute("onclick","deleteanswer("+index+","+answerindex+")");
         return btn_deleteAnswer;
+    }
+
+    function createButtonUpAnswer(index,answerindex){
+        const btn_upAnswer = document.createElement("Button");
+        btn_upAnswer.className = "Button ButtonAnswer fa fa-arrow-up";
+        btn_upAnswer.setAttribute("onclick", "pushAnswerup("+index+","+answerindex+")");
+        return btn_upAnswer;
+    }
+
+    function pushAnswerup(q_index, a_index) {
+        saveInputs();
+        swapAnswer(q_index,(a_index-1),a_index);
+        renderall();
+
+    }
+
+
+    function createButtonDownAnswer(index,answerindex){
+        const btn_downAnswer = document.createElement("Button");
+        btn_downAnswer.className = "Button ButtonAnswer fa fa-arrow-down";
+        btn_downAnswer.setAttribute("onclick", "pushAnswerdown("+index+","+answerindex+")");
+        return btn_downAnswer;
+    }
+
+    function pushAnswerdown(q_index, a_index) {
+        saveInputs();
+        swapAnswer(q_index, a_index, (a_index+1));
+        renderall();
+
+    }
+
+    function swapAnswer (q_index, a1_index, a2_index){
+        const predecessor = questionnaire[q_index].answers[a1_index];
+        questionnaire[q_index].answers[a1_index]= questionnaire[q_index].answers[a2_index];
+        questionnaire[q_index].answers[a2_index] =predecessor;
     }
 
     function deleteanswer(indexq,indexa) {
