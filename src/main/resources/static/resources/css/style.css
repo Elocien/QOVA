@@ -3,6 +3,10 @@ body {
   --tu_blue_highlight: #274275;
 }
 
+.page-footer {
+  background-color: var(--tu_blue);
+}
+
 .navbar {
   background-color: var(--tu_blue);
   z-index: 9999;
@@ -42,4 +46,20 @@ body {
 .link_to_page:hover {
   color:#98b1e3;
   transition: 0.5s;
+}
+
+.fancy_text {
+  font-size: xx-large;
+  letter-spacing: 0.4rem;
+  line-height: 3rem;
+  text-decoration: left;
+}
+
+.banner {
+  background: url(https://img.freepik.com/free-vector/seamless-pattern_1159-5086.jpg?size=626&ext=jpg);
+  background-size: 300px 300px;
+}
+
+.about_text {
+  background-color: rgba(100, 100, 100, 0.9);
 }

@@ -23,7 +23,7 @@
 
         <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
             <ul class="navbar-nav mr-auto">
-                <a class="navbar-brand" href="/"><img class="nav-bar-icon" src="https://cdn.discordapp.com/attachments/599967045219647492/702526899917815868/qova_logo.png" alt="Logo"/></a>
+                <a class="navbar-brand" href="/"><img class="nav-bar-icon" th:src="@{resources/images/qova_logo.png}" src="../static/images/qova_logo.png" alt="Logo"/></a>
                 <!--<li class="nav-item"><a class="nav-link disabled">QOVA</a></li>-->
             </ul>
         </div>
@@ -37,7 +37,7 @@
 
                 <li class="nav-item"><a class="nav-link link_to_page" th:text="#{navbar.account}" th:href="@{/account}" sec:authorize="hasRole('ADMIN')">accounting</a></li>
 
-                <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link link_to_page" id="loginbtn" href="login.html" th:text="#{navbar.login}" th:href="@{/login}">Login</a></li>
+                <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link link_to_page" id="loginbtn" href="login.html" th:text="#{home.login}" th:href="@{/login}">Login</a></li>
                 <!-- <li class="nav-item" sec:authorize="isAuthenticated()">
                     <form action="#" id ="logoutForm" th:action="@{/logout}" method="post">
                         <button class="btn btn-outline-danger" id="logoutbtn" type="submit"><span class="fas fa-sign-out-alt"></span>Ausloggen</button>

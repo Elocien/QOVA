@@ -1,61 +1,72 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
-	<head>
-		<meta charset="utf-8">
-    	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-    	<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-		<link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}" />
-		<link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />	
-		<link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />		
-		<title th:text="#{home.title}">TITLE</title>
-    </head>
-    <body>
-	<div th:include="navbar"></div>
-	<div class="container-fluid">
-		<div class="p-3 mb-2 bg-dark text-white">
-			<div class="container w-100 h-100 ">
-				<div class="row justify-content-center align-items-center h-100">
-				 	<div class="card mb-4">
-					 	<div class="card-header">
-							<font color="#727272"> 
-								<h3 th:text="#{home.login}">TITLE</h3>
-							</font>
-					 	</div>
-					 	<div class="card-body">
-							 <form class="form" method="post" th:action="@{/login}">
-								<div class="form-group">
-									<font color="#727272"> 
-										<label for="username" th:text="#{home.email}">MAIL</label>
-										<input id="username" name="username" type="text" class="form-control" required />
-									</font>
-								</div>
-								<div class="form-group">
-									<font color="#727272"> 
-										<label for="password" th:text="#{home.password}">PASSWORD</label>
-										<input id="password" name="password" type="password" class="form-control" required />
-									</font>
-								</div>
-							 	<button type="submit" class="btn btn-primary btn-lg float-right" th:text="#{home.login}">LOGIN</button>
-						 	</form>
-					 	</div>
-					</div>
-			 	</div>
-		 	</div>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />	
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />		
+	<title th:text="#{home.title}">TITLE</title>
+</head>
+<body class="banner">
+<div th:include="navbar"></div>
+<div class="container-fluid">
+
+	<div class="row justify-content-end align-items-center p-5">
+		<div class="col"></div>
+		<div class="col">
+			<ul class="fancy_text list-unstyled">
+				<li><b>Q</b>uality</li>
+				<li><b>O</b>peration</li>
+				<li><b>V</b>erification</li>
+				<li><b>A</b>briviation</li>
+			</ul>
+		</div>
+		<div class="col"></div>
+		<!--Login-Window-->
+		<div class="col">
+			<div class="card">
+				<div class="card-header">
+					<h3 th:text="#{home.login}">TITLE</h3>
+				</div>
+				<div class="card-body">
+						<form class="form" method="post" th:action="@{/login}">
+						<div class="form-group">
+							<label for="username" th:text="#{home.email}">MAIL</label>
+							<input id="username" name="username" type="text" class="form-control" required />
+						</div>
+						<div class="form-group">
+							<label for="password" th:text="#{home.password}">PASSWORD</label>
+							<input id="password" name="password" type="password" class="form-control" required />
+						</div>
+						<button type="submit" class="btn btn-primary btn-lg float-right" th:text="#{home.login}">LOGIN</button>
+					</form>
+				</div>
+			</div>
 		</div>
 	</div>
-	<img src="../static/images/index.jpg" width="220px" height="70px" th:src="@{resources/images/logo.jpg}"/> 
-	<h1 id="Name">
-		Jakob sucks
-	</h1>
-	<h1 id="Attribut">
-		Really Bad
-	</h1>
-	<button onclick="document.getElementById('Name').innerHTML=thetruth()">Tell me the Truth</button>
-	<script>
-	function thetruth(){
-		return "Lucian sucks";
-	}
-	</script>
-    </body>
+
+	<div class="row about_text justify-content-center p-1">
+		<div class="col col-6 pt-3">
+			<h1>About us:</h1>
+			<p>
+				Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Fringilla ut morbi tincidunt augue interdum velit euismod in pellentesque. Sollicitudin tempor id eu nisl. Dictumst vestibulum rhoncus est pellentesque elit ullamcorper. Elit ullamcorper dignissim cras tincidunt lobortis feugiat. Urna nunc id cursus metus. Mattis ullamcorper velit sed ullamcorper morbi. Non consectetur a erat nam. Tristique senectus et netus et malesuada fames ac. Lacus sed viverra tellus in hac habitasse platea dictumst vestibulum. Turpis nunc eget lorem dolor sed viverra ipsum nunc. Tristique senectus et netus et. Sed turpis tincidunt id aliquet risus feugiat in. Turpis egestas maecenas pharetra convallis posuere morbi leo. Leo vel orci porta non pulvinar neque. Viverra tellus in hac habitasse platea dictumst vestibulum. Aliquet eget sit amet tellus cras adipiscing enim. Varius quam quisque id diam vel quam elementum. Vitae semper quis lectus nulla at volutpat diam ut venenatis.</br>
+				Ultricies lacus sed turpis tincidunt id aliquet risus feugiat in. At tellus at urna condimentum mattis. Massa tempor nec feugiat nisl pretium fusce id velit. Amet consectetur adipiscing elit ut aliquam. Vulputate enim nulla aliquet porttitor lacus. Pharetra sit amet aliquam id diam maecenas ultricies mi eget. Sagittis orci a scelerisque purus. Fermentum et sollicitudin ac orci phasellus egestas tellus rutrum. Sapien et ligula ullamcorper malesuada proin libero nunc consequat. Mus mauris vitae ultricies leo integer malesuada. Nunc scelerisque viverra mauris in aliquam sem. Vulputate odio ut enim blandit volutpat. Diam donec adipiscing tristique risus nec feugiat in. Quis risus sed vulputate odio ut enim blandit volutpat maecenas. Ornare suspendisse sed nisi lacus. Vulputate sapien nec sagittis aliquam malesuada bibendum arcu. Magna etiam tempor orci eu lobortis elementum nibh. Tempor nec feugiat nisl pretium fusce. Nulla pellentesque dignissim enim sit.</br>
+				Ullamcorper velit sed ullamcorper morbi tincidunt ornare massa eget. Lectus magna fringilla urna porttitor rhoncus dolor purus non. Quam id leo in vitae turpis massa sed elementum tempus. Consectetur libero id faucibus nisl. Ornare quam viverra orci sagittis eu volutpat odio facilisis. Porta lorem mollis aliquam ut porttitor leo. Vel turpis nunc eget lorem dolor sed. Porttitor massa id neque aliquam. Lacus laoreet non curabitur gravida arcu ac. Auctor augue mauris augue neque gravida in. Augue neque gravida in fermentum et. Tempor id eu nisl nunc mi. Sem et tortor consequat id. Consequat mauris nunc congue nisi vitae suscipit tellus mauris. Senectus et netus et malesuada fames ac turpis egestas.</br>
+				Tempor commodo ullamcorper a lacus vestibulum. Tristique et egestas quis ipsum suspendisse ultrices gravida. Sed felis eget velit aliquet. Elementum sagittis vitae et leo duis. Mauris commodo quis imperdiet massa tincidunt. Bibendum neque egestas congue quisque egestas diam in arcu. Fames ac turpis egestas maecenas pharetra convallis posuere. Venenatis lectus magna fringilla urna porttitor rhoncus dolor purus. Amet nulla facilisi morbi tempus iaculis urna id volutpat. Facilisi morbi tempus iaculis urna. Elit scelerisque mauris pellentesque pulvinar pellentesque habitant morbi tristique senectus. Scelerisque in dictum non consectetur a. Sed turpis tincidunt id aliquet. Ut sem viverra aliquet eget sit amet tellus cras adipiscing. Facilisis volutpat est velit egestas dui. Odio ut enim blandit volutpat maecenas. Faucibus purus in massa tempor nec feugiat nisl.</br>
+				Viverra mauris in aliquam sem. In hac habitasse platea dictumst quisque sagittis purus sit. Eget sit amet tellus cras adipiscing. Est ante in nibh mauris cursus mattis. Elit duis tristique sollicitudin nibh sit. Ultrices gravida dictum fusce ut placerat orci. Pellentesque pulvinar pellentesque habitant morbi tristique senectus et netus. Ornare massa eget egestas purus viverra accumsan in. Montes nascetur ridiculus mus mauris vitae ultricies leo integer. Duis at tellus at urna condimentum mattis pellentesque id nibh. Malesuada fames ac turpis egestas maecenas pharetra convallis posuere. Rhoncus est pellentesque elit ullamcorper dignissim cras tincidunt. Id diam maecenas ultricies mi eget. Maecenas ultricies mi eget mauris pharetra et. Scelerisque fermentum dui faucibus in ornare quam viverra orci sagittis. Adipiscing elit pellentesque habitant morbi tristique senectus et netus.</br>
+				Odio eu feugiat pretium nibh ipsum consequat. Mollis nunc sed id semper risus in hendrerit. Egestas diam in arcu cursus euismod quis. Consectetur libero id faucibus nisl tincidunt eget nullam non. Diam sollicitudin tempor id eu nisl nunc mi ipsum. Scelerisque fermentum dui faucibus in ornare. Amet volutpat consequat mauris nunc congue nisi. Vulputate sapien nec sagittis aliquam malesuada bibendum arcu vitae. Pharetra magna ac placerat vestibulum lectus mauris ultrices. Id ornare arcu odio ut sem nulla pharetra diam. Massa tincidunt nunc pulvinar sapien.</br>
+				Lectus quam id leo in vitae turpis massa sed. Elementum curabitur vitae nunc sed velit. Blandit massa enim nec dui nunc mattis enim ut tellus. Sagittis purus sit amet volutpat consequat mauris. Vestibulum lectus mauris ultrices eros in cursus. Et odio pellentesque diam volutpat commodo sed. Ornare lectus sit amet est. Quis commodo odio aenean sed adipiscing diam donec adipiscing tristique. Sem nulla pharetra diam sit amet nisl. Et ligula ullamcorper malesuada proin. Enim nec dui nunc mattis enim ut tellus elementum sagittis. Aliquam sem et tortor consequat id porta. Convallis tellus id interdum velit. Commodo viverra maecenas accumsan lacus vel facilisis volutpat. Magna sit amet purus gravida quis blandit turpis cursus in.</br>
+				Morbi enim nunc faucibus a pellentesque sit amet porttitor eget. Egestas diam in arcu cursus euismod quis. Rutrum quisque non tellus orci ac auctor augue. Risus nullam eget felis eget nunc. Habitasse platea dictumst vestibulum rhoncus est pellentesque. Gravida arcu ac tortor dignissim convallis aenean. Nibh tortor id aliquet lectus proin nibh nisl condimentum. Viverra ipsum nunc aliquet bibendum enim facilisis gravida neque. Nunc aliquet bibendum enim facilisis gravida neque. Magnis dis parturient montes nascetur. Feugiat nibh sed pulvinar proin.</br>
+				Adipiscing tristique risus nec feugiat in fermentum posuere urna nec. Sit amet consectetur adipiscing elit. Sagittis id consectetur purus ut faucibus pulvinar elementum. Lobortis mattis aliquam faucibus purus in massa tempor nec feugiat. Nec feugiat in fermentum posuere urna nec. Nibh cras pulvinar mattis nunc sed blandit libero volutpat. Pulvinar elementum integer enim neque volutpat ac tincidunt. A erat nam at lectus urna duis convallis convallis. Nunc lobortis mattis aliquam faucibus. Ornare arcu odio ut sem. Ut enim blandit volutpat maecenas volutpat blandit aliquam. Nisl pretium fusce id velit ut tortor pretium viverra suspendisse. Odio ut sem nulla pharetra diam sit amet nisl suscipit.</br>
+				Tincidunt arcu non sodales neque sodales ut etiam. A scelerisque purus semper eget duis at. Ac turpis egestas maecenas pharetra. A scelerisque purus semper eget duis at. Habitant morbi tristique senectus et netus et malesuada. Vitae suscipit tellus mauris a. In aliquam sem fringilla ut morbi. Consequat mauris nunc congue nisi vitae suscipit tellus. Amet porttitor eget dolor morbi non arcu risus. Risus at ultrices mi tempus imperdiet nulla malesuada pellentesque. Risus pretium quam vulputate dignissim suspendisse in est ante. Pharetra et ultrices neque ornare. Duis at tellus at urna. Non enim praesent elementum facilisis. Euismod lacinia at quis risus sed vulputate odio ut enim. Massa vitae tortor condimentum lacinia. Condimentum id venenatis a condimentum vitae sapien.</br>
+			</p>
+		</div>
+	</div>
+
+</div>
+<div th:include="footer"></div>
+</body>
 </html>
