@@ -121,6 +121,11 @@ public class CourseController {
         return "questioneditor3";
     }
 
+    @GetMapping("/4")
+    public String welcome5(){
+        return "questioneditor4";
+    }
+
 
 
 

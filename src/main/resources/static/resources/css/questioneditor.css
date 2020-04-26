@@ -76,12 +76,13 @@
     float: left;
 }
 
-.Title {
+.Title.dropdown {
+    position: relative;
+    display: inline-block;
     color: gray;
-    margin-left: 20px;
-    margin-top: 8px;
+    margin-left: 9px;
+    margin-top: 0px;
     width: 300px;
-    float: left;
 }
 
 .Button {
@@ -97,7 +98,7 @@
 }
 
 .Button:hover{
-    opacity: 0.7;
+    opacity: 0.8;
 }
 
 .Button.NewAnswer {
@@ -116,7 +117,7 @@
 .Button.ButtonAnswer {
     display: none;
     float: left;
-    margin-left: 20px;
+    margin-left: 10px;
     color: #f44336;
     background-color: transparent;
     border: none;
@@ -124,5 +125,50 @@
     padding-top: 5px;
     font-size: 25px;
 
+}
+
+.Buttondropdown {
+    color: gray;
+    border:none;
+    background-color: transparent;
+    text-align: left;
+    padding-top: 11px;
+    padding-left: 10px;
+    margin-top: 5px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+
+}
+
+.dropdown-content{
+    display:none;
+    position: absolute;
+    z-index: 1;
+    overflow: auto;
+}
+
+.BtnDropDown {
+    display: block;
+    color: gray;
+    width: 150px;
+    border:none;
+    background-color: #ebebeb;
+    text-align: left;
+    padding-top: 5px;
+    padding-left: 20px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    padding-bottom: 5px;
+    padding-right: 5px;
+}
+
+.dropdown-content button:hover {
+    background-color: lightblue;
+}
+
+.show {
+    display: block;
 }
 
