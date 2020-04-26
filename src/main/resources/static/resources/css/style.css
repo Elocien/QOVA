@@ -3,6 +3,13 @@ body {
   --tu_blue_highlight: #274275;
 }
 
+.btn-primary {
+  background-color: var(--tu_blue);
+}
+.btn-primary:hover {
+  background-color: var(--tu_blue_highlight);
+}
+
 .page-footer {
   background-color: var(--tu_blue);
 }
@@ -11,40 +18,56 @@ body {
   background-color: var(--tu_blue);
   z-index: 9999;
   border: 0;
-  font-size: 1.1rem;
-  letter-spacing: 0.2rem;
   margin-bottom: 1rem;
+  padding: 0.8rem;
+  box-shadow: 0px 1px rgba(100, 100, 100, 0.9);
 }
 
 .navbar-brand {
   padding: 0;
-}
-
-.nav-bar-icon {
-  height: 50px;
-  width: 50px;
-  padding: 0.1rem;
   border-width: thin;
   border-style: solid;
   border-color: white;
 }
-
-.nav-bar-icon:hover {
+.navbar-brand:hover > .logo_qr {
   filter: brightness(1000%) grayscale(100%);
-  transition: 1s;
+  transition: 0.8s;
+}
+.navbar-brand:hover > .logo_text {
+  filter: opacity(0%);
+  transition: 0.8s;
+}
+.logo {
+  padding: 0.1rem;
+  max-height: 50px;
+  max-width: 50px;
+}
+.logo_text {
+  position: absolute;
+  top: 14px;
+  left: 13px;
 }
 
 .nav-item {
-  padding-left: 2rem;
+  padding: 0rem 1rem;
 }
 
 .link_to_page {
-  font-weight: 500;
+  font-size: 1.1rem;
+  line-height: 1.1rem;
+  letter-spacing: 0.2rem;
   color: white;
 }
-
 .link_to_page:hover {
-  color:#98b1e3;
+  color: grey;
+  transition: 0.5s;
+}
+
+.settings_icon {
+  color: white;
+}
+.settings_icon:hover {
+  color: grey;
   transition: 0.5s;
 }
 

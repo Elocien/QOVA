@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="icon" type="image/png" sizes="32x32" th:href="@{/resources/images/favicon-32.png}">
+    <script src="https://kit.fontawesome.com/5b9febade6.js" crossorigin="anonymous"></script>
 
     <!-- JavaScript and jQuery added -->
     <script th:src="@{/resources/jsbootstrap/jquerymin.js}" src="../static/resources/jsbootstrap/jquerymin.js" type="text/javascript"></script>
@@ -14,36 +14,28 @@
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}"/>
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}"/>
-
 </head>
 
 <body>
 <nav th:fragment="navigation">
-    <div class="navbar navbar-expand-lg">
+    <div class="navbar navbar-expand-lg align-items-center">
 
         <div class="navbar-collapse collapse w-100 order-1 order-md-0 dual-collapse2">
             <ul class="navbar-nav mr-auto">
-                <a class="navbar-brand" href="/"><img class="nav-bar-icon" th:src="@{resources/images/qova_logo.png}" src="../static/images/qova_logo.png" alt="Logo"/></a>
-                <!--<li class="nav-item"><a class="nav-link disabled">QOVA</a></li>-->
+                <a class="navbar-brand nav-bar-icon" href="/">
+                    <img class="logo logo_qr img-fluid" th:src="@{resources/images/qova_logo_qr.png}" alt="Logo"/>
+                    <img class="logo logo_text img-fluid" th:src="@{resources/images/qova_logo_text.png}" alt="Logo"/>
+                </a>
             </ul>
         </div>
 
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
             <ul class="navbar-nav ml-auto">
-                
-                <li class="nav-item"><a class="nav-link link_to_page" th:text="#{navbar.course}" th:href="@{/courses}" <!--sec:authorize="hasRole('ADMIN')"-->>course managment</a></li>
-
-                <li class="nav-item"><a class="nav-link link_to_page" th:text="#{navbar.results}" th:href="@{/results}" sec:authorize="hasRole('TEILZEIT')">survey results</a></li>
-
-                <li class="nav-item"><a class="nav-link link_to_page" th:text="#{navbar.account}" th:href="@{/account}" sec:authorize="hasRole('ADMIN')">accounting</a></li>
-
+                <li class="nav-item"><a class="nav-link link_to_page" th:text="#{navbar.course}" th:href="@{/courses}">course managment</a></li>
+                <li class="nav-item" sec:authorize="hasRole('TEILZEIT')"><a class="nav-link link_to_page" th:text="#{navbar.results}" th:href="@{/results}">survey results</a></li>
+                <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a class="nav-link link_to_page" th:text="#{navbar.account}" th:href="@{/account}">accounting</a></li>
                 <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link link_to_page" id="loginbtn" href="login.html" th:text="#{home.login}" th:href="@{/login}">Login</a></li>
-                <!-- <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <form action="#" id ="logoutForm" th:action="@{/logout}" method="post">
-                        <button class="btn btn-outline-danger" id="logoutbtn" type="submit"><span class="fas fa-sign-out-alt"></span>Ausloggen</button>
-                        <a href="#" onclick="document.getElementById('logoutForm').submit()">Ausloggen</a>
-                    </form>
-                </li> -->
+                <li class="nav-item media"><button class="btn btn-link align-self-center"><i class="fas fa-cog fa-lg settings_icon"></i></button></li>
             </ul>
         </div>
 
