@@ -91,7 +91,7 @@ public class CourseController {
 		return "redirect:../courses";
     }
     
-        
+    
     @PostMapping("/courses/delete")
 	public String courseDelete(@RequestParam String id) {
 		courseManagement.deleteCourse(id);
