@@ -177,6 +177,15 @@ public class CourseController {
         return "questioneditor4";
     }
 
+    @PostMapping("/41")
+    public String welcome6(Form form) {
+        if (form.getQuestionnairejson().length()>0) {
+            return "redirect:/";
+        }
+        else   {
+            return "questioneditor4";
+        }
+    }
 
 
 

@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/questioneditor.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <title th:text="#{home.title}">TITLE</title>
 </head>
 <body>
@@ -24,6 +25,9 @@
     <button class="Button NewQuestion" onclick="addSingleChoiceQuestion()">Füge eine Single-Choice-Frage hinzu</button>
     <button class="Button NewQuestion" onclick="addDropDownQuestion()"> Füge eine DropDown-Frage hinzu</button>
     <button class="Button NewQuestion" onclick="getJson()">Fragebogen abschicken</button>
+    <form action="/41" method="post" th:object="${form}">
+        <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
+        <button class="Button NewQuestion" type="submit"  >Abschicken</button> </form>
     <div class="Json" id="json"></div>
 </div>
 
@@ -90,7 +94,6 @@
     }
 
     function getJson() {
-        debugger;
         saveInputs();
         document.getElementById("json").innerHTML= JSON.stringify(questionnaire);
         renderall();
@@ -100,6 +103,7 @@
     function renderall(){
         clearquestionnaire();
         questionnaire.forEach(renderquestionnaireelement);
+        document.getElementById("questionnairejson").value = JSON.stringify(questionnaire);
     }
 
     function renderquestionnaireelement (value, index, array){
@@ -611,6 +615,12 @@
         }
 
     }
+
+    $(document).ready(function () {
+        $("form").submit(function () {
+            saveInputs();
+        })
+    })
 
 </script>
 </body>

@@ -171,4 +171,7 @@
 .show {
     display: block;
 }
+.input {
+    display: none;
+}
 
