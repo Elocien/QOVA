@@ -37,7 +37,7 @@ cd '/usr/mysql-test' ; perl mysql-test-run.pl
 
 IMPORTANT:      sudo systemctl start mariadb
 
--------------------------------------------------
+--------------------------------------------------------------------------
 
 
 medienzentrum@​tu-dresden.de
@@ -45,3 +45,11 @@ medienzentrum@​tu-dresden.de
 internes Medizin projekt röder
 
 wegen server
+
+
+--------------------------------------------------------------------------
+
+
+1. Write JSON Serializer, Deserializer
+2. Write Controller method for initial view (Get)
+3. Write Controller method with JSON responsebody

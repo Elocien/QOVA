@@ -48,7 +48,7 @@ public class CourseController {
     }
 
     @GetMapping("/course/details")
-    public String courseDetails(Model model, @RequestParam(required = false) String id) throws Exception{
+    public String courseDetails(Model model, @RequestParam(required = false) String id) throws Exception {
         
         //redirect 
         if (id == null) {
@@ -71,7 +71,26 @@ public class CourseController {
     }
 
 
+    //Mapping for Survey html view
     @GetMapping("course/survey")
+    public String SuveyView (@RequestParam(required = false) String id){
+        //redirect 
+        if (id == null) {
+			return "redirect:../";
+        }
+        
+        //fetch course and go to details if present
+        Optional<Course> course = courseRepository.findById(id);
+        if (course.isPresent()){
+            return "survey";
+        }else{
+            return "redirect:../";
+        }
+    }
+
+
+    //Mapping for getting JSON from server to Javascript
+    @GetMapping("course/survey/get")
     @ResponseBody
     public String[] sendSurvey(@RequestParam(required = false) String id){
         
@@ -84,11 +103,22 @@ public class CourseController {
         Optional<Course> course = courseRepository.findById(id);
         if (course.isPresent()){
             Course crs = course.get();
+
+            //Serialize before sending?
             return crs.getSurvey();
-            
+
         }else{
             return null;
         }
+    }
+
+
+
+
+    //Mapping for submitting the Suvey and saving it to database
+    @PostMapping("survey")
+    public void saveSurvey(@RequestParam(required = false) String id){
+        //Deserialization to Java Object using Response
     }
 
     
