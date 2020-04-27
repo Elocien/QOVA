@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 
 
@@ -69,6 +70,26 @@ public class CourseController {
 		}
     }
 
+
+    @GetMapping("course/survey")
+    @ResponseBody
+    public String[] sendSurvey(@RequestParam(required = false) String id){
+        
+        //redirect 
+        if (id == null) {
+			return null;
+        }
+        
+        //fetch course and go to details if present
+        Optional<Course> course = courseRepository.findById(id);
+        if (course.isPresent()){
+            Course crs = course.get();
+            return crs.getSurvey();
+            
+        }else{
+            return null;
+        }
+    }
 
     
     

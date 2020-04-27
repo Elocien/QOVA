@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 
 @Repository
 public interface CourseRepository extends CrudRepository <Course, String> {
-   
+    
 }
 
 
