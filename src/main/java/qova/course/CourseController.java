@@ -70,6 +70,27 @@ public class CourseController {
 		}
     }
 
+        
+    @GetMapping("course/create")
+	public String createCourse(Model model, CourseForm form) {
+
+		model.addAttribute("form", form);
+		return "courseCreate";
+	}
+
+	@PostMapping("course/create")
+	public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
+			BindingResult result) {
+
+
+		if (result.hasErrors()) {
+			return createCourse(model, form);
+		}
+
+		courseManagement.createCourse(form);
+		return "redirect:../courses";
+	}
+
 
     //Mapping for Survey html view
     @GetMapping("course/survey")
@@ -115,34 +136,14 @@ public class CourseController {
 
 
 
-    //Mapping for submitting the Suvey and saving it to database
-    @PostMapping("survey")
-    public void saveSurvey(@RequestParam(required = false) String id){
-        //Deserialization to Java Object using Response
-    }
+    // //Mapping for submitting the Suvey and saving it to database
+    // @PostMapping("survey")
+    // public void saveSurvey(@RequestParam(required = false) String id){
+    //     //Deserialization to Java Object using Response
+    // }
 
     
     
-    
-    @GetMapping("course/create")
-	public String createCourse(Model model, CourseForm form) {
-
-		model.addAttribute("form", form);
-		return "courseCreate";
-	}
-
-	@PostMapping("course/create")
-	public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
-			BindingResult result) {
-
-
-		if (result.hasErrors()) {
-			return createCourse(model, form);
-		}
-
-		courseManagement.createCourse(form);
-		return "redirect:../courses";
-	}
 
 
     
@@ -154,32 +155,16 @@ public class CourseController {
 	}
 
     
-    
-    
-    
-    @GetMapping("/1")
-    public String welcome2 () {
-        return "questioneditor";
-    }
 
-    @GetMapping("/2")
-    public String welcome3 () {
-        return "questioneditor2";
-    }
-
-    @GetMapping("/3")
-    public String welcome4(){
-        return "questioneditor3";
-    }
-
-    @GetMapping("/4")
-    public String welcome5(){
+    @GetMapping("/course/editor")
+    public String fragebogeneditor(@RequestParam(required = false) String id){
         return "questioneditor4";
     }
 
-    @PostMapping("/41")
+    @PostMapping("/survey")
     public String welcome6(Form form) {
         if (form.getQuestionnairejson().length()>0) {
+
             return "redirect:/";
         }
         else   {
@@ -191,7 +176,7 @@ public class CourseController {
 
 
 
-
+    //test method
     @GetMapping("/create")
     public String createTest(){
         courseManagement.TestCreateCourse();
