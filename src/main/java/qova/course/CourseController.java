@@ -89,7 +89,19 @@ public class CourseController {
 
 		courseManagement.createCourse(form);
 		return "redirect:../courses";
+    }
+    
+        
+    @PostMapping("/courses/delete")
+	public String courseDelete(@RequestParam String id) {
+		courseManagement.deleteCourse(id);
+		return "redirect:../courses";
 	}
+
+
+
+
+
 
 
     //Mapping for Survey html view
@@ -133,30 +145,11 @@ public class CourseController {
         }
     }
 
-
-
-
-    // //Mapping for submitting the Suvey and saving it to database
-    // @PostMapping("survey")
-    // public void saveSurvey(@RequestParam(required = false) String id){
-    //     //Deserialization to Java Object using Response
-    // }
-
     
-    
-
-
-    
-    
-    @PostMapping("/courses/delete")
-	public String courseDelete(@RequestParam String id) {
-		courseManagement.deleteCourse(id);
-		return "redirect:../courses";
-	}
 
     
 
-    @GetMapping("/course/editor")
+    @GetMapping("/course/surveyeditor")
     public String fragebogeneditor(@RequestParam(required = false) String id){
         return "questioneditor4";
     }
