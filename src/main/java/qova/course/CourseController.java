@@ -235,7 +235,7 @@ public class CourseController {
 
 
 
-    //Finished I think
+    //Get Survey from Server (not finished)
     //---------------------------------------------------------------------------
 
     //Mapping for Survey html view
@@ -318,6 +318,16 @@ public class CourseController {
                 return null;
             }
         }
+
+
+    //---------------------------------------------------------------------------
+
+    
+
+
+    //Submit Survey Response to server
+    //---------------------------------------------------------------------------
+
 
 
     //---------------------------------------------------------------------------
