@@ -27,17 +27,26 @@ public class CourseManagement {
         this.courses = Objects.requireNonNull(courses);
     }
 
-    public Course createCourse(CourseForm form) {
+
+    //Create Course and get Id from new course
+    public String createCourseReturnId(CourseForm form) {
         Objects.requireNonNull(form);
 
         var name = form.getName();
-        var type = form.getType();
-        var survey = form.getSurvey();
-        var classTotal = form.getClassTotal();
+        var lectureExists = form.getLectureExists();
+        var tutorialExists = form.getTutorialExists();
+        var seminarExists = form.getSeminarExists();  
+        var classTotalSeminar = form.getClassTotalSeminar();
+        var classTotalTutorial = form.getClassTotalTutorial();
         var semester = form.getSemester();
         var faculty = form.getFaculty();
 
-        return courses.save(new Course(name, type, survey, classTotal, semester, faculty));
+
+
+        Course crs  = new Course(name, lectureExists, tutorialExists, seminarExists, "", "", "", classTotalTutorial, classTotalSeminar, semester, faculty);
+        courses.save(crs);
+        
+        return crs.getId();
     }
 
 
@@ -49,26 +58,54 @@ public class CourseManagement {
         Optional<Course> crs = courses.findById(id);
         if (crs.isPresent()){
             Course course = crs.get();
+
+
             course.setName(form.getName());
-            course.setType(form.getType());
-            course.setClassTotal(form.getClassTotal());
+            course.setLectureExists(form.getLectureExists());
+            course.setTutorialExists(form.getTutorialExists());
+            course.setSeminarExists(form.getSeminarExists());
+            course.setClassTotalTutorial(form.getClassTotalTutorial());
+            course.setClassTotalSeminar(form.getClassTotalSeminar());
             course.setSemester(form.getSemester());
             course.setFaculty(form.getFaculty());
 
         }
     }
 
-    public void updateCourseSurvey(String id, CourseForm form){
+
+
+    //update the lecture survey
+    public void updateLectureSurvey(String id, CourseForm form){
         Optional<Course> crs = courses.findById(id);
         if (crs.isPresent()){
             Course course = crs.get();
-            course.setSurvey(form.getSurvey());
+            course.setLectureSurvey(form.getLectureSurvey());
+        }
+    }
+
+    //update the tutorial survey
+    public void updateTutorialSurvey(String id, CourseForm form){
+        Optional<Course> crs = courses.findById(id);
+        if (crs.isPresent()){
+            Course course = crs.get();
+            course.setTutorialSurvey(form.getTutorialSurvey());
+        }
+    }
+
+    //update the seminar survey
+    public void updateSeminarSurvey(String id, CourseForm form){
+        Optional<Course> crs = courses.findById(id);
+        if (crs.isPresent()){
+            Course course = crs.get();
+            course.setSeminarSurvey(form.getSeminarSurvey());
         }
     }
 
 
-    //callicoder version
 
+
+
+    //QRCode Generator
     public byte[] generateQRCodeImage(String text) throws WriterException, IOException {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 300, 300);
@@ -80,14 +117,29 @@ public class CourseManagement {
     }
 
 
+
+
+
+
+
+
+
+
+
+    //Test Method, remove in final build
     public void TestCreateCourse(){
         var name = "test";
-        var type = CourseType.LECTURE;
-        String[] survey = {"test 1, test 2"};
-        var classTotal = 10;
+        var lectureExists = true;
+        var tutorialExists = true;
+        var seminarExists = true;
+        var classTotalTutorial = 10;
+        var classTotalSeminar = 5;
         var semester = 3;
         var faculty = CourseFaculty.CHEMISTRY;
 
-        courses.save(new Course(name, type, survey, classTotal, semester, faculty));
+        courses.save(new Course(name, lectureExists, tutorialExists, seminarExists, "some test string", "test string 2", "test string 3", classTotalTutorial, classTotalSeminar, semester, faculty));
     }
+
+
+
 }

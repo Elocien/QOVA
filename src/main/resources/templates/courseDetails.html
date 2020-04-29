@@ -46,11 +46,11 @@
                         <dt class="col-sm-4" th:text="#{course.name}">NAME</dt>
                         <dd class="col-sm-8" th:text="${course.name}">VALUE</dd>
 
-                        <dt class="col-sm-4" th:text="#{course.classTotal}">CITY</dt>
-                        <dd class="col-sm-8" th:text="${course.classTotal}">VALUE</dd>
+                        <dt class="col-sm-4" th:text="#{course.classTotalTutorial}">CITY</dt>
+                        <dd class="col-sm-8" th:text="${course.classTotalTutorial}">VALUE</dd>
 
-                        <dt class="col-sm-4" th:text="#{course.type}">TYPE</dt>
-                        <dd class="col-sm-8" th:text="#{'course.type.'+${{course.type}}}">VALUE</dd>
+                        <dt class="col-sm-4" th:text="#{course.classTotalSeminar}">CITY</dt>
+                        <dd class="col-sm-8" th:text="${course.classTotalSeminar}">VALUE</dd>
 
                     </dl>
                     <a class="btn btn-primary" th:href="@{/course/edit?id={id}(id=${course.id})}" th:text="#{buttons.edit}">EDIT</a>
