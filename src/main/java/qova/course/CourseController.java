@@ -254,7 +254,7 @@ public class CourseController {
     }
 
 
-    //Mapping to recieve LECTURE SURVEY from server
+    //Mapping to recieve SURVEY from server
     @GetMapping("course/survey/get")
     @ResponseBody
     public String sendLectureSurvey( @RequestParam CourseType type, @RequestParam(required = false) String id){
