@@ -1,14 +1,16 @@
 package qova.course;
 
+import java.time.LocalDate;
 import java.util.Base64;
 import java.util.Objects;
 
 import java.util.Optional;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Null;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import qova.responses.ResponseRepository;
 
 
 
@@ -31,9 +35,13 @@ public class CourseController {
     private final CourseRepository courseRepository;
 
     @Autowired
-    CourseController(CourseManagement courseManagement, CourseRepository courseRepository) {
+    private final ResponseRepository responseRepository;
+
+    @Autowired
+    CourseController(CourseManagement courseManagement, CourseRepository courseRepository, ResponseRepository responseRepository) {
         this.courseManagement = Objects.requireNonNull(courseManagement);
         this.courseRepository = Objects.requireNonNull(courseRepository);
+        this.responseRepository = Objects.requireNonNull(responseRepository);
 
     }
 
@@ -44,7 +52,10 @@ public class CourseController {
 
     @GetMapping("/courses")
     public String courses (Model model) {
-        model.addAttribute("courseList", courseRepository.findAll());
+
+        LocalDate CurrentSemester = LocalDate.of(2019, 10, 1);
+
+        model.addAttribute("courseList", courseRepository.findByCreationDateTimeBetween(CurrentSemester, LocalDate.now()));
         return "courses";
     }
 
@@ -152,32 +163,56 @@ public class CourseController {
 
 
 
-    //In Progress
+    //Call Questioneditor and Submit created Survey
     //---------------------------------------------------------------------------
 
 
 
-    //Mapping for surveyeditor HTML for LECTURES
+    //Mapping for surveyeditor HTML (called from CourseDetails Page!)
     @GetMapping("/course/surveyeditor")
-    public String questioneditorLecture(@RequestParam(required = false) String id){
+    public String questioneditorLecture(Model model, @RequestParam CourseType type, @RequestParam(required = false) String id){
+        model.addAttribute("CoureType", type);
         return "questioneditor4";
     }
 
 
-    //Mapping to submit LECTURE questionaire (called from CourseDetails Page!)
-    @PostMapping("/course/lecture/surveyeditor")
-    public String questioneditorLectureSubmit(Form form, @RequestParam(required = false) String id) {
+    //Mapping to submit a questionaire 
+    @PostMapping("/course/surveyeditor")
+    public String questioneditorLectureSubmit(Form form, @RequestParam CourseType type, @RequestParam(required = false) String id) {
         
+
+
         //Form empty -> Redirect to details again 
         if (form.getQuestionnairejson().length()>0) {
-            return questioneditorLecture(id);           //TODO: Redirects back to Questioneditor if Survey is empty
+            return "redirect:../courses";          //TODO: Redirects back Courses at the moment, think about fix
         }
         
         //fetch course and go to details if present
         Optional<Course> course = courseRepository.findById(id);
         if (course.isPresent()){
             Course crs = course.get();
-            crs.setLectureSurvey(form.getQuestionnairejson());
+
+            //if CourseType is Lecture, then save Survey as lectureSurvey
+            if(type == CourseType.LECTURE){
+                crs.setLectureSurvey(form.getQuestionnairejson());
+            }
+
+            //if CourseType is Tutorial, then save Survey as lectureSurvey
+            if(type == CourseType.TUTORIAL){
+                crs.setTutorialSurvey(form.getQuestionnairejson());
+            }
+
+            //if CourseType is Seminar, then save Survey as lectureSurvey
+            if(type == CourseType.SEMINAR){
+                crs.setSeminarSurvey(form.getQuestionnairejson());
+            }
+            
+            //if type is none of the correct values
+            if((type != CourseType.LECTURE) && (type != CourseType.TUTORIAL) && (type != CourseType.SEMINAR)){
+                //TODO: Where to go from here? Back to Survey or error html
+            }
+
+            //Redirect back to CourseDetails page
             return "redirect:../course/details" + "?id=" + id;
         }
         else{
@@ -185,62 +220,20 @@ public class CourseController {
         }
     }
     
-    
-        //Mapping to submit TUTORIAL questionaire (called from CourseDetails Page!)
-        @PostMapping("/course/tutorial/surveyeditor")
-        public String questioneditorTutorialSubmit(Form form, @RequestParam(required = false) String id) {
-            
-            //Form empty -> Redirect to details again 
-            if (form.getQuestionnairejson().length()>0) {
-                return questioneditorLecture(id);           //TODO: Redirects back to Questioneditor if Survey is empty
-            }
-            
-            //fetch course and go to details if present
-            Optional<Course> course = courseRepository.findById(id);
-            if (course.isPresent()){
-                Course crs = course.get();
-                crs.setTutorialSurvey(form.getQuestionnairejson());
-                return "redirect:../course/details" + "?id=" + id;
-            }
-            else{
-                return "redirect:../courses";
-            }
-        }
-    
-    
-        //Mapping to submit TUTORIAL questionaire (called from CourseDetails Page!)
-        @PostMapping("/course/seminar/surveyeditor")
-        public String questioneditorSeminarSubmit(Form form, @RequestParam(required = false) String id) {
-            
-            //Form empty -> Redirect to details again 
-            if (form.getQuestionnairejson().length()>0) {
-                return questioneditorLecture(id);           //TODO: Redirects back to Questioneditor if Survey is empty
-            }
-            
-            //fetch course and go to details if present
-            Optional<Course> course = courseRepository.findById(id);
-            if (course.isPresent()){
-                Course crs = course.get();
-                crs.setSeminarSurvey(form.getQuestionnairejson());
-                return "redirect:../course/details" + "?id=" + id;
-            }
-            else{
-                return "redirect:../courses";
-            }
-        }
-
 
     //---------------------------------------------------------------------------
 
 
 
 
-    //Get Survey from Server (not finished)
+
+
+    //Get Survey from Server 
     //---------------------------------------------------------------------------
 
     //Mapping for Survey html view
     @GetMapping("course/survey")
-    public String SuveyView (@RequestParam(required = false) String id){
+    public String SuveyView (Model model, @RequestParam CourseType type, @RequestParam(required = false) String id){
         //redirect 
         if (id == null) {
 			return "redirect:../";
@@ -262,9 +255,9 @@ public class CourseController {
 
 
     //Mapping to recieve LECTURE SURVEY from server
-    @GetMapping("course/survey/lecture/get")
+    @GetMapping("course/survey/get")
     @ResponseBody
-    public String sendLectureSurvey(@RequestParam(required = false) String id){
+    public String sendLectureSurvey( @RequestParam CourseType type, @RequestParam(required = false) String id){
         
         //redirect 
         if (id == null) {
@@ -273,69 +266,21 @@ public class CourseController {
         
         //fetch course and go to details if present
         Optional<Course> course = courseRepository.findById(id);
-        if (course.isPresent()){
+        if (course.isPresent() && type == CourseType.LECTURE){
             return course.get().getLectureSurvey();
-        }else{
-            return null;
         }
-    }
-
-    //Mapping to recieve TUTORIAL SURVEY from server
-    @GetMapping("course/survey/tutorial/get")
-    @ResponseBody
-    public String sendTutorialSurvey(@RequestParam(required = false) String id){
-        
-        //redirect 
-        if (id == null) {
-			return null;
-        }
-        
-        //fetch course and go to details if present
-        Optional<Course> course = courseRepository.findById(id);
-        if (course.isPresent()){
+        else if (course.isPresent() && type == CourseType.TUTORIAL){
             return course.get().getTutorialSurvey();
-
-        }else{
-            return null;
+        }
+        else if (course.isPresent() && type == CourseType.SEMINAR){
+            return course.get().getSeminarSurvey();
+        }
+        else{
+            return null;  //Returns null, handle in JavaScript 
         }
     }
 
-    //Mapping to recieve LECTURE SURVEY from server
-        @GetMapping("course/survey/seminar/get")
-        @ResponseBody
-        public String sendSeminarSurvey(@RequestParam(required = false) String id){
-            
-            //redirect 
-            if (id == null) {
-                return null;
-            }
-            
-            //fetch course and go to details if present
-            Optional<Course> course = courseRepository.findById(id);
-            if (course.isPresent()){
-                return course.get().getSeminarSurvey();
-            }else{
-                return null;
-            }
-        }
-
-
     //---------------------------------------------------------------------------
-
-    
-
-
-    //Submit Survey Response to server
-    //---------------------------------------------------------------------------
-
-
-
-    //---------------------------------------------------------------------------
-
-    
-
-    
-
    
 
 
@@ -343,7 +288,30 @@ public class CourseController {
 
 
 
+    //PostMapping to submit survey and serialize results
+    //---------------------------------------------------------------------------
+    @PostMapping
+    public ResponseEntity recieveResponseJSON(Form form, @RequestParam CourseType type, @RequestParam(required = false) String id){
+        
+        //get JSON Response as string
+        String JsonResponse = form.getQuestionnairejson();
+        
 
+        //Deserialize the String to a JavaObject Response (package qova.responses)
+        // response = Deserialize(JsonResponse);
+
+        //Save object 
+        // responseRepository.save(response)
+        
+        //if all goes well
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+
+
+
+
+    //---------------------------------------------------------------------------
 
 
 
@@ -355,6 +323,9 @@ public class CourseController {
         courseManagement.TestCreateCourse();
         return "home";
     }
+
+
 }
 
 
+//http://localhost:8080/accommodations/filter?city=Berlin&type=STANDARD&location=

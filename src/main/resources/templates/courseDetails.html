@@ -55,7 +55,12 @@
                     </dl>
                     <a class="btn btn-primary" th:href="@{/course/edit?id={id}(id=${course.id})}" th:text="#{buttons.edit}">EDIT</a>
                     <a class="btn btn-secondary" th:href="@{/courses}" th:text="#{buttons.back}">BACK</a>
-                    <a class="btn btn-primary" th:href="@{/course/surveyeditor?id={id}(id=${course.id})}" th:text="#{buttons.editsurvey}">EDIT</a>
+
+                    <a class="btn btn-primary" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" th:text="#{buttons.editSurveyLecture}">some link</a>
+                    <a class="btn btn-primary" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" th:text="#{buttons.editSurveyTutorial}">some link</a>
+                    <a class="btn btn-primary" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" th:text="#{buttons.editSurveySeminar}">some link</a>
+                    
+                    
                     <button type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#deleteModal" th:text="#{buttons.delete}">DELETE</button>
                 </div>
                 <div class="col-lg-6" style="border-left: 1px solid #eee;">

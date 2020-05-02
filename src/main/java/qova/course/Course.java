@@ -1,6 +1,8 @@
 package qova.course;
 
 
+import java.time.LocalDate;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -52,6 +54,8 @@ public class Course {
 
     private CourseFaculty faculty;
 
+    private LocalDate creationDateTime;
+
 
     //Needed for JPA purposes
     @SuppressWarnings("unused")
@@ -70,7 +74,7 @@ public class Course {
      * @param semester          What semester is the Subject taken by students
      * @param faculty           Enum defining which faculty the subject belongs to 
      */
-    public Course(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalTutorial, int classTotalSeminar, int semester, CourseFaculty faculty){
+    public Course(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalTutorial, int classTotalSeminar, int semester, CourseFaculty faculty, LocalDate creationDateTime){
         this.name = name;
         this.lectureExists = lectureExists;
         this.tutorialExists = tutorialExists;
@@ -82,6 +86,7 @@ public class Course {
         this.classTotalSeminar = classTotalSeminar;
         this.semester = semester;
         this.faculty=faculty;
+        this.creationDateTime = creationDateTime;
     }
 
     public String getId(){
@@ -174,6 +179,10 @@ public class Course {
 
     public void setFaculty(CourseFaculty faculty){
         this.faculty = faculty;
+    }
+
+    public LocalDate getCreationDateTime(){
+        return this.creationDateTime;
     }
 }
 

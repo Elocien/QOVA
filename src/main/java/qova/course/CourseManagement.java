@@ -13,6 +13,7 @@ import javax.transaction.Transactional;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -41,9 +42,7 @@ public class CourseManagement {
         var semester = form.getSemester();
         var faculty = form.getFaculty();
 
-
-
-        Course crs  = new Course(name, lectureExists, tutorialExists, seminarExists, "", "", "", classTotalTutorial, classTotalSeminar, semester, faculty);
+        Course crs  = new Course(name, lectureExists, tutorialExists, seminarExists, "", "", "", classTotalTutorial, classTotalSeminar, semester, faculty, LocalDate.now());
         courses.save(crs);
         
         return crs.getId();
@@ -124,8 +123,6 @@ public class CourseManagement {
 
 
 
-
-
     //Test Method, remove in final build
     public void TestCreateCourse(){
         var name = "test";
@@ -137,7 +134,7 @@ public class CourseManagement {
         var semester = 3;
         var faculty = CourseFaculty.CHEMISTRY;
 
-        courses.save(new Course(name, lectureExists, tutorialExists, seminarExists, "some test string", "test string 2", "test string 3", classTotalTutorial, classTotalSeminar, semester, faculty));
+        courses.save(new Course(name, lectureExists, tutorialExists, seminarExists, "some test string", "test string 2", "test string 3", classTotalTutorial, classTotalSeminar, semester, faculty, LocalDate.now()));
     }
 
 

@@ -14,7 +14,7 @@ import qova.course.Course;
 @Entity
 public class Response {
 
-    private @Id @GeneratedValue(strategy = GenerationType.AUTO) long id;
+    private @Id @GeneratedValue(strategy = GenerationType.AUTO) Long id;
 
     private Date dateTime;
 
@@ -77,6 +77,10 @@ public class Response {
         this.answer1 = answer8;
         this.answer1 = answer9;
         this.answer1 = answer10;
+    }
+
+    public Long getId(){
+        return this.id;
     }
 
     public Date getDateTime(){
