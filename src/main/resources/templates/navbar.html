@@ -31,10 +31,10 @@
 
         <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
             <ul class="navbar-nav ml-auto">
-                <li class="nav-item"><a class="nav-link link_to_page" th:text="#{navbar.course}" th:href="@{/courses}">course managment</a></li>
-                <li class="nav-item" sec:authorize="hasRole('TEILZEIT')"><a class="nav-link link_to_page" th:text="#{navbar.results}" th:href="@{/results}">survey results</a></li>
-                <li class="nav-item" sec:authorize="hasRole('ADMIN')"><a class="nav-link link_to_page" th:text="#{navbar.account}" th:href="@{/account}">accounting</a></li>
-                <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link link_to_page" id="loginbtn" href="login.html" th:text="#{home.login}" th:href="@{/login}">Login</a></li>
+                <li class="nav-item media"><a class="nav-link link_to_page" th:text="#{navbar.course}" th:href="@{/courses}">course managment</a></li>
+                <li class="nav-item media" sec:authorize="hasRole('TEILZEIT')"><a class="nav-link link_to_page" th:text="#{navbar.results}" th:href="@{/results}">survey results</a></li>
+                <li class="nav-item media" sec:authorize="hasRole('ADMIN')"><a class="nav-link link_to_page" th:text="#{navbar.account}" th:href="@{/account}">accounting</a></li>
+                <li class="nav-item media" sec:authorize="isAnonymous()"><a class="nav-link link_to_page align-self-center" id="loginbtn" href="login.html" th:text="#{home.login}" th:href="@{/login}">Login</a></li>
                 <li class="nav-item media"><button class="btn btn-link align-self-center"><i class="fas fa-cog fa-lg settings_icon"></i></button></li>
             </ul>
         </div>
