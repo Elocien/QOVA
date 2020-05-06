@@ -1,6 +1,8 @@
 package qova.course;
 
 
+import java.time.LocalDate;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -31,13 +33,30 @@ public class Course {
     private String id;
 
     private String name;
-    private CourseType type;
+    
+    private Boolean lectureExists;
 
-    private String[] survey;
+    private Boolean tutorialExists;
 
-    private int classTotal;
+    private Boolean seminarExists;
+
+    private String lectureSurvey;
+
+    private String tutorialSurvey;
+
+    private String seminarSurvey;
+
+    private int classTotalTutorial;
+
+    private int classTotalSeminar;
+
+    //The number representing the semester this course is taken by students
     private int semester;
+
     private CourseFaculty faculty;
+
+    //The date at which indicates to which semester the course belongs to 
+    private LocalDate semesterDate;
 
 
     //Needed for JPA purposes
@@ -57,13 +76,19 @@ public class Course {
      * @param semester          What semester is the Subject taken by students
      * @param faculty           Enum defining which faculty the subject belongs to 
      */
-    public Course(String name, CourseType type, String[] survey, int classTotal, int semester, CourseFaculty faculty){
+    public Course(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalTutorial, int classTotalSeminar, int semester, CourseFaculty faculty, LocalDate semesterDate){
         this.name = name;
-        this.type = type;
-        this.survey = survey;
-        this.classTotal = classTotal;
+        this.lectureExists = lectureExists;
+        this.tutorialExists = tutorialExists;
+        this.seminarExists = seminarExists;
+        this.lectureSurvey = lectureSurvey;
+        this.tutorialSurvey = tutorialSurvey;
+        this.seminarSurvey = seminarSurvey;
+        this.classTotalTutorial = classTotalTutorial;
+        this.classTotalSeminar = classTotalSeminar;
         this.semester = semester;
         this.faculty=faculty;
+        this.semesterDate = semesterDate;
     }
 
     public String getId(){
@@ -78,28 +103,68 @@ public class Course {
         this.name = name;
     }
 
-    public CourseType getType(){
-        return this.type;
+    public Boolean getLectureExists(){
+        return this.lectureExists;
     }
 
-    public void setType(CourseType type){
-        this.type = type;
+    public void setLectureExists(Boolean exists){
+        this.lectureExists = exists;
     }
 
-    public String[] getSurvey(){
-        return this.survey;
+    public Boolean getTutorialExists(){
+        return this.tutorialExists;
     }
 
-    public void setSurvey(String[] survey){
-        this.survey = survey;
+    public void setTutorialExists(Boolean exists){
+        this.tutorialExists = exists;
     }
 
-    public int getClassTotal(){
-        return this.classTotal;
+    public Boolean getSeminarExists(){
+        return this.seminarExists;
     }
 
-    public void setClassTotal(int classTotal){
-        this.classTotal = classTotal;
+    public void setSeminarExists(Boolean exists){
+        this.seminarExists = exists;
+    }
+
+    public String getLectureSurvey(){
+        return this.lectureSurvey;
+    }
+
+    public void setLectureSurvey(String survey){
+        this.lectureSurvey = survey;
+    }
+
+    public String getTutorialSurvey(){
+        return this.tutorialSurvey;
+    }
+
+    public void setTutorialSurvey(String survey){
+        this.tutorialSurvey = survey;
+    }
+
+    public String getSeminarSurvey(){
+        return this.seminarSurvey;
+    }
+
+    public void setSeminarSurvey(String survey){
+        this.seminarSurvey = survey;
+    }
+
+    public int getClassTotalTutorial(){
+        return this.classTotalTutorial;
+    }
+
+    public void setClassTotalTutorial(int classTotal){
+        this.classTotalTutorial = classTotal;
+    }
+
+    public int getClassTotalSeminar(){
+        return this.classTotalSeminar;
+    }
+
+    public void setClassTotalSeminar(int classTotal){
+        this.classTotalSeminar = classTotal;
     }
 
     public int getSemester(){
@@ -116,6 +181,14 @@ public class Course {
 
     public void setFaculty(CourseFaculty faculty){
         this.faculty = faculty;
+    }
+
+    public LocalDate getSemesterDate(){
+        return this.semesterDate;
+    }
+
+    public void setCreationDate(LocalDate date){
+        this.semesterDate = date;
     }
 }
 
