@@ -186,9 +186,5 @@ public class Course {
     public LocalDate getSemesterDate(){
         return this.semesterDate;
     }
-
-    public void setCreationDate(LocalDate date){
-        this.semesterDate = date;
-    }
 }
 

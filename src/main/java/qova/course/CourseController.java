@@ -55,10 +55,6 @@ public class CourseController {
     @GetMapping("/courses")
     public String courses (Model model) {
 
-
-        LocalDate CurrentSemester = LocalDate.of(2019, 10, 1);
-
-
         model.addAttribute("courseList", courseRepository.findAll());
         return "courses";
     }
@@ -106,6 +102,8 @@ public class CourseController {
 	public String createCourse(Model model, CourseForm form) {
 
         model.addAttribute("form", form);
+
+        //List of Semesters for Course Creator to pick from
         model.addAttribute("semesterDates", courseManagement.findSemesters());
 		return "courseCreate";
 	}
@@ -192,15 +190,16 @@ public class CourseController {
 
     //Mapping for surveyeditor HTML (called from CourseDetails Page!)
     @GetMapping("/course/surveyeditor")
-    public String questioneditorLecture(Model model, @RequestParam CourseType type, @RequestParam(required = false) String id){
+    public String questioneditor(Model model, @RequestParam CourseType type, @RequestParam(required = false) String id){
         model.addAttribute("CoureType", type);
+        model.addAttribute("id", id);
         return "questioneditor4";
     }
 
 
     //Mapping to submit a questionaire 
     @PostMapping("/course/surveyeditor")
-    public String questioneditorLectureSubmit(Form form, @RequestParam CourseType type, @RequestParam(required = false) String id) {
+    public String questioneditorSubmit(Form form, @RequestParam CourseType type, @RequestParam(required = false) String id) {
         
 
 
@@ -282,7 +281,7 @@ public class CourseController {
     //Mapping to recieve LECTURE SURVEY from server
     @GetMapping("/survey/get")
     @ResponseBody
-    public String sendLectureSurvey( @RequestParam CourseType type, @RequestParam(required = false) String id){
+    public String sendSurvey( @RequestParam CourseType type, @RequestParam(required = false) String id){
         
         //redirect 
         if (id == null) {
@@ -333,7 +332,6 @@ public class CourseController {
         //if all goes well
         return ResponseEntity.ok(HttpStatus.OK);
     }
-
 
     //---------------------------------------------------------------------------
 
