@@ -204,8 +204,8 @@ public class CourseController {
 
 
         //Form empty -> Redirect to details again 
-        if (form.getQuestionnairejson().length()>0) {
-            return "redirect:../courses";          //TODO: Redirects back Courses at the moment, think about fix
+        if (form.getQuestionnairejson().length()==0) {
+            return "redirect:../course/details" + "?id=" + id;          //TODO: Redirects back course at the moment, think about where this should go
         }
         
         //fetch course and go to details if present
