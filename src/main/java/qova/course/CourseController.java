@@ -59,7 +59,7 @@ public class CourseController {
         LocalDate CurrentSemester = LocalDate.of(2019, 10, 1);
 
 
-        model.addAttribute("courseList", courseRepository.findByCreationDateTimeBetween(CurrentSemester, LocalDate.now()));
+        model.addAttribute("courseList", courseRepository.findAll());
         return "courses";
     }
 
@@ -335,9 +335,6 @@ public class CourseController {
     }
 
 
-
-
-
     //---------------------------------------------------------------------------
 
 
@@ -355,4 +352,3 @@ public class CourseController {
 }
 
 
-//http://localhost:8080/accommodations/filter?city=Berlin&type=STANDARD&location=
