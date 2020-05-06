@@ -50,15 +50,21 @@ public class CourseController {
         return "home";
     }
 
+
+    //Shows a table containing all courses 
     @GetMapping("/courses")
     public String courses (Model model) {
 
+
         LocalDate CurrentSemester = LocalDate.of(2019, 10, 1);
+
 
         model.addAttribute("courseList", courseRepository.findByCreationDateTimeBetween(CurrentSemester, LocalDate.now()));
         return "courses";
     }
 
+
+    //Shows the details for a specific course
     @GetMapping("/course/details")
     public String courseDetails(Model model, @RequestParam(required = false) String id) throws Exception {
         
@@ -73,8 +79,16 @@ public class CourseController {
             model.addAttribute("course", course.get());
 
 
-            //send byte array to model 
-            model.addAttribute("image", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage((course.get().getName()))));  //TODO: course.get().getName() needs to be replaced with URL String
+            //QRCode URL (Redirects to a courses survey when scanned)
+            String LectureSurveyURl = "localhost:8080/survey?type=LECTURE&id="+ course.get().getId();
+            String TutorialSurveyURl = "localhost:8080/survey?type=TUTORIAL&id="+ course.get().getId();
+            String SeminarSurveyURl = "localhost:8080/survey?type=SEMINAR&id="+ course.get().getId();
+
+
+            //send byte array (the QRCode image) to model 
+            model.addAttribute("LectureQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(LectureSurveyURl)));  //TODO: course.get().getName() needs to be replaced with URL String
+            model.addAttribute("LectureQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(TutorialSurveyURl)));  //TODO: course.get().getName() needs to be replaced with URL String
+            model.addAttribute("LectureQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(SeminarSurveyURl)));  //TODO: course.get().getName() needs to be replaced with URL String
             
             return "courseDetails";
         } else {
@@ -91,7 +105,8 @@ public class CourseController {
     @GetMapping("course/create")
 	public String createCourse(Model model, CourseForm form) {
 
-		model.addAttribute("form", form);
+        model.addAttribute("form", form);
+        model.addAttribute("semesterDates", courseManagement.findSemesters());
 		return "courseCreate";
 	}
 
@@ -114,6 +129,8 @@ public class CourseController {
     
     
 
+
+
     //Delete Course 
     @PostMapping("/course/delete")
 	public String delteCourse(@RequestParam String id) {
@@ -121,6 +138,9 @@ public class CourseController {
 		return "redirect:../courses";
     }
     
+
+
+
 
     //Edit Course
     @GetMapping("/course/edit")
@@ -139,8 +159,10 @@ public class CourseController {
 			return "redirect:../courses";
 		}
     }
+
+
     
-    //Edit Course Validation
+    //Edit Course Validation (when course is updated, check wether the fields are all appropriately set e.g. NotNull)
     @PostMapping("/course/edit")
 	public String editCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
 			BindingResult result, @RequestParam String id) {
@@ -228,11 +250,14 @@ public class CourseController {
 
 
 
+
+
+
     //Get Survey from Server 
     //---------------------------------------------------------------------------
 
     //Mapping for Survey html view
-    @GetMapping("course/survey")
+    @GetMapping("/survey")
     public String SuveyView (Model model, @RequestParam CourseType type, @RequestParam(required = false) String id){
         //redirect 
         if (id == null) {
@@ -255,7 +280,7 @@ public class CourseController {
 
 
     //Mapping to recieve LECTURE SURVEY from server
-    @GetMapping("course/survey/get")
+    @GetMapping("/survey/get")
     @ResponseBody
     public String sendLectureSurvey( @RequestParam CourseType type, @RequestParam(required = false) String id){
         
@@ -288,9 +313,11 @@ public class CourseController {
 
 
 
+
+
     //PostMapping to submit survey and serialize results
     //---------------------------------------------------------------------------
-    @PostMapping
+    @PostMapping("survey")
     public ResponseEntity recieveResponseJSON(Form form, @RequestParam CourseType type, @RequestParam(required = false) String id){
         
         //get JSON Response as string

@@ -50,11 +50,13 @@ public class Course {
 
     private int classTotalSeminar;
 
+    //The number representing the semester this course is taken by students
     private int semester;
 
     private CourseFaculty faculty;
 
-    private LocalDate creationDateTime;
+    //The date at which indicates to which semester the course belongs to 
+    private LocalDate semesterDate;
 
 
     //Needed for JPA purposes
@@ -74,7 +76,7 @@ public class Course {
      * @param semester          What semester is the Subject taken by students
      * @param faculty           Enum defining which faculty the subject belongs to 
      */
-    public Course(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalTutorial, int classTotalSeminar, int semester, CourseFaculty faculty, LocalDate creationDateTime){
+    public Course(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalTutorial, int classTotalSeminar, int semester, CourseFaculty faculty, LocalDate semesterDate){
         this.name = name;
         this.lectureExists = lectureExists;
         this.tutorialExists = tutorialExists;
@@ -86,7 +88,7 @@ public class Course {
         this.classTotalSeminar = classTotalSeminar;
         this.semester = semester;
         this.faculty=faculty;
-        this.creationDateTime = creationDateTime;
+        this.semesterDate = semesterDate;
     }
 
     public String getId(){
@@ -181,8 +183,12 @@ public class Course {
         this.faculty = faculty;
     }
 
-    public LocalDate getCreationDateTime(){
-        return this.creationDateTime;
+    public LocalDate getSemesterDate(){
+        return this.semesterDate;
+    }
+
+    public void setCreationDate(LocalDate date){
+        this.semesterDate = date;
     }
 }
 

@@ -14,6 +14,7 @@ import javax.transaction.Transactional;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -41,18 +42,23 @@ public class CourseManagement {
         var classTotalTutorial = form.getClassTotalTutorial();
         var semester = form.getSemester();
         var faculty = form.getFaculty();
+        var semesterDate = form.getSemesterDate();
 
-        Course crs  = new Course(name, lectureExists, tutorialExists, seminarExists, "", "", "", classTotalTutorial, classTotalSeminar, semester, faculty, LocalDate.now());
+        Course crs  = new Course(name, lectureExists, tutorialExists, seminarExists, "", "", "", classTotalTutorial, classTotalSeminar, semester, faculty, semesterDate);
         courses.save(crs);
         
         return crs.getId();
     }
 
-
+    
+    //delete course
     public void deleteCourse(String id) {
         courses.deleteById(id);
     }
 
+
+
+    //update course details
     public void updateCourseDetails(String id, CourseForm form){
         Optional<Course> crs = courses.findById(id);
         if (crs.isPresent()){
@@ -82,6 +88,8 @@ public class CourseManagement {
         }
     }
 
+
+
     //update the tutorial survey
     public void updateTutorialSurvey(String id, CourseForm form){
         Optional<Course> crs = courses.findById(id);
@@ -90,6 +98,8 @@ public class CourseManagement {
             course.setTutorialSurvey(form.getTutorialSurvey());
         }
     }
+
+
 
     //update the seminar survey
     public void updateSeminarSurvey(String id, CourseForm form){
@@ -102,9 +112,14 @@ public class CourseManagement {
 
 
 
-
-
     //QRCode Generator
+    /**
+     * 
+     * @param text Takes a string as input (in our case a url)
+     * @return A byte[] with the image of the QRCode
+     * @throws WriterException
+     * @throws IOException
+     */
     public byte[] generateQRCodeImage(String text) throws WriterException, IOException {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 300, 300);
@@ -116,6 +131,98 @@ public class CourseManagement {
     }
 
 
+
+
+
+    //Generates a set amount of semesters which are added to the model, to pick from as course creation dates.
+    /**
+     * Function used to populate a drop down menu in course creation UI. Fills a list with (x) future semesters and (y) previous semsters, as well as the current semester
+     * @return
+     */
+    public ArrayList<LocalDate> findSemesters(){
+        
+        //Current Date
+        LocalDate now = LocalDate.now();
+
+        //Current year and month as ints
+        int currentYear = now.getYear();
+        int currentMonth = now.getMonthValue();
+
+        //Future Semesters to add (Given in years)
+        int x = 1;
+
+        //Previous Semesters to add (Given in years)
+        int y = 1;
+
+
+
+        //List sent to controller
+        ArrayList<LocalDate> semesters = new ArrayList<LocalDate>();
+
+
+        //Summer semester start is April(4), winter semester starts in October(10)
+        //Winter semester spans over the new year, so it is of the format WiSe xx/yy
+
+
+        //if winter semester and in year xx
+        if(currentMonth <4){
+            //previous semesters
+            for(int i=0; i < x; i++){
+                semesters.add(LocalDate.of((currentYear-(2+i)), 10, 1));
+                semesters.add(LocalDate.of((currentYear-(1+i)), 4, 1));
+            }
+
+            //current Semester
+            semesters.add(LocalDate.of((currentYear-1), 10, 1));
+
+            //future semesters
+            for(int i=0; i < y; i++){
+                semesters.add(LocalDate.of((currentYear+i), 4, 1));
+                semesters.add(LocalDate.of((currentYear+i), 10, 1));
+            }
+        }
+        
+        //if winter semster and in year yy
+        else if(currentMonth >= 10){
+            //previous semesters
+            for(int i=0; i < x; i++){
+                semesters.add(LocalDate.of((currentYear-(1+i)), 10, 1));
+                semesters.add(LocalDate.of((currentYear-i), 4, 1));
+            }
+
+            //current Semester
+            semesters.add(LocalDate.of((currentYear), 10, 1));
+
+            //future semesters
+            for(int i=0; i < y; i++){
+                semesters.add(LocalDate.of((currentYear+(1+i)), 4, 1));
+                semesters.add(LocalDate.of((currentYear+(1+i)), 10, 1));
+            }
+        }
+
+
+        //if summer semester
+        else{
+            //previous semesters
+            for(int i=0; i < x; i++){
+                semesters.add(LocalDate.of((currentYear-(1+i)), 4, 1));
+                semesters.add(LocalDate.of((currentYear-(1+i)), 10, 1));
+            }
+
+            //current Semester
+            semesters.add(LocalDate.of((currentYear), 4, 1));
+
+            //future semesters
+            for(int i=0; i < y; i++){
+                semesters.add(LocalDate.of((currentYear+i), 10, 1));
+                semesters.add(LocalDate.of((currentYear+(1+i)), 4, 1));
+            }
+        }
+        
+
+        //return arraylist
+        return semesters;
+    }
 
 
 
@@ -137,6 +244,7 @@ public class CourseManagement {
         courses.save(new Course(name, lectureExists, tutorialExists, seminarExists, "some test string", "test string 2", "test string 3", classTotalTutorial, classTotalSeminar, semester, faculty, LocalDate.now()));
     }
 
+   
 
 
 }

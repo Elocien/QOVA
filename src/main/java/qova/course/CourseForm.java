@@ -1,5 +1,7 @@
 package qova.course;
 
+import java.time.LocalDate;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -36,9 +38,12 @@ public class CourseForm {
     @NotNull
     private CourseFaculty faculty;
 
+    @NotNull
+    private LocalDate semesterDate;
 
 
-    public CourseForm(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalSeminar, int classTotaltutorial, int semester, CourseFaculty faculty){
+
+    public CourseForm(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalSeminar, int classTotaltutorial, int semester, CourseFaculty faculty, LocalDate semesterDate){
         this.name = name;
         this.lectureExists = lectureExists;
         this.tutorialExists = tutorialExists;
@@ -50,6 +55,7 @@ public class CourseForm {
         this.classTotalTutorial = classTotaltutorial;
         this.semester = semester;
         this.faculty=faculty;
+        this.semesterDate = semesterDate;
     }
 
     public String getName(){
@@ -94,6 +100,10 @@ public class CourseForm {
 
     public CourseFaculty getFaculty(){
         return this.faculty;
+    }
+
+    public LocalDate getSemesterDate(){
+        return this.semesterDate;
     }
 
 }
