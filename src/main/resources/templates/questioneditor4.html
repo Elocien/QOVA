@@ -28,7 +28,7 @@
     <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${type}, id=${id})}" method="post" th:object="${form}">
         <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
         <button class="Button NewQuestion" type="submit"  >Abschicken</button> </form>
-    <div class="Json" id="json"></div>
+    <div class="Json" id="json" th:text="${survey}"></div>
 </div>
 
 <div class="column right" id="questionnaire">

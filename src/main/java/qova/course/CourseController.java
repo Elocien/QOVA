@@ -194,6 +194,8 @@ public class CourseController {
     public String questioneditor(Model model, @RequestParam CourseType type, @RequestParam(required = false) String id){
         model.addAttribute("CoureType", type);
         model.addAttribute("id", id);
+        String survey = courseManagement.getSurveyforTyp(id,type);
+        model.addAttribute("survey", survey);
         return "questioneditor4";
     }
 
@@ -215,7 +217,7 @@ public class CourseController {
             Course crs = course.get();
 
             //if CourseType is Lecture, then save Survey as lectureSurvey
-            if(type == CourseType.LECTURE){
+            if(type == CourseType.LECTURE) {
                 crs.setLectureSurvey(form.getQuestionnairejson());
             }
 
@@ -228,11 +230,14 @@ public class CourseController {
             if(type == CourseType.SEMINAR){
                 crs.setSeminarSurvey(form.getQuestionnairejson());
             }
-            
+
+            courseManagement.saveCourse(crs);
             //if type is none of the correct values
             if((type != CourseType.LECTURE) && (type != CourseType.TUTORIAL) && (type != CourseType.SEMINAR)){
                 //TODO: Where to go from here? Back to Survey or error html
             }
+
+
 
             //Redirect back to CourseDetails page
             return "redirect:../course/details" + "?id=" + id;
