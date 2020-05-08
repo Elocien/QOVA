@@ -1,6 +1,7 @@
 package qova.course;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Objects;
 
@@ -83,8 +84,8 @@ public class CourseController {
 
             //send byte array (the QRCode image) to model 
             model.addAttribute("LectureQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(LectureSurveyURl)));  //TODO: course.get().getName() needs to be replaced with URL String
-            model.addAttribute("LectureQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(TutorialSurveyURl)));  //TODO: course.get().getName() needs to be replaced with URL String
-            model.addAttribute("LectureQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(SeminarSurveyURl)));  //TODO: course.get().getName() needs to be replaced with URL String
+            model.addAttribute("TutorialQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(TutorialSurveyURl)));  //TODO: course.get().getName() needs to be replaced with URL String
+            model.addAttribute("SeminarQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(SeminarSurveyURl)));  //TODO: course.get().getName() needs to be replaced with URL String
             
             return "courseDetails";
         } else {

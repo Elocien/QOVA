@@ -40,11 +40,11 @@ public class CourseManagement {
         var seminarExists = form.getSeminarExists();  
         var classTotalSeminar = form.getClassTotalSeminar();
         var classTotalTutorial = form.getClassTotalTutorial();
-        var semester = form.getSemester();
+        var semesterOfStudents = form.getSemesterOfStudents();
         var faculty = form.getFaculty();
-        var semesterDate = form.getSemesterDate();
+        var courseInstance = form.getCourseInstance();
 
-        Course crs  = new Course(name, lectureExists, tutorialExists, seminarExists, "", "", "", classTotalTutorial, classTotalSeminar, semester, faculty, semesterDate);
+        Course crs  = new Course(name, lectureExists, tutorialExists, seminarExists, "", "", "", classTotalTutorial, classTotalSeminar, semesterOfStudents, faculty, courseInstance);
         courses.save(crs);
         
         return crs.getId();
@@ -71,7 +71,7 @@ public class CourseManagement {
             course.setSeminarExists(form.getSeminarExists());
             course.setClassTotalTutorial(form.getClassTotalTutorial());
             course.setClassTotalSeminar(form.getClassTotalSeminar());
-            course.setSemester(form.getSemester());
+            course.setSemesterOfStudents(form.getSemesterOfStudents());
             course.setFaculty(form.getFaculty());
 
         }
