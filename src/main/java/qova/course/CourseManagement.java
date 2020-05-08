@@ -77,6 +77,24 @@ public class CourseManagement {
         }
     }
 
+    //getter for the Survey String
+    public String getSurveyforTyp ( String id, CourseType type){
+        Optional<Course> crs = courses.findById(id);
+        if (crs.isPresent()){
+            Course course = crs.get();
+            if (type == CourseType.LECTURE){
+                return course.getLectureSurvey();
+            }
+            else if (type == CourseType.SEMINAR){
+                return course.getSeminarSurvey();
+            }
+            else if (type == CourseType.TUTORIAL){
+                return course.getTutorialSurvey();
+            }
+        }
+        return "Something went wrong";
+    }
+
 
 
     //update the lecture survey
@@ -224,7 +242,9 @@ public class CourseManagement {
         return semesters;
     }
 
-
+    public Course saveCourse ( Course course){
+        return courses.save(course);
+    }
 
 
 
@@ -241,7 +261,7 @@ public class CourseManagement {
         var semester = 3;
         var faculty = CourseFaculty.CHEMISTRY;
 
-        courses.save(new Course(name, lectureExists, tutorialExists, seminarExists, "some test string", "test string 2", "test string 3", classTotalTutorial, classTotalSeminar, semester, faculty, LocalDate.now()));
+        courses.save(new Course(name, lectureExists, tutorialExists, seminarExists, "", "", "", classTotalTutorial, classTotalSeminar, semester, faculty, LocalDate.now()));
     }
 
    
