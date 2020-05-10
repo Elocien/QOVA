@@ -149,7 +149,8 @@ public class CourseController {
 
 		Optional<Course> crs = courseRepository.findById(id);
 		if (crs.isPresent()) {
-			model.addAttribute("form", form);
+            model.addAttribute("form", form);
+            model.addAttribute("semesterDates", courseManagement.findSemesters());
 			model.addAttribute("course", crs.get());
 			return "courseEdit";
 		} else {

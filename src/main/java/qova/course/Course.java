@@ -56,7 +56,7 @@ public class Course {
     private CourseFaculty faculty;
 
     //The date at which indicates to which semester the course belongs to 
-    private LocalDate courseInstance;   //courseInstance 
+    private LocalDate courseInstance;  
 
 
     //Needed for JPA purposes
@@ -185,6 +185,10 @@ public class Course {
 
     public LocalDate getCourseInstance(){
         return this.courseInstance;
+    }
+
+    public void setCourseInstance(LocalDate date){
+        this.courseInstance = date;
     }
 }
 
