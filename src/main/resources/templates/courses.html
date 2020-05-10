@@ -23,13 +23,13 @@
                             <thead class="thead-dark">
                                 <tr>
                                     <th th:text="#{course.name}">NAME</th>
-                                    <th th:text="#{course.semester}">SEMESTER</th>
+                                    <th th:text="#{course.courseInstance}">SEMESTER</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr th:each="course : ${courseList}" style="cursor: pointer" th:onclick="'window.location.href = \'' + @{/course/details?id={id}(id=${course.id})} + '\''">
                                     <td th:text="${course.name}">NAME</td>
-                                    <td th:text="${course.semester}">SEMESTER</td>
+                                    <td th:text="${course.courseInstance}">SEMESTER</td>
                                 </tr>
                             </tbody>
                         </table>

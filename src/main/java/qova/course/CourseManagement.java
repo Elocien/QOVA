@@ -77,22 +77,44 @@ public class CourseManagement {
         }
     }
 
-    //getter for the Survey String
-    public String getSurveyforTyp ( String id, CourseType type){
+
+
+    //Gets the relevant Survey in the course objects, based on the given surveyType
+    public String getSurveyforType (String id, String type){
         Optional<Course> crs = courses.findById(id);
         if (crs.isPresent()){
             Course course = crs.get();
-            if (type == CourseType.LECTURE){
+            if (type == "LECTURE"){
                 return course.getLectureSurvey();
             }
-            else if (type == CourseType.SEMINAR){
+            else if (type == "SEMINAR"){
                 return course.getSeminarSurvey();
             }
-            else if (type == CourseType.TUTORIAL){
+            else if (type == "TUTORIAL"){
                 return course.getTutorialSurvey();
             }
         }
         return "Something went wrong";
+    }
+
+
+
+    //Sets the relevant Survey in the course objects, based on the given surveyType
+    public void setSurveyforType (String id, String type, SurveyForm form){
+        Optional<Course> crs = courses.findById(id);
+        if (crs.isPresent()){
+            Course course = crs.get();
+            //if CourseType is Lecture, then save Survey as lectureSurvey
+            if(type == "LECTURE") {
+                course.setLectureSurvey(form.getQuestionnairejson()); 
+            }
+            else if(type == "TUTORIAL") {
+                course.setTutorialSurvey(form.getQuestionnairejson());
+            }
+            else if (type == "SEMINAR"){
+                course.setSeminarSurvey(form.getQuestionnairejson());
+            }
+        }
     }
 
 

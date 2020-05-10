@@ -1,7 +1,5 @@
 package qova.course;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Objects;
 
@@ -189,22 +187,21 @@ public class CourseController {
 
 
 
+
     //Mapping for surveyeditor HTML (called from CourseDetails Page!)
     @GetMapping("/course/surveyeditor")
-    public String questioneditor(Model model, @RequestParam CourseType type, @RequestParam(required = false) String id){
-        model.addAttribute("CoureType", type);
+    public String questioneditor(Model model, @RequestParam String type, @RequestParam(required = false) String id){
+        model.addAttribute("typeID", type);
         model.addAttribute("id", id);
-        String survey = courseManagement.getSurveyforTyp(id,type);
-        model.addAttribute("survey", survey);
+        model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
         return "questioneditor4";
     }
 
 
     //Mapping to submit a questionaire 
     @PostMapping("/course/surveyeditor")
-    public String questioneditorSubmit(Form form, @RequestParam CourseType type, @RequestParam(required = false) String id) {
+    public String questioneditorSubmit(SurveyForm form, @RequestParam String type, @RequestParam(required = false) String id) {
         
-
 
         //Form empty -> Redirect to details again 
         if (form.getQuestionnairejson().length()==0) {
@@ -214,29 +211,18 @@ public class CourseController {
         //fetch course and go to details if present
         Optional<Course> course = courseRepository.findById(id);
         if (course.isPresent()){
-            Course crs = course.get();
 
-            //if CourseType is Lecture, then save Survey as lectureSurvey
-            if(type == CourseType.LECTURE) {
-                crs.setLectureSurvey(form.getQuestionnairejson());
-            }
 
-            //if CourseType is Tutorial, then save Survey as lectureSurvey
-            if(type == CourseType.TUTORIAL){
-                crs.setTutorialSurvey(form.getQuestionnairejson());
-            }
-
-            //if CourseType is Seminar, then save Survey as lectureSurvey
-            if(type == CourseType.SEMINAR){
-                crs.setSeminarSurvey(form.getQuestionnairejson());
-            }
-
-            courseManagement.saveCourse(crs);
-            //if type is none of the correct values
-            if((type != CourseType.LECTURE) && (type != CourseType.TUTORIAL) && (type != CourseType.SEMINAR)){
+            // if type is none of the correct values
+            if((type != "LECTURE") && (type != "TUTORIAL") && (type != "SEMINAR")){
                 //TODO: Where to go from here? Back to Survey or error html
+                System.out.println("type is null");
             }
 
+            else{
+                //Method from courseManager which sets the survey for the relevant surveyType
+                courseManagement.setSurveyforType(id, type, form);
+            }
 
 
             //Redirect back to CourseDetails page
@@ -263,7 +249,7 @@ public class CourseController {
 
     //Mapping for Survey html view
     @GetMapping("/survey")
-    public String SuveyView (Model model, @RequestParam CourseType type, @RequestParam(required = false) String id){
+    public String SuveyView (Model model, @RequestParam String type, @RequestParam(required = false) String id){
         //redirect 
         if (id == null) {
 			return "redirect:../";
@@ -287,26 +273,15 @@ public class CourseController {
     //Mapping to recieve SURVEY from server
     @GetMapping("/survey/get")
     @ResponseBody
-    public String sendSurvey( @RequestParam CourseType type, @RequestParam(required = false) String id){
+    public String sendSurvey( @RequestParam String type, @RequestParam(required = false) String id){
         
         //redirect 
         if (id == null) {
 			return null;
         }
         
-        //fetch course and go to details if present
-        Optional<Course> course = courseRepository.findById(id);
-        if (course.isPresent() && type == CourseType.LECTURE){
-            return course.get().getLectureSurvey();
-        }
-        else if (course.isPresent() && type == CourseType.TUTORIAL){
-            return course.get().getTutorialSurvey();
-        }
-        else if (course.isPresent() && type == CourseType.SEMINAR){
-            return course.get().getSeminarSurvey();
-        }
         else{
-            return null;  //Returns null, handle in JavaScript 
+            return courseManagement.getSurveyforType(id, type);
         }
     }
 
@@ -323,7 +298,7 @@ public class CourseController {
     //PostMapping to submit survey and serialize results
     //---------------------------------------------------------------------------
     @PostMapping("survey")
-    public ResponseEntity recieveResponseJSON(Form form, @RequestParam CourseType type, @RequestParam(required = false) String id){
+    public ResponseEntity recieveResponseJSON(SurveyForm form, @RequestParam String type, @RequestParam(required = false) String id){
         
         //get JSON Response as string
         String JsonResponse = form.getQuestionnairejson();
