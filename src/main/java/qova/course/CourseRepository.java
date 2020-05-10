@@ -11,11 +11,11 @@ import org.springframework.data.repository.CrudRepository;
 @Repository
 public interface CourseRepository extends CrudRepository <Course, String> {
     
-    public Iterable<Course> findBycourseInstanceAfter(LocalDate date);
+    public Iterable<Course> findBySemesterDateAfter(LocalDate date);
 
-    public Iterable<Course> findBycourseInstanceBefore(LocalDate date);
+    public Iterable<Course> findBySemesterDateBefore(LocalDate date);
 
-    public Iterable<Course> findBycourseInstanceBetween(LocalDate date, LocalDate date2);
+    public Iterable<Course> findBySemesterDateBetween(LocalDate date, LocalDate date2);
 
 }
 

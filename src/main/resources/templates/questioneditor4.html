@@ -25,10 +25,10 @@
     <button class="Button NewQuestion" onclick="addSingleChoiceQuestion()">Füge eine Single-Choice-Frage hinzu</button>
     <button class="Button NewQuestion" onclick="addDropDownQuestion()"> Füge eine DropDown-Frage hinzu</button>
     <button class="Button NewQuestion" onclick="getJson()">Fragebogen abschicken</button>
-    <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}">
+    <form action="/41" method="post" th:object="${form}">
         <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
         <button class="Button NewQuestion" type="submit"  >Abschicken</button> </form>
-    <div class="Json" id="json" th:text="${survey}"></div>
+    <div class="Json" id="json"></div>
 </div>
 
 <div class="column right" id="questionnaire">

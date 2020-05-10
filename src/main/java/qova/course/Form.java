@@ -1,11 +1,13 @@
 package qova.course;
 
 
+import lombok.Data;
 
-public class SurveyForm {
+
+public class Form {
     private String questionnairejson;
 
-    public SurveyForm(String questionnairejson){
+    public Form(String questionnairejson){
         this.questionnairejson = questionnairejson;
     }
 

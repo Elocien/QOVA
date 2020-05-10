@@ -51,12 +51,12 @@ public class Course {
     private int classTotalSeminar;
 
     //The number representing the semester this course is taken by students
-    private int semesterOfStudents;
+    private int semester;
 
     private CourseFaculty faculty;
 
     //The date at which indicates to which semester the course belongs to 
-    private LocalDate courseInstance;  
+    private LocalDate semesterDate;
 
 
     //Needed for JPA purposes
@@ -76,7 +76,7 @@ public class Course {
      * @param semester          What semester is the Subject taken by students
      * @param faculty           Enum defining which faculty the subject belongs to 
      */
-    public Course(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalTutorial, int classTotalSeminar, int semesterOfStundets, CourseFaculty faculty, LocalDate courseInastance){
+    public Course(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalTutorial, int classTotalSeminar, int semester, CourseFaculty faculty, LocalDate semesterDate){
         this.name = name;
         this.lectureExists = lectureExists;
         this.tutorialExists = tutorialExists;
@@ -86,9 +86,9 @@ public class Course {
         this.seminarSurvey = seminarSurvey;
         this.classTotalTutorial = classTotalTutorial;
         this.classTotalSeminar = classTotalSeminar;
-        this.semesterOfStudents = semesterOfStundets;
+        this.semester = semester;
         this.faculty=faculty;
-        this.courseInstance = courseInastance;
+        this.semesterDate = semesterDate;
     }
 
     public String getId(){
@@ -167,12 +167,12 @@ public class Course {
         this.classTotalSeminar = classTotal;
     }
 
-    public int getSemesterOfStudents(){
-        return this.semesterOfStudents;
+    public int getSemester(){
+        return this.semester;
     }
 
-    public void setSemesterOfStudents(int semester){
-        this.semesterOfStudents = semester;
+    public void setSemester(int semester){
+        this.semester = semester;
     }
 
     public CourseFaculty getFaculty(){
@@ -183,12 +183,12 @@ public class Course {
         this.faculty = faculty;
     }
 
-    public LocalDate getCourseInstance(){
-        return this.courseInstance;
+    public LocalDate getSemesterDate(){
+        return this.semesterDate;
     }
 
-    public void setCourseInstance(LocalDate date){
-        this.courseInstance = date;
+    public void setCreationDate(LocalDate date){
+        this.semesterDate = date;
     }
 }
 
