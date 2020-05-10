@@ -58,6 +58,12 @@ public class CourseController {
         return "courses";
     }
 
+    @GetMapping("/courses/new")
+    public String courseNew () {
+        return "courseNew";
+    }
+
+
 
     //Shows the details for a specific course
     @GetMapping("/course/details")
