@@ -33,17 +33,17 @@ public class CourseForm {
     private int classTotalTutorial;
 
     @NotNull
-    private int semester;
+    private int semesterOfStudents;
 
     @NotNull
     private CourseFaculty faculty;
 
+    //Taken as String from model
     @NotNull
-    private LocalDate semesterDate;
+    private String courseInstanceString;
 
 
-
-    public CourseForm(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalSeminar, int classTotaltutorial, int semester, CourseFaculty faculty, LocalDate semesterDate){
+    public CourseForm(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalSeminar, int classTotaltutorial, int semesterOfStudents, CourseFaculty faculty, String courseInstanceString){
         this.name = name;
         this.lectureExists = lectureExists;
         this.tutorialExists = tutorialExists;
@@ -53,9 +53,9 @@ public class CourseForm {
         this.seminarSurvey = seminarSurvey;
         this.classTotalSeminar = classTotalSeminar;
         this.classTotalTutorial = classTotaltutorial;
-        this.semester = semester;
+        this.semesterOfStudents = semesterOfStudents;
         this.faculty=faculty;
-        this.semesterDate = semesterDate;
+        this.courseInstanceString = courseInstanceString;
     }
 
     public String getName(){
@@ -94,16 +94,16 @@ public class CourseForm {
         return this.classTotalTutorial;
     }
 
-    public int getSemester(){
-        return this.semester;
+    public int getSemesterOfStudents(){
+        return this.semesterOfStudents;
     }
 
     public CourseFaculty getFaculty(){
         return this.faculty;
     }
 
-    public LocalDate getSemesterDate(){
-        return this.semesterDate;
+    public String getCourseInstance(){
+        return this.courseInstanceString;
     }
 
 }
