@@ -235,6 +235,7 @@ public class CourseController {
             //if type is none of the correct values
             if((type != CourseType.LECTURE) && (type != CourseType.TUTORIAL) && (type != CourseType.SEMINAR)){
                 //TODO: Where to go from here? Back to Survey or error html
+                return "redirect:/";
             }
 
 
