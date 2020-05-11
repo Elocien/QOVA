@@ -1,6 +1,6 @@
 body {
-  --tu_blue: #002557;
-  --tu_blue_highlight: #274275;
+  --tu_blue: rgb(0, 37, 87);
+  --tu_blue_highlight: rgb(200, 200, 200);
   background: url(..//images/seamless-bg.jpg);
   background-size: 300px 300px;
   min-height: 100vh;
@@ -27,9 +27,12 @@ input[type=number] {
 
 .btn-primary {
   background-color: var(--tu_blue);
+  border-color: black;
 }
 .btn-primary:hover {
   background-color: var(--tu_blue_highlight);
+  color: black;
+  border-color: black;
 }
 
 .page-footer {
@@ -108,4 +111,8 @@ input[type=number] {
   background-color: white;
   border-width: 1px;
   border-color: grey;
+}
+
+.form_color {
+  background-color: var(--tu_blue_highlight);
 }
