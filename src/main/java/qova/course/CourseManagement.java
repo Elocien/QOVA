@@ -84,13 +84,13 @@ public class CourseManagement {
         Optional<Course> crs = courses.findById(id);
         if (crs.isPresent()){
             Course course = crs.get();
-            if (type == "LECTURE"){
+            if (type.equals("LECTURE")){
                 return course.getLectureSurvey();
             }
-            else if (type == "SEMINAR"){
+            else if (type.equals("SEMINAR")){
                 return course.getSeminarSurvey();
             }
-            else if (type == "TUTORIAL"){
+            else if (type.equals("TUTORIAL")){
                 return course.getTutorialSurvey();
             }
         }
@@ -106,8 +106,9 @@ public class CourseManagement {
             Course course = crs.get();
             //if CourseType is Lecture, then save Survey as lectureSurvey
             if(type.equals("LECTURE")) {
-                System.out.println("lol");
-                course.setLectureSurvey(form.getQuestionnairejson()); 
+                System.out.println("Der Type is Lecture");
+                course.setLectureSurvey(form.getQuestionnairejson());
+                System.out.println(course.getLectureSurvey());
             }
             else if(type == "TUTORIAL") {
                 course.setTutorialSurvey(form.getQuestionnairejson());

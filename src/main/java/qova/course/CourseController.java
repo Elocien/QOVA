@@ -222,6 +222,7 @@ public class CourseController {
             if (type.equals("LECTURE")){
                 System.out.println("True mit Equels");
                 courseManagement.setSurveyforType(id, type, form);
+                System.out.println(courseRepository.findById(id).get().getLectureSurvey());
             }
             // if type is none of the correct values
             if((type != "LECTURE") && (type != "TUTORIAL") && (type != "SEMINAR")){
