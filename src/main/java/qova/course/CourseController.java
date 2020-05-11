@@ -58,11 +58,6 @@ public class CourseController {
         return "courses";
     }
 
-    @GetMapping("/courses/new")
-    public String courseNew(){
-        return "courseNew";
-    }
-
 
 
     //Shows the details for a specific course
@@ -103,7 +98,7 @@ public class CourseController {
 
 
     //Create Course
-    @GetMapping("course/create")
+    @GetMapping("course/new")
 	public String createCourse(Model model, CourseForm form) {
 
         model.addAttribute("form", form);
@@ -116,7 +111,7 @@ public class CourseController {
 
 
     //Validation of Created course
-	@PostMapping("course/create")
+	@PostMapping("course/new")
 	public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
 			BindingResult result) {
 

@@ -103,3 +103,9 @@ input[type=number] {
 .about_text {
   background-color: rgba(100, 100, 100, 0.9);
 }
+
+.form-control {
+  background-color: white;
+  border-width: 1px;
+  border-color: grey;
+}
