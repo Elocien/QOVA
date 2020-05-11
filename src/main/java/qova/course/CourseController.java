@@ -219,12 +219,15 @@ public class CourseController {
         Optional<Course> course = courseRepository.findById(id);
         if (course.isPresent()){
 
-
+            if (type.equals("LECTURE")){
+                System.out.println("True mit Equels");
+                courseManagement.setSurveyforType(id, type, form);
+            }
             // if type is none of the correct values
             if((type != "LECTURE") && (type != "TUTORIAL") && (type != "SEMINAR")){
                 //TODO: Where to go from here? Back to Survey or error html
 
-                System.out.println("type is null");
+                System.out.println("type is null:"+ type);
                 return "redirect:/";
 
             }

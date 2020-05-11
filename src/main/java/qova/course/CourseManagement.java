@@ -105,7 +105,8 @@ public class CourseManagement {
         if (crs.isPresent()){
             Course course = crs.get();
             //if CourseType is Lecture, then save Survey as lectureSurvey
-            if(type == "LECTURE") {
+            if(type.equals("LECTURE")) {
+                System.out.println("lol");
                 course.setLectureSurvey(form.getQuestionnairejson()); 
             }
             else if(type == "TUTORIAL") {
@@ -114,6 +115,7 @@ public class CourseManagement {
             else if (type == "SEMINAR"){
                 course.setSeminarSurvey(form.getQuestionnairejson());
             }
+            courses.save(course);
         }
     }
 
