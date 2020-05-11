@@ -1,0 +1,101 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />	
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
+    <title th:text="#{home.title}">TITLE</title>
+</head>
+<body class="bg-light"></body>
+
+    <div th:include="navbar"></div>
+
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-12">
+
+                <h2 class="font-weight-bold text-center mb-4 mt-4" th:text="#{new.headline}">NEW COURSE</h2>
+
+                <form class="border border-dark rounded p-4 bg-light">
+                    <!--Checkboxes-->
+                    <div class="form-row justify-content-md-center">
+                        <div class="col-sm-2">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="lectureCheck">
+                                <label class="custom-control-label" for="lectureCheck" th:text="#{new.lecture}">LECTURE</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="practiceCheck" data-toggle="collapse" data-target="#collapseTutor"  aria-expanded="false" aria-controls="collapseTutor">
+                                <label class="custom-control-label" for="practiceCheck" th:text="#{new.practice}">PRACTICE</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-2">
+                            <div class="custom-control custom-checkbox">
+                                <input type="checkbox" class="custom-control-input" id="seminarCheck" data-toggle="collapse" data-target="#collapseSeminar"  aria-expanded="false" aria-controls="collapseSeminar">
+                                <label class="custom-control-label" for="seminarCheck" th:text="#{new.seminar}">SEMINAR</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider border-dark"></div>
+                    <!--Inputs-->
+                    <div class="text-center">
+                        <!--Permanent-->
+                        <div class="form-row">
+                            <div class="col-md-5">
+                                <label for="courseName" th:text="#{new.courseName}">COURSE NAME</label>
+                                <input type="text" class="form-control" id="courseName" placeholder="..." required>
+                            </div>
+                            <div class="col-md-5">
+                                <label for="courseFaculty" th:text="#{new.courseFaculty}">COURSE FACULTY</label>
+                                <input type="text" class="form-control" id="courseFaculty" placeholder="..." required>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="courseSemester" th:text="#{new.courseSemester}">COURSE SEMESTER</label>
+                                <input type="number" class="form-control" id="courseSemester" placeholder="20XX" min="2000" max="3000" required>
+                                <div class="invalid-feedback">
+                                    Are you a time traveler?
+                                </div>
+                            </div>
+                        </div>
+                        <!--Collapsables-->
+                        <div class="form-row">
+                            <div class="col-md-5 mt-3 collapse" id="collapseSeminar">
+                                <label for="courseSeminar" th:text="#{new.courseSeminar}">COURSE SEMINAR</label>
+                                <input type="number" class="form-control" id="courseSeminar" placeholder="0" min="0" required>
+                                <div class="invalid-feedback">
+                                    You do know how numbers work, right?
+                                </div>
+                            </div>
+                            <div class="col-md-5 mt-3 collapse" id="collapseTutor">
+                                <label for="courseTutor" th:text="#{new.courseTutor}">COURSE TUTOR</label>
+                                <input type="number" class="form-control" id="courseTutor" placeholder="0" min="0" required>
+                                <div class="invalid-feedback">
+                                    You do know how numbers work, right?
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+    
+    <div th:include="footer"></div>
+
+</body>
+</html>

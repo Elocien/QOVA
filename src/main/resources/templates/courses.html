@@ -1,5 +1,6 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<<<<<<< HEAD
 	<head>
 		<meta charset="utf-8">
     	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -35,7 +36,55 @@
                         </table>
                     </div>
                 </div>
+=======
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />	
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />		
+    <title th:text="#{home.title}">TITLE</title>
+</head>
+<body class="bg-light"></body>
+
+    <div th:include="navbar"></div>
+
+    <div class="container">
+
+        <div class="row text-center">
+            <div class="col-lg-12 mt-4">
+
+                <h2 class="font-weight-bold" th:text="#{navbar.course}">COURSE MANAGEMENT</h2>
+                <h5 class="font-weight-light" th:text="#{course.description}">COURSE DESCRIPTION</h5>
+                <a class="btn btn-primary mt-4 mb-4" th:text="#{course.new}" th:href="@{/courses/new}">NEW COURSE</a>
+                <h5 class="font-weight-light" th:text="#{course.table_headline}">COURSE TABLE</h5>
+
+                <table class="table table-hover">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col" th:text="#{course.name}">NAME</th>
+                            <th scope="col" th:text="#{course.semester}">SEMESTER</th>
+                            <th scope="col" th:text="#{course.semesterDate}">YEAR</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-left">
+                        <tr th:each="course : ${courseList}" style="cursor: pointer" th:onclick="'window.location.href = \'' + @{/course/details?id={id}(id=${course.id})} + '\''">
+                            <td th:text="${course.name}">NAME</td>
+                            <td th:text="${course.semester}">SEMESTER</td>
+                            <td th:text="${course.semesterDate}">YEAR</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+>>>>>>> bb413fc74472137e096d00ddbe9f4c83b4df04f7
             </div>
         </div>
-    </body>
+
+    </div>
+
+    <div th:include="footer"></div>
+
+</body>
 </html>

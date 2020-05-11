@@ -3,6 +3,26 @@ body {
   --tu_blue_highlight: #274275;
   background: url(..//images/seamless-bg.jpg);
   background-size: 300px 300px;
+  min-height: 100vh;
+  position: relative;
+  margin: 0;
+  padding-bottom: 56px;
+}
+
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+
+/*Removes arrows from number input fields*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
 }
 
 .btn-primary {

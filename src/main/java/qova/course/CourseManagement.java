@@ -42,7 +42,7 @@ public class CourseManagement {
         var classTotalTutorial = form.getClassTotalTutorial();
         var semesterOfStudents = form.getSemesterOfStudents();
         var faculty = form.getFaculty();
-        var courseInstance = form.getCourseInstance();
+        var courseInstance = parseSemesterString(form.getCourseInstance());
 
         Course crs  = new Course(name, lectureExists, tutorialExists, seminarExists, "", "", "", classTotalTutorial, classTotalSeminar, semesterOfStudents, faculty, courseInstance);
         courses.save(crs);
@@ -73,26 +73,48 @@ public class CourseManagement {
             course.setClassTotalSeminar(form.getClassTotalSeminar());
             course.setSemesterOfStudents(form.getSemesterOfStudents());
             course.setFaculty(form.getFaculty());
-
+            course.setCourseInstance(parseSemesterString(form.getCourseInstance()));
         }
     }
 
-    //getter for the Survey String
-    public String getSurveyforTyp ( String id, CourseType type){
+
+
+    //Gets the relevant Survey in the course objects, based on the given surveyType
+    public String getSurveyforType (String id, String type){
         Optional<Course> crs = courses.findById(id);
         if (crs.isPresent()){
             Course course = crs.get();
-            if (type == CourseType.LECTURE){
+            if (type == "LECTURE"){
                 return course.getLectureSurvey();
             }
-            else if (type == CourseType.SEMINAR){
+            else if (type == "SEMINAR"){
                 return course.getSeminarSurvey();
             }
-            else if (type == CourseType.TUTORIAL){
+            else if (type == "TUTORIAL"){
                 return course.getTutorialSurvey();
             }
         }
         return "Something went wrong";
+    }
+
+
+
+    //Sets the relevant Survey in the course objects, based on the given surveyType
+    public void setSurveyforType (String id, String type, SurveyForm form){
+        Optional<Course> crs = courses.findById(id);
+        if (crs.isPresent()){
+            Course course = crs.get();
+            //if CourseType is Lecture, then save Survey as lectureSurvey
+            if(type == "LECTURE") {
+                course.setLectureSurvey(form.getQuestionnairejson()); 
+            }
+            else if(type == "TUTORIAL") {
+                course.setTutorialSurvey(form.getQuestionnairejson());
+            }
+            else if (type == "SEMINAR"){
+                course.setSeminarSurvey(form.getQuestionnairejson());
+            }
+        }
     }
 
 
@@ -242,7 +264,59 @@ public class CourseManagement {
         return semesters;
     }
 
-    public Course saveCourse ( Course course){
+
+    //Parse Semester String and convert to date
+    public LocalDate parseSemesterString(String semString){   
+        
+        //Split string at space
+        String[] tokens = semString.split(" ");
+
+
+        int year;
+        try {year = Integer.parseInt(tokens[1]);}
+        catch (NumberFormatException e){year = 0000;}
+
+        if(tokens[0].equals("SoSe")){
+            return LocalDate.of(year, 4, 1);
+        }
+
+        else if(tokens[0].equals("WiSe")){
+            return LocalDate.of(year, 10, 1);
+        }
+
+        else{   //TODO: what to do when wrong date is entered?
+            System.out.println("something went wrong");
+            return LocalDate.of(0, 1, 1);
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //TODO: remove in final build I think (this is jakobs function)
+    public Course saveCourse (Course course){
         return courses.save(course);
     }
 
