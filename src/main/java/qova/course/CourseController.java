@@ -59,7 +59,7 @@ public class CourseController {
     }
 
     @GetMapping("/courses/new")
-    public String courseNew () {
+    public String courseNew(){
         return "courseNew";
     }
 
@@ -110,8 +110,10 @@ public class CourseController {
 
         //List of Semesters for Course Creator to pick from
         model.addAttribute("semesterDates", courseManagement.findSemesters());
-		return "courseCreate";
+		return "courseNew";
 	}
+
+
 
     //Validation of Created course
 	@PostMapping("course/create")
@@ -121,7 +123,9 @@ public class CourseController {
 
 		if (result.hasErrors()) {
 			return createCourse(model, form);
-		}
+        }
+
+
 
         //Management Method returns String of new Course
         String id = courseManagement.createCourseReturnId(form);
@@ -255,9 +259,6 @@ public class CourseController {
 
 
 
-
-
-
     //Get Survey from Server 
     //---------------------------------------------------------------------------
 
@@ -329,6 +330,20 @@ public class CourseController {
     }
 
     //---------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

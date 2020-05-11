@@ -63,8 +63,8 @@
                                 <input type="text" class="form-control" id="courseFaculty" placeholder="..." required>
                             </div>
                             <div class="col-md-2">
-                                <label for="courseSemester" th:text="#{new.courseSemester}">COURSE SEMESTER</label>
-                                <input type="number" class="form-control" id="courseSemester" placeholder="20XX" min="2000" max="3000" required>
+                                <label for="semesterOfStudents" th:text="#{new.courseSemester}">COURSE SEMESTER</label>
+                                <input type="number" class="form-control" id="semesterOfStudents" placeholder="20XX" min="2000" max="3000" required>
                                 <div class="invalid-feedback">
                                     Are you a time traveler?
                                 </div>
@@ -73,15 +73,15 @@
                         <!--Collapsables-->
                         <div class="form-row">
                             <div class="col-md-5 mt-3 collapse" id="collapseSeminar">
-                                <label for="courseSeminar" th:text="#{new.courseSeminar}">COURSE SEMINAR</label>
-                                <input type="number" class="form-control" id="courseSeminar" placeholder="0" min="0" required>
+                                <label for="classTotalSeminar" th:text="#{new.courseSeminar}">COURSE SEMINAR</label>
+                                <input type="number" class="form-control" id="classTotalSeminar" placeholder="0" min="0" required>
                                 <div class="invalid-feedback">
                                     You do know how numbers work, right?
                                 </div>
                             </div>
                             <div class="col-md-5 mt-3 collapse" id="collapseTutor">
-                                <label for="courseTutor" th:text="#{new.courseTutor}">COURSE TUTOR</label>
-                                <input type="number" class="form-control" id="courseTutor" placeholder="0" min="0" required>
+                                <label for="classTotalTutorial" th:text="#{new.courseTutor}">COURSE TUTOR</label>
+                                <input type="number" class="form-control" id="classTotalTutorial" placeholder="0" min="0" required>
                                 <div class="invalid-feedback">
                                     You do know how numbers work, right?
                                 </div>

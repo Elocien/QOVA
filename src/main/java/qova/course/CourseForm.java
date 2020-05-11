@@ -1,7 +1,5 @@
 package qova.course;
 
-import java.time.LocalDate;
-
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -27,13 +25,13 @@ public class CourseForm {
     private String seminarSurvey;
     
     @NotNull
-    private int classTotalSeminar;
+    private Integer classTotalSeminar;
 
     @NotNull
-    private int classTotalTutorial;
+    private Integer classTotalTutorial;
 
     @NotNull
-    private int semesterOfStudents;
+    private Integer semesterOfStudents;
 
     @NotNull
     private CourseFaculty faculty;
@@ -43,7 +41,7 @@ public class CourseForm {
     private String courseInstanceString;
 
 
-    public CourseForm(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalSeminar, int classTotaltutorial, int semesterOfStudents, CourseFaculty faculty, String courseInstanceString){
+    public CourseForm(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, Integer classTotalSeminar, Integer classTotalTutorial, Integer semesterOfStudents, CourseFaculty faculty, String courseInstanceString){
         this.name = name;
         this.lectureExists = lectureExists;
         this.tutorialExists = tutorialExists;
@@ -52,7 +50,7 @@ public class CourseForm {
         this.tutorialSurvey = tutorialSurvey;
         this.seminarSurvey = seminarSurvey;
         this.classTotalSeminar = classTotalSeminar;
-        this.classTotalTutorial = classTotaltutorial;
+        this.classTotalTutorial = classTotalTutorial;
         this.semesterOfStudents = semesterOfStudents;
         this.faculty=faculty;
         this.courseInstanceString = courseInstanceString;
@@ -86,15 +84,15 @@ public class CourseForm {
         return this.seminarSurvey;
     }
 
-    public int getClassTotalSeminar(){
+    public Integer getClassTotalSeminar(){
         return this.classTotalSeminar;
     }
 
-    public int getClassTotalTutorial(){
+    public Integer getClassTotalTutorial(){
         return this.classTotalTutorial;
     }
 
-    public int getSemesterOfStudents(){
+    public Integer getSemesterOfStudents(){
         return this.semesterOfStudents;
     }
 

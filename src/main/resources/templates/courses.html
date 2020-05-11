@@ -28,15 +28,15 @@
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col" th:text="#{course.name}">NAME</th>
-                            <th scope="col" th:text="#{course.semester}">SEMESTER</th>
-                            <th scope="col" th:text="#{course.semesterDate}">YEAR</th>
+                            <th scope="col" th:text="#{course.courseInstance}">SEMESTER</th>
+                            <th scope="col" th:text="#{course.semesterOfStudents}">YEAR</th>
                         </tr>
                     </thead>
                     <tbody class="text-left">
                         <tr th:each="course : ${courseList}" style="cursor: pointer" th:onclick="'window.location.href = \'' + @{/course/details?id={id}(id=${course.id})} + '\''">
                             <td th:text="${course.name}">NAME</td>
-                            <!--<td th:text="${course.semester}">SEMESTER</td>
-                            <td th:text="${course.semesterDate}">YEAR</td>-->
+                            <td th:text="${course.courseInstance}">SEMESTER</td>
+                            <td th:text="${course.semesterOfStudents}">YEAR</td>
                         </tr>
                     </tbody>
                 </table>
