@@ -179,17 +179,18 @@ public class CourseManagement {
 
     //Generates a set amount of semesters which are added to the model, to pick from as course creation dates.
     /**
-     * Function used to populate a drop down menu in course creation UI. Fills a list with (x) future semesters and (y) previous semsters, as well as the current semester
-     * @return
+     * Function used to populate a drop down menu in course creation UI. Fills a list with (x) future semesters and (y) previous semsters, as well as the current semester. {@linkplain Course}
+     * only has a LocalDate attribute, so parseSemesterString method in controller converts this string back to a date, which is used for finding courses by date
+     * @return ArrayList<String> with strings of type: "SoSe xxxx" or "WiSe xxxx/yyyy"
      */
-    public ArrayList<LocalDate> findSemesters(){
+    public ArrayList<String> findSemesters(){
         
         //Current Date
-        LocalDate now = LocalDate.now();
+        LocalDate dateNow = LocalDate.now();
 
         //Current year and month as ints
-        int currentYear = now.getYear();
-        int currentMonth = now.getMonthValue();
+        int currentYear = dateNow.getYear();
+        int currentMonth = dateNow.getMonthValue();
 
         //Future Semesters to add (Given in years)
         int x = 1;
@@ -200,7 +201,7 @@ public class CourseManagement {
 
 
         //List sent to controller
-        ArrayList<LocalDate> semesters = new ArrayList<LocalDate>();
+        ArrayList<String> semesters = new ArrayList<String>();
 
 
         //Summer semester start is April(4), winter semester starts in October(10)
@@ -210,36 +211,36 @@ public class CourseManagement {
         //if winter semester and in year xx
         if(currentMonth <4){
             //previous semesters
-            for(int i=0; i < x; i++){
-                semesters.add(LocalDate.of((currentYear-(2+i)), 10, 1));
-                semesters.add(LocalDate.of((currentYear-(1+i)), 4, 1));
+            for(int i=x; i > 0; i--){
+                semesters.add("WiSe " + String.valueOf(currentYear-(2+i)) + "/" + String.valueOf(currentYear-(1+i)));
+                semesters.add("SoSe " + String.valueOf(currentYear-(1+i)));
             }
 
             //current Semester
-            semesters.add(LocalDate.of((currentYear-1), 10, 1));
+            semesters.add("WiSe " + String.valueOf(currentYear-1) + "/" + String.valueOf(currentYear));
 
             //future semesters
-            for(int i=0; i < y; i++){
-                semesters.add(LocalDate.of((currentYear+i), 4, 1));
-                semesters.add(LocalDate.of((currentYear+i), 10, 1));
+            for(int i = 0; i < y; i++){
+                semesters.add("SoSe " + String.valueOf(currentYear+i));
+                semesters.add("WiSe " + String.valueOf(currentYear+i) + "/" + String.valueOf(currentYear + (i + 1)));
             }
         }
         
         //if winter semster and in year yy
         else if(currentMonth >= 10){
             //previous semesters
-            for(int i=0; i < x; i++){
-                semesters.add(LocalDate.of((currentYear-(1+i)), 10, 1));
-                semesters.add(LocalDate.of((currentYear-i), 4, 1));
+            for(int i=x; i > 0; i--){
+                semesters.add("WiSe " + String.valueOf(currentYear-(1+i)) + "/" + String.valueOf(currentYear-(i)));
+                semesters.add("SoSe " + String.valueOf(currentYear-i));
             }
 
             //current Semester
-            semesters.add(LocalDate.of((currentYear), 10, 1));
+            semesters.add("WiSe " + String.valueOf(currentYear) + "/" + String.valueOf(currentYear + 1));
 
             //future semesters
             for(int i=0; i < y; i++){
-                semesters.add(LocalDate.of((currentYear+(1+i)), 4, 1));
-                semesters.add(LocalDate.of((currentYear+(1+i)), 10, 1));
+                semesters.add("SoSe " + String.valueOf(currentYear+(1+i)));
+                semesters.add("WiSe " + String.valueOf(currentYear+(1+i)) + "/" + String.valueOf(currentYear+(2+i)));
             }
         }
 
@@ -247,18 +248,19 @@ public class CourseManagement {
         //if summer semester
         else{
             //previous semesters
-            for(int i=0; i < x; i++){
-                semesters.add(LocalDate.of((currentYear-(1+i)), 4, 1));
-                semesters.add(LocalDate.of((currentYear-(1+i)), 10, 1));
+            for(int i=x; i > 0; i--){
+                semesters.add("SoSe " + String.valueOf(currentYear-(1+i)));
+                semesters.add("WiSe " + String.valueOf(currentYear-(1+i)) + "/" + String.valueOf(currentYear- i));
             }
 
             //current Semester
-            semesters.add(LocalDate.of((currentYear), 4, 1));
+            semesters.add("SoSe " + String.valueOf(currentYear));
 
             //future semesters
             for(int i=0; i < y; i++){
-                semesters.add(LocalDate.of((currentYear+i), 10, 1));
-                semesters.add(LocalDate.of((currentYear+(1+i)), 4, 1));
+                semesters.add("WiSe " + String.valueOf(currentYear+i) + "/" + String.valueOf(currentYear + (i + 2)));
+                semesters.add("SoSe " + String.valueOf(currentYear+(1+i)));
+                
             }
         }
         
@@ -268,22 +270,45 @@ public class CourseManagement {
     }
 
 
+
+
     //Parse Semester String and convert to date
     public LocalDate parseSemesterString(String semString){   
         
         //Split string at space
         String[] tokens = semString.split(" ");
 
-
         int year;
-        try {year = Integer.parseInt(tokens[1]);}
-        catch (NumberFormatException e){year = 0000;}
 
+        //If SoSe
         if(tokens[0].equals("SoSe")){
+            
+            //try to parse the string for the int of the year
+            try {year = Integer.parseInt(tokens[1]);}
+
+            //else set year to 00000
+            catch (NumberFormatException e){year = 0000;}
+
+            //return date
             return LocalDate.of(year, 4, 1);
         }
 
+
+        //If WiSe
         else if(tokens[0].equals("WiSe")){
+            
+            //String is of form: "WiSe xxxx/yyyy", so we split at "/"
+            String[] yearX = tokens[1].split("/");
+
+            System.out.println(yearX[0]);
+
+            //Try to parse the year (the year xxxx from "xxxx/yyyy") from string. We choose xxxx because this makes sorting easier later
+            try {year = Integer.parseInt(yearX[0]);}
+
+            //else set year to 0000
+            catch (NumberFormatException e){year = 0000;}
+
+            //return Date
             return LocalDate.of(year, 10, 1);
         }
 
