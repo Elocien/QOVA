@@ -1,14 +1,21 @@
 package qova.course;
 
+import java.io.IOException;
 import java.util.Base64;
 import java.util.Objects;
 
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import com.google.zxing.WriterException;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -77,14 +84,14 @@ public class CourseController {
 
             //QRCode URL (Redirects to a courses survey when scanned)
             String LectureSurveyURl = "localhost:8080/survey?type=LECTURE&id="+ course.get().getId();
-            String TutorialSurveyURl = "localhost:8080/survey?type=TUTORIAL&id="+ course.get().getId();
+            String TutorialSurveyURl = "localhost:8080/survey?type=TUTORIAL&id="+ course.get().getId();   //TODO: replace localhost:8080 with domain name
             String SeminarSurveyURl = "localhost:8080/survey?type=SEMINAR&id="+ course.get().getId();
 
 
             //send byte array (the QRCode image) to model 
-            model.addAttribute("LectureQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(LectureSurveyURl)));  //TODO: course.get().getName() needs to be replaced with URL String
-            model.addAttribute("TutorialQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(TutorialSurveyURl)));  //TODO: course.get().getName() needs to be replaced with URL String
-            model.addAttribute("SeminarQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(SeminarSurveyURl)));  //TODO: course.get().getName() needs to be replaced with URL String
+            model.addAttribute("LectureQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(LectureSurveyURl)));  
+            model.addAttribute("TutorialQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(TutorialSurveyURl)));
+            model.addAttribute("SeminarQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(SeminarSurveyURl)));  
             
             return "courseDetails";
         } else {
@@ -177,14 +184,6 @@ public class CourseController {
 		courseManagement.updateCourseDetails(id, form);
 		return "redirect:../courses";
 	}
-
-
-
-
-
-
-
-
 
 
 
@@ -301,10 +300,6 @@ public class CourseController {
 
 
 
-
-
-
-
     //PostMapping to submit survey and serialize results
     //---------------------------------------------------------------------------
     @PostMapping("survey")
@@ -325,6 +320,66 @@ public class CourseController {
     }
 
     //---------------------------------------------------------------------------
+
+
+
+    //to test
+    //http://localhost:8080/qrcode?type=LECTURE&id=c000000000000001
+
+    //HttpResponse returns a qrcode png file
+    @GetMapping("/qrcode")
+    public HttpEntity<byte[]> qrcode(HttpServletResponse response, @RequestParam String type, @RequestParam(required = false) String id) throws IOException, WriterException  {
+
+        //QRCode URL (Redirects to a courses survey when scanned). Generated using pathvariables
+        String url = "localhost:8080/survey?type=" + type + "&id=" + id;  
+        
+        //find course
+        Optional<Course> crs = courseRepository.findById(id);
+
+        //generate filename
+        String filename = crs.get().getName() + type + "QRCode";
+
+        //Generate QRCode
+        byte[] qrcode = courseManagement.generateQRCodeImage(url);
+
+        //Set HTTP headers and return HttpEntity
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.IMAGE_PNG);
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
+        header.setContentLength(qrcode.length);
+
+        return new HttpEntity<byte[]>(qrcode, header);
+    }
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
