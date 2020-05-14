@@ -217,22 +217,16 @@ public class CourseController {
         Optional<Course> course = courseRepository.findById(id);
         if (course.isPresent()){
 
-            if (type.equals("LECTURE")){
-                System.out.println("True mit Equels");
-                courseManagement.setSurveyforType(id, type, form);
-                System.out.println(courseRepository.findById(id).get().getLectureSurvey());
-            }
-            // if type is none of the correct values
-            if((type != "LECTURE") && (type != "TUTORIAL") && (type != "SEMINAR")){
-                //TODO: Where to go from here? Back to Survey or error html
-
-                System.out.println("type is null:"+ type);
+            // if type is none of the correct values, then redirect to homepage
+            if(!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR"))){
+                //TODO: Where to go from here? Maybe send exception to trigger popup?
                 return "redirect:/";
 
             }
 
             else{
                 //Method from courseManager which sets the survey for the relevant surveyType
+                System.out.println("THIS worked");
                 courseManagement.setSurveyforType(id, type, form);
             }
 

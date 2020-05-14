@@ -103,55 +103,22 @@ public class CourseManagement {
     public void setSurveyforType (String id, String type, SurveyForm form){
         Optional<Course> crs = courses.findById(id);
         if (crs.isPresent()){
+            
             Course course = crs.get();
+
             //if CourseType is Lecture, then save Survey as lectureSurvey
             if(type.equals("LECTURE")) {
-                System.out.println("Der Type is Lecture");
                 course.setLectureSurvey(form.getQuestionnairejson());
-                System.out.println(course.getLectureSurvey());
             }
-            else if(type == "TUTORIAL") {
+            else if(type.equals("TUTORIAL")) {
                 course.setTutorialSurvey(form.getQuestionnairejson());
             }
-            else if (type == "SEMINAR"){
+            else if (type.equals("SEMINAR")){
                 course.setSeminarSurvey(form.getQuestionnairejson());
             }
-            courses.save(course);
         }
     }
 
-
-
-    //update the lecture survey
-    public void updateLectureSurvey(String id, CourseForm form){
-        Optional<Course> crs = courses.findById(id);
-        if (crs.isPresent()){
-            Course course = crs.get();
-            course.setLectureSurvey(form.getLectureSurvey());
-        }
-    }
-
-
-
-    //update the tutorial survey
-    public void updateTutorialSurvey(String id, CourseForm form){
-        Optional<Course> crs = courses.findById(id);
-        if (crs.isPresent()){
-            Course course = crs.get();
-            course.setTutorialSurvey(form.getTutorialSurvey());
-        }
-    }
-
-
-
-    //update the seminar survey
-    public void updateSeminarSurvey(String id, CourseForm form){
-        Optional<Course> crs = courses.findById(id);
-        if (crs.isPresent()){
-            Course course = crs.get();
-            course.setSeminarSurvey(form.getSeminarSurvey());
-        }
-    }
 
 
 
@@ -300,7 +267,6 @@ public class CourseManagement {
             //String is of form: "WiSe xxxx/yyyy", so we split at "/"
             String[] yearX = tokens[1].split("/");
 
-            System.out.println(yearX[0]);
 
             //Try to parse the year (the year xxxx from "xxxx/yyyy") from string. We choose xxxx because this makes sorting easier later
             try {year = Integer.parseInt(yearX[0]);}
@@ -313,7 +279,6 @@ public class CourseManagement {
         }
 
         else{   //TODO: what to do when wrong date is entered?
-            System.out.println("something went wrong");
             return LocalDate.of(0, 1, 1);
         }
     }

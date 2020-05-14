@@ -60,7 +60,9 @@
                     <a class="btn btn-primary" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" th:text="#{buttons.editSurveyTutorial}">some link</a>
                     <a class="btn btn-primary" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" th:text="#{buttons.editSurveySeminar}">some link</a>
                     
-                    
+                    <!--Test-->
+                    <a class="btn btn-primary" th:target="_blank" th:href="${'/qrcode?type=LECTURE&id='  + {course.id}}" th:text="#{buttons.download}">some link</a>
+
                     <button type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#deleteModal" th:text="#{buttons.delete}">DELETE</button>
                 </div>
                 <div class="col-lg-6" style="border-left: 1px solid #eee;">
