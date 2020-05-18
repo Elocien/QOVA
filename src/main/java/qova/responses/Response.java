@@ -9,6 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 import qova.course.Course;
+import qova.course.CourseType;
 
 
 @Entity
@@ -20,9 +21,10 @@ public class Response {
 
     @ManyToOne
     private Course course;
+    private CourseType type;
+
 
     private ResponseType responseType;
-
 
 
     //For text response
@@ -35,7 +37,7 @@ public class Response {
 
 
     //For Drop Down and Multiple Choice
-    private int responsePossiblilites;  //defines how many responses were set by survey author
+    private int responsePossiblilites;  
 
     private Boolean answer1;
     private Boolean answer2;
@@ -54,6 +56,46 @@ public class Response {
 	private Response() {
     }
 
+    /**
+     * The response Object is used to save user responses of any kind. Each response corresponds
+     * to the response of a user to a single questionaire question. 
+     * 
+     * @param dateTime Captures the date and time of the users submission (Technically captures 
+     * the time when the response is saved to the database
+     * 
+     * @param course The Course to which the Response belongs to (i.e. to which course did the 
+     * user respond to). This field is used to find the Response object when compiling responses
+     * for the summary pdf
+     * 
+     * @param type Enumeration which is either LECTURE, SURVEY or SEMINAR (also needed to find 
+     * the correct responses when compiling)
+     * 
+     * @param responsePossiblilites Used to set the number of fields to be evaluated. When
+     * summarising the users responses, this field is required to calculate the distribution.
+     * E.g. Response possibilities = 2. 20 people picked answer1, 10 answer2. Therefore 
+     * answer1 = 67% and answer2 = 33%
+     * 
+     * @param responseType //Emum which is one of the following: MULTIPLE_CHOICE, 
+     * DROP_DOWN, TEXT_RESPONSE or BINARY_ANSWER
+     * 
+     * @param textResponse Captures responses which are of type TEXT_RESPONSE
+     * 
+     * @param binaryAnswer Captures responses which are of type BINARY_ANSWER 
+     * TRUE when response yes/ja      and       FALSE when no/nein 
+     * 
+     * @param answer1 All of params of type answerN are set to true, in the case that they were 
+     * selected by the user, otherwise they are set to false
+     * 
+     * @param answer2
+     * @param answer3
+     * @param answer4
+     * @param answer5
+     * @param answer6
+     * @param answer7
+     * @param answer8
+     * @param answer9
+     * @param answer10
+     */
     public Response(Date dateTime, Course course, int responsePossiblilites, ResponseType responseType, String textResponse, Boolean binaryAnswer, Boolean answer1, Boolean answer2, Boolean answer3, Boolean answer4, Boolean answer5, Boolean answer6, Boolean answer7, Boolean answer8, Boolean answer9, Boolean answer10){
         this.dateTime = dateTime;
         this.course = course;

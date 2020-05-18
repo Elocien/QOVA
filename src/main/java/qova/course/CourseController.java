@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import qova.responses.ResponseRepository;
 
 
 
@@ -41,14 +40,9 @@ public class CourseController {
     private final CourseRepository courseRepository;
 
     @Autowired
-    private final ResponseRepository responseRepository;
-
-    @Autowired
-    CourseController(CourseManagement courseManagement, CourseRepository courseRepository, ResponseRepository responseRepository) {
+    CourseController(CourseManagement courseManagement, CourseRepository courseRepository) {
         this.courseManagement = Objects.requireNonNull(courseManagement);
         this.courseRepository = Objects.requireNonNull(courseRepository);
-        this.responseRepository = Objects.requireNonNull(responseRepository);
-
     }
 
     @GetMapping("/")
@@ -294,29 +288,6 @@ public class CourseController {
 
 
 
-    //PostMapping to submit survey and serialize results
-    //---------------------------------------------------------------------------
-    @PostMapping("survey")
-    public ResponseEntity recieveResponseJSON(SurveyForm form, @RequestParam String type, @RequestParam(required = false) String id){
-        
-        //get JSON Response as string
-        String JsonResponse = form.getQuestionnairejson();
-        
-
-        //Deserialize the String to a JavaObject Response (package qova.responses)
-        // response = Deserialize(JsonResponse);
-
-        //Save object 
-        // responseRepository.save(response)
-        
-        //if all goes well
-        return ResponseEntity.ok(HttpStatus.OK);
-    }
-
-    //---------------------------------------------------------------------------
-
-
-
     //to test
     //http://localhost:8080/qrcode?type=LECTURE&id=c000000000000001
 
@@ -394,8 +365,15 @@ public class CourseController {
 
 
     //test method
-    @GetMapping("/create")
-    public String createTest(){
+    @GetMapping("/createC")
+    public String createC(){
+        courseManagement.TestCreateCourse();
+        return "home";
+    }
+
+    //test method
+    @GetMapping("/createR")
+    public String creatR(){
         courseManagement.TestCreateCourse();
         return "home";
     }

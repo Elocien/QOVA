@@ -308,10 +308,6 @@ public class CourseManagement {
 
 
 
-    //TODO: remove in final build I think (this is jakobs function)
-    public Course saveCourse (Course course){
-        return courses.save(course);
-    }
 
 
 
