@@ -271,14 +271,17 @@ public class CourseController {
     @GetMapping("/survey/get")
     @ResponseBody
     public String sendSurvey( @RequestParam String type, @RequestParam(required = false) String id){
-        
+
         //redirect 
         if (id == null) {
 			return null;
         }
-        
+
         else{
-            return courseManagement.getSurveyforType(id, type);
+            String Json = courseManagement.getSurveyforType(id, type);
+            Json = Json.substring(1,Json.length()-1);
+            System.out.println(Json);
+            return Json;
         }
     }
 
@@ -376,6 +379,12 @@ public class CourseController {
     public String creatR(){
         courseManagement.TestCreateCourse();
         return "home";
+    }
+
+    //test method
+    @GetMapping("/jsTest")
+    public String JsTest(){
+        return "survey";
     }
 
 

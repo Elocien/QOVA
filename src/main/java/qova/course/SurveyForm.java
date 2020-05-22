@@ -3,6 +3,7 @@ package qova.course;
 
 
 public class SurveyForm {
+    
     private String questionnairejson;
 
     public SurveyForm(String questionnairejson){

@@ -103,7 +103,7 @@ public class CourseManagement {
     public void setSurveyforType (String id, String type, SurveyForm form){
         Optional<Course> crs = courses.findById(id);
         if (crs.isPresent()){
-            
+
             Course course = crs.get();
 
             //if CourseType is Lecture, then save Survey as lectureSurvey
