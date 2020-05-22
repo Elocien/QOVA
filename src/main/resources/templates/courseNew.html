@@ -62,7 +62,9 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="courseFaculty" th:text="#{new.courseFaculty}">COURSE FACULTY</label>
-                                <input type="text" class="form-control" id="courseFaculty" placeholder="..." required>
+                                <select class="custom-select form-control" th:with="faculties=${T(qova.course.CourseFaculty).values()}">
+                                    <option class="dropdown-item" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}">FACULTY</option>
+                                </select>
                             </div>
                             <div class="col-md-2">
                                 <label for="semesterOfStudents" th:text="#{course.semesterOfStudents}">COURSE SEMESTER</label>
