@@ -1,6 +1,8 @@
 package qova.course;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Base64;
 import java.util.Objects;
 
@@ -93,6 +95,17 @@ public class CourseController {
 		}
     }
 
+    /*
+    @GetMapping("/course/details")
+    public String courseDetails(Model model) {
+
+        LocalDate dateNow = LocalDate.now();
+
+        var NewCourse = new Course("Cheese", true, true, true, "Lec", "Tut", "Sem", 5, 5, 5, CourseFaculty.ARCHITECTURE, dateNow);
+        model.addAttribute("course", NewCourse);
+
+        return "courseDetails";
+    }*/
         
 
 
