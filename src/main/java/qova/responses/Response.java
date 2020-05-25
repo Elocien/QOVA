@@ -1,6 +1,6 @@
 package qova.responses;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -15,17 +15,20 @@ import qova.course.CourseType;
 @Entity
 public class Response {
 
+    //Always used
+    //-----------------------------------------------------------------------
     private @Id @GeneratedValue(strategy = GenerationType.AUTO) Long id;
 
-    private Date dateTime;
+    private LocalDateTime dateTime;
 
     @ManyToOne
     private Course course;
-    private CourseType type;
+    private CourseType courseType;
 
+    private Integer position;
 
     private ResponseType responseType;
-
+    //------------------------------------------------------------------------
 
     //For text response
     private String textResponse;
@@ -37,7 +40,7 @@ public class Response {
 
 
     //For Drop Down and Multiple Choice
-    private int responsePossiblilites;  
+    private Integer responsePossiblilites;  
 
     private Boolean answer1;
     private Boolean answer2;
@@ -58,7 +61,7 @@ public class Response {
 
     /**
      * The response Object is used to save user responses of any kind. Each response corresponds
-     * to the response of a user to a single questionaire question. 
+     * to the response of a user to a single questionaire question. Primary use is to generate PDF of student responses 
      * 
      * @param dateTime Captures the date and time of the users submission (Technically captures 
      * the time when the response is saved to the database
@@ -67,8 +70,9 @@ public class Response {
      * user respond to). This field is used to find the Response object when compiling responses
      * for the summary pdf
      * 
-     * @param type Enumeration which is either LECTURE, SURVEY or SEMINAR (also needed to find 
-     * the correct responses when compiling)
+     * @param courseType Enumeration which is either LECTURE, SURVEY or SEMINAR (used for more detailed retrieval)
+     * 
+     * @param position The position of the question in the survey is mapped to the position field (used for more detailed retrieval and grouping)
      * 
      * @param responsePossiblilites Used to set the number of fields to be evaluated. When
      * summarising the users responses, this field is required to calculate the distribution.
@@ -96,9 +100,11 @@ public class Response {
      * @param answer9
      * @param answer10
      */
-    public Response(Date dateTime, Course course, int responsePossiblilites, ResponseType responseType, String textResponse, Boolean binaryAnswer, Boolean answer1, Boolean answer2, Boolean answer3, Boolean answer4, Boolean answer5, Boolean answer6, Boolean answer7, Boolean answer8, Boolean answer9, Boolean answer10){
+    public Response(LocalDateTime dateTime, Course course, CourseType courseType, Integer position, Integer responsePossiblilites, ResponseType responseType, String textResponse, Boolean binaryAnswer, Boolean answer1, Boolean answer2, Boolean answer3, Boolean answer4, Boolean answer5, Boolean answer6, Boolean answer7, Boolean answer8, Boolean answer9, Boolean answer10){
         this.dateTime = dateTime;
         this.course = course;
+        this.courseType = courseType;
+        this.position = position;
         this.responseType = responseType;
 
         //Text response
@@ -121,15 +127,98 @@ public class Response {
         this.answer1 = answer10;
     }
 
+
+    //Text response constructor
+    public Response(LocalDateTime dateTime, Course course, CourseType courseType, int position, ResponseType responseType, String textResponse){
+        this.dateTime = dateTime;
+        this.course = course;
+        this.courseType = courseType;
+        this.position = position;
+        this.responseType = responseType;
+
+        //Text response
+        this.textResponse = textResponse;
+
+
+        //non-relevant fields  
+        this.binaryAnswer = null;
+        this.responsePossiblilites = null;
+        this.answer1 = null;
+        this.answer2 = null;
+        this.answer3 = null;
+        this.answer4 = null;
+        this.answer5 = null;
+        this.answer6 = null;
+        this.answer7 = null;
+        this.answer8 = null;
+        this.answer9 = null;
+        this.answer10 = null;
+    }
+
+    //binary answer constructor
+    public Response(LocalDateTime dateTime, Course course, CourseType courseType, int position, ResponseType responseType, Boolean binaryAnswer){
+        this.dateTime = dateTime;
+        this.course = course;
+        this.courseType = courseType;
+        this.position = position;
+        this.responseType = responseType;
+
+        //Binary repsonse
+        this.binaryAnswer = binaryAnswer;
+
+
+        //non-relevant fields  
+        this.textResponse = null;
+        this.responsePossiblilites = null;
+        this.answer1 = null;
+        this.answer2 = null;
+        this.answer3 = null;
+        this.answer4 = null;
+        this.answer5 = null;
+        this.answer6 = null;
+        this.answer7 = null;
+        this.answer8 = null;
+        this.answer9 = null;
+        this.answer10 = null;
+    }
+
+    //Multiple Choice & Drop-Down Constructor
+    public Response(LocalDateTime dateTime, Course course, CourseType courseType, Integer position, Integer responsePossiblilites, ResponseType responseType, Boolean answer1, Boolean answer2, Boolean answer3, Boolean answer4, Boolean answer5, Boolean answer6, Boolean answer7, Boolean answer8, Boolean answer9, Boolean answer10){
+        this.dateTime = dateTime;
+        this.course = course;
+        this.courseType = courseType;
+        this.position = position;
+        this.responseType = responseType;
+
+        //Drop down and Multiple Choice
+        this.responsePossiblilites = responsePossiblilites;
+        this.answer1 = answer1;
+        this.answer1 = answer2;
+        this.answer1 = answer3;
+        this.answer1 = answer4;
+        this.answer1 = answer5;
+        this.answer1 = answer6;
+        this.answer1 = answer7;
+        this.answer1 = answer8;
+        this.answer1 = answer9;
+        this.answer1 = answer10;
+
+        //non-relevant fields  
+        this.textResponse = null;
+        this.binaryAnswer = null;
+
+    }
+
+
     public Long getId(){
         return this.id;
     }
 
-    public Date getDateTime(){
+    public LocalDateTime getDateTime(){
         return this.dateTime;
     }
 
-    public void setDateTime(Date dateTime){
+    public void setDateTime(LocalDateTime dateTime){
         this.dateTime = dateTime;
     }
 
@@ -139,6 +228,22 @@ public class Response {
 
     public void setCourse(Course course){
         this.course = course;
+    }
+
+    public CourseType getCourseType(){
+        return this.courseType;
+    }
+
+    public void setCourseType(CourseType courseType){
+        this.courseType = courseType;
+    }
+
+    public int getPosition(){
+        return this.position;
+    }
+
+    public void setPositio(int pos){
+        this.position = pos;
     }
 
     public ResponseType getResponseType(){
@@ -153,7 +258,11 @@ public class Response {
 
 
 
-    //Text response
+
+
+
+
+    //Text response fields
     public String gettextResponse(){
         return this.textResponse;
     }
@@ -169,7 +278,7 @@ public class Response {
 
     
     
-    //Binary response
+    //Binary response fields
     public Boolean getBinaryAnswer(){
         return this.binaryAnswer;
     }
@@ -185,7 +294,7 @@ public class Response {
 
 
 
-    //Drop Down and Multiple Choice
+    //Drop Down and Multiple Choice fields
     public int getResponsePossibilities(){
         return this.responsePossiblilites;
     }

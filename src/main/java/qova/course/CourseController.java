@@ -244,7 +244,7 @@ public class CourseController {
     //Get Survey from Server 
     //---------------------------------------------------------------------------
 
-    //Mapping for Survey html view
+    //Mapping for Survey HTML
     @GetMapping("/survey")
     public String SuveyView (Model model, @RequestParam String type, @RequestParam(required = false) String id){
         //redirect 
@@ -267,7 +267,7 @@ public class CourseController {
     }
 
 
-    //Mapping to recieve SURVEY from server
+    //Mapping to recieve SURVEY (Formatted as JSON) from server
     @GetMapping("/survey/get")
     @ResponseBody
     public String sendSurvey( @RequestParam String type, @RequestParam(required = false) String id){
@@ -278,10 +278,14 @@ public class CourseController {
         }
 
         else{
-            String Json = courseManagement.getSurveyforType(id, type);
-            Json = Json.substring(1,Json.length()-1);
-            System.out.println(Json);
-            return Json;
+            //Retrieve survey
+            String JsonString = courseManagement.getSurveyforType(id, type);
+
+            //Remove [] so JS method can parse the JSON correctly
+            JsonString = JsonString.substring(1,JsonString.length()-1);
+
+            //return the JSON
+            return JsonString;
         }
     }
 
@@ -294,7 +298,16 @@ public class CourseController {
     //to test
     //http://localhost:8080/qrcode?type=LECTURE&id=c000000000000001
 
-    //HttpResponse returns a qrcode png file
+   
+    /**
+     * Returns a HttpEntity (QRCode) of type PNG
+     * @param response
+     * @param type
+     * @param id
+     * @return
+     * @throws IOException
+     * @throws WriterException
+     */
     @GetMapping("/qrcode")
     public HttpEntity<byte[]> qrcode(HttpServletResponse response, @RequestParam String type, @RequestParam(required = false) String id) throws IOException, WriterException  {
 
@@ -370,13 +383,6 @@ public class CourseController {
     //test method
     @GetMapping("/createC")
     public String createC(){
-        courseManagement.TestCreateCourse();
-        return "home";
-    }
-
-    //test method
-    @GetMapping("/createR")
-    public String creatR(){
         courseManagement.TestCreateCourse();
         return "home";
     }

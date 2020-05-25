@@ -1,14 +1,18 @@
 package qova.responses;
 
 import java.util.Objects;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import qova.course.Course;
+import qova.course.CourseRepository;
 import qova.course.SurveyForm;
 
 @Controller // This means that this class is a Controller
@@ -22,9 +26,13 @@ public class ResponseController{
     private final ResponseRepository responseRepository;
 
     @Autowired
-    ResponseController(ResponseManagement responseManagement, ResponseRepository responseRepository) {
+    private final CourseRepository courseRepository;
+
+    @Autowired
+    ResponseController(ResponseManagement responseManagement, ResponseRepository responseRepository, CourseRepository courseRepository) {
         this.responseManagement = Objects.requireNonNull(responseManagement);
         this.responseRepository = Objects.requireNonNull(responseRepository);
+        this.courseRepository = Objects.requireNonNull(courseRepository);
     }
 
 
@@ -49,4 +57,44 @@ public class ResponseController{
     }
 
     //---------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //test method
+    @GetMapping("/createR")
+    public String creatR(){
+        Optional<Course> crs = courseRepository.findById("c000000000000001");
+        responseManagement.TestCreateResponses(crs.get());
+        return "home";
+    }
 }
