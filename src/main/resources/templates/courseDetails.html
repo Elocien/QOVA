@@ -10,9 +10,93 @@
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
     <title th:text="#{home.title}">TITLE</title>
 </head>
-<body class="bg-light"></body>
+<body class="bg-light">
 
-<div th:include="navbar"></div>
+    <div th:include="navbar"></div>
+
+    <div class="container">
+
+        <div class="row justify-content-md-center">
+            <div class="col-lg-12">
+
+                <h2 class="font-weight-bold text-center mb-4 mt-4" th:text="#{course.details} + ': ' + ${course.name}">COURSE DETAILS</h2>
+
+                <div class="container bg-light border border-dark rounded">
+
+                    <div class="row justify-content-md-center p-4">
+                        <div class="col-md-auto">
+                            <div class="row">
+                                <table class="table">
+                                    <tbody>
+                                        <tr>
+                                            <th scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
+                                            <td th:text="#{'course.faculty.' + ${course.faculty}}">NAME</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" th:text="#{course.courseInstance}">YEAR</th>
+                                            <td th:with="year = ${course.courseInstance}" th:text="${#strings.replace(#strings.replace(year, '-04-01', ' SoSe'), '-10-01', ' WiSe')}">XXXX</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" th:text="#{course.semesterOfStudents}">SEMESTER</th>
+                                            <td th:text="${course.semesterOfStudents}">XX</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" th:text="#{new.lecture} + '?'">LECTURE</th>
+                                            <td th:if="${course.lectureExists}" th:text="#{detail.yes}">YES/NO</td>
+                                            <td th:if="!${course.lectureExists}" th:text="#{detail.no}">YES/NO</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" th:text="#{course.classTotalTutorial}">TUTORIAL COUNT</th>
+                                            <td th:text="${course.classTotalTutorial}">COUNT</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row" th:text="#{course.classTotalSeminar}">SEMINAR COUNT</th>
+                                            <td th:text="${course.classTotalSeminar}">COUNT</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div class="col-md-1"></div>
+
+                        <div class="col-md-auto">
+                            <div class="row justify-content-md-center">
+                                <div class="wrapper border border-dark">
+                                    <!--<img th:src="'data:image/jpeg;base64,' + ${LectureQRCode}" class="img-fluid" alt="image"/>-->
+                                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/QR_code_Wi-Fi.png/220px-QR_code_Wi-Fi.png" class="img-fluid" alt="image"/>
+                                </div>
+                            </div>
+                            <div class="row justify-content-md-center mt-3">
+                                <button type="button" class="btn btn-secondary" th:target="_blank" th:href="${'/qrcode?type=LECTURE&id='  + {course.id}}" href="#">DOWNLOAD QR-CODE</button>
+                            </div>              
+                        </div>
+                    </div>
+                    
+                    <div class="row justify-content-md-center p-4">
+                        <div class="col-md-auto">
+                            <div class="row justify-content-md-center">
+                                <div class="btn-group" role="group">
+                                    <button type="button" class="btn btn-secondary disabled">EDIT SURVEY:</button>
+                                    <button type="button" class="btn btn-secondary" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#">LECTURE</button>
+                                    <button type="button" class="btn btn-secondary" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" href="#">TUTORIAL</button>
+                                    <button type="button" class="btn btn-secondary" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" href="#">SEMINAR</button>
+                                </div>
+                            </div>
+                            <div class="row justify-content-md-center mt-3">
+                                <div class="btn-group btn-group-justified" role="group">
+                                    <button type="button" class="btn btn-secondary disabled">COURSE:</button>
+                                    <button type="button" class="btn btn-secondary" th:href="@{/course/edit?id={id}(id=${course.id})}" href="#" th:text="#{buttons.edit}">EDIT</button>
+                                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal" th:text="#{buttons.delete}">DELETE</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
 
 <div class = "container">
     <div class="modal" id="deleteModal">
@@ -27,46 +111,10 @@
                 </div>
                 <div class="modal-footer">
                     <form class="mr-auto col-sm-6" th:action="@{/course/delete}" method="post">
-                        <input type="hidden" name="id" th:value="${course.id}" />
-                        <input type="submit" class="btn btn-primary btn-block" th:value="#{buttons.confirm}" />
+                        <input type="hidden" name="id" th:value="${course.id}" value="ERROR"/>
+                        <input type="submit" class="btn btn-primary btn-block" th:value="#{buttons.confirm}" value="ERROR"/>
                     </form>
                     <button type="button" class="btn btn-secondary btn-block col-sm-6" th:text="#{buttons.abort}" data-dismiss="modal">ABORT</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-12">
-        <div class="pb-2 mt-4 mb-2">
-            <h1 th:text="#{course.details}">TITLE</h1>
-        </div>
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-6">
-                    <dl class="row">
-                        <dt class="col-sm-4" th:text="#{course.name}">NAME</dt>
-                        <dd class="col-sm-8" th:text="${course.name}">VALUE</dd>
-
-                        <dt class="col-sm-4" th:text="#{course.classTotalTutorial}">CITY</dt>
-                        <dd class="col-sm-8" th:text="${course.classTotalTutorial}">VALUE</dd>
-
-                        <dt class="col-sm-4" th:text="#{course.classTotalSeminar}">CITY</dt>
-                        <dd class="col-sm-8" th:text="${course.classTotalSeminar}">VALUE</dd>
-
-                    </dl>
-                    <a class="btn btn-primary" th:href="@{/course/edit?id={id}(id=${course.id})}" th:text="#{buttons.edit}">EDIT</a>
-                    <a class="btn btn-secondary" th:href="@{/courses}" th:text="#{buttons.back}">BACK</a>
-
-                    <a class="btn btn-primary" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" th:text="#{buttons.editSurveyLecture}">some link</a>
-                    <a class="btn btn-primary" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" th:text="#{buttons.editSurveyTutorial}">some link</a>
-                    <a class="btn btn-primary" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" th:text="#{buttons.editSurveySeminar}">some link</a>
-                    
-                    <!--Test-->
-                    <a class="btn btn-primary" th:target="_blank" th:href="${'/qrcode?type=LECTURE&id='  + {course.id}}" th:text="#{buttons.download}">some link</a>
-
-                    <button type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#deleteModal" th:text="#{buttons.delete}">DELETE</button>
-                </div>
-                <div class="col-lg-6" style="border-left: 1px solid #eee;">
-                    <img th:src="'data:image/jpeg;base64,' + ${LectureQRCode}" class="img-fluid" alt="image" />
                 </div>
             </div>
         </div>

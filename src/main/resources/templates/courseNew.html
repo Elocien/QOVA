@@ -22,7 +22,7 @@
 
     <div class="container">
 
-        <div class="row">
+        <div class="row justify-content-md-center">
             <div class="col-lg-12">
 
                 <h2 class="font-weight-bold text-center mb-4 mt-4" th:text="#{new.headline}">NEW COURSE</h2>
@@ -62,7 +62,9 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="courseFaculty" th:text="#{new.courseFaculty}">COURSE FACULTY</label>
-                                <input type="text" class="form-control" id="courseFaculty" placeholder="..." required>
+                                <select class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
+                                    <option class="dropdown-item" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}">FACULTY</option>
+                                </select>
                             </div>
                             <div class="col-md-2">
                                 <label for="semesterOfStudents" th:text="#{course.semesterOfStudents}">COURSE SEMESTER</label>
@@ -74,7 +76,7 @@
                             <div class="col-md-2">
                                 <label for="semesterOfStudents" th:text="#{course.courseInstance}">COURSE SEMESTER</label>
                                 <select class="custom-select form-control">
-                                    <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${#strings.replace(#strings.replace(year, '-04-01', ' SoSe'), '-10-01', ' WiSe')}" th:value="${year}">YEAR</option>
+                                    <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
                                 </select>
                             </div>
                         </div>

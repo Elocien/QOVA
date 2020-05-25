@@ -30,7 +30,7 @@ input[type=number] {
   border-color: black;
 }
 .btn-primary:hover {
-  background-color: var(--tu_blue_highlight);
+  background-color: rgba(100, 100, 100, 0);
   color: black;
   border-color: black;
 }
