@@ -1,8 +1,11 @@
 package qova.responses;
 
+import java.io.File;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+import org.jfree.chart.JFreeChart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +24,22 @@ public class ResponseManagement {
         this.responses = Objects.requireNonNull(responses);
     }
 
+
+    public void GeneratePDF() throws IOException{
+
+        try{
+            String DEST = "src/main/resources/test.pdf";
+
+            File file = new File(DEST);
+            file.getParentFile().mkdirs();
+
+            new PDFGenerator().createPdf(DEST);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
+        
+    }
 
 
 

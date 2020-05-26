@@ -1,5 +1,6 @@
 package qova.responses;
 
+import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -16,8 +17,7 @@ import qova.course.CourseRepository;
 import qova.course.SurveyForm;
 
 @Controller // This means that this class is a Controller
-public class ResponseController{
-
+public class ResponseController {
 
     @Autowired
     private final ResponseManagement responseManagement;
@@ -29,64 +29,40 @@ public class ResponseController{
     private final CourseRepository courseRepository;
 
     @Autowired
-    ResponseController(ResponseManagement responseManagement, ResponseRepository responseRepository, CourseRepository courseRepository) {
+    ResponseController(ResponseManagement responseManagement, ResponseRepository responseRepository,
+            CourseRepository courseRepository) {
         this.responseManagement = Objects.requireNonNull(responseManagement);
         this.responseRepository = Objects.requireNonNull(responseRepository);
         this.courseRepository = Objects.requireNonNull(courseRepository);
     }
 
-
-    
-    //PostMapping to submit survey and serialize results
-    //---------------------------------------------------------------------------
+    // PostMapping to submit survey and serialize results
+    // ---------------------------------------------------------------------------
     @PostMapping("/survey")
-    public ResponseEntity recieveResponseJSON(SurveyForm form, @RequestParam String type, @RequestParam(required = false) String id){
-        
-        //get JSON Response as string
-        String JsonResponse = form.getQuestionnairejson();
-        
+    public ResponseEntity recieveResponseJSON(SurveyForm form, @RequestParam String type,
+            @RequestParam(required = false) String id) {
 
-        //Deserialize the String to a JavaObject Response (package qova.responses)
+        // get JSON Response as string
+        String JsonResponse = form.getQuestionnairejson();
+
+        // Deserialize the String to a JavaObject Response (package qova.responses)
         // response = Deserialize(JsonResponse);
 
-        //Save object 
+        // Save object
         // responseRepository.save(response)
-        
-        //if all goes well
+
+        // if all goes well
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    //---------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    // test method
+    @GetMapping("/barchart")
+    public String barchartTest() throws IOException {
+        responseManagement.GeneratePDF();
+        return "home";
+    }
 
 
 
