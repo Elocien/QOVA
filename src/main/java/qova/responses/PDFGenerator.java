@@ -160,8 +160,6 @@ public class PDFGenerator {
 
             if(responseType == ResponseType.MULTIPLE_CHOICE || responseType == ResponseType.DROP_DOWN){
 
-                
-
 
         
 

@@ -3,10 +3,13 @@ package qova.responses;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import qova.course.Course;
@@ -33,14 +36,20 @@ public class Response {
     //------------------------------------------------------------------------
 
     //For text response
+    @ElementCollection
+    @CollectionTable(name = "text_resposes", joinColumns = @JoinColumn(name = "id"))
     private ArrayList<String> textResponse;
 
 
     //For binary response
+    @ElementCollection
+    @CollectionTable(name = "binary_responses", joinColumns = @JoinColumn(name = "id"))
     private ArrayList<Boolean> binaryAnswer;    //---true--- if yes/ja      and       ---false--- if no/nein 
  
 
     //ArrayList of ArrayLists. Amount of ArrayList<Response> objects created is based on responsePossibilities
+    @ElementCollection
+    @CollectionTable(name = "MC_or_DD_responses", joinColumns = @JoinColumn(name = "id"))
     private ArrayList<ArrayList<Boolean>> answersMCAndDD;
 
 
