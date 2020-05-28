@@ -64,7 +64,7 @@ public class CourseController {
 
 
     //Shows the details for a specific course
-    /*@GetMapping("/course/details")
+    @GetMapping("/course/details")
     public String courseDetails(Model model, @RequestParam(required = false) String id) throws Exception {
         
         //redirect 
@@ -93,9 +93,9 @@ public class CourseController {
         } else {
 			return "redirect:../courses";
 		}
-    }*/
+    }
 
-    @GetMapping("/course/details")
+    /*@GetMapping("/course/details")
     public String courseDetails(Model model) {
 
         LocalDate dateNow = LocalDate.now();
@@ -104,9 +104,9 @@ public class CourseController {
         model.addAttribute("course", NewCourse);
 
         return "courseDetails";
-    }
+    }*/
 
-    
+
 
     //Create Course
     @GetMapping("course/new")
