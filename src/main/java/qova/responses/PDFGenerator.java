@@ -13,28 +13,156 @@ import com.itextpdf.layout.element.List;
 import com.itextpdf.layout.element.Paragraph;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import java.io.ByteArrayInputStream;
+import java.util.Objects;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
- 
-/**
- * Simple Hello World example.
- */
-public class PDFGenerator {
+import org.springframework.beans.factory.annotation.Autowired;
 
+import qova.course.Course;
  
-    public void createPdf(String dest) throws IOException {
+
+
+
+
+public class PDFGenerator {
+    
+    @Autowired
+    private final ResponseRepository responseRepository;
+    
+    @Autowired
+    PDFGenerator(ResponseRepository responseRepository){
+        this.responseRepository = Objects.requireNonNull(responseRepository);
+    }
+    
+
+
+    /**
+     * This class generates the PDF with the results of a survey. It takes all response objects that correspond to a survey and generates the following, based on {@linkplain ResponseType}:
+     * MULTIPLE_CHOICE, DROP_DOWN           - Bar Graph
+     * TEXT_RESPONSE                        - List of text responses
+     * BINARY_ANSWER                        - TODO: decide what to generate
+     * 
+     * @param dest                          Where the file is saved (TODO: dont save file, pass it to {@linkplain ResponseController} as byte[])
+     * @param course                        {@linkplain Course} which is used to fetch the corresponding {@linkplain Response} objects
+     * @throws IOException                  Throws runntime exception, in case of IOException when generating PDF
+     */
+    public void createPdf(String dest, Course course) throws IOException, NullPointerException {
         
+        //Variables
+        //Map that contains responses, ordered by position
+        Map<Integer, ArrayList<Response>> responses = new HashMap<>();
+
+
+
+
+
+
+
+
+
+        //Class has multiple steps
+
+        //Step 1:
+            //Get all responses for the given course
+            //add to Map
+
+        //Step 2:
+            //For each position in map:
+                //Get ResponseType: (either mult-choice, dropdown, textresponse or binaryanswer):
+                    //generate appropriate graphic and add to pdf
+
+        //Step 3:
+            //Return PDF
+
+
+
+
+
+
+
+
+
+            
+
+
+
+        //Step 1:
+
+        //Get responses, based on position, up to the maximum of 100 (this is the maximum possible amount of responses)
+        for(int pos = 0; pos < 100; pos++){
+            
+
+            //Array list that is the temporary container for all Responses of the position being iterated over
+            java.util.ArrayList<Response> currentPosResponses = responseRepository.findByCourseAndPosition(course, pos);
+
+
+            //We don't break in the case of no responses, since there could be certain questions that aren't answered (TODO: think about breaking if responses of 5 consecutive positions are empty)
+            for(int j = 0; j < currentPosResponses.size(); j++){
+                responses.put(pos, currentPosResponses);
+            }    
+        }  
+        
+        
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //Step 2:
+        //Iterate through map
+        for(int pos = 0; pos < 100; pos++){
+
+            //Get ResponseType for Responses of given position (pos). We assume this to be the same for every Response of that position (if error occurs, check serialisation of Responses)
+            ResponseType type = responses.get(pos).get(0).getResponseType();
+
+            if(type == ResponseType.MULTIPLE_CHOICE || type == ResponseType.DROP_DOWN){
+
+            }
+            else if(type == ResponseType.TEXT_RESPONSE){
+
+            }
+
+            else if(type == ResponseType.BINARY_ANSWER){
+
+            }
+
+            else{
+                throw new NullPointerException();
+            }
+        }
+
+
+
+
+
+
+
+
+
+
         //Chart generation
         int width = 800;
         int height = 600;
@@ -69,7 +197,24 @@ public class PDFGenerator {
 
 
 
-        //PDF Generation
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        //For each elment of array of graphs:
+            //add graph to document
+
         
         try {
             //Test iteration through arraylist
@@ -128,7 +273,4 @@ public class PDFGenerator {
             throw new RuntimeException(e);
         }
     }
-    
-    
-
 }
