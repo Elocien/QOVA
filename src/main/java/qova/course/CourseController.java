@@ -95,8 +95,7 @@ public class CourseController {
 		}
     }
 
-    /*
-    @GetMapping("/course/details")
+    /*@GetMapping("/course/details")
     public String courseDetails(Model model) {
 
         LocalDate dateNow = LocalDate.now();
@@ -106,8 +105,6 @@ public class CourseController {
 
         return "courseDetails";
     }*/
-        
-
 
 
 
