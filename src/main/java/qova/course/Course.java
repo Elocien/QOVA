@@ -67,14 +67,19 @@ public class Course {
 
     
     /**
-     * Instance of a Course (meaning a Subject [DE Lehrveranstaltung])
      * 
-     * @param name              Name of the course
-     * @param type              Enum which is either: Lecture, Tutorial or Seminar
-     * @param survey            An {@linkplain Survey} Object containg the questions
-     * @param classTotal        How many different tutorial-/seminar groups exist
-     * @param semester          What semester is the Subject taken by students
-     * @param faculty           Enum defining which faculty the subject belongs to 
+     * @param name
+     * @param lectureExists
+     * @param tutorialExists
+     * @param seminarExists
+     * @param lectureSurvey
+     * @param tutorialSurvey
+     * @param seminarSurvey
+     * @param classTotalTutorial
+     * @param classTotalSeminar
+     * @param semesterOfStundets
+     * @param faculty
+     * @param courseInastance
      */
     public Course(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalTutorial, int classTotalSeminar, int semesterOfStundets, CourseFaculty faculty, LocalDate courseInastance){
         this.name = name;

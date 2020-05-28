@@ -48,6 +48,8 @@ public class ResponseController {
         // Deserialize the String to a JavaObject Response (package qova.responses)
         // response = Deserialize(JsonResponse);
 
+        //TODO: Cap responsePossibilites at 10 (server side and client side)
+
         // Save object
         // responseRepository.save(response)
 

@@ -3,6 +3,7 @@ package qova.responses;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Objects;
 
 import org.jfree.chart.JFreeChart;
@@ -90,64 +91,42 @@ public class ResponseManagement {
 
     //Test Method, remove in final build
     public void TestCreateResponses(Course course){
+
+        var courseType = CourseType.LECTURE;
+
+        Response rspBinary = new Response(LocalDateTime.now(), course, courseType, 1, 1, ResponseType.BINARY_ANSWER, 0);
+        Response rspText = new Response(LocalDateTime.now(), course, courseType, 1, 2, ResponseType.TEXT_RESPONSE, 0);
+        Response rspMultiChoice = new Response(LocalDateTime.now(), course, courseType, 1, 3, ResponseType.MULTIPLE_CHOICE, 4);
+
+
         for(int i = 0; i < 60; i++){
-            var courseType = CourseType.LECTURE;
-            var position = i % 3;
 
-            if(position % 3 == 0){
-            var responseType = ResponseType.BINARY_ANSWER;
-            
 
-            if(i < 20){
-                var binaryAnswer = false;
-                responses.save(new Response(LocalDateTime.now(), course, courseType, position, responseType, binaryAnswer));
-            }
-            else{
-                var binaryAnswer = true;
-                responses.save(new Response(LocalDateTime.now(), course, courseType, position, responseType, binaryAnswer));
-                
-            }
+            if(i % 3 == 0){
 
-            }
-
-            else if(position % 3 == 1){
-                var responseType = ResponseType.MULTIPLE_CHOICE;
-                var responsePossiblilites = 4;
-
-                var answer5 = false;
-                var answer6 = false;
-                var answer7 = false;
-                var answer8 = false;
-                var answer9 = false;
-                var answer10 = false;
-
-                if(i<15){
-                    var answer1 = true;
-                    var answer2 = false;
-                    var answer3 = false;
-                    var answer4 = false;
-                    responses.save(new Response(LocalDateTime.now(), course, courseType, position, responsePossiblilites, responseType, answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10));
-                }
-                else if(i < 20){
-                    var answer1 = false;
-                    var answer2 = true;
-                    var answer3 = false;
-                    var answer4 = false;
-                    responses.save(new Response(LocalDateTime.now(), course, courseType, position, responsePossiblilites, responseType, answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10));
-                }
-                else if(i < 25){
-                    var answer1 = false;
-                    var answer2 = false;
-                    var answer3 = true;
-                    var answer4 = false;
-                    responses.save(new Response(LocalDateTime.now(), course, courseType, position, responsePossiblilites, responseType, answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10));
+                if(i < 20){
+                    rspBinary.addBinaryAnswer(false);
+                    
                 }
                 else{
-                    var answer1 = false;
-                    var answer2 = false;
-                    var answer3 = false;
-                    var answer4 = true;
-                    responses.save(new Response(LocalDateTime.now(), course, courseType, position, responsePossiblilites, responseType, answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10));
+                    rspBinary.addBinaryAnswer(true);
+                }
+
+            }
+
+            else if(i % 3 == 1){
+
+                if(i<15){
+                    rspMultiChoice.setMC_or_DD_ResponseTrue(1);
+                }
+                else if(i < 20){
+                    rspMultiChoice.setMC_or_DD_ResponseTrue(2);
+                }
+                else if(i < 25){
+                    rspMultiChoice.setMC_or_DD_ResponseTrue(3);
+                }
+                else{
+                    rspMultiChoice.setMC_or_DD_ResponseTrue(4);
                 }
                 
                 
@@ -156,12 +135,24 @@ public class ResponseManagement {
             }
 
             else{
-                var responseType = ResponseType.TEXT_RESPONSE;
-                var textResponse = "some extended text response for testing purposes";
-
-                responses.save(new Response(LocalDateTime.now(), course, courseType, position, responseType, textResponse));
+                if(i<5){
+                    rspText.addTextResponse("short test");
+                }
+                else if(i < 20){
+                    rspText.addTextResponse("this is a very very very long test string");
+                }
+                else if(i < 30){
+                    rspText.addTextResponse("this is a medium length test string");
+                }
+                else{
+                    rspText.addTextResponse("this is a slightly longer than medium length test string");
+                }
             }
         }
+
+        responses.save(rspBinary);
+        responses.save(rspText);
+        responses.save(rspMultiChoice);
         
         
     }

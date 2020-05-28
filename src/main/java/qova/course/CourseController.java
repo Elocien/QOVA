@@ -233,7 +233,6 @@ public class CourseController {
 
             else{
                 //Method from courseManager which sets the survey for the relevant surveyType
-                System.out.println("THIS worked");
                 courseManagement.setSurveyforType(id, type, form);
             }
 
@@ -259,36 +258,22 @@ public class CourseController {
 
     //Mapping for Survey HTML
     @GetMapping("/survey")
-    public String SuveyView (Model model, @RequestParam String type, @RequestParam(required = false) String id){
-        //redirect 
-        if (id == null) {
-			return "redirect:../";
-        }
-        
-        //fetch course and go to details if present
-        Optional<Course> course = courseRepository.findById(id);
-
-        //Validate that course exists, and that the survey is not empty
-        if (course.isPresent()){
-            return "survey";
-        }
-        
-        //If condition not met, redirect to home
-        else{
-            return "redirect:../";
-        }
+    public String SuveyView (Model model){
+        return "survey";
     }
 
 
-    //Mapping to recieve SURVEY (Formatted as JSON) from server
-    @GetMapping("/survey/get")
+    //Mapping to recieve SURVEY (Formatted as JSON) from server. ADDITIONALLY NEED TO CALL /survey/getClassTotal, so that students can pick which tutorial/seminar they are attending!!!
+    @GetMapping("/survey/getSurvey")
     @ResponseBody
     public String sendSurvey( @RequestParam String type, @RequestParam(required = false) String id){
-
+        
+        
         //redirect 
         if (id == null) {
 			return null;
         }
+
 
         else{
             //Retrieve survey
@@ -299,6 +284,30 @@ public class CourseController {
 
             //return the JSON
             return JsonString;
+        }
+    }
+
+
+    
+    //Mapping to recieve classTotal for given Course and CourseType
+    @GetMapping("/survey/getClassTotal")
+    @ResponseBody
+    public Integer sendCourseTotal( @RequestParam String type, @RequestParam(required = false) String id){
+           
+        //redirect 
+        if (id == null) {
+			return null;
+        }
+
+        else{
+            Optional<Course> crs = courseRepository.findById(id);
+            if (crs.isPresent()) {
+                if(type.equals("SEMINAR")){return crs.get().getClassTotalTutorial();}
+                else if (type.equals("SEMINAR")){return crs.get().getClassTotalSeminar();}
+                else{return null;}      
+            }
+            
+            else{return null;}
         }
     }
 
