@@ -70,7 +70,7 @@ Also scan QRCode -> show this page
 </html>
 
 <script>
-	$.getJSON( "/survey/getSurvey?type=LECTURE&id=c000000000000001", function( data ) {
+	$.getJSON( "/survey/get?type=LECTURE&id=c000000000000001", function( data ) {
 		var items = [];
 		$.each( data, function( key, val ) {
     		items.push( "<li id='" + key + "'>" + val + "</li>" );
