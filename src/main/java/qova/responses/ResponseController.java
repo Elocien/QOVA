@@ -59,33 +59,6 @@ public class ResponseController {
 
     // ---------------------------------------------------------------------------
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //TEST STUFF
-    //TODO: remove before production
-
-
-
     // // test method
     // @GetMapping("/barchart")
     // public String barchartTest() throws IOException {

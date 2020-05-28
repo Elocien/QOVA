@@ -14,12 +14,15 @@ import com.itextpdf.layout.element.List;
 import com.itextpdf.layout.element.Paragraph;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -31,10 +34,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import qova.course.Course;
 import qova.course.CourseType;
  
-
-
-
-
+/**
+ * Simple Hello World example.
+ */
 public class PDFGenerator {
     
     @Autowired
@@ -271,4 +273,7 @@ public class PDFGenerator {
         
         
     }
+    
+    
+
 }
