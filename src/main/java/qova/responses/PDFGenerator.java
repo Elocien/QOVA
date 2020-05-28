@@ -29,13 +29,13 @@ import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
+<<<<<<< HEAD
 import org.springframework.beans.factory.annotation.Autowired;
 
-import qova.course.Course;
 import qova.course.CourseType;
+=======
+>>>>>>> parent of 7182de3... Further additions to PDFGenerator class. Added Map of all responses for each position and started main logic for generation, based on ResponseType
  
-/**
- * Simple Hello World example.
  */
 public class PDFGenerator {
     

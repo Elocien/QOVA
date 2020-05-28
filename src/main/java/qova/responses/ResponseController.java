@@ -59,12 +59,21 @@ public class ResponseController {
 
     // ---------------------------------------------------------------------------
 
+<<<<<<< HEAD
     // // test method
     // @GetMapping("/barchart")
     // public String barchartTest() throws IOException {
     //     responseManagement.GeneratePDF();
     //     return "home";
     // }
+=======
+    // test method
+    @GetMapping("/barchart")
+    public String barchartTest() throws IOException {
+        responseManagement.GeneratePDF();
+        return "home";
+    }
+>>>>>>> parent of 7182de3... Further additions to PDFGenerator class. Added Map of all responses for each position and started main logic for generation, based on ResponseType
 
 
 

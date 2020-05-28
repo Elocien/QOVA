@@ -26,21 +26,21 @@ public class ResponseManagement {
     }
 
 
-    // public void GeneratePDF() throws IOException{
+    public void GeneratePDF() throws IOException{
 
-    //     try{
-    //         String DEST = "src/main/resources/test.pdf";
+        try{
+            String DEST = "src/main/resources/test.pdf";
 
-    //         File file = new File(DEST);
-    //         file.getParentFile().mkdirs();
+            File file = new File(DEST);
+            file.getParentFile().mkdirs();
 
-    //         new PDFGenerator().createPdf(DEST);
-    //     }
-    //     catch(IOException e){
-    //         e.printStackTrace();
-    //     }
+            new PDFGenerator().createPdf(DEST);
+        }
+        catch(IOException e){
+            e.printStackTrace();
+        }
         
-    // }
+    }
 
 
 
