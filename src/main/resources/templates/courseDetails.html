@@ -14,6 +14,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
+    <script src="https://kit.fontawesome.com/5b9febade6.js" crossorigin="anonymous"></script>
+
     <title th:text="#{home.title}">TITLE</title>
 </head>
 <body class="bg-light">
@@ -21,43 +23,73 @@
     <div th:include="navbar"></div>
 
     <div class="container">
-
         <div class="row justify-content-md-center">
             <div class="col-lg-12">
 
-                <h2 class="font-weight-bold text-center mb-4 mt-4" th:text="#{course.details} + ': ' + ${course.name}">COURSE DETAILS</h2>
+                <h2 class="font-weight-bold text-center mb-4 mt-4" th:text="${course.name}">COURSE NAME</h2>
 
                 <div class="container bg-light border border-dark rounded">
-
                     <div class="row justify-content-md-center p-4">
+
+                        <!--Course Details-->
                         <div class="col-md-auto">
                             <div class="row">
+
+                                <div class="col-4 pl-0">
+                                    <h5 class="font-weight-light text-left" th:text="#{course.details}">COURSE DETAILS</h5>
+                                </div>
+                                <div class="col-6"></div>
+                                <div class="col-2">
+                                    <button type="button" class="btn edit_details btn-link p-0 ml-3 align-middle" th:href="@{/course/edit?id={id}(id=${course.id})}" href="#"><i class="far fa-edit"></i></button>
+                                </div>
+
                                 <table class="table">
                                     <tbody>
                                         <tr>
                                             <th scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
                                             <td th:text="#{'course.faculty.' + ${course.faculty}}">NAME</td>
+                                            <td></td>
                                         </tr>
                                         <tr>
                                             <th scope="row" th:text="#{course.courseInstance}">YEAR</th>
                                             <td th:with="year = ${course.courseInstance}" th:text="${#strings.replace(#strings.replace(year, '-04-01', ' SoSe'), '-10-01', ' WiSe')}">XXXX</td>
+                                            <td></td>
                                         </tr>
                                         <tr>
                                             <th scope="row" th:text="#{course.semesterOfStudents}">SEMESTER</th>
                                             <td th:text="${course.semesterOfStudents}">XX</td>
+                                            <td></td>
                                         </tr>
                                         <tr>
                                             <th scope="row" th:text="#{new.lecture} + '?'">LECTURE</th>
                                             <td th:if="${course.lectureExists}" th:text="#{detail.yes}">YES/NO</td>
                                             <td th:if="!${course.lectureExists}" th:text="#{detail.no}">YES/NO</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr th:if="${course.lectureExists}">
+                                            <td scope="row" th:text="#{detail.LectureSurvey}">LECTURE</td>
+                                            <td th:text="${course.lectureSurvey}">SURVEY LECTURE</td>
+                                            <td><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#"><i class="far fa-edit"></i></button></td>
                                         </tr>
                                         <tr>
                                             <th scope="row" th:text="#{course.classTotalTutorial}">TUTORIAL COUNT</th>
                                             <td th:text="${course.classTotalTutorial}">COUNT</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr th:if="${0 &lt; course.classTotalTutorial}">
+                                            <td scope="row" th:text="#{detail.TutorialSurvey}">TUTORIAL</td>
+                                            <td th:text="${course.tutorialSurvey}">TUTORIAL SURVEY</td>
+                                            <td><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" href="#"><i class="far fa-edit"></i></button></td>
                                         </tr>
                                         <tr>
                                             <th scope="row" th:text="#{course.classTotalSeminar}">SEMINAR COUNT</th>
                                             <td th:text="${course.classTotalSeminar}">COUNT</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr th:if="${0 &lt; course.classTotalSeminar}">
+                                            <td scope="row" th:text="#{detail.SeminarSurvey}">SEMINAR</td>
+                                            <td th:text="${course.seminarSurvey}">SEMINAR SURVEY</td>
+                                            <td><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" href="#"><i class="far fa-edit"></i></button></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -66,7 +98,9 @@
 
                         <div class="col-md-1"></div>
 
+                        <!--QR Codes-->
                         <div class="col-md-auto">
+                            <h5 class="font-weight-light text-center" th:text="#{detail.QR}">QR CODES</h5>
                             <div class="row justify-content-md-center">
                                 <div id="carouselExampleIndicators" class="carousel slide" interval="false">
                                     <ol class="carousel-indicators">
@@ -78,19 +112,19 @@
                                         <div class="carousel-item active">
                                             <img class="d-block w-100 mb-5" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/QR_code_Wi-Fi.png/220px-QR_code_Wi-Fi.png" alt="First slide">
                                             <div class="carousel-caption text-dark d-block mb-1">
-                                                <h5>Lecture QR-Code</h5>
+                                                <h5>Lecture</h5>
                                             </div>
                                         </div>
                                         <div class="carousel-item">
                                             <img class="d-block w-100 mb-5" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/QR_code_Wi-Fi.png/220px-QR_code_Wi-Fi.png" alt="First slide">
                                             <div class="carousel-caption text-dark d-block mb-1">
-                                                <h5>Tutorial QR-Code</h5>
+                                                <h5>Tutorial</h5>
                                             </div>
                                         </div>
                                         <div class="carousel-item">
                                             <img class="d-block w-100 mb-5" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/QR_code_Wi-Fi.png/220px-QR_code_Wi-Fi.png" alt="First slide">
                                             <div class="carousel-caption text-dark d-block mb-1">
-                                                <h5>Seminar QR-Code</h5>
+                                                <h5>Seminar</h5>
                                             </div>
                                         </div>
                                     </div>
@@ -109,56 +143,18 @@
                             </div>
                             <div class="row justify-content-md-center mt-3">
                                 <button type="button" class="btn btn-secondary" th:target="_blank" th:href="${'/qrcode?type=LECTURE&id='  + {course.id}}" href="#">DOWNLOAD QR-CODES</button>
-                            </div>              
-                        </div>
-                    </div>
-                    
-                    <div class="row justify-content-md-center p-4">
-                        <div class="col-md-auto">
-                            <div class="row justify-content-md-center">
-                                <div class="btn-group" role="group">
-                                    <button type="button" class="btn btn-secondary disabled">EDIT SURVEY:</button>
-                                    <button type="button" class="btn btn-secondary" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#">LECTURE</button>
-                                    <button type="button" class="btn btn-secondary" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" href="#">TUTORIAL</button>
-                                    <button type="button" class="btn btn-secondary" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" href="#">SEMINAR</button>
-                                </div>
                             </div>
                             <div class="row justify-content-md-center mt-3">
-                                <div class="btn-group btn-group-justified" role="group">
-                                    <button type="button" class="btn btn-secondary disabled">COURSE:</button>
-                                    <button type="button" class="btn btn-secondary" th:href="@{/course/edit?id={id}(id=${course.id})}" href="#" th:text="#{buttons.edit}">EDIT</button>
-                                    <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#deleteModal" th:text="#{buttons.delete}">DELETE</button>
-                                </div>
-                            </div>
+                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#deleteModal"><i class="fas fa-trash-alt"></i></button>
+                            </div>     
                         </div>
+
                     </div>
-
                 </div>
 
-            </div>
-        </div>
-
-<div class = "container">
-    <div class="modal" id="deleteModal">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header bg-danger">
-                    <h4 class="modal-title" th:text="#{course.modal.deletion.title}">DELETION_TITLE</h4>
-                    <button type="button" class="close" data-dismiss="modal">×</button>
-                </div>
-                <div class="modal-body">
-                    <p th:text="#{course.modal.deletion.content}"></p>
-                </div>
-                <div class="modal-footer">
-                    <form class="mr-auto col-sm-6" th:action="@{/course/delete}" method="post">
-                        <input type="hidden" name="id" th:value="${course.id}" value="ERROR"/>
-                        <input type="submit" class="btn btn-primary btn-block" th:value="#{buttons.confirm}" value="ERROR"/>
-                    </form>
-                    <button type="button" class="btn btn-secondary btn-block col-sm-6" th:text="#{buttons.abort}" data-dismiss="modal">ABORT</button>
-                </div>
             </div>
         </div>
     </div>
-</div>
+    
 </body>
 </html>
