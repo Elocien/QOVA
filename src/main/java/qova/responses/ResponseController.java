@@ -57,12 +57,12 @@ public class ResponseController {
 
     // ---------------------------------------------------------------------------
 
-    // test method
-    @GetMapping("/barchart")
-    public String barchartTest() throws IOException {
-        responseManagement.GeneratePDF();
-        return "home";
-    }
+    // // test method
+    // @GetMapping("/barchart")
+    // public String barchartTest() throws IOException {
+    //     responseManagement.GeneratePDF();
+    //     return "home";
+    // }
 
 
 

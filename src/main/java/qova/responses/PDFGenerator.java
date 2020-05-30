@@ -13,6 +13,7 @@ import com.itextpdf.layout.element.List;
 import com.itextpdf.layout.element.Paragraph;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -59,7 +60,7 @@ public class PDFGenerator {
      * @param course                        {@linkplain Course} which is used to fetch the corresponding {@linkplain Response} objects
      * @throws IOException                  Throws runntime exception, in case of IOException when generating PDF
      */
-    public void createPdf(String dest, Course course) throws IOException, NullPointerException {
+    public void createPdf(String dest, Course course, CourseType courseType, Integer classNo) throws IOException, NullPointerException {
         
         //Variables
         //Map that contains responses, ordered by position
@@ -102,17 +103,36 @@ public class PDFGenerator {
         //Step 1:
 
         //Get responses, based on position, up to the maximum of 100 (this is the maximum possible amount of responses)
-        for(int pos = 0; pos < 100; pos++){
+        for(int pos = 1; pos < 100; pos++){
             
+            //Container for responses
+            ArrayList<Response> currentPosResponses = new ArrayList<Response>();
 
-            //Array list that is the temporary container for all Responses of the position being iterated over
-            java.util.ArrayList<Response> currentPosResponses = responseRepository.findByCourseAndPosition(course, pos);
+            //Limit for the number of consecutively emtpy responses tolerated
+            Integer limit = 5;
 
+            //Iterator that is the temporary container for all Responses of the position being iterated over
+            Iterable<Response> respIterator = responseRepository.findByCourseAndCourseTypeAndClassNoAndPosition(course, courseType, classNo, pos);
 
-            //We don't break in the case of no responses, since there could be certain questions that aren't answered (TODO: think about breaking if responses of 5 consecutive positions are empty)
-            for(int j = 0; j < currentPosResponses.size(); j++){
-                responses.put(pos, currentPosResponses);
-            }    
+            //Add responses to arrayList
+            for(Response rsp: respIterator){
+                currentPosResponses.add(rsp);
+            }
+
+            //Add arrayList of all responses for current position to map, with the key being the position
+            responses.put(pos, currentPosResponses);
+
+            //Logic: If there are no responses for 5 consecutive positions, break
+            if(currentPosResponses.size() == 0){
+                limit -= 1;
+                if(limit == 0){
+                    break;
+                }
+            }
+            else{
+                limit = 5;
+            }
+   
         }  
         
         
@@ -141,8 +161,11 @@ public class PDFGenerator {
         for(int pos = 0; pos < 100; pos++){
 
             //Get ResponseType for Responses of given position (pos). We assume this to be the same for every Response of that position (if error occurs, check serialisation of Responses)
-            ResponseType responseType = responses.get(pos).getResponseType();
+            ResponseType responseType = responses.get(pos).get(0).getResponseType();
 
+
+
+            //Bar chart is created, if ResponseType was either Multiple_Choice or Drop_Down
             if(responseType == ResponseType.MULTIPLE_CHOICE || responseType == ResponseType.DROP_DOWN){
 
 
@@ -184,15 +207,15 @@ public class PDFGenerator {
 
                     byte[] pngData = pngOutputStream.toByteArray(); 
 
-
-            if(type == ResponseType.MULTIPLE_CHOICE || type == ResponseType.DROP_DOWN){
+            }
+            if(responseType == ResponseType.MULTIPLE_CHOICE || responseType == ResponseType.DROP_DOWN){
 
             }
-            else if(type == ResponseType.TEXT_RESPONSE){
+            else if(responseType == ResponseType.TEXT_RESPONSE){
 
             }
 
-            else if(type == ResponseType.BINARY_ANSWER){
+            else if(responseType == ResponseType.BINARY_ANSWER){
 
             }
 

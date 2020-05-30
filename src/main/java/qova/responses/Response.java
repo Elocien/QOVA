@@ -1,6 +1,7 @@
 package qova.responses;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.ElementCollection;
@@ -22,39 +23,49 @@ public class Response {
     //-----------------------------------------------------------------------
     private @Id @GeneratedValue(strategy = GenerationType.AUTO) Long id;
 
+    //Used to take a timestamp of when a response is submitted (timestamp is taken at the time when the response is serialized and saved to the database)
     private LocalDateTime dateTime;
 
+    //Course and CourseType are used for more detailed search purposes (primarily when compiling responses into results pdf)
     @ManyToOne
     private Course course;
     private CourseType courseType;
 
+    //Used to indicate to which Tutorial or Seminar the response corresponds, as a tutorial and seminar can have multiple instances for a single course 
+    //is 1 if CourseType is Lecture
+    private Integer classNo;
+
+    //Used to indicate to which position on the survey, the response belongs to.
+    //E.g. If a survey has 10 questions, then position is used to mark which quesiton (out of the 10) the response belongs to.
     private Integer position;
 
+    //See ResponseType file 
     private ResponseType responseType;
     //------------------------------------------------------------------------
 
-    //For text response
+    //Container in case of text response
     private String textResponse;
 
 
-    //For binary response
+    //Container in case of binary response
     private Boolean binaryAnswer;    //---true--- if yes/ja      and       ---false--- if no/nein 
 
 
 
-    //For Drop Down and Multiple Choice
-    private Integer responsePossiblilites;  
+    //Answers for Multiple Choice (MC) and Drop Down (DD) 
 
-    private Boolean answer1;
-    private Boolean answer2;
-    private Boolean answer3;
-    private Boolean answer4;
-    private Boolean answer5;
-    private Boolean answer6;
-    private Boolean answer7;
-    private Boolean answer8;
-    private Boolean answer9;
-    private Boolean answer10;
+    //Response possibilities is used to indicate how many responses were possible for a given Multiple_Choice or Drop_Down quesiton. Used when compiling and analysing the set of all responses
+    //to a question
+    //E.g. A multiple choice question has the options: bad, okay, good, perfect. Then response possibilities is set to 4
+    private Integer responsePossibilities;
+
+    //Used to store the response of the user. 
+    //E.g.If responsePossibilities = 4, then the arrayList will contain 3 Booleans of type "false" and one Boolean of type "true". The position of the "true" statement in the array, indicates which
+    //option a user selected
+    
+    // @ElementCollection
+	// @CollectionTable(name = "MC_OR_DD_Response", joinColumns = @JoinColumn())
+    private ArrayList<Boolean> answerMCDD;
 
 
     //Needed for JPA puposes
@@ -62,52 +73,13 @@ public class Response {
 	private Response() {
     }
 
-    /**
-     * The response Object is used to save user responses of any kind. Each response corresponds
-     * to the response of a user to a single questionaire question. Primary use is to generate PDF of student responses 
-     * 
-     * @param dateTime Captures the date and time of the users submission (Technically captures 
-     * the time when the response is saved to the database
-     * 
-     * @param course The Course to which the Response belongs to (i.e. to which course did the 
-     * user respond to). This field is used to find the Response object when compiling responses
-     * for the summary pdf
-     * 
-     * @param courseType Enumeration which is either LECTURE, SURVEY or SEMINAR (used for more detailed retrieval)
-     * 
-     * @param position The position of the question in the survey is mapped to the position field (used for more detailed retrieval and grouping)
-     * 
-     * @param responsePossiblilites Used to set the number of fields to be evaluated. When
-     * summarising the users responses, this field is required to calculate the distribution.
-     * E.g. Response possibilities = 2. 20 people picked answer1, 10 answer2. Therefore 
-     * answer1 = 67% and answer2 = 33%
-     * 
-     * @param responseType //Emum which is one of the following: MULTIPLE_CHOICE, 
-     * DROP_DOWN, TEXT_RESPONSE or BINARY_ANSWER
-     * 
-     * @param textResponse Captures responses which are of type TEXT_RESPONSE
-     * 
-     * @param binaryAnswer Captures responses which are of type BINARY_ANSWER 
-     * TRUE when response yes/ja      and       FALSE when no/nein 
-     * 
-     * @param answer1 All of params of type answerN are set to true, in the case that they were 
-     * selected by the user, otherwise they are set to false
-     * 
-     * @param answer2
-     * @param answer3
-     * @param answer4
-     * @param answer5
-     * @param answer6
-     * @param answer7
-     * @param answer8
-     * @param answer9
-     * @param answer10
-     */
-    public Response(LocalDateTime dateTime, Course course, CourseType courseType, Integer position, Integer responsePossiblilites, ResponseType responseType, String textResponse, Boolean binaryAnswer, Boolean answer1, Boolean answer2, Boolean answer3, Boolean answer4, Boolean answer5, Boolean answer6, Boolean answer7, Boolean answer8, Boolean answer9, Boolean answer10){
+    
+    public Response(LocalDateTime dateTime, Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, String textResponse, Boolean binaryAnswer, Integer responsePossibilites, Integer MCorDDresponse){
         this.dateTime = dateTime;
         this.course = course;
         this.courseType = courseType;
         this.position = position;
+        this.classNo = classNo;
         this.responseType = responseType;
 
         //Text response
@@ -117,101 +89,25 @@ public class Response {
         this.binaryAnswer = binaryAnswer;
 
         //Drop down and Multiple Choice
-        this.responsePossiblilites = responsePossiblilites;
-        this.answer1 = answer1;
-        this.answer1 = answer2;
-        this.answer1 = answer3;
-        this.answer1 = answer4;
-        this.answer1 = answer5;
-        this.answer1 = answer6;
-        this.answer1 = answer7;
-        this.answer1 = answer8;
-        this.answer1 = answer9;
-        this.answer1 = answer10;
+        this.responsePossibilities = responsePossibilites;
+
+        if(responsePossibilites == 0){
+            //TODO: What to do, if question is not MC or DD
+        }
+        
+        
+        for(int i = 0; i < responsePossibilites; i++){
+            answerMCDD.add(false);
+        }
+        //MCorDDresponse gives position of response. We subtract 1, because ArrayList counts from 0
+        answerMCDD.set(MCorDDresponse, true);
+        
+
+        
     }
 
 
-    //Text response constructor
-    public Response(LocalDateTime dateTime, Course course, CourseType courseType, int position, ResponseType responseType, String textResponse){
-        this.dateTime = dateTime;
-        this.course = course;
-        this.courseType = courseType;
-        this.position = position;
-        this.responseType = responseType;
-
-        //Text response
-        this.textResponse = textResponse;
-
-
-        //non-relevant fields  
-        this.binaryAnswer = null;
-        this.responsePossiblilites = null;
-        this.answer1 = null;
-        this.answer2 = null;
-        this.answer3 = null;
-        this.answer4 = null;
-        this.answer5 = null;
-        this.answer6 = null;
-        this.answer7 = null;
-        this.answer8 = null;
-        this.answer9 = null;
-        this.answer10 = null;
-    }
-
-    //binary answer constructor
-    public Response(LocalDateTime dateTime, Course course, CourseType courseType, int position, ResponseType responseType, Boolean binaryAnswer){
-        this.dateTime = dateTime;
-        this.course = course;
-        this.courseType = courseType;
-        this.position = position;
-        this.responseType = responseType;
-
-        //Binary repsonse
-        this.binaryAnswer = binaryAnswer;
-
-
-        //non-relevant fields  
-        this.textResponse = null;
-        this.responsePossiblilites = null;
-        this.answer1 = null;
-        this.answer2 = null;
-        this.answer3 = null;
-        this.answer4 = null;
-        this.answer5 = null;
-        this.answer6 = null;
-        this.answer7 = null;
-        this.answer8 = null;
-        this.answer9 = null;
-        this.answer10 = null;
-    }
-
-    //Multiple Choice & Drop-Down Constructor
-    public Response(LocalDateTime dateTime, Course course, CourseType courseType, Integer position, Integer responsePossiblilites, ResponseType responseType, Boolean answer1, Boolean answer2, Boolean answer3, Boolean answer4, Boolean answer5, Boolean answer6, Boolean answer7, Boolean answer8, Boolean answer9, Boolean answer10){
-        this.dateTime = dateTime;
-        this.course = course;
-        this.courseType = courseType;
-        this.position = position;
-        this.responseType = responseType;
-
-        //Drop down and Multiple Choice
-        this.responsePossiblilites = responsePossiblilites;
-        this.answer1 = answer1;
-        this.answer1 = answer2;
-        this.answer1 = answer3;
-        this.answer1 = answer4;
-        this.answer1 = answer5;
-        this.answer1 = answer6;
-        this.answer1 = answer7;
-        this.answer1 = answer8;
-        this.answer1 = answer9;
-        this.answer1 = answer10;
-
-        //non-relevant fields  
-        this.textResponse = null;
-        this.binaryAnswer = null;
-
-    }
-
+    //Getters & Setters
 
     public Long getId(){
         return this.id;
@@ -245,8 +141,16 @@ public class Response {
         return this.position;
     }
 
-    public void setPositio(int pos){
+    public void setPosition(int pos){
         this.position = pos;
+    }
+
+    public int getClassNo(){
+        return this.classNo;
+    }
+
+    public void setClassNo(int number){
+        this.classNo = number;
     }
 
     public ResponseType getResponseType(){
@@ -299,92 +203,24 @@ public class Response {
 
     //Drop Down and Multiple Choice fields
     public int getResponsePossibilities(){
-        return this.responsePossiblilites;
+        return this.responsePossibilities;
     }
 
     public void setResponsePossibilities(int possibilieties){
-        this.responsePossiblilites = possibilieties;
+        this.responsePossibilities= possibilieties;
     }
 
-    public Boolean getAnswer1(){
-        return this.answer1;
+    public ArrayList<Boolean> getAnswerMCDD(){
+        return this.answerMCDD;
     }
 
-    public void setAnswer1(Boolean answer){
-        this.answer1 = answer;
+    public void setAnswerMCDDTrueAtPos(Integer pos){
+        //set all to false, to erase single true statement
+        for(int i = 0; i < this.answerMCDD.size(); i++){
+            this.answerMCDD.set(i, false);
+        }
+
+        //set new true statement
+        this.answerMCDD.set(pos, true);
     }
-
-    public Boolean getAnswer2(){
-        return this.answer2;
-    }
-
-    public void setAnswer2(Boolean answer){
-        this.answer2 = answer;
-    }
-
-    public Boolean getAnswer3(){
-        return this.answer3;
-    }
-
-    public void setAnswer3(Boolean answer){
-        this.answer3 = answer;
-    }
-
-    public Boolean getAnswer4(){
-        return this.answer4;
-    }
-
-    public void setAnswer4(Boolean answer){
-        this.answer4 = answer;
-    }
-
-    public Boolean getAnswer5(){
-        return this.answer5;
-    }
-
-    public void setAnswer5(Boolean answer){
-        this.answer5 = answer;
-    }
-
-
-    public Boolean getAnswer6(){
-        return this.answer6;
-    }
-
-    public void setAnswer6(Boolean answer){
-        this.answer6 = answer;
-    }
-
-    public Boolean getAnswer7(){
-        return this.answer7;
-    }
-
-    public void setAnswer7(Boolean answer){
-        this.answer7 = answer;
-    }
-
-    public Boolean getAnswer8(){
-        return this.answer8;
-    }
-
-    public void setAnswer8(Boolean answer){
-        this.answer8 = answer;
-    }
-
-    public Boolean getAnswer9(){
-        return this.answer9;
-    }
-
-    public void setAnswer9(Boolean answer){
-        this.answer9 = answer;
-    }
-
-    public Boolean getAnswer10(){
-        return this.answer10;
-    }
-
-    public void setAnswer10(Boolean answer){
-        this.answer10 = answer;
-    }
-
 }

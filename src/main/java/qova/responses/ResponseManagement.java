@@ -100,11 +100,11 @@ public class ResponseManagement {
 
             if(i < 20){
                 var binaryAnswer = false;
-                responses.save(new Response(LocalDateTime.now(), course, courseType, position, responseType, binaryAnswer));
+                responses.save(new Response(LocalDateTime.now(), course, courseType, position, 1, responseType, "", binaryAnswer, 0, 0));
             }
             else{
                 var binaryAnswer = true;
-                responses.save(new Response(LocalDateTime.now(), course, courseType, position, responseType, binaryAnswer));
+                responses.save(new Response(LocalDateTime.now(), course, courseType, position, 1, responseType, "", binaryAnswer, 0, 0));
                 
             }
 
@@ -112,42 +112,19 @@ public class ResponseManagement {
 
             else if(position % 3 == 1){
                 var responseType = ResponseType.MULTIPLE_CHOICE;
-                var responsePossiblilites = 4;
-
-                var answer5 = false;
-                var answer6 = false;
-                var answer7 = false;
-                var answer8 = false;
-                var answer9 = false;
-                var answer10 = false;
+                var responsePossibilites = 4;
 
                 if(i<15){
-                    var answer1 = true;
-                    var answer2 = false;
-                    var answer3 = false;
-                    var answer4 = false;
-                    responses.save(new Response(LocalDateTime.now(), course, courseType, position, responsePossiblilites, responseType, answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10));
+                    responses.save(new Response(LocalDateTime.now(), course, courseType, position, 1, responseType, "", false, responsePossibilites, 0));
                 }
                 else if(i < 20){
-                    var answer1 = false;
-                    var answer2 = true;
-                    var answer3 = false;
-                    var answer4 = false;
-                    responses.save(new Response(LocalDateTime.now(), course, courseType, position, responsePossiblilites, responseType, answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10));
+                    responses.save(new Response(LocalDateTime.now(), course, courseType, position, 1, responseType, "", false, responsePossibilites, 1));
                 }
                 else if(i < 25){
-                    var answer1 = false;
-                    var answer2 = false;
-                    var answer3 = true;
-                    var answer4 = false;
-                    responses.save(new Response(LocalDateTime.now(), course, courseType, position, responsePossiblilites, responseType, answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10));
+                    responses.save(new Response(LocalDateTime.now(), course, courseType, position, 1, responseType, "", false, responsePossibilites, 2));
                 }
                 else{
-                    var answer1 = false;
-                    var answer2 = false;
-                    var answer3 = false;
-                    var answer4 = true;
-                    responses.save(new Response(LocalDateTime.now(), course, courseType, position, responsePossiblilites, responseType, answer1, answer2, answer3, answer4, answer5, answer6, answer7, answer8, answer9, answer10));
+                    responses.save(new Response(LocalDateTime.now(), course, courseType, position, 1, responseType, "", false, responsePossibilites, 3));
                 }
                 
                 
@@ -159,7 +136,7 @@ public class ResponseManagement {
                 var responseType = ResponseType.TEXT_RESPONSE;
                 var textResponse = "some extended text response for testing purposes";
 
-                responses.save(new Response(LocalDateTime.now(), course, courseType, position, responseType, textResponse));
+                responses.save(new Response(LocalDateTime.now(), course, courseType, position, 1, responseType, "", false, 0, 0));
             }
         }
         
