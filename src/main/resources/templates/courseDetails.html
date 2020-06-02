@@ -33,18 +33,17 @@
                     <div class="row justify-content-md-center p-4">
 
                         <!--Course Details-->
-                        <div class="col-md-auto">
+                        <div class="col-md-6">
+
+                            <!--Headline-->
                             <div class="row">
+                                <h5 class="font-weight-light text-left" th:text="#{course.details}">COURSE DETAILS</h5>
+                                <button type="button" class="btn edit_details btn-link p-0 ml-4 align-middle" th:href="@{/course/edit?id={id}(id=${course.id})}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}"><i class="far fa-edit"></i></button>
+                            </div>
 
-                                <div class="col-4 pl-0">
-                                    <h5 class="font-weight-light text-left" th:text="#{course.details}">COURSE DETAILS</h5>
-                                </div>
-                                <div class="col-6"></div>
-                                <div class="col-2">
-                                    <button type="button" class="btn edit_details btn-link p-0 ml-3 align-middle" th:href="@{/course/edit?id={id}(id=${course.id})}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}"><i class="far fa-edit"></i></button>
-                                </div>
-
-                                <table class="table m-0">
+                            <!--1st Table-->
+                            <div class="row">
+                                <table class="table mb-4">
                                     <tbody>
                                         <tr>
                                             <th scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
@@ -61,40 +60,48 @@
                                             <td th:text="${course.semesterOfStudents}">XX</td>
                                             <td></td>
                                         </tr>
-                                        <tr>
-                                            <th scope="row" th:text="#{new.lecture} + '?'">LECTURE</th>
-                                            <td th:if="${course.lectureExists}" th:text="#{detail.yes}">YES/NO</td>
-                                            <td th:if="!${course.lectureExists}" th:text="#{detail.no}">YES/NO</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr th:if="${course.lectureExists}">
-                                            <td scope="row" th:text="#{detail.LectureSurvey}">LECTURE</td>
-                                            <td th:text="${course.lectureSurvey}">SURVEY LECTURE</td>
-                                            <td><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></button></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" th:text="#{course.classTotalTutorial}">TUTORIAL COUNT</th>
-                                            <td th:text="${course.classTotalTutorial}">COUNT</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr th:if="${0 &lt; course.classTotalTutorial}">
-                                            <td scope="row" th:text="#{detail.TutorialSurvey}">TUTORIAL</td>
-                                            <td th:text="${course.tutorialSurvey}">TUTORIAL SURVEY</td>
-                                            <td><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></button></td>
-                                        </tr>
-                                        <tr>
-                                            <th scope="row" th:text="#{course.classTotalSeminar}">SEMINAR COUNT</th>
-                                            <td th:text="${course.classTotalSeminar}">COUNT</td>
-                                            <td></td>
-                                        </tr>
-                                        <tr th:if="${0 &lt; course.classTotalSeminar}">
-                                            <td class="pb-0" scope="row" th:text="#{detail.SeminarSurvey}">SEMINAR</td>
-                                            <td class="pb-0" th:text="${course.seminarSurvey}">SEMINAR SURVEY</td>
-                                            <td class="pb-0"><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></button></td>
-                                        </tr>
                                     </tbody>
                                 </table>
                             </div>
+
+                            <!--2nd Table-->
+                            <div class="row">
+                                <table class="table mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th class="border-0 col-md-2" scope="col" th:text="#{detail.classType}">TYPE</th>
+                                            <th class="border-0 text-center col-md-2" scope="col" data-toggle="tooltip" data-placement="top" title="AMOUNT" th:title="#{detail.classAmount}">#</th>
+                                            <th class="border-0" scope="col" th:text="#{detail.classSurvey}">SURVEY</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td scope="row" th:text="#{new.lecture}">LECTURE</td>
+                                            <td class="text-center" th:if="${course.lectureExists}">1</td><td class="text-center" th:if="!${course.lectureExists}">0</td>
+                                            <td th:if="${course.lectureExists}"><a class="btn btn-link p-0" th:text="${course.lectureSurvey}" href="#">LECTURE SURVEY</a></td>
+                                            <td th:if="!${course.lectureExists}">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="row" th:text="#{new.practice}">TUTORIAL</td>
+                                            <td class="text-center" th:text="${course.classTotalTutorial}">COUNT</td>
+                                            <td th:if="${0 &lt; course.classTotalTutorial}"><a class="btn btn-link p-0" th:text="${course.tutorialSurvey}" href="#">TUTORIAL SURVEY</a></td>
+                                            <td th:if="!${0 &lt; course.classTotalTutorial}">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td scope="row" th:text="#{new.seminar}">SEMINAR</td>
+                                            <td class="text-center" th:text="${course.classTotalSeminar}">COUNT</td>
+                                            <td th:if="${0 &lt; course.classTotalSeminar}"><a class="btn btn-link p-0" th:text="${course.seminarSurvey}" href="#">SEMINAR SURVEY</a></td>
+                                            <td th:if="!${0 &lt; course.classTotalSeminar}">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <!--<button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></button>-->
+                                <!--<button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></button>-->
+                                <!--<button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></button>-->
+
+                            </div>
+
                         </div>
 
                         <div class="col-md-1"></div>
@@ -103,7 +110,7 @@
                         <div class="col-md-auto">
                             <h5 class="font-weight-light text-center" th:text="#{detail.QR}">QR CODES</h5>
                             <div class="row justify-content-md-center">    
-                                <div class="container border border-dark p-1">
+                                <div class="container carousel-border border border-secondary p-1">
                                     <div id="carouselExampleIndicators" class="carousel slide" interval="false">
                                         <ol class="carousel-indicators">
                                             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
@@ -145,7 +152,7 @@
                                 </div>
                             </div>
                             <div class="row justify-content-md-center mt-3">
-                                <button type="button" class="btn btn-outline-primary" th:target="_blank" th:href="${'/qrcode?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="bottom" th:title="#{detail.download}"><i class="fas fa-download"></i></button>
+                                <button type="button" class="btn btn-primary" th:text="#{detail.download}" th:target="_blank" th:href="${'/qrcode?type=LECTURE&id='  + {course.id}}" href="#">DOWNLOAD</button>
                             </div>
 
                         </div>
