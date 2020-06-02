@@ -595,6 +595,18 @@
 
     }
 
+    function loadsurveystring (){
+        alert(document.getElementById("json").innerHTML);
+        const survey = JSON.parse(document.getElementById("json").innerHTML);
+        alert(survey);
+        for ( let i=0; i < survey.length; i++){
+            questionnaire.push(survey[i]);
+
+        }
+        renderall();
+
+    }
+
     <!--Onclick Show the Dropdown Content -->
     function hideshowdropdowntitle(q_index) {
 
@@ -615,6 +627,13 @@
         }
 
     }
+
+    window.onload = function(){
+        loadsurveystring();
+        renderall();
+    }
+
+
 
     $(document).ready(function () {
         $("form").submit(function () {
