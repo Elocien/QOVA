@@ -25,45 +25,22 @@ input[type=number] {
   -moz-appearance: textfield;
 }
 
-.carousel-caption {
-  bottom: -5rem;
-}
-.carousel-control-prev, .carousel-control-next {
-  bottom: -19rem;
-}
-.carousel-item {
-  height: 100%;
-  width: 300px;
-}
-.carousel-indicators {
-  bottom: 1rem;
-}
-.carousel-indicators li {
-  background-color: #999;
-  background-color: rgba(70, 70, 70, 0.25);
-}
-.carousel-indicators .active {
-  background-color: #444;
-}
-.carousel-control-prev-icon {
-  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%44444' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
-}
-
-.carousel-control-next-icon {
-  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%44444' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
-}
-.edit_details {
-  margin-bottom: 0.5rem;
-}
-
-.btn-primary {
+.btn-tu {
   background-color: var(--tu_blue);
   border-color: black;
 }
-.btn-primary:hover {
+.btn-tu:hover {
   background-color: rgba(100, 100, 100, 0);
   color: black;
   border-color: black;
+}
+
+.btn-delete {
+  position: absolute;
+  right: 1rem;
+  color: red;
+}.btn-delete:hover {
+  color: darkred;
 }
 
 .page-footer {
@@ -146,4 +123,35 @@ input[type=number] {
 
 .form_color {
   background-color: var(--tu_blue_highlight);
+}
+
+/*courseDetails.html*/
+.carousel-caption {
+  bottom: -4rem;
+}
+.carousel-control-prev, .carousel-control-next {
+  bottom: -18.8rem;
+}
+.carousel-item {
+  height: 100%;
+  width: 300px;
+}
+.carousel-indicators {
+  bottom: -0.5rem;
+}
+.carousel-indicators li {
+  background-color: #999;
+  background-color: rgba(70, 70, 70, 0.25);
+}
+.carousel-indicators .active {
+  background-color: #444;
+}
+.carousel-control-prev-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%44444' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
+}
+.carousel-control-next-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%44444' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+}
+.edit_details {
+  margin-bottom: 0.5rem;
 }
