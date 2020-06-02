@@ -284,6 +284,24 @@ public class CourseManagement {
     }
 
 
+    /**
+	 * @param id the Course id
+	 * @return an {@linkplain Optional} of a {@linkplain Course}
+	 *         with the given id
+	 */
+	public Optional<Course> findById(String id) {
+		return courses.findById(id);
+	}
+
+
+    /**
+	 * @param id the Course id
+	 * @return an {@linkplain Optional} of a {@linkplain Course}
+	 *         with the given id
+	 */
+	public Iterable<Course> findAll() {
+		return courses.findAll();
+	}
 
 
 

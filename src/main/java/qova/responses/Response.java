@@ -3,13 +3,11 @@ package qova.responses;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-import javax.persistence.CollectionTable;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 
 import qova.course.Course;
@@ -63,8 +61,7 @@ public class Response {
     //E.g.If responsePossibilities = 4, then the arrayList will contain 3 Booleans of type "false" and one Boolean of type "true". The position of the "true" statement in the array, indicates which
     //option a user selected
     
-    // @ElementCollection
-	// @CollectionTable(name = "MC_OR_DD_Response", joinColumns = @JoinColumn())
+    @Lob
     private ArrayList<Boolean> answerMCDD;
 
 
@@ -73,9 +70,9 @@ public class Response {
 	private Response() {
     }
 
-    
-    public Response(LocalDateTime dateTime, Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, String textResponse, Boolean binaryAnswer, Integer responsePossibilites, Integer MCorDDresponse){
-        this.dateTime = dateTime;
+    //Text Response Constructor
+    public Response(Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, String textResponse){
+        this.dateTime = LocalDateTime.now();
         this.course = course;
         this.courseType = courseType;
         this.position = position;
@@ -86,24 +83,60 @@ public class Response {
         this.textResponse = textResponse;
 
         //Binary repsonse
+        this.binaryAnswer = null;
+
+        //Drop down and Multiple Choice
+        this.responsePossibilities = null;
+
+        this.answerMCDD = new ArrayList<Boolean>();        
+    }
+
+
+
+    //Binary Answer Constructor
+    public Response(Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, Boolean binaryAnswer){
+        this.dateTime = LocalDateTime.now();
+        this.course = course;
+        this.courseType = courseType;
+        this.position = position;
+        this.classNo = classNo;
+        this.responseType = responseType;
+
+        //Text response
+        this.textResponse = null;
+
+        //Binary repsonse
         this.binaryAnswer = binaryAnswer;
+
+        //Drop down and Multiple Choice
+        this.responsePossibilities = null;
+
+        this.answerMCDD = new ArrayList<Boolean>(); 
+    }
+
+    public Response(Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, Integer responsePossibilites, Integer MCorDDresponse){
+        this.dateTime = LocalDateTime.now();
+        this.course = course;
+        this.courseType = courseType;
+        this.position = position;
+        this.classNo = classNo;
+        this.responseType = responseType;
+
+        //Text response
+        this.textResponse = null;
+
+        //Binary repsonse
+        this.binaryAnswer = null;
 
         //Drop down and Multiple Choice
         this.responsePossibilities = responsePossibilites;
 
-        if(responsePossibilites == 0){
-            //TODO: What to do, if question is not MC or DD
-        }
-        
-        
+        this.answerMCDD = new ArrayList<Boolean>(); 
         for(int i = 0; i < responsePossibilites; i++){
-            answerMCDD.add(false);
+            this.answerMCDD.add(false);
         }
-        //MCorDDresponse gives position of response. We subtract 1, because ArrayList counts from 0
-        answerMCDD.set(MCorDDresponse, true);
-        
-
-        
+        //MCorDDresponse gives position of response. 
+        this.answerMCDD.set(MCorDDresponse, true);  
     }
 
 

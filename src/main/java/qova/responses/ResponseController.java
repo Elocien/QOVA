@@ -23,16 +23,11 @@ public class ResponseController {
     private final ResponseManagement responseManagement;
 
     @Autowired
-    private final ResponseRepository responseRepository;
-
-    @Autowired
     private final CourseRepository courseRepository;
 
     @Autowired
-    ResponseController(ResponseManagement responseManagement, ResponseRepository responseRepository,
-            CourseRepository courseRepository) {
+    ResponseController(ResponseManagement responseManagement, CourseRepository courseRepository) {
         this.responseManagement = Objects.requireNonNull(responseManagement);
-        this.responseRepository = Objects.requireNonNull(responseRepository);
         this.courseRepository = Objects.requireNonNull(courseRepository);
     }
 

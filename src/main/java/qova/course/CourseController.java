@@ -39,12 +39,8 @@ public class CourseController {
     private final CourseManagement courseManagement;
 
     @Autowired
-    private final CourseRepository courseRepository;
-
-    @Autowired
-    CourseController(CourseManagement courseManagement, CourseRepository courseRepository) {
+    CourseController(CourseManagement courseManagement) {
         this.courseManagement = Objects.requireNonNull(courseManagement);
-        this.courseRepository = Objects.requireNonNull(courseRepository);
     }
 
     @GetMapping("/")
@@ -57,7 +53,7 @@ public class CourseController {
     @GetMapping("/courses")
     public String courses (Model model) {
 
-        model.addAttribute("courseList", courseRepository.findAll());
+        model.addAttribute("courseList", courseManagement.findAll());
         return "courses";
     }
 
@@ -73,7 +69,7 @@ public class CourseController {
         }
         
         //fetch course and go to details if present
-        Optional<Course> course = courseRepository.findById(id);
+        Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()){
             model.addAttribute("course", course.get());
 
@@ -163,7 +159,7 @@ public class CourseController {
 			return "redirect:../courses";
 		}
 
-		Optional<Course> crs = courseRepository.findById(id);
+		Optional<Course> crs = courseManagement.findById(id);
 		if (crs.isPresent()) {
             model.addAttribute("form", form);
             model.addAttribute("semesterDates", courseManagement.findSemesters());
@@ -218,7 +214,7 @@ public class CourseController {
         }
         
         //fetch course and go to details if present
-        Optional<Course> course = courseRepository.findById(id);
+        Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()){
 
             // if type is none of the correct values, then redirect to homepage
@@ -263,7 +259,7 @@ public class CourseController {
         }
         
         //fetch course and go to details if present
-        Optional<Course> course = courseRepository.findById(id);
+        Optional<Course> course = courseManagement.findById(id);
 
         //Validate that course exists, and that the survey is not empty
         if (course.isPresent()){
@@ -325,7 +321,7 @@ public class CourseController {
         String url = "localhost:8080/survey?type=" + type + "&id=" + id;  
         
         //find course
-        Optional<Course> crs = courseRepository.findById(id);
+        Optional<Course> crs = courseManagement.findById(id);
 
         //generate filename
         String filename = crs.get().getName() + type + "QRCode";
