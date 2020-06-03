@@ -3,6 +3,7 @@ package qova.responses;
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -91,15 +92,16 @@ public class ResponseManagement {
             var position = i % 3;
 
             if(position % 3 == 0){
-            var responseType = ResponseType.BINARY_ANSWER;
+                var responseType = ResponseType.BINARY_ANSWER;
+                var question = "Is this test question good?";
 
                 if(i < 20){
                     var binaryAnswer = false;
-                    responses.save(new Response(course, courseType, position, classNo, responseType, binaryAnswer));
+                    responses.save(new Response(course, courseType, position, classNo, responseType, question, binaryAnswer));
                 }
                 else{
                     var binaryAnswer = true;
-                    responses.save(new Response(course, courseType, position, classNo, responseType, binaryAnswer));
+                    responses.save(new Response(course, courseType, position, classNo, responseType, question, binaryAnswer));
                     
                 }
             }
@@ -107,18 +109,25 @@ public class ResponseManagement {
             else if(position % 3 == 1){
                 var responseType = ResponseType.MULTIPLE_CHOICE;
                 var responsePossibilites = 4;
+                var question = "Is this test question good?";
+                ArrayList<String> options = new ArrayList<String>();
+                options.add("bad");
+                options.add("acceptable");
+                options.add("good");
+                options.add("perfect");
+                
 
                 if(i < 15){
-                    responses.save(new Response(course, courseType, position, classNo, responseType, responsePossibilites, 0));
+                    responses.save(new Response(course, courseType, position, classNo, responseType, question, responsePossibilites, 0, options));
                 }
                 else if(i < 20){
-                    responses.save(new Response(course, courseType, position, classNo, responseType, responsePossibilites, 1));
+                    responses.save(new Response(course, courseType, position, classNo, responseType, question, responsePossibilites, 1, options));
                 }
                 else if(i < 25){
-                    responses.save(new Response(course, courseType, position, classNo, responseType, responsePossibilites, 2));
+                    responses.save(new Response(course, courseType, position, classNo, responseType, question, responsePossibilites, 2, options));
                 }
                 else{
-                    responses.save(new Response(course, courseType, position, classNo, responseType, responsePossibilites, 3));
+                    responses.save(new Response(course, courseType, position, classNo, responseType, question, responsePossibilites, 3, options));
                 }   
 
             }
@@ -126,8 +135,9 @@ public class ResponseManagement {
             else{
                 var responseType = ResponseType.TEXT_RESPONSE;
                 var textResponse = "some extended text response for testing purposes";
+                var question = "Another test question, respond in text form";
 
-                responses.save(new Response(course, courseType, position, classNo, responseType, textResponse));
+                responses.save(new Response(course, courseType, position, classNo, responseType, question, textResponse));
             }
         }  
     } 

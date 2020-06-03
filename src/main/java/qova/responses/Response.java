@@ -39,6 +39,10 @@ public class Response {
 
     //See ResponseType file 
     private ResponseType responseType;
+
+    //Container for the question belonging to the response (Used during PDF generation)
+    @Lob
+    private String question;
     //------------------------------------------------------------------------
 
     //Container in case of text response
@@ -57,13 +61,16 @@ public class Response {
     //E.g. A multiple choice question has the options: bad, okay, good, perfect. Then response possibilities is set to 4
     private Integer responsePossibilities;
 
+    
     //Used to store the response of the user. 
     //E.g.If responsePossibilities = 4, then the arrayList will contain 3 Booleans of type "false" and one Boolean of type "true". The position of the "true" statement in the array, indicates which
     //option a user selected
-    
     @Lob
     private ArrayList<Boolean> answerMCDD;
 
+    private ArrayList<String> optionsMCDD;
+
+    
 
     //Needed for JPA puposes
     @SuppressWarnings("unused")
@@ -71,16 +78,18 @@ public class Response {
     }
 
     //Text Response Constructor
-    public Response(Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, String textResponse){
+    public Response(Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, String question, String textResponse){
         this.dateTime = LocalDateTime.now();
         this.course = course;
         this.courseType = courseType;
         this.position = position;
         this.classNo = classNo;
         this.responseType = responseType;
+        this.question = question;
 
         //Text response
         this.textResponse = textResponse;
+
 
         //Binary repsonse
         this.binaryAnswer = null;
@@ -94,19 +103,21 @@ public class Response {
 
 
     //Binary Answer Constructor
-    public Response(Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, Boolean binaryAnswer){
+    public Response(Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, String question, Boolean binaryAnswer){
         this.dateTime = LocalDateTime.now();
         this.course = course;
         this.courseType = courseType;
         this.position = position;
         this.classNo = classNo;
         this.responseType = responseType;
-
-        //Text response
-        this.textResponse = null;
+        this.question = question;
 
         //Binary repsonse
         this.binaryAnswer = binaryAnswer;
+
+
+        //Text response
+        this.textResponse = null;
 
         //Drop down and Multiple Choice
         this.responsePossibilities = null;
@@ -114,19 +125,15 @@ public class Response {
         this.answerMCDD = new ArrayList<Boolean>(); 
     }
 
-    public Response(Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, Integer responsePossibilites, Integer MCorDDresponse){
+    public Response(Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, String question, Integer responsePossibilites, Integer MCorDDresponse, ArrayList<String> responseOptions) throws ArrayStoreException{
         this.dateTime = LocalDateTime.now();
         this.course = course;
         this.courseType = courseType;
         this.position = position;
         this.classNo = classNo;
         this.responseType = responseType;
+        this.question = question;
 
-        //Text response
-        this.textResponse = null;
-
-        //Binary repsonse
-        this.binaryAnswer = null;
 
         //Drop down and Multiple Choice
         this.responsePossibilities = responsePossibilites;
@@ -136,7 +143,19 @@ public class Response {
             this.answerMCDD.add(false);
         }
         //MCorDDresponse gives position of response. 
-        this.answerMCDD.set(MCorDDresponse, true);  
+        this.answerMCDD.set(MCorDDresponse, true); 
+
+        this.optionsMCDD = responseOptions;
+
+        if(responseOptions.size() != answerMCDD.size()){
+            throw new ArrayStoreException();
+        }
+
+        //Text response
+        this.textResponse = null;
+
+        //Binary repsonse
+        this.binaryAnswer = null;
     }
 
 
@@ -150,48 +169,28 @@ public class Response {
         return this.dateTime;
     }
 
-    public void setDateTime(LocalDateTime dateTime){
-        this.dateTime = dateTime;
-    }
-
     public Course getCourse(){
         return this.course;
-    }
-
-    public void setCourse(Course course){
-        this.course = course;
     }
 
     public CourseType getCourseType(){
         return this.courseType;
     }
 
-    public void setCourseType(CourseType courseType){
-        this.courseType = courseType;
-    }
-
     public int getPosition(){
         return this.position;
-    }
-
-    public void setPosition(int pos){
-        this.position = pos;
     }
 
     public int getClassNo(){
         return this.classNo;
     }
 
-    public void setClassNo(int number){
-        this.classNo = number;
-    }
-
     public ResponseType getResponseType(){
         return this.responseType;
     }
 
-    public void setResponseType(ResponseType type){
-        this.responseType = type;
+    public String getQuestion(){
+        return this.question;
     }
 
 
@@ -207,11 +206,6 @@ public class Response {
         return this.textResponse;
     }
 
-    public void settextResponse(String response){
-        this.textResponse = response;
-    }
-
-
 
 
 
@@ -223,8 +217,8 @@ public class Response {
         return this.binaryAnswer;
     }
 
-    public void setBinaryAnswer(Boolean answer){
-        this.binaryAnswer = answer;
+    public String getBinaryQuestion(){
+        return question;
     }
 
 
@@ -239,21 +233,12 @@ public class Response {
         return this.responsePossibilities;
     }
 
-    public void setResponsePossibilities(int possibilieties){
-        this.responsePossibilities= possibilieties;
-    }
-
-    public ArrayList<Boolean> getAnswerMCDD(){
+    public ArrayList<Boolean> getListMCDD(){
         return this.answerMCDD;
     }
 
-    public void setAnswerMCDDTrueAtPos(Integer pos){
-        //set all to false, to erase single true statement
-        for(int i = 0; i < this.answerMCDD.size(); i++){
-            this.answerMCDD.set(i, false);
-        }
-
-        //set new true statement
-        this.answerMCDD.set(pos, true);
+    public ArrayList<String> getOptionsMCDD(){
+        return this.optionsMCDD;
     }
+
 }
