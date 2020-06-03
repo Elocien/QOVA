@@ -6,6 +6,9 @@ import java.time.LocalTime;
 import java.util.Base64;
 import java.util.Objects;
 
+import java.util.List;
+import java.util.Arrays;
+
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
@@ -57,6 +60,19 @@ public class CourseController {
         return "courses";
     }
 
+    /*@GetMapping("/courses")
+    public String courses (Model model) {
+
+        LocalDate dateNow = LocalDate.now();
+
+        var NewCourse1 = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.ARCHITECTURE, dateNow);
+        var NewCourse2 = new Course("Sausage", true, true, true, "Sausage Lecture Survey 2020", "Sausage Tutorial Survey 2020", "Sausage Seminar Survey 2020", 2, 3, 1, CourseFaculty.BIOLOGY, dateNow);
+        List<Course> courseList = Arrays.asList(NewCourse1, NewCourse2);
+        model.addAttribute("courseList", courseList);
+
+        return "courses";
+    }*/
+
 
 
     //Shows the details for a specific course
@@ -96,7 +112,7 @@ public class CourseController {
 
         LocalDate dateNow = LocalDate.now();
 
-        var NewCourse = new Course("Cheese", true, true, true, "Lec", "Tut", "Sem", 5, 5, 5, CourseFaculty.ARCHITECTURE, dateNow);
+        var NewCourse = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.ARCHITECTURE, dateNow);
         model.addAttribute("course", NewCourse);
 
         return "courseDetails";

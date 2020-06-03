@@ -24,7 +24,6 @@
     <button class="Button NewQuestion" onclick="addFreeTextQuestion()">Füge eine Frei-Text-Frage</button>
     <button class="Button NewQuestion" onclick="addSingleChoiceQuestion()">Füge eine Single-Choice-Frage hinzu</button>
     <button class="Button NewQuestion" onclick="addDropDownQuestion()"> Füge eine DropDown-Frage hinzu</button>
-    <button class="Button NewQuestion" onclick="getJson()">Fragebogen abschicken</button>
     <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}">
         <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
         <button class="Button NewQuestion" type="submit"  >Abschicken</button> </form>
@@ -595,6 +594,16 @@
 
     }
 
+    function loadsurveystring (){
+        const survey = JSON.parse(document.getElementById("json").innerHTML);
+        for ( let i=0; i < survey.length; i++){
+            questionnaire.push(survey[i]);
+
+        }
+        renderall();
+
+    }
+
     <!--Onclick Show the Dropdown Content -->
     function hideshowdropdowntitle(q_index) {
 
@@ -615,6 +624,13 @@
         }
 
     }
+
+    window.onload = function(){
+        loadsurveystring();
+        renderall();
+    }
+
+
 
     $(document).ready(function () {
         $("form").submit(function () {

@@ -21,6 +21,7 @@
     border: 1px solid #dadce0;
     border-radius: 8px;
     margin-top: 20px;
+    background-color: white;
 }
 
 
@@ -86,7 +87,7 @@
 }
 
 .Button {
-    background-color: #f44336;
+    background-color: rgb(0,37,87);
     float: right;
     border: none;
     border-radius: 5px;
@@ -118,7 +119,7 @@
     display: none;
     float: left;
     margin-left: 10px;
-    color: #f44336;
+    color: rgb(0,37,87);
     background-color: transparent;
     border: none;
     padding: 0;
@@ -173,5 +174,9 @@
 }
 .input {
     display: none;
+}
+
+.Json {
+    display:none;
 }
 

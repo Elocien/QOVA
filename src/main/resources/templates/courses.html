@@ -32,7 +32,7 @@
                             <th scope="col" th:text="#{course.semesterOfStudents}">YEAR</th>
                         </tr>
                     </thead>
-                    <tbody class="text-left">
+                    <tbody class="text-center">
                         <tr th:each="course : ${courseList}" style="cursor: pointer" th:onclick="'window.location.href = \'' + @{/course/details?id={id}(id=${course.id})} + '\''">
                             <td th:text="${course.name}">NAME</td>
                             <td th:text="${course.courseInstance}">SEMESTER</td>
