@@ -38,7 +38,7 @@
                             <!--Headline-->
                             <div class="row">
                                 <h5 class="font-weight-light text-left" th:text="#{course.details}">COURSE DETAILS</h5>
-                                <button type="button" class="btn edit_details btn-link p-0 ml-4 align-middle" th:href="@{/course/edit?id={id}(id=${course.id})}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}"><i class="far fa-edit"></i></button>
+                                <a type="button" class="btn edit_details btn-link p-0 ml-4 align-middle" th:href="@{/course/edit?id={id}(id=${course.id})}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}"><i class="far fa-edit"></i></a>
                             </div>
 
                             <!--1st Table-->
@@ -85,11 +85,11 @@
                                                     <div th:switch="${course.lectureSurvey}">
                                                         <div th:case="'-'">
                                                             <td class="text-center" th:text="#{No}">!EXISTS</td>
-                                                            <td><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></button></td>
+                                                            <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a></td>
                                                         </div>
                                                         <div th:case="*">
                                                             <td class="text-center" th:text="#{Yes}">EXISTS</td>
-                                                            <td><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></button></td>
+                                                            <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a></td>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -109,11 +109,11 @@
                                                     <div th:switch="${course.tutorialSurvey}">
                                                         <div th:case="'-'">
                                                             <td class="text-center" th:text="#{No}">!EXISTS</td>
-                                                            <td><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></button></td>
+                                                            <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a></td>
                                                         </div>
                                                         <div th:case="*">
                                                             <td class="text-center" th:text="#{Yes}">EXISTS</td>
-                                                            <td><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></button></td>
+                                                            <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a></td>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -132,11 +132,11 @@
                                                     <div th:switch="${course.seminarSurvey}">
                                                         <div th:case="'-'">
                                                             <td class="text-center" th:text="#{No}">!EXISTS</td>
-                                                            <td><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></button></td>
+                                                            <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a></td>
                                                         </div>
                                                         <div th:case="*">
                                                             <td class="text-center" th:text="#{Yes}">EXISTS</td>
-                                                            <td><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></button></td>
+                                                            <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a></td>
                                                         </div>
                                                     </div>
                                                 </div>
