@@ -49,9 +49,7 @@
                     </div>
                 </div>
                 <!--Questions-->
-                <div class="col-md-6">
-                    <div class="question-list" id="questionnaire"></div>
-                </div>
+                <div class="col-md-6" id="questionnaire"></div>
                 <div class="col-md-3"></div>
             </div>
 
@@ -136,18 +134,30 @@
 
             const row1 = document.createElement("DIV");
             row1.className = "row";
+            const question_header = document.createElement("H7");
+            question_header.innerHTML = "QUESTION:"
+            question_header.className = "font-weight-light";
             const left = document.createElement("DIV");
             left.className = "col-md-6";
             const right = document.createElement("DIV");
             right.className = "col-md-6";
 
+            //Question Initilisation
             const row2 = document.createElement("DIV");
             row2.className = "row";
+            const middle_col = document.createElement("DIV");
+            middle_col.className = "col-md-12";
+            row2.appendChild(middle_col)
 
+            //Answere Initilisation
+            const answere_header = document.createElement("H7");
+            answere_header.innerHTML = "ANSWERS:";
+            answere_header.className = "font-weight-light";
             const row3 = document.createElement("DIV");
             row3.className = "row";
             const last_col = document.createElement("DIV");
-            last_col.className = "col-md-12";
+            last_col.className = "col-md-12 ml-5";
+            last_col.appendChild(answere_header);
             row3.appendChild(last_col)
 
             if (value.type === "YesNo"){
@@ -157,6 +167,7 @@
                 x.setAttribute("id",index);
 
                 left.appendChild(createTitleDropdown(index,value.type));
+                left.appendChild(question_header);
                 right.appendChild(createButtonDelete(index));
                 right.appendChild(createButtonCopy(index));
                 if (index > 0) {
@@ -172,9 +183,9 @@
                 //Textarea for the question input
                 const text_area = document.createElement("TEXTAREA");
                 text_area.className = "Textarea Question";
+                text_area.setAttribute("placeholder", value.question)
                 text_area.setAttribute("id",index);
-                text_area.defaultValue = value.question;
-                row2.appendChild(text_area);
+                middle_col.appendChild(text_area);
                 x.appendChild(row2);
 
             }
@@ -186,6 +197,7 @@
                 x.setAttribute("id",index);
 
                 left.appendChild(createTitleDropdown(index,value.type));
+                left.appendChild(question_header);
                 right.appendChild(createButtonDelete(index));
                 right.appendChild(createButtonCopy(index));
                 if (index > 0) {
@@ -202,8 +214,8 @@
                 const text_area = document.createElement("TEXTAREA");
                 text_area.className = "Textarea Question";
                 text_area.setAttribute("id",index);
-                text_area.defaultValue = value.question;
-                row2.appendChild(text_area);
+                text_area.setAttribute("placeholder", value.question)
+                middle_col.appendChild(text_area);
                 x.appendChild(row2);
 
             }
@@ -215,6 +227,7 @@
                 x.setAttribute("id",index);
 
                 left.appendChild(createTitleDropdown(index,value.type));
+                left.appendChild(question_header);
                 right.appendChild(createButtonDelete(index));
                 right.appendChild(createButtonCopy(index));
                 if (index > 0) {
@@ -231,8 +244,8 @@
                 const text_area = document.createElement("TEXTAREA");
                 text_area.className = "Textarea Question";
                 text_area.setAttribute("id",index);
-                text_area.defaultValue = value.question;
-                row2.appendChild(text_area);
+                text_area.setAttribute("placeholder", value.question)
+                middle_col.appendChild(text_area);
                 x.appendChild(row2);
 
                 //Answer Option Part
@@ -252,6 +265,7 @@
                 x.setAttribute("id",index);
 
                 left.appendChild(createTitleDropdown(index,value.type));
+                left.appendChild(question_header);
                 right.appendChild(createButtonDelete(index));
                 right.appendChild(createButtonCopy(index));
                 if (index > 0) {
@@ -268,8 +282,8 @@
                 const text_area = document.createElement("TEXTAREA");
                 text_area.className = "Textarea Question";
                 text_area.setAttribute("id",index);
-                text_area.defaultValue = value.question;
-                row2.appendChild(text_area);
+                text_area.setAttribute("placeholder", value.question)
+                middle_col.appendChild(text_area);
                 x.appendChild(row2);
 
                 //Answer Option Part
@@ -289,6 +303,7 @@
                 x.setAttribute("id",index);
 
                 left.appendChild(createTitleDropdown(index,value.type));
+                left.appendChild(question_header);
                 right.appendChild(createButtonDelete(index));
                 right.appendChild(createButtonCopy(index));
                 if (index > 0) {
@@ -303,10 +318,10 @@
 
                 //Textarea for the question input
                 const text_area = document.createElement("TEXTAREA");
-                text_area.className = "Textarea Question";
+                text_area.className = "Textarea Question ";
                 text_area.setAttribute("id",index);
-                text_area.defaultValue = value.question;
-                row2.appendChild(text_area);
+                text_area.setAttribute("placeholder", value.question)
+                middle_col.appendChild(text_area);
                 x.appendChild(row2);
 
                 //Answer Option Part
@@ -407,7 +422,7 @@
 
         function createButtonnewAnswer(index){
             const btn_newAnswer = document.createElement("Button");
-            btn_newAnswer.className="btn btn-primary m-2 ml-5";
+            btn_newAnswer.className="btn btn-primary mb-2";
             btn_newAnswer.innerHTML="Add new Answer";
             btn_newAnswer.setAttribute("onclick","addnewAnswer("+index+")");
 
