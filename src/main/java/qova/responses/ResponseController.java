@@ -52,20 +52,42 @@ public class ResponseController {
 
     // ---------------------------------------------------------------------------
 
-    // // test method
-    // @GetMapping("/barchart")
-    // public String barchartTest() throws IOException {
-    //     responseManagement.GeneratePDF();
-    //     return "home";
-    // }
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
     //test method
     @GetMapping("/createR")
-    public String creatR(){
+    public String creatR() throws Exception {
         Optional<Course> crs = courseRepository.findById("c000000000000001");
         responseManagement.TestCreateResponses(crs.get());
+        return "home";
+    }
+
+    // test method
+    @GetMapping("/pdfGen")
+    public String barchartTest() throws Exception {
+        responseManagement.generatePDF();
         return "home";
     }
 }

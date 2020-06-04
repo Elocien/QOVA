@@ -1,13 +1,10 @@
 package qova.responses;
 
-import java.io.File;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.jfree.chart.JFreeChart;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +22,21 @@ public class ResponseManagement {
     public ResponseManagement(ResponseRepository responses) {
         this.responses = Objects.requireNonNull(responses);
     }
+
+    public void generatePDF() throws IOException, Exception {
+        //TODO: Get correct responses
+        ArrayList<Response> pdfResponses = new ArrayList<Response>();
+        responses.findAll().forEach(pdfResponses::add);
+        
+        //Generate PDF
+        PDFGenerator pdfGen = new PDFGenerator();
+        pdfGen.createPdf(pdfResponses);
+    }
+
+
+
+
+
 
 
     /**
@@ -84,7 +96,7 @@ public class ResponseManagement {
 
 
     //Test Method, remove in final build
-    public void TestCreateResponses(Course course){
+    public void TestCreateResponses(Course course) throws Exception {
         CourseType courseType = CourseType.LECTURE;
         Integer classNo = 1;
         for(int i = 0; i < 60; i++){
@@ -107,7 +119,7 @@ public class ResponseManagement {
             }
 
             else if(position % 3 == 1){
-                var responseType = ResponseType.MULTIPLE_CHOICE;
+                var responseType = ResponseType.DROP_DOWN;
                 var responsePossibilites = 4;
                 var question = "Is this test question good?";
                 ArrayList<String> options = new ArrayList<String>();

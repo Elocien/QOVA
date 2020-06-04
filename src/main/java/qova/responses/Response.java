@@ -78,7 +78,13 @@ public class Response {
     }
 
     //Text Response Constructor
-    public Response(Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, String question, String textResponse){
+    public Response(Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, String question, String textResponse) throws Exception{
+        
+        //Throw Exception is the two arrays do not match in length. If they do not match, then there is no deterministic matching from possible options to the actual response given.
+        if(responseType != ResponseType.TEXT_RESPONSE){
+            throw new Exception("responseType does not match constructor");
+        }
+        
         this.dateTime = LocalDateTime.now();
         this.course = course;
         this.courseType = courseType;
@@ -103,7 +109,13 @@ public class Response {
 
 
     //Binary Answer Constructor
-    public Response(Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, String question, Boolean binaryAnswer){
+    public Response(Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, String question, Boolean binaryAnswer) throws Exception{
+        
+        //Throw Exception is the two arrays do not match in length. If they do not match, then there is no deterministic matching from possible options to the actual response given.
+        if(responseType != ResponseType.BINARY_ANSWER){
+            throw new Exception("responseType does not match constructor");
+        }
+        
         this.dateTime = LocalDateTime.now();
         this.course = course;
         this.courseType = courseType;
@@ -125,7 +137,13 @@ public class Response {
         this.answerMCDD = new ArrayList<Boolean>(); 
     }
 
-    public Response(Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, String question, Integer responsePossibilites, Integer MCorDDresponse, ArrayList<String> responseOptions) throws ArrayStoreException{
+    public Response(Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, String question, Integer responsePossibilites, Integer DDresponse, ArrayList<String> responseOptions) throws Exception{
+        
+        //Throw Exception is the two arrays do not match in length. If they do not match, then there is no deterministic matching from possible options to the actual response given.
+        if(responseType != ResponseType.DROP_DOWN){
+            throw new Exception("responseType does not match constructor");
+        }
+        
         this.dateTime = LocalDateTime.now();
         this.course = course;
         this.courseType = courseType;
@@ -138,17 +156,55 @@ public class Response {
         //Drop down and Multiple Choice
         this.responsePossibilities = responsePossibilites;
 
+        //Initialise arrayList and popilate with false
         this.answerMCDD = new ArrayList<Boolean>(); 
         for(int i = 0; i < responsePossibilites; i++){
             this.answerMCDD.add(false);
         }
-        //MCorDDresponse gives position of response. 
-        this.answerMCDD.set(MCorDDresponse, true); 
+        //MCorDDresponse gives position of the user response. That field is set to true 
+        this.answerMCDD.set(DDresponse, true); 
+
+        this.optionsMCDD = responseOptions;
+
+
+        //Throw Exception is the two arrays do not match in length. If they do not match, then there is no deterministic matching from possible options to the actual response given.
+        if(responseOptions.size() != answerMCDD.size()){
+            throw new Exception("Array of responses, does not match the amount of options");
+        }
+
+        //Text response
+        this.textResponse = null;
+
+        //Binary repsonse
+        this.binaryAnswer = null;
+    }
+
+    public Response(Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, String question, Integer responsePossibilites, ArrayList<Boolean> MCresponse, ArrayList<String> responseOptions) throws Exception{
+        
+        //Throw Exception is the two arrays do not match in length. If they do not match, then there is no deterministic matching from possible options to the actual response given.
+        if(responseType != ResponseType.MULTIPLE_CHOICE){
+            throw new Exception("responseType does not match constructor");
+        }
+        
+        this.dateTime = LocalDateTime.now();
+        this.course = course;
+        this.courseType = courseType;
+        this.position = position;
+        this.classNo = classNo;
+        this.responseType = responseType;
+        this.question = question;
+
+
+        //Drop down and Multiple Choice
+        this.responsePossibilities = responsePossibilites;
+
+        //Different to Drop Down, multiple values can be true here, so an arrayList of all values is taken
+        this.answerMCDD = MCresponse;
 
         this.optionsMCDD = responseOptions;
 
         if(responseOptions.size() != answerMCDD.size()){
-            throw new ArrayStoreException();
+            throw new Exception("Array of responses, does not match the amount of options");
         }
 
         //Text response
@@ -214,11 +270,7 @@ public class Response {
     
     //Binary response fields
     public Boolean getBinaryAnswer(){
-        return this.binaryAnswer;
-    }
-
-    public String getBinaryQuestion(){
-        return question;
+        return binaryAnswer;
     }
 
 

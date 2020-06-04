@@ -16,8 +16,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -32,16 +30,22 @@ import org.jfree.data.category.DefaultCategoryDataset;
 
  
 
-public class PDFGenerator {
+public final class PDFGenerator {
     
 
 
     
-    public void createPdf(ArrayList<Response> allResponses) throws IOException, NullPointerException {
+    public void createPdf(ArrayList<Response> allResponses) throws IOException, Exception {
         
         //Variables
+        ArrayList<Image> ImageList = new ArrayList<Image>();
+
+
         //Map that contains responses/ The key is the position of response objects in ArrayList
         Map<Integer, ArrayList<Response>> responses = new HashMap<Integer, ArrayList<Response>>();
+
+
+        
 
         //Iterate through ArrayList and add each response to the correct ArrayList of the HashMap. The key of the 
         for(int i = 0; i < allResponses.size(); i++){
@@ -64,28 +68,7 @@ public class PDFGenerator {
             }
         }
 
-        
-
-
-
-
-
-        
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -94,60 +77,123 @@ public class PDFGenerator {
         //Iterate through map
         for(int pos = 0; pos < 100; pos++){
 
-            //Get ResponseType for Responses of given position (pos). We assume this to be the same for every Response of that position (if error occurs, check serialisation of Responses)
-            ResponseType responseType = responses.get(pos).get(0).getResponseType();
 
-            //ArrayList of responses for the current Position. These will be from the same Couse and have the same: CourseType, classNo, ResponseType and position
+            //ArrayList of responses for the current Position. These will be from the same Course and have the same: CourseType, classNo, ResponseType and position
             ArrayList<Response> responsesForPos = responses.get(pos);
 
 
+
+            //Get ResponseType for Responses of given position (pos). We assume this to be the same for every Response of that position (if error occurs, check serialisation of Responses)
+            //------------------------------------------------------------------------
+            //This is used to determine what graphic to add to the PDF 
+            //MULTIPLE_CHOICE or DROP_DOWN -- Bar Graph
+            //BINARY_ANSWER -- Simple Text with % values for yes/no
+            //TEXT_RESPONSE -- Table of TextResponses
+            ResponseType responseType = responsesForPos.get(0).getResponseType();
+
+
             //Bar chart is created, if ResponseType was either Multiple_Choice or Drop_Down
-            if(responseType == ResponseType.MULTIPLE_CHOICE || responseType == ResponseType.DROP_DOWN){
-
-                for(int i = 0; i < responsesForPos.size(); i++){
-
-                    //how to get values for column keys? Response object has arrayList of string, with each position corresponding to response
-
-                    //Column values are accumulation of true statements for that column 
-                    //Row key is 
+            if(responseType.equals(ResponseType.MULTIPLE_CHOICE) || responseType.equals(ResponseType.DROP_DOWN)){
 
 
-                    //Chart generation
-                    int width = 800;
-                    int height = 600;
+                //The number of response possibilities determines the number of columns in the bar graph
+                Integer responsePossibilities = responsesForPos.get(0).getResponsePossibilities();
 
-                    DefaultCategoryDataset dataSet = new DefaultCategoryDataset();
-                    dataSet.setValue(791, "Population", "1750 AD");
-                    dataSet.setValue(978, "Population", "1800 AD");
-                    dataSet.setValue(1262, "Population", "1850 AD");
-                    dataSet.setValue(1650, "Population", "1900 AD");
-                    dataSet.setValue(2519, "Population", "1950 AD");
-                    dataSet.setValue(6070, "Population", "2000 AD");
+                //ArrayList containing all column titles 
+                ArrayList<String> columnTitles = responsesForPos.get(0).getOptionsMCDD();
 
-                    JFreeChart chart = ChartFactory.createBarChart("World Population growth", // title
-                            "Year", // x-axis heading
-                            "Population in millions", // y-axis heading
-                            dataSet, // dataset
-                            PlotOrientation.VERTICAL, // orientation
-                            false, // Show legend
-                            true, // Use Tooltips
-                            false // Configure chart to generate URL's
-                    );
+                //Create an ArrayList, where each element represents a column of the bar graph. The value is the total number of responses for that option
+                ArrayList<Integer> columnTotals = new ArrayList<Integer>(responsePossibilities);
 
-
-                    ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
-                    try {
-                        ChartUtilities.writeChartAsPNG(pngOutputStream, chart, width, height);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-                    byte[] pngData = pngOutputStream.toByteArray(); 
-
+                //Populate the list
+                for (int j = 0; j < responsePossibilities; j++) {
+                    columnTotals.add(0);
                 }
 
-            }
-            if(responseType == ResponseType.MULTIPLE_CHOICE || responseType == ResponseType.DROP_DOWN){
+
+
+
+
+                //Main-Loop (Iterate through all Responses)
+                //Accumulate the values for each column (using columnDataList)
+                for (Response r: responsesForPos){
+
+                    // TODO: Check if this causes performance issues. If so, do random checks outside of loop
+                    // checks to make sure response matches those at the same position
+
+                    //check responseType
+                    if(r.getResponseType() != responseType){
+                        throw new Exception("ResponseType does not match that of others at this position, error in Serialisation");
+                    }
+                    //check OptionsMCDD
+                    else if(r.getOptionsMCDD() != columnTitles){
+                        throw new Exception("optionsMCDD does not match that of others at this position, error in Serialisation");
+                    }
+                    //check responsePossibilities
+                    else if(r.getListMCDD().size() != responsePossibilities){
+                        throw new Exception("Length of list of MC or DD responses (ListMCDD) does not match that of others at this position, error in Serialisation");
+                    }
+
+
+
+                    //iterate through values from list of user responses 
+                    for(int j = 0; j < r.getListMCDD().size(); j++){
+
+                        //if true --> increment column value
+                        if(r.getListMCDD().get(j) == true){
+                            int columnTotal = columnTotals.get(j);
+                            columnTotals.set(j, columnTotal + 1);
+                        }
+                    }
+                }
+
+
+
+
+
+
+                //Initialise the DataSet
+                DefaultCategoryDataset dataSet = new DefaultCategoryDataset();
+
+                //Iterate through the columnDataList and add the data to the dataSet
+                for (int j = 0; j < responsePossibilities; j++) {
+                    dataSet.setValue(columnTotals.get(j), "total", columnTitles.get(0));
+                }
+                
+
+                //Chart Configuration
+                JFreeChart chart = ChartFactory.createBarChart(responsesForPos.get(0).getQuestion(), // Title of BarGraph = Question in Survey
+                        "Response", // x-axis heading
+                        "Total", // y-axis heading
+                        dataSet, // dataset
+                        PlotOrientation.VERTICAL, // orientation
+                        false, // Show legend
+                        true, // Use Tooltips
+                        false // Configure chart to generate URL's
+                );
+
+                //Chart Dimensions
+                int width = 800;
+                int height = 600;
+
+
+
+
+
+                //Create OutputStream of the graph
+                ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
+                try {
+                    ChartUtilities.writeChartAsPNG(pngOutputStream, chart, width, height);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                //Add Graph to PDF
+                ImageData data = ImageDataFactory.create(pngOutputStream.toByteArray());
+                Image img = new Image(data); 
+
+                ImageList.add(img);
+
 
             }
             else if(responseType == ResponseType.TEXT_RESPONSE){
@@ -159,7 +205,7 @@ public class PDFGenerator {
             }
 
             else{
-                throw new NullPointerException();
+                throw new Exception("");
             }
         }
 
@@ -172,122 +218,33 @@ public class PDFGenerator {
 
 
 
-        //Chart generation
-        int width = 800;
-        int height = 600;
-
-        DefaultCategoryDataset dataSet = new DefaultCategoryDataset();
-        dataSet.setValue(791, "Population", "1750 AD");
-        dataSet.setValue(978, "Population", "1800 AD");
-        dataSet.setValue(1262, "Population", "1850 AD");
-        dataSet.setValue(1650, "Population", "1900 AD");
-        dataSet.setValue(2519, "Population", "1950 AD");
-        dataSet.setValue(6070, "Population", "2000 AD");
-
-        JFreeChart chart = ChartFactory.createBarChart("World Population growth", // title
-                "Year", // x-axis heading
-                "Population in millions", // y-axis heading
-                dataSet, // dataset
-                PlotOrientation.VERTICAL, // orientation
-                false, // Show legend
-                true, // Use Tooltips
-                false // Configure chart to generate URL's
-        );
 
 
-        ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
-        try {
-            ChartUtilities.writeChartAsPNG(pngOutputStream, chart, width, height);
-        } catch (IOException e) {
-            e.printStackTrace();
+        //Create PDF Document
+
+        //TODO: create PDF as ByteArray OutputStream, instead of saving to file. Tradeoff occurs here: Save to file, and don't regenerate PDF to save time, but use lots of storage
+        String dest = "src/main/resources/test.pdf";
+
+        //Initialize PDF writer
+        PdfWriter writer = new PdfWriter(dest);
+
+        //Initialize PDF document
+        PdfDocument pdf = new PdfDocument(writer);
+        
+        // Initialize document
+        Document document = new Document(pdf);
+
+
+        for (Image img: ImageList){
+            document.add(img);
         }
 
-        byte[] pngData = pngOutputStream.toByteArray(); 
+        
+        //Close document
+        document.close();
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        //For each elment of array of graphs:
-            //add graph to document
 
         
-        try {
-
-            String dest = "src/main/resources/test.pdf";
-
-
-            //Test iteration through arraylist
-            Map<String, String> a = new HashMap<>();
-            a.put("1", "Some response");
-            a.put("2", "this is a text response");
-            
-
-            
-
-            //Initialize PDF writer
-            PdfWriter writer = new PdfWriter(dest);
-    
-            //Initialize PDF document
-            PdfDocument pdf = new PdfDocument(writer);
-            
-            // Initialize document
-            Document document = new Document(pdf);
-    
-
-
-            // Create a PdfFont
-            PdfFont font = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
-            // Add a Paragraph
-            document.add(new Paragraph("iText is:").setFont(font));
-            // Create a List
-            List list = new List()
-                .setSymbolIndent(12)
-                .setListSymbol("\u2022")
-                .setFont(font);
-
-
-
-
-            //TODO
-            for (String i : a.values()) {
-                document.add(new Paragraph(i));
-            }		
-
-
-
-            ImageData data = ImageDataFactory.create(pngData);
-            Image img = new Image(data); 
-            document.add(img);
-
-            // Add the list
-            document.add(list);
-
-
-            
-            document.add(img);
-    
-            //Close document
-            document.close();
-        
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
-    
-    
-
 }
