@@ -1,19 +1,20 @@
 <!DOCTYPE HTML>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+
     <script src="https://kit.fontawesome.com/5b9febade6.js" crossorigin="anonymous"></script>
-
-    <!-- JavaScript and jQuery added -->
-    <script th:src="@{/resources/jsbootstrap/jquerymin.js}" src="../static/resources/jsbootstrap/jquerymin.js" type="text/javascript"></script>
-    <script th:src="@{/resources/jsbootstrap/bootstrapmin.js}" src="../static/resources/jsbootstrap/bootstrapmin.js" type="text/javascript"></script>
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}"/>
-    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}"/>
 </head>
 
 <body>
@@ -35,7 +36,18 @@
                 <li class="nav-item media" sec:authorize="hasRole('TEILZEIT')"><a class="nav-link link_to_page" th:text="#{navbar.results}" th:href="@{/results}">survey results</a></li>
                 <li class="nav-item media" sec:authorize="hasRole('ADMIN')"><a class="nav-link link_to_page" th:text="#{navbar.account}" th:href="@{/account}">accounting</a></li>
                 <li class="nav-item media" sec:authorize="isAnonymous()"><a class="nav-link link_to_page align-self-center" id="loginbtn" href="login.html" th:text="#{home.login}" th:href="@{/login}">Login</a></li>
-                <li class="nav-item media"><button class="btn btn-link align-self-center"><i class="fas fa-cog fa-lg settings_icon"></i></button></li>
+                <!--Settings-->
+                <li class="nav-item media dropdown p-0">
+                    <a class="btn btn-link align-self-center" href="#" id="dropdownSettings" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-cog fa-lg settings_icon"></i>
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right mt-3" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item font-weight-bold" href="#">LANGUAGE</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="#">DE</a>
+                        <a class="dropdown-item" href="#">ENG</a>
+                    </div>
+                </li>
             </ul>
         </div>
 
