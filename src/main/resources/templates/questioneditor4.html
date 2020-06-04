@@ -23,38 +23,39 @@
 
     <div th:include="navbar"></div>
 
-    <div class="container">
+    <div class="row">
+        <div class="col-lg-12 mt-4">
+            
+            <h2 class="font-weight-bold text-center">SURVEY EDITOR</h2>
+            <h5 class="font-weight-light text-center">CURRENT SURVEY</h5>
 
-        <div class="row w-100">
-            <div class="col-lg-12 mt-4">
-                
-                <h2 class="font-weight-bold text-center">SURVEY EDITOR</h2>
-                <h5 class="font-weight-light text-center">CURRENT SURVEY</h5>
-                
+            <div class="row">       
+                <div class="col-md-1"></div>     
                 <!--Menu-->
-                <div class="survey-editor-menu text-right">
-                    <div class="btn-group-vertical" role="group" aria-label="First group">
-                        <button type="button" class="btn btn-dark btn-text-right">NEW QUESTION</button>
-                        <button type="button" class="btn btn-secondary btn-text-right" onclick="addYesNoQuestion()">YES/NO<i class="fas fa-plus-square ml-2"></i></button>
-                        <button type="button" class="btn btn-secondary btn-text-right" onclick="addMultipleChoiceQuestion()">MULTIPLE CHOICE<i class="fas fa-plus-square ml-2"></i></button>
-                        <button type="button" class="btn btn-secondary btn-text-right" onclick="addSingleChoiceQuestion()">SINGLE CHOICE<i class="fas fa-plus-square ml-2"></i></button>
-                        <button type="button" class="btn btn-secondary btn-text-right" onclick="addFreeTextQuestion()">FREE TEXT<i class="fas fa-plus-square ml-2"></i></button>
-                        <button type="button" class="btn btn-secondary btn-text-right" onclick="addDropDownQuestion()">DROPDOWN<i class="fas fa-plus-square ml-2"></i></button>
+                <div class="col-md-2 text-right">
+                    <div class="container">
+                        <div class="btn-group-vertical mt-4" role="group" aria-label="First group">
+                            <button type="button" class="btn btn-dark btn-text-right">NEW QUESTION</button>
+                            <button type="button" class="btn btn-secondary btn-text-right" onclick="addYesNoQuestion()">YES/NO<i class="fas fa-plus-square ml-2"></i></button>
+                            <button type="button" class="btn btn-secondary btn-text-right" onclick="addMultipleChoiceQuestion()">MULTIPLE CHOICE<i class="fas fa-plus-square ml-2"></i></button>
+                            <button type="button" class="btn btn-secondary btn-text-right" onclick="addSingleChoiceQuestion()">SINGLE CHOICE<i class="fas fa-plus-square ml-2"></i></button>
+                            <button type="button" class="btn btn-secondary btn-text-right" onclick="addFreeTextQuestion()">FREE TEXT<i class="fas fa-plus-square ml-2"></i></button>
+                            <button type="button" class="btn btn-secondary btn-text-right" onclick="addDropDownQuestion()">DROPDOWN<i class="fas fa-plus-square ml-2"></i></button>
+                        </div>
+                        <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}">
+                            <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
+                            <button class="btn btn-primary mt-2" type="submit">SUBMIT</button> </form>
+                        <div class="Json" id="json" th:text="${survey}"></div>
                     </div>
-                    <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}">
-                        <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
-                        <button class="btn btn-primary mt-2" type="submit">SUBMIT</button> </form>
-                    <div class="Json" id="json" th:text="${survey}"></div>
                 </div>
-
                 <!--Questions-->
-                <div class="row">
+                <div class="col-md-6">
                     <div class="question-list" id="questionnaire"></div>
                 </div>
-
+                <div class="col-md-3">
             </div>
-        </div>
 
+        </div>
     </div>
 
     <script>
@@ -512,20 +513,24 @@
             title.className = ("Title dropdown");
 
             const btn_dropdown = document.createElement("Button");
-            btn_dropdown.className= ("Buttondropdown");
-            btn_dropdown.setAttribute("onclick","hideshowdropdowntitle("+q_index+")");
+            btn_dropdown.className= ("btn btn-link dropdown-toggle question-headline");
+            btn_dropdown.setAttribute("type","button");
+            btn_dropdown.setAttribute("id","dropdownMenuButton("+q_index+")");
+            btn_dropdown.setAttribute("data-toggle","dropdown");
+            btn_dropdown.setAttribute("aria-haspopup","true");
+            btn_dropdown.setAttribute("aria-expanded","false");
             btn_dropdown.innerHTML = (q_index+1) +". "+q_type;
 
             title.appendChild(btn_dropdown);
 
             const dropdown_content = document.createElement("DIV");
-            dropdown_content.setAttribute("id","dropdown-content");
-            dropdown_content.className=("dropdown-content");
+            dropdown_content.setAttribute("id","dropdown-menu");
+            dropdown_content.className=("dropdown-menu");
 
             if (q_type !== "YesNo") {
 
-                const btn_changetoYesNO = document.createElement("Button");
-                btn_changetoYesNO.className = ("BtnDropDown");
+                const btn_changetoYesNO = document.createElement("a");
+                btn_changetoYesNO.className = ("dropdown-item");
                 btn_changetoYesNO.innerHTML = ("YesNo");
                 btn_changetoYesNO.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 1 + ")");
                 dropdown_content.appendChild(btn_changetoYesNO);
@@ -534,8 +539,8 @@
 
             if (q_type !== "DropDown") {
 
-                const btn_changetoDropDown = document.createElement("Button");
-                btn_changetoDropDown.className = ("BtnDropDown");
+                const btn_changetoDropDown = document.createElement("a");
+                btn_changetoDropDown.className = ("dropdown-item");
                 btn_changetoDropDown.innerHTML = ("DropDown");
                 btn_changetoDropDown.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 3 + ")");
                 dropdown_content.appendChild(btn_changetoDropDown);
@@ -544,8 +549,8 @@
 
             if (q_type !== "MultipleChoice") {
 
-                const btn_changetoMultipleChoice = document.createElement("Button");
-                btn_changetoMultipleChoice.className = ("BtnDropDown");
+                const btn_changetoMultipleChoice = document.createElement("a");
+                btn_changetoMultipleChoice.className = ("dropdown-item");
                 btn_changetoMultipleChoice.innerHTML = ("MultipleChoice");
                 btn_changetoMultipleChoice.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 2 + ")");
                 dropdown_content.appendChild(btn_changetoMultipleChoice);
@@ -554,8 +559,8 @@
 
             if (q_type !== "SingleChoice") {
 
-                const btn_changetoSingleChoice = document.createElement("Button");
-                btn_changetoSingleChoice.className = ("BtnDropDown");
+                const btn_changetoSingleChoice = document.createElement("a");
+                btn_changetoSingleChoice.className = ("dropdown-item");
                 btn_changetoSingleChoice.innerHTML = ("SingleChoice");
                 btn_changetoSingleChoice.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 4 + ")");
                 dropdown_content.appendChild(btn_changetoSingleChoice);
@@ -565,16 +570,16 @@
             if (q_type !== "FreeText") {
 
                 const btn_changetoFreeText = document.createElement("Button");
-                btn_changetoFreeText.className = ("BtnDropDown");
+                btn_changetoFreeText.className = ("dropdown-item");
                 btn_changetoFreeText.innerHTML = ("FreeText");
                 btn_changetoFreeText.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 5 + ")");
                 dropdown_content.appendChild(btn_changetoFreeText);
 
             }
+
             title.appendChild(dropdown_content);
 
             return title;
-
 
         }
 
