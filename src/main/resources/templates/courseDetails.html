@@ -71,35 +71,83 @@
                                         <tr>
                                             <th class="border-0 col-md-2" scope="col" th:text="#{detail.classType}">TYPE</th>
                                             <th class="border-0 text-center col-md-2" scope="col" data-toggle="tooltip" data-placement="top" title="AMOUNT" th:title="#{detail.classAmount}">#</th>
-                                            <th class="border-0" scope="col" th:text="#{detail.classSurvey}">SURVEY</th>
+                                            <th class="border-0 text-center col-md-2" scope="col" th:text="#{detail.classSurvey}">SURVEY</th>
+                                            <th class="border-0"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <!--Lecture-->
                                         <tr>
                                             <td scope="row" th:text="#{new.lecture}">LECTURE</td>
-                                            <td class="text-center" th:if="${course.lectureExists}">1</td><td class="text-center" th:if="!${course.lectureExists}">0</td>
-                                            <td th:if="${course.lectureExists}"><a class="btn btn-link p-0" th:text="${course.lectureSurvey}" href="#">LECTURE SURVEY</a></td>
-                                            <td th:if="!${course.lectureExists}">-</td>
+                                            <div th:switch="${course.lectureExists}">
+                                                <div  th:case="TRUE">
+                                                    <td class="text-center">1</td>
+                                                    <div th:switch="${course.lectureSurvey}">
+                                                        <div th:case="'-'">
+                                                            <td class="text-center" th:text="#{No}">!EXISTS</td>
+                                                            <td><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></button></td>
+                                                        </div>
+                                                        <div th:case="*">
+                                                            <td class="text-center" th:text="#{Yes}">EXISTS</td>
+                                                            <td><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></button></td>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div th:case="FALSE">
+                                                    <td class="text-center">0</td>
+                                                    <td class="text-center">-</td>
+                                                    <td></td>
+                                                </div>
+                                            </div>
                                         </tr>
+                                        <!--Tutorial-->
                                         <tr>
                                             <td scope="row" th:text="#{new.practice}">TUTORIAL</td>
                                             <td class="text-center" th:text="${course.classTotalTutorial}">COUNT</td>
-                                            <td th:if="${0 &lt; course.classTotalTutorial}"><a class="btn btn-link p-0" th:text="${course.tutorialSurvey}" href="#">TUTORIAL SURVEY</a></td>
-                                            <td th:if="!${0 &lt; course.classTotalTutorial}">-</td>
+                                            <div th:switch="${course.tutorialExists}">
+                                                <div th:case="TRUE">
+                                                    <div th:switch="${course.tutorialSurvey}">
+                                                        <div th:case="'-'">
+                                                            <td class="text-center" th:text="#{No}">!EXISTS</td>
+                                                            <td><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></button></td>
+                                                        </div>
+                                                        <div th:case="*">
+                                                            <td class="text-center" th:text="#{Yes}">EXISTS</td>
+                                                            <td><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></button></td>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div th:case="FALSE">
+                                                    <td class="text-center">-</td>
+                                                    <td></td>
+                                                </div>
+                                            </div>
                                         </tr>
+                                        <!--Seminar-->
                                         <tr>
                                             <td scope="row" th:text="#{new.seminar}">SEMINAR</td>
                                             <td class="text-center" th:text="${course.classTotalSeminar}">COUNT</td>
-                                            <td th:if="${0 &lt; course.classTotalSeminar}"><a class="btn btn-link p-0" th:text="${course.seminarSurvey}" href="#">SEMINAR SURVEY</a></td>
-                                            <td th:if="!${0 &lt; course.classTotalSeminar}">-</td>
+                                            <div th:switch="${course.seminarExists}">
+                                                <div th:case="TRUE">
+                                                    <div th:switch="${course.seminarSurvey}">
+                                                        <div th:case="'-'">
+                                                            <td class="text-center" th:text="#{No}">!EXISTS</td>
+                                                            <td><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></button></td>
+                                                        </div>
+                                                        <div th:case="*">
+                                                            <td class="text-center" th:text="#{Yes}">EXISTS</td>
+                                                            <td><button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></button></td>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div th:case="FALSE">
+                                                    <td class="text-center">-</td>
+                                                    <td></td>
+                                                </div>
+                                            </div>                                            
                                         </tr>
                                     </tbody>
                                 </table>
-
-                                <!--<button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></button>-->
-                                <!--<button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></button>-->
-                                <!--<button type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></button>-->
-
                             </div>
 
                         </div>
@@ -109,31 +157,38 @@
                         <!--QR Codes-->
                         <div class="col-md-auto">
                             <h5 class="font-weight-light text-center" th:text="#{detail.QR}">QR CODES</h5>
-                            <div class="row justify-content-md-center">    
+                            <div class="row justify-content-md-center">
                                 <div class="container carousel-border border border-secondary p-1">
                                     <div id="carouselExampleIndicators" class="carousel slide" interval="false">
                                         <ol class="carousel-indicators">
-                                            <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                                            <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
-                                            <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                                            <li th:if="!${course.lectureSurvey.equals('-')}" data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                                            <li th:if="!${course.tutorialSurvey.equals('-')}" data-target="#carouselExampleIndicators" data-slide-to="1" th:classappend="${course.lectureSurvey.equals('-')} ? active : userclass"></li>
+                                            <li th:if="!${course.seminarSurvey.equals('-')}" data-target="#carouselExampleIndicators" data-slide-to="2" th:classappend="${course.lectureSurvey.equals('-') and course.tutorialSurvey.equals('-')} ? active : userclass"></li>
+                                            <li th:if="${course.lectureSurvey.equals('-') and course.tutorialSurvey.equals('-') and course.seminarSurvey.equals('-')}" data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
                                         </ol>
                                         <div class="carousel-inner">
-                                            <div class="carousel-item active">
-                                                <img class="d-block w-100 mb-5" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/QR_code_Wi-Fi.png/220px-QR_code_Wi-Fi.png" alt="First slide">
+                                            <div th:if="!${course.lectureSurvey.equals('-')}" class="carousel-item active">
+                                                <img class="d-block w-100 mb-5" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/QR_code_Wi-Fi.png/220px-QR_code_Wi-Fi.png" alt="Lecture slide">
                                                 <div class="carousel-caption text-dark d-block mb-1">
                                                     <h5>Lecture</h5>
                                                 </div>
                                             </div>
-                                            <div class="carousel-item">
-                                                <img class="d-block w-100 mb-5" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/QR_code_Wi-Fi.png/220px-QR_code_Wi-Fi.png" alt="First slide">
+                                            <div th:if="!${course.tutorialSurvey.equals('-')}" th:classappend="${course.lectureSurvey.equals('-')} ? active : userclass" class="carousel-item">
+                                                <img class="d-block w-100 mb-5" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/QR_code_Wi-Fi.png/220px-QR_code_Wi-Fi.png" alt="Tutorial slide">
                                                 <div class="carousel-caption text-dark d-block mb-1">
                                                     <h5>Tutorial</h5>
                                                 </div>
                                             </div>
-                                            <div class="carousel-item">
-                                                <img class="d-block w-100 mb-5" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/QR_code_Wi-Fi.png/220px-QR_code_Wi-Fi.png" alt="First slide">
+                                            <div th:if="!${course.seminarSurvey.equals('-')}" th:classappend="${course.lectureSurvey.equals('-') and course.tutorialSurvey.equals('-')} ? active : userclass" class="carousel-item">
+                                                <img class="d-block w-100 mb-5" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/QR_code_Wi-Fi.png/220px-QR_code_Wi-Fi.png" alt="Seminar slide">
                                                 <div class="carousel-caption text-dark d-block mb-1">
                                                     <h5>Seminar</h5>
+                                                </div>
+                                            </div>
+                                            <div th:if="${course.lectureSurvey.equals('-') and course.tutorialSurvey.equals('-') and course.seminarSurvey.equals('-')}" class="carousel-item active">
+                                                <img class="d-block w-100 mb-5 bg-dark" src="..." alt="" style="width: 300px; height: 300px;">
+                                                <div class="carousel-caption text-dark d-block mb-1">
+                                                    <h5>No Surveys yet</h5>
                                                 </div>
                                             </div>
                                         </div>
