@@ -52,7 +52,7 @@
                 <div class="col-md-6">
                     <div class="question-list" id="questionnaire"></div>
                 </div>
-                <div class="col-md-3">
+                <div class="col-md-3"></div>
             </div>
 
         </div>
@@ -129,196 +129,193 @@
             document.getElementById("questionnairejson").value = JSON.stringify(questionnaire);
         }
 
+        //Bootsrapped
         function renderquestionnaireelement (value, index, array){
+
             const x = document.createElement("DIV");
+
+            const row1 = document.createElement("DIV");
+            row1.className = "row";
+            const left = document.createElement("DIV");
+            left.className = "col-md-6";
+            const right = document.createElement("DIV");
+            right.className = "col-md-6";
+
+            const row2 = document.createElement("DIV");
+            row2.className = "row";
+
+            const row3 = document.createElement("DIV");
+            row3.className = "row";
+            const last_col = document.createElement("DIV");
+            last_col.className = "col-md-12";
+            row3.appendChild(last_col)
 
             if (value.type === "YesNo"){
 
                 //Create a html section for a YesNo-Question
-                x.className = "Question YesNo";
+                x.className = "container bg-white border border-secondary rounded mt-4 YesNo";
                 x.setAttribute("id",index);
 
-                //Create Dropdown to Change Questiontyp
-                x.appendChild(createTitleDropdown(index,value.type));
-
-                //Buttons Delete
-                x.appendChild(createButtonDelete(index));
-
-                //Button Copy
-                x.appendChild(createButtonCopy(index));
-
-                //Button PushDown PushUp
+                left.appendChild(createTitleDropdown(index,value.type));
+                right.appendChild(createButtonDelete(index));
+                right.appendChild(createButtonCopy(index));
                 if (index > 0) {
-                    x.appendChild(createButtonUp(index));
+                    right.appendChild(createButtonUp(index));
                 }
-                //array.lastChild === array[index]
                 if (index+1 !== array.length && array.length >1){
-                    x.appendChild(createButtonDown(index));
+                    right.appendChild(createButtonDown(index));
                 }
-
+                row1.appendChild(left);
+                row1.appendChild(right);
+                x.appendChild(row1);
 
                 //Textarea for the question input
-                const x1 = document.createElement("TEXTAREA");
-                x1.className = ("Textarea Question");
-                x1.defaultValue = value.question;
-                x.appendChild(x1);
+                const text_area = document.createElement("TEXTAREA");
+                text_area.className = "Textarea Question";
+                text_area.setAttribute("id",index);
+                text_area.defaultValue = value.question;
+                row2.appendChild(text_area);
+                x.appendChild(row2);
 
             }
 
             else if (value.type ==="FreeText"){
 
-                //Create a html section for a YesNo-Question
-                x.className = "Question FreeText";
+                //Create a html section for a FreeText-Question
+                x.className = "container bg-white border border-secondary rounded mt-4 FreeText";
                 x.setAttribute("id",index);
 
-
-                //Create Dropdown to Change Questiontyp
-                x.appendChild(createTitleDropdown(index,value.type));
-
-
-                //Buttons Delete
-                x.appendChild(createButtonDelete(index));
-
-                //Button Copy
-                x.appendChild(createButtonCopy(index));
-
-                //Button PushDown PushUp
+                left.appendChild(createTitleDropdown(index,value.type));
+                right.appendChild(createButtonDelete(index));
+                right.appendChild(createButtonCopy(index));
                 if (index > 0) {
-                    x.appendChild(createButtonUp(index));
+                    right.appendChild(createButtonUp(index));
                 }
-                //array.lastChild === array[index]
                 if (index+1 !== array.length && array.length >1){
-                    x.appendChild(createButtonDown(index));
+                    right.appendChild(createButtonDown(index));
                 }
-
+                row1.appendChild(left);
+                row1.appendChild(right);
+                x.appendChild(row1);
 
                 //Textarea for the question input
-                const x1 = document.createElement("TEXTAREA");
-                x1.className = ("Textarea Question");
-                x1.defaultValue = value.question;
-
-                x.appendChild(x1);
+                const text_area = document.createElement("TEXTAREA");
+                text_area.className = "Textarea Question";
+                text_area.setAttribute("id",index);
+                text_area.defaultValue = value.question;
+                row2.appendChild(text_area);
+                x.appendChild(row2);
 
             }
 
             else if (value.type === "SingleChoice"){
 
                 //Create a html section for a SingleChoice-Question
-                x.className = "Question SingleChoice";
+                x.className = "container bg-white border border-secondary rounded mt-4 SingleChoice";
                 x.setAttribute("id",index);
 
-                //Create Dropdown to Change Questiontyp
-                x.appendChild(createTitleDropdown(index,value.type));
-
-
-                //Buttons Delete
-                x.appendChild(createButtonDelete(index));
-
-                //Button Copy
-                x.appendChild(createButtonCopy(index));
-
-                //Button PushDown PushUp
+                left.appendChild(createTitleDropdown(index,value.type));
+                right.appendChild(createButtonDelete(index));
+                right.appendChild(createButtonCopy(index));
                 if (index > 0) {
-                    x.appendChild(createButtonUp(index));
+                    right.appendChild(createButtonUp(index));
                 }
-                //array.lastChild === array[index]
                 if (index+1 !== array.length && array.length >1){
-                    x.appendChild(createButtonDown(index));
+                    right.appendChild(createButtonDown(index));
                 }
+                row1.appendChild(left);
+                row1.appendChild(right);
+                x.appendChild(row1);
 
                 //Textarea for the question input
-                const x1 = document.createElement("TEXTAREA");
-                x1.className = ("Textarea Question");
-                x1.defaultValue = value.question;
-                x.appendChild(x1);
+                const text_area = document.createElement("TEXTAREA");
+                text_area.className = "Textarea Question";
+                text_area.setAttribute("id",index);
+                text_area.defaultValue = value.question;
+                row2.appendChild(text_area);
+                x.appendChild(row2);
 
                 //Answer Option Part
-                x.appendChild(createAnswerOptionPart(index,value.answers));
+                last_col.setAttribute("id",index);
+                last_col.appendChild(createAnswerOptionPart(index,value.answers));
 
                 //New Answer Button
-                x.appendChild(createButtonnewAnswer(index));
-
-
+                last_col.appendChild(createButtonnewAnswer(index));
+                x.appendChild(row3);
 
             }
 
             else if (value.type === "DropDown"){
 
                 //Create a html section for a DropDown-Question
-                x.className = "Question DropDown";
+                x.className = "container bg-white border border-secondary rounded mt-4 DropDown";
                 x.setAttribute("id",index);
 
-                //Create Dropdown to Change Questiontyp
-                x.appendChild(createTitleDropdown(index,value.type));
-
-                //Buttons Delete
-                x.appendChild(createButtonDelete(index));
-
-                //Button Cop Question
-                x.appendChild(createButtonCopy(index));
-
-                //Button PushDown PushUp
+                left.appendChild(createTitleDropdown(index,value.type));
+                right.appendChild(createButtonDelete(index));
+                right.appendChild(createButtonCopy(index));
                 if (index > 0) {
-                    x.appendChild(createButtonUp(index));
+                    right.appendChild(createButtonUp(index));
                 }
-                //array.lastChild === array[index]
                 if (index+1 !== array.length && array.length >1){
-                    x.appendChild(createButtonDown(index));
+                    right.appendChild(createButtonDown(index));
                 }
+                row1.appendChild(left);
+                row1.appendChild(right);
+                x.appendChild(row1);
 
                 //Textarea for the question input
-                const x1 = document.createElement("TEXTAREA");
-                x1.className = ("Textarea Question");
-                x1.defaultValue = value.question;
-                x.appendChild(x1);
+                const text_area = document.createElement("TEXTAREA");
+                text_area.className = "Textarea Question";
+                text_area.setAttribute("id",index);
+                text_area.defaultValue = value.question;
+                row2.appendChild(text_area);
+                x.appendChild(row2);
 
                 //Answer Option Part
-                x.appendChild(createAnswerOptionPart(index, value.answers));
+                last_col.setAttribute("id",index);
+                last_col.appendChild(createAnswerOptionPart(index,value.answers));
 
-                //New Answer BUtton
-                x.appendChild(createButtonnewAnswer(index));
-
-
+                //New Answer Button
+                last_col.appendChild(createButtonnewAnswer(index));
+                x.appendChild(row3);
 
             }
 
             else if (value.type === "MultipleChoice"){
 
                 //Create a html section for a MultipleChoice-Question
-                x.className = "Question MultipleChoice";
+                x.className = "container bg-white border border-secondary rounded mt-4 MultipleChoice";
                 x.setAttribute("id",index);
 
-                //Create Dropdown to Change Questiontyp
-                x.appendChild(createTitleDropdown(index,value.type));
-
-                //Buttons Delete
-                x.appendChild(createButtonDelete(index));
-
-                //Button Copy Question
-                x.appendChild(createButtonCopy(index));
-
-                //Button PushDown PushUp
+                left.appendChild(createTitleDropdown(index,value.type));
+                right.appendChild(createButtonDelete(index));
+                right.appendChild(createButtonCopy(index));
                 if (index > 0) {
-                    x.appendChild(createButtonUp(index));
+                    right.appendChild(createButtonUp(index));
                 }
-                //array.lastChild === array[index]
                 if (index+1 !== array.length && array.length >1){
-                    x.appendChild(createButtonDown(index));
+                    right.appendChild(createButtonDown(index));
                 }
+                row1.appendChild(left);
+                row1.appendChild(right);
+                x.appendChild(row1);
 
                 //Textarea for the question input
-                const x1 = document.createElement("TEXTAREA");
-                x1.className = ("Textarea Question");
-                x1.defaultValue = value.question;
-                x.appendChild(x1);
+                const text_area = document.createElement("TEXTAREA");
+                text_area.className = "Textarea Question";
+                text_area.setAttribute("id",index);
+                text_area.defaultValue = value.question;
+                row2.appendChild(text_area);
+                x.appendChild(row2);
 
                 //Answer Option Part
-                x.appendChild(createAnswerOptionPart(index, value.answers));
+                last_col.setAttribute("id",index);
+                last_col.appendChild(createAnswerOptionPart(index,value.answers));
 
                 //New Answer Button
-                x.appendChild(createButtonnewAnswer(index));
-
-
+                last_col.appendChild(createButtonnewAnswer(index));
+                x.appendChild(row3);
 
             }
 
@@ -337,7 +334,7 @@
         function saveInputs() {
             const textareas_question = document.getElementsByClassName("Textarea Question");
             for (let i=0;i<textareas_question.length;i++){
-                const questionid = textareas_question[i].parentElement.id;
+                const questionid = textareas_question[i].id;
                 questionnaire[questionid].question = textareas_question[i].value;
 
             }
@@ -352,32 +349,65 @@
 
         }
 
+        //Relevant for Frontend
         function createButtonDelete (index){
+
             const btn_d = document.createElement("BUTTON");
-            btn_d.className = "Button Delete fa fa-trash";
+            btn_d.className = "btn btn-link nounderline pull-right m-1";
             btn_d.setAttribute("onclick","deleteQuestion("+ index+")");
+
+            const btn_icon = document.createElement("i");
+            btn_icon.className = "fa fa-trash";
+            btn_d.appendChild(btn_icon);
+
             return btn_d;
 
         }
 
+        function createButtonCopy(index) {
+
+            const btn_copy = document.createElement("Button");
+            btn_copy.className="btn btn-link nounderline pull-right m-1";
+            btn_copy.setAttribute("onclick","copyQuestion("+index+")");
+
+            const btn_icon = document.createElement("i");
+            btn_icon.className = "fa fa-clone";
+            btn_copy.appendChild(btn_icon);
+
+            return btn_copy;
+
+        }
+
         function createButtonUp(index) {
+
             const btn_up = document.createElement("Button");
-            btn_up.className = "Button UP fa fa-arrow-up";
+            btn_up.className = "btn btn-link nounderline pull-right m-1";
             btn_up.setAttribute("onclick","pushQuestionUp("+index+")");
+
+            const btn_icon = document.createElement("i");
+            btn_icon.className = "fa fa-arrow-up";
+            btn_up.appendChild(btn_icon);
+
             return btn_up;
         }
 
         function createButtonDown(index) {
+
             const btn_down = document.createElement("Button");
-            btn_down.className="Button DOWN fa fa-arrow-down";
+            btn_down.className="btn btn-link nounderline pull-right m-1";
             btn_down.setAttribute("onclick","pushQuestionDown("+index+")");
+
+            const btn_icon = document.createElement("i");
+            btn_icon.className = "fa fa-arrow-down";
+            btn_down.appendChild(btn_icon);
+
             return btn_down;
 
         }
 
         function createButtonnewAnswer(index){
             const btn_newAnswer = document.createElement("Button");
-            btn_newAnswer.className="Button NewAnswer";
+            btn_newAnswer.className="btn btn-primary m-2 ml-5";
             btn_newAnswer.innerHTML="Add new Answer";
             btn_newAnswer.setAttribute("onclick","addnewAnswer("+index+")");
 
@@ -415,25 +445,29 @@
             renderall();
         }
 
-        function createButtonCopy(index) {
-            const btn_copy = document.createElement("Button");
-            btn_copy.className="Button DOWN fa fa-clone";
-            btn_copy.setAttribute("onclick","copyQuestion("+index+")");
-            return btn_copy;
-
-        }
-
         function createButtonDeleteAnswer(index, answerindex) {
+
             const btn_deleteAnswer = document.createElement("Button");
-            btn_deleteAnswer.className = "Button ButtonAnswer fa fa-times";
+            btn_deleteAnswer.className = "btn btn-link nounderline";
             btn_deleteAnswer.setAttribute("onclick","deleteanswer("+index+","+answerindex+")");
+
+            const btn_icon = document.createElement("i");
+            btn_icon.className = "fa fa-times";
+            btn_deleteAnswer.appendChild(btn_icon);
+
             return btn_deleteAnswer;
         }
 
         function createButtonUpAnswer(index,answerindex){
+
             const btn_upAnswer = document.createElement("Button");
-            btn_upAnswer.className = "Button ButtonAnswer fa fa-arrow-up";
+            btn_upAnswer.className = "btn btn-link nounderline";
             btn_upAnswer.setAttribute("onclick", "pushAnswerup("+index+","+answerindex+")");
+
+            const btn_icon = document.createElement("i");
+            btn_icon.className = "fa fa-arrow-up";
+            btn_upAnswer.appendChild(btn_icon);
+
             return btn_upAnswer;
         }
 
@@ -474,9 +508,15 @@
 
 
         function createButtonDownAnswer(index,answerindex){
+
             const btn_downAnswer = document.createElement("Button");
-            btn_downAnswer.className = "Button ButtonAnswer fa fa-arrow-down";
+            btn_downAnswer.className = "btn btn-link nounderline";
             btn_downAnswer.setAttribute("onclick", "pushAnswerdown("+index+","+answerindex+")");
+
+            const btn_icon = document.createElement("i");
+            btn_icon.className = "fa fa-arrow-down";
+            btn_downAnswer.appendChild(btn_icon);
+
             return btn_downAnswer;
         }
 

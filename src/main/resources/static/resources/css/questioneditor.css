@@ -61,101 +61,16 @@
     float: left;
 }
 
-.Title.dropdown {
-    position: relative;
-    display: inline-block;
-    color: gray;
-    margin-left: 9px;
-    margin-top: 0px;
-    width: 300px;
-}
-
-.Button {
-    background-color: rgb(0,37,87);
-    float: right;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    text-align: center;
-    padding: 10px 15px;
-    margin-right: 8px ;
-    margin-top: 8px;
-}
-
-.Button:hover{
-    opacity: 0.8;
-}
-
-.Button.NewAnswer {
-    float: left;
-    margin-left: 43px;
-    margin-bottom: 15px;
-
-}
-
-.Button.NewQuestion {
-    float: left;
-    margin-left: 30px;
-    margin-top: 10px;
-}
-
-.Button.ButtonAnswer {
-    display: none;
-    float: left;
-    margin-left: 10px;
-    color: rgb(0,37,87);
-    background-color: transparent;
-    border: none;
-    padding: 0;
-    padding-top: 5px;
-    font-size: 25px;
-
-}
-
-.Buttondropdown {
-    color: gray;
-    border:none;
-    background-color: transparent;
-    text-align: left;
-    padding-top: 11px;
-    padding-left: 10px;
-    margin-top: 5px;
-    margin-bottom: 0px;
-    margin-left: 0px;
-    padding-bottom: 5px;
-    padding-right: 5px;
-
-}
-
-.dropdown-content{
-    display:none;
-    position: absolute;
-    z-index: 1;
-    overflow: auto;
-}
-
 .question-headline {
     color: grey !important;
     text-decoration: none !important;
 }
-
-.BtnDropDown {
-    display: block;
-    color: grey;
-    width: 150px;
-    border:none;
-    background-color: #ebebeb;
-    text-align: left;
-    padding-top: 5px;
-    padding-left: 20px;
-    margin-bottom: 0px;
-    margin-left: 0px;
-    padding-bottom: 5px;
-    padding-right: 5px;
+.options {
+  text-decoration: none !important;
+  color: grey;
 }
-
-.dropdown-content button:hover {
-    background-color: lightblue;
+.options:hover {
+    color: darkgrey;
 }
 
 .show {
