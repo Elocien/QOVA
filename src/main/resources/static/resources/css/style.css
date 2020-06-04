@@ -103,6 +103,22 @@ input[type=number] {
   color: grey;
   transition: 0.5s;
 }
+.custom-icon-text {
+  line-height: 1.2rem;
+  font-size: 1.2rem;
+}
+.custom-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  position: relative;
+  margin-right: 0.3rem;
+}
+.ger-icon {
+  background-image: url(..//images/ger.svg);
+}
+.uk-icon {
+  background-image: url(..//images/uk.svg);
+}
 
 .fancy_text {
   font-size: xx-large;
