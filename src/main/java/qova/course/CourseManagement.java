@@ -34,12 +34,20 @@ public class CourseManagement {
     public String createCourseReturnId(CourseForm form) {
         Objects.requireNonNull(form);
 
+
         var name = form.getName();
         var lectureExists = form.getLectureExists();
         var tutorialExists = form.getTutorialExists();
-        var seminarExists = form.getSeminarExists();  
-        var classTotalSeminar = form.getClassTotalSeminar();
-        var classTotalTutorial = form.getClassTotalTutorial();
+        var seminarExists = form.getSeminarExists(); 
+
+        int classTotalTutorial;
+        if(!tutorialExists){classTotalTutorial = 0;}
+        else{classTotalTutorial = form.getClassTotalTutorial();}
+
+        int classTotalSeminar;
+        if(!seminarExists){classTotalSeminar = 0;}
+        else{classTotalSeminar = form.getClassTotalSeminar();}
+
         var semesterOfStudents = form.getSemesterOfStudents();
         var faculty = form.getFaculty();
         var courseInstance = parseSemesterString(form.getCourseInstance());

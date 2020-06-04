@@ -38,6 +38,7 @@ public final class PDFGenerator {
     public void createPdf(ArrayList<Response> allResponses) throws IOException, Exception {
         
         //Variables
+        //List containing all graphs
         ArrayList<Image> ImageList = new ArrayList<Image>();
 
 
