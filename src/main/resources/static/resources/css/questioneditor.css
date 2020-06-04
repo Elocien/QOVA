@@ -1,16 +1,16 @@
 *{
     box-sizing: border-box;
 }
-
 .column {
     float: left;
 }
-.column.left {
-    width: 25%;
-    height: 100%;
+.survey-editor-menu {
+    margin-top: 20px;
+    position: fixed;
+    left: 10%;
 }
 
-.column.right {
+.question-list {
     display: flex;
     flex-direction: column;
     width: 900px;
@@ -24,6 +24,9 @@
     background-color: white;
 }
 
+.btn-text-right{
+    text-align: right !important;
+}
 
 .Question.YesNo {
 }

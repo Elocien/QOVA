@@ -5,639 +5,663 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/questioneditor.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+        
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
     <title th:text="#{home.title}">TITLE</title>
 </head>
-<body>
-<div th:include="navbar"></div>
-<h1 id="Name">
-    Fragen für den Fragebogen
-</h1>
-<div class="column left">
-    <button class="Button NewQuestion" onclick="addYesNoQuestion()">Füge eine Ja-Nein-Frage hinzu</button>
-    <button class="Button NewQuestion" onclick="addMultipleChoiceQuestion()">Füge eine Multiple-Choice-Frage hinzu</button>
-    <button class="Button NewQuestion" onclick="addFreeTextQuestion()">Füge eine Frei-Text-Frage</button>
-    <button class="Button NewQuestion" onclick="addSingleChoiceQuestion()">Füge eine Single-Choice-Frage hinzu</button>
-    <button class="Button NewQuestion" onclick="addDropDownQuestion()"> Füge eine DropDown-Frage hinzu</button>
-    <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}">
-        <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
-        <button class="Button NewQuestion" type="submit"  >Abschicken</button> </form>
-    <div class="Json" id="json" th:text="${survey}"></div>
-</div>
+<body class="bg-light">
 
-<div class="column right" id="questionnaire">
-</div>
+    <div th:include="navbar"></div>
 
+    <div class="container">
 
-<script>
-    const questionnaire = [];
+        <div class="row w-100">
+            <div class="col-lg-12 mt-4">
+                
+                <h2 class="font-weight-bold text-center">SURVEY EDITOR</h2>
+                <h5 class="font-weight-light text-center">CURRENT SURVEY</h5>
+                
+                <!--Menu-->
+                <div class="survey-editor-menu text-right">
+                    <div class="btn-group-vertical" role="group" aria-label="First group">
+                        <button type="button" class="btn btn-dark btn-text-right">NEW QUESTION</button>
+                        <button type="button" class="btn btn-secondary btn-text-right" onclick="addYesNoQuestion()">YES/NO<i class="fas fa-plus-square ml-2"></i></button>
+                        <button type="button" class="btn btn-secondary btn-text-right" onclick="addMultipleChoiceQuestion()">MULTIPLE CHOICE<i class="fas fa-plus-square ml-2"></i></button>
+                        <button type="button" class="btn btn-secondary btn-text-right" onclick="addSingleChoiceQuestion()">SINGLE CHOICE<i class="fas fa-plus-square ml-2"></i></button>
+                        <button type="button" class="btn btn-secondary btn-text-right" onclick="addFreeTextQuestion()">FREE TEXT<i class="fas fa-plus-square ml-2"></i></button>
+                        <button type="button" class="btn btn-secondary btn-text-right" onclick="addDropDownQuestion()">DROPDOWN<i class="fas fa-plus-square ml-2"></i></button>
+                    </div>
+                    <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}">
+                        <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
+                        <button class="btn btn-primary mt-2" type="submit">SUBMIT</button> </form>
+                    <div class="Json" id="json" th:text="${survey}"></div>
+                </div>
 
-    function addYesNoQuestion() {
-        saveInputs();
-        const yesnoQuestion = {
-            type: "YesNo",
-            question: "Frage"
-        };
-        questionnaire.push(yesnoQuestion);
-        renderall();
-    }
+                <!--Questions-->
+                <div class="row">
+                    <div class="question-list" id="questionnaire"></div>
+                </div>
 
-    function addMultipleChoiceQuestion(){
-        saveInputs();
-        const multiplechoiceQuestion = {
-            type: "MultipleChoice",
-            question: "Frage",
-            answers: []
-        };
-        questionnaire.push(multiplechoiceQuestion);
-        renderall();
+            </div>
+        </div>
 
-    }
+    </div>
 
-    function addDropDownQuestion() {
-        saveInputs();
-        const dropdownQuestion = {
-            type: "DropDown",
-            question: "Frage",
-            answers: []
-        };
-        questionnaire.push(dropdownQuestion);
-        renderall();
-    }
+    <script>
+        const questionnaire = [];
 
-    function addSingleChoiceQuestion() {
-        saveInputs();
-        const singlechoiceQuestion = {
-            type: "SingleChoice",
-            question: "Frage",
-            answers: []
-        };
-        questionnaire.push(singlechoiceQuestion);
-        renderall();
-    }
+        function addYesNoQuestion() {
+            saveInputs();
+            const yesnoQuestion = {
+                type: "YesNo",
+                question: "Frage"
+            };
+            questionnaire.push(yesnoQuestion);
+            renderall();
+        }
 
-    function addFreeTextQuestion() {
-        saveInputs();
-        const freetextQuestion={
-            type: "FreeText",
-            question: "Frage",
-        };
-        questionnaire.push(freetextQuestion);
-        renderall();
-
-    }
-
-    function getJson() {
-        saveInputs();
-        document.getElementById("json").innerHTML= JSON.stringify(questionnaire);
-        renderall();
-
-    }
-
-    function renderall(){
-        clearquestionnaire();
-        questionnaire.forEach(renderquestionnaireelement);
-        document.getElementById("questionnairejson").value = JSON.stringify(questionnaire);
-    }
-
-    function renderquestionnaireelement (value, index, array){
-        const x = document.createElement("DIV");
-
-        if (value.type === "YesNo"){
-
-            <!--Create a html section for a YesNo-Question -->
-            x.className = "Question YesNo";
-            x.setAttribute("id",index);
-
-            <!--Create Dropdown to Change Questiontyp -->
-            x.appendChild(createTitleDropdown(index,value.type));
-
-            <!--Buttons Delete-->
-            x.appendChild(createButtonDelete(index));
-
-            <!--Button Copy -->
-            x.appendChild(createButtonCopy(index));
-
-            <!--Button PushDown PushUp -->
-            if (index > 0) {
-                x.appendChild(createButtonUp(index));
-            }
-            <!-- array.lastChild === array[index]-->
-            if (index+1 !== array.length && array.length >1){
-                x.appendChild(createButtonDown(index));
-            }
-
-
-            <!--Textarea for the question input-->
-            const x1 = document.createElement("TEXTAREA");
-            x1.className = ("Textarea Question");
-            x1.defaultValue = value.question;
-            x.appendChild(x1);
+        function addMultipleChoiceQuestion(){
+            saveInputs();
+            const multiplechoiceQuestion = {
+                type: "MultipleChoice",
+                question: "Frage",
+                answers: []
+            };
+            questionnaire.push(multiplechoiceQuestion);
+            renderall();
 
         }
 
-        else if (value.type ==="FreeText"){
+        function addDropDownQuestion() {
+            saveInputs();
+            const dropdownQuestion = {
+                type: "DropDown",
+                question: "Frage",
+                answers: []
+            };
+            questionnaire.push(dropdownQuestion);
+            renderall();
+        }
 
-            <!--Create a html section for a YesNo-Question -->
-            x.className = "Question FreeText";
-            x.setAttribute("id",index);
+        function addSingleChoiceQuestion() {
+            saveInputs();
+            const singlechoiceQuestion = {
+                type: "SingleChoice",
+                question: "Frage",
+                answers: []
+            };
+            questionnaire.push(singlechoiceQuestion);
+            renderall();
+        }
+
+        function addFreeTextQuestion() {
+            saveInputs();
+            const freetextQuestion={
+                type: "FreeText",
+                question: "Frage",
+            };
+            questionnaire.push(freetextQuestion);
+            renderall();
+
+        }
+
+        function getJson() {
+            saveInputs();
+            document.getElementById("json").innerHTML= JSON.stringify(questionnaire);
+            renderall();
+
+        }
+
+        function renderall(){
+            clearquestionnaire();
+            questionnaire.forEach(renderquestionnaireelement);
+            document.getElementById("questionnairejson").value = JSON.stringify(questionnaire);
+        }
+
+        function renderquestionnaireelement (value, index, array){
+            const x = document.createElement("DIV");
+
+            if (value.type === "YesNo"){
+
+                <!--Create a html section for a YesNo-Question -->
+                x.className = "Question YesNo";
+                x.setAttribute("id",index);
+
+                <!--Create Dropdown to Change Questiontyp -->
+                x.appendChild(createTitleDropdown(index,value.type));
+
+                <!--Buttons Delete-->
+                x.appendChild(createButtonDelete(index));
+
+                <!--Button Copy -->
+                x.appendChild(createButtonCopy(index));
+
+                <!--Button PushDown PushUp -->
+                if (index > 0) {
+                    x.appendChild(createButtonUp(index));
+                }
+                <!-- array.lastChild === array[index]-->
+                if (index+1 !== array.length && array.length >1){
+                    x.appendChild(createButtonDown(index));
+                }
 
 
-            <!--Create Dropdown to Change Questiontyp -->
-            x.appendChild(createTitleDropdown(index,value.type));
+                <!--Textarea for the question input-->
+                const x1 = document.createElement("TEXTAREA");
+                x1.className = ("Textarea Question");
+                x1.defaultValue = value.question;
+                x.appendChild(x1);
 
-
-            <!--Buttons Delete-->
-            x.appendChild(createButtonDelete(index));
-
-            <!--Button Copy -->
-            x.appendChild(createButtonCopy(index));
-
-            <!--Button PushDown PushUp -->
-            if (index > 0) {
-                x.appendChild(createButtonUp(index));
-            }
-            <!-- array.lastChild === array[index]-->
-            if (index+1 !== array.length && array.length >1){
-                x.appendChild(createButtonDown(index));
             }
 
+            else if (value.type ==="FreeText"){
 
-            <!--Textarea for the question input-->
-            const x1 = document.createElement("TEXTAREA");
-            x1.className = ("Textarea Question");
-            x1.defaultValue = value.question;
-
-            x.appendChild(x1);
-
-        }
-
-        else if (value.type === "SingleChoice"){
-
-            <!--Create a html section for a SingleChoice-Question -->
-            x.className = "Question SingleChoice";
-            x.setAttribute("id",index);
-
-            <!--Create Dropdown to Change Questiontyp -->
-            x.appendChild(createTitleDropdown(index,value.type));
+                <!--Create a html section for a YesNo-Question -->
+                x.className = "Question FreeText";
+                x.setAttribute("id",index);
 
 
-            <!--Buttons Delete-->
-            x.appendChild(createButtonDelete(index));
-
-            <!--Button Copy -->
-            x.appendChild(createButtonCopy(index));
-
-            <!--Button PushDown PushUp -->
-            if (index > 0) {
-                x.appendChild(createButtonUp(index));
-            }
-            <!-- array.lastChild === array[index]-->
-            if (index+1 !== array.length && array.length >1){
-                x.appendChild(createButtonDown(index));
-            }
-
-            <!--Textarea for the question input-->
-            const x1 = document.createElement("TEXTAREA");
-            x1.className = ("Textarea Question");
-            x1.defaultValue = value.question;
-            x.appendChild(x1);
-
-            <!--Answer Option Part -->
-            x.appendChild(createAnswerOptionPart(index,value.answers));
-
-            <!--New Answer Button -->
-            x.appendChild(createButtonnewAnswer(index));
+                <!--Create Dropdown to Change Questiontyp -->
+                x.appendChild(createTitleDropdown(index,value.type));
 
 
+                <!--Buttons Delete-->
+                x.appendChild(createButtonDelete(index));
 
-        }
+                <!--Button Copy -->
+                x.appendChild(createButtonCopy(index));
 
-        else if (value.type === "DropDown"){
+                <!--Button PushDown PushUp -->
+                if (index > 0) {
+                    x.appendChild(createButtonUp(index));
+                }
+                <!-- array.lastChild === array[index]-->
+                if (index+1 !== array.length && array.length >1){
+                    x.appendChild(createButtonDown(index));
+                }
 
-            <!--Create a html section for a DropDown-Question -->
-            x.className = "Question DropDown";
-            x.setAttribute("id",index);
 
-            <!--Create Dropdown to Change Questiontyp -->
-            x.appendChild(createTitleDropdown(index,value.type));
+                <!--Textarea for the question input-->
+                const x1 = document.createElement("TEXTAREA");
+                x1.className = ("Textarea Question");
+                x1.defaultValue = value.question;
 
-            <!--Buttons Delete-->
-            x.appendChild(createButtonDelete(index));
+                x.appendChild(x1);
 
-            <!-- Button Cop Question-->
-            x.appendChild(createButtonCopy(index));
-
-            <!--Button PushDown PushUp -->
-            if (index > 0) {
-                x.appendChild(createButtonUp(index));
-            }
-            <!-- array.lastChild === array[index]-->
-            if (index+1 !== array.length && array.length >1){
-                x.appendChild(createButtonDown(index));
             }
 
-            <!--Textarea for the question input-->
-            const x1 = document.createElement("TEXTAREA");
-            x1.className = ("Textarea Question");
-            x1.defaultValue = value.question;
-            x.appendChild(x1);
+            else if (value.type === "SingleChoice"){
 
-            <!-- Answer Option Part-->
-            x.appendChild(createAnswerOptionPart(index, value.answers));
+                <!--Create a html section for a SingleChoice-Question -->
+                x.className = "Question SingleChoice";
+                x.setAttribute("id",index);
 
-            <!-- New Answer BUtton-->
-            x.appendChild(createButtonnewAnswer(index));
+                <!--Create Dropdown to Change Questiontyp -->
+                x.appendChild(createTitleDropdown(index,value.type));
 
 
+                <!--Buttons Delete-->
+                x.appendChild(createButtonDelete(index));
 
-        }
+                <!--Button Copy -->
+                x.appendChild(createButtonCopy(index));
 
-        else if (value.type === "MultipleChoice"){
+                <!--Button PushDown PushUp -->
+                if (index > 0) {
+                    x.appendChild(createButtonUp(index));
+                }
+                <!-- array.lastChild === array[index]-->
+                if (index+1 !== array.length && array.length >1){
+                    x.appendChild(createButtonDown(index));
+                }
 
-            <!--Create a html section for a MultipleChoice-Question -->
-            x.className = "Question MultipleChoice";
-            x.setAttribute("id",index);
+                <!--Textarea for the question input-->
+                const x1 = document.createElement("TEXTAREA");
+                x1.className = ("Textarea Question");
+                x1.defaultValue = value.question;
+                x.appendChild(x1);
 
-            <!--Create Dropdown to Change Questiontyp -->
-            x.appendChild(createTitleDropdown(index,value.type));
+                <!--Answer Option Part -->
+                x.appendChild(createAnswerOptionPart(index,value.answers));
 
-            <!--Buttons Delete-->
-            x.appendChild(createButtonDelete(index));
-
-            <!-- Button Copy Question -->
-            x.appendChild(createButtonCopy(index));
-
-            <!--Button PushDown PushUp -->
-            if (index > 0) {
-                x.appendChild(createButtonUp(index));
-            }
-            <!-- array.lastChild === array[index]-->
-            if (index+1 !== array.length && array.length >1){
-                x.appendChild(createButtonDown(index));
-            }
-
-            <!--Textarea for the question input-->
-            const x1 = document.createElement("TEXTAREA");
-            x1.className = ("Textarea Question");
-            x1.defaultValue = value.question;
-            x.appendChild(x1);
-
-            <!--Answer Option Part -->
-            x.appendChild(createAnswerOptionPart(index, value.answers));
-
-            <!--New Answer Button -->
-            x.appendChild(createButtonnewAnswer(index));
+                <!--New Answer Button -->
+                x.appendChild(createButtonnewAnswer(index));
 
 
 
-        }
-
-        document.getElementById("questionnaire").appendChild(x);
-
-    }
-
-    function clearquestionnaire() {
-        const questionnaire = document.getElementById("questionnaire");
-        while (questionnaire.firstChild){
-            questionnaire.removeChild(questionnaire.lastChild);
-        }
-
-    }
-
-    function saveInputs() {
-        const textareas_question = document.getElementsByClassName("Textarea Question");
-        for (let i=0;i<textareas_question.length;i++){
-            const questionid = textareas_question[i].parentElement.id;
-            questionnaire[questionid].question = textareas_question[i].value;
-
-        }
-
-        const textareas_answer = document.getElementsByClassName("Textarea Answers");
-        for (let i=0;i<textareas_answer.length;i++){
-            const questionid = textareas_answer[i].parentElement.parentElement.parentElement.id;
-            const answerid = textareas_answer[i].id;
-            questionnaire[questionid].answers[answerid] = textareas_answer[i].value;
-
-        }
-
-    }
-
-    function createButtonDelete (index){
-        const btn_d = document.createElement("BUTTON");
-        btn_d.className = "Button Delete fa fa-trash";
-        btn_d.setAttribute("onclick","deleteQuestion("+ index+")");
-        return btn_d;
-
-    }
-
-    function createButtonUp(index) {
-        const btn_up = document.createElement("Button");
-        btn_up.className = "Button UP fa fa-arrow-up";
-        btn_up.setAttribute("onclick","pushQuestionUp("+index+")");
-        return btn_up;
-    }
-
-    function createButtonDown(index) {
-        const btn_down = document.createElement("Button");
-        btn_down.className="Button DOWN fa fa-arrow-down";
-        btn_down.setAttribute("onclick","pushQuestionDown("+index+")");
-        return btn_down;
-
-    }
-
-    function createButtonnewAnswer(index){
-        const btn_newAnswer = document.createElement("Button");
-        btn_newAnswer.className="Button NewAnswer";
-        btn_newAnswer.innerHTML="Add new Answer";
-        btn_newAnswer.setAttribute("onclick","addnewAnswer("+index+")");
-
-        return btn_newAnswer;
-    }
-
-    function deleteQuestion(index) {
-        saveInputs();
-        questionnaire.splice(index,1);
-        renderall();
-    }
-
-    function pushQuestionUp(index){
-        saveInputs();
-        const predecessor = index -1;
-        const question = questionnaire[index];
-        questionnaire[index]= questionnaire[predecessor];
-        questionnaire[predecessor]=question;
-        renderall();
-    }
-
-    function pushQuestionDown(index) {
-        saveInputs();
-        const predecessor = index +1;
-        const question = questionnaire[index];
-        questionnaire[index]= questionnaire[predecessor];
-        questionnaire[predecessor]=question;
-        renderall();
-
-    }
-
-    function addnewAnswer(index){
-        saveInputs();
-        questionnaire[index].answers.push("Answer");
-        renderall();
-    }
-
-    function createButtonCopy(index) {
-        const btn_copy = document.createElement("Button");
-        btn_copy.className="Button DOWN fa fa-clone";
-        btn_copy.setAttribute("onclick","copyQuestion("+index+")");
-        return btn_copy;
-
-    }
-
-    function createButtonDeleteAnswer(index, answerindex) {
-        const btn_deleteAnswer = document.createElement("Button");
-        btn_deleteAnswer.className = "Button ButtonAnswer fa fa-times";
-        btn_deleteAnswer.setAttribute("onclick","deleteanswer("+index+","+answerindex+")");
-        return btn_deleteAnswer;
-    }
-
-    function createButtonUpAnswer(index,answerindex){
-        const btn_upAnswer = document.createElement("Button");
-        btn_upAnswer.className = "Button ButtonAnswer fa fa-arrow-up";
-        btn_upAnswer.setAttribute("onclick", "pushAnswerup("+index+","+answerindex+")");
-        return btn_upAnswer;
-    }
-
-    function createAnswerOptionPart(index, answers){
-
-        const answer_div = document.createElement("DIV");
-        answer_div.className = "Answer";
-        for ( let i =0;i<answers.length;i++){
-            const answeroption = document.createElement("DIV");
-            answeroption.className= ("Answer Option");
-            const x2 =document.createElement("TEXTAREA");
-            x2.className = ("Textarea Answers");
-            x2.defaultValue = answers[i];
-            x2.setAttribute("id",i.toString());
-            answeroption.appendChild(x2);
-
-            if (i > 0) {
-                answeroption.appendChild(createButtonUpAnswer(index,i));
-            }
-            if (i+1 !== answers.length && answers.length >1){
-                answeroption.appendChild(createButtonDownAnswer(index,i));
             }
 
-            answeroption.appendChild(createButtonDeleteAnswer(index,i));
-            answer_div.appendChild(answeroption);
+            else if (value.type === "DropDown"){
+
+                <!--Create a html section for a DropDown-Question -->
+                x.className = "Question DropDown";
+                x.setAttribute("id",index);
+
+                <!--Create Dropdown to Change Questiontyp -->
+                x.appendChild(createTitleDropdown(index,value.type));
+
+                <!--Buttons Delete-->
+                x.appendChild(createButtonDelete(index));
+
+                <!-- Button Cop Question-->
+                x.appendChild(createButtonCopy(index));
+
+                <!--Button PushDown PushUp -->
+                if (index > 0) {
+                    x.appendChild(createButtonUp(index));
+                }
+                <!-- array.lastChild === array[index]-->
+                if (index+1 !== array.length && array.length >1){
+                    x.appendChild(createButtonDown(index));
+                }
+
+                <!--Textarea for the question input-->
+                const x1 = document.createElement("TEXTAREA");
+                x1.className = ("Textarea Question");
+                x1.defaultValue = value.question;
+                x.appendChild(x1);
+
+                <!-- Answer Option Part-->
+                x.appendChild(createAnswerOptionPart(index, value.answers));
+
+                <!-- New Answer BUtton-->
+                x.appendChild(createButtonnewAnswer(index));
 
 
-        }
-        return answer_div;
-    }
 
-    function pushAnswerup(q_index, a_index) {
-        saveInputs();
-        swapAnswer(q_index,(a_index-1),a_index);
-        renderall();
-
-    }
-
-
-    function createButtonDownAnswer(index,answerindex){
-        const btn_downAnswer = document.createElement("Button");
-        btn_downAnswer.className = "Button ButtonAnswer fa fa-arrow-down";
-        btn_downAnswer.setAttribute("onclick", "pushAnswerdown("+index+","+answerindex+")");
-        return btn_downAnswer;
-    }
-
-    function pushAnswerdown(q_index, a_index) {
-        saveInputs();
-        swapAnswer(q_index, a_index, (a_index+1));
-        renderall();
-
-    }
-
-    function swapAnswer (q_index, a1_index, a2_index){
-        const predecessor = questionnaire[q_index].answers[a1_index];
-        questionnaire[q_index].answers[a1_index]= questionnaire[q_index].answers[a2_index];
-        questionnaire[q_index].answers[a2_index] =predecessor;
-    }
-
-    function deleteanswer(indexq,indexa) {
-        saveInputs();
-        questionnaire[indexq].answers.splice(indexa,1);
-        renderall();
-
-    }
-
-    function copyQuestion(index) {
-        saveInputs();
-        questionnaire.push(questionnaire[index]);
-        renderall();
-
-    }
-
-    function createTitleDropdown(q_index, q_type) {
-
-        const title = document.createElement("DIV");
-        title.className = ("Title dropdown");
-
-        const btn_dropdown = document.createElement("Button");
-        btn_dropdown.className= ("Buttondropdown");
-        btn_dropdown.setAttribute("onclick","hideshowdropdowntitle("+q_index+")");
-        btn_dropdown.innerHTML = (q_index+1) +". "+q_type;
-
-        title.appendChild(btn_dropdown);
-
-        const dropdown_content = document.createElement("DIV");
-        dropdown_content.setAttribute("id","dropdown-content");
-        dropdown_content.className=("dropdown-content");
-
-        if (q_type !== "YesNo") {
-
-            const btn_changetoYesNO = document.createElement("Button");
-            btn_changetoYesNO.className = ("BtnDropDown");
-            btn_changetoYesNO.innerHTML = ("YesNo");
-            btn_changetoYesNO.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 1 + ")");
-            dropdown_content.appendChild(btn_changetoYesNO);
-
-        }
-
-        if (q_type !== "DropDown") {
-
-            const btn_changetoDropDown = document.createElement("Button");
-            btn_changetoDropDown.className = ("BtnDropDown");
-            btn_changetoDropDown.innerHTML = ("DropDown");
-            btn_changetoDropDown.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 3 + ")");
-            dropdown_content.appendChild(btn_changetoDropDown);
-
-        }
-
-        if (q_type !== "MultipleChoice") {
-
-            const btn_changetoMultipleChoice = document.createElement("Button");
-            btn_changetoMultipleChoice.className = ("BtnDropDown");
-            btn_changetoMultipleChoice.innerHTML = ("MultipleChoice");
-            btn_changetoMultipleChoice.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 2 + ")");
-            dropdown_content.appendChild(btn_changetoMultipleChoice);
-
-        }
-
-        if (q_type !== "SingleChoice") {
-
-            const btn_changetoSingleChoice = document.createElement("Button");
-            btn_changetoSingleChoice.className = ("BtnDropDown");
-            btn_changetoSingleChoice.innerHTML = ("SingleChoice");
-            btn_changetoSingleChoice.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 4 + ")");
-            dropdown_content.appendChild(btn_changetoSingleChoice);
-
-        }
-
-        if (q_type !== "FreeText") {
-
-            const btn_changetoFreeText = document.createElement("Button");
-            btn_changetoFreeText.className = ("BtnDropDown");
-            btn_changetoFreeText.innerHTML = ("FreeText");
-            btn_changetoFreeText.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 5 + ")");
-            dropdown_content.appendChild(btn_changetoFreeText);
-
-        }
-        title.appendChild(dropdown_content);
-
-        return title;
-
-
-    }
-
-    <!--1 - YesNo 2-MultipleChoice 3-Dropdown 4-SingleQuestion 5-FreeText -->
-    function changeQuestionTyp(index,questiontyp) {
-        saveInputs();
-        debugger;
-        if (questiontyp ===1){
-            questionnaire[index].type = "YesNo";
-            if (questionnaire[index].answers){
-                delete questionnaire[index].answers;
             }
-        }
-        else if (questiontyp ===5){
-            questionnaire[index].type = "FreeText";
-            if (questionnaire[index].answers){
-                delete questionnaire[index].answers;
+
+            else if (value.type === "MultipleChoice"){
+
+                <!--Create a html section for a MultipleChoice-Question -->
+                x.className = "Question MultipleChoice";
+                x.setAttribute("id",index);
+
+                <!--Create Dropdown to Change Questiontyp -->
+                x.appendChild(createTitleDropdown(index,value.type));
+
+                <!--Buttons Delete-->
+                x.appendChild(createButtonDelete(index));
+
+                <!-- Button Copy Question -->
+                x.appendChild(createButtonCopy(index));
+
+                <!--Button PushDown PushUp -->
+                if (index > 0) {
+                    x.appendChild(createButtonUp(index));
+                }
+                <!-- array.lastChild === array[index]-->
+                if (index+1 !== array.length && array.length >1){
+                    x.appendChild(createButtonDown(index));
+                }
+
+                <!--Textarea for the question input-->
+                const x1 = document.createElement("TEXTAREA");
+                x1.className = ("Textarea Question");
+                x1.defaultValue = value.question;
+                x.appendChild(x1);
+
+                <!--Answer Option Part -->
+                x.appendChild(createAnswerOptionPart(index, value.answers));
+
+                <!--New Answer Button -->
+                x.appendChild(createButtonnewAnswer(index));
+
+
+
             }
+
+            document.getElementById("questionnaire").appendChild(x);
+
         }
-        else if (questiontyp ===4){
-            questionnaire[index].type = "SingleChoice";
-            if (!questionnaire[index].answers){
-                questionnaire[index].answers=[];
+
+        function clearquestionnaire() {
+            const questionnaire = document.getElementById("questionnaire");
+            while (questionnaire.firstChild){
+                questionnaire.removeChild(questionnaire.lastChild);
             }
+
         }
-        else if (questiontyp ===2){
-            questionnaire[index].type = "MultipleChoice";
-            if (!questionnaire[index].answers){
-                questionnaire[index].answers=[];
+
+        function saveInputs() {
+            const textareas_question = document.getElementsByClassName("Textarea Question");
+            for (let i=0;i<textareas_question.length;i++){
+                const questionid = textareas_question[i].parentElement.id;
+                questionnaire[questionid].question = textareas_question[i].value;
+
             }
-        }
-        else if (questiontyp ===3){
-            questionnaire[index].type = "DropDown";
-            if (!questionnaire[index].answers){
-                questionnaire[index].answers=[];
+
+            const textareas_answer = document.getElementsByClassName("Textarea Answers");
+            for (let i=0;i<textareas_answer.length;i++){
+                const questionid = textareas_answer[i].parentElement.parentElement.parentElement.id;
+                const answerid = textareas_answer[i].id;
+                questionnaire[questionid].answers[answerid] = textareas_answer[i].value;
+
             }
-        }
-
-        renderall();
-
-    }
-
-    function loadsurveystring (){
-        const survey = JSON.parse(document.getElementById("json").innerHTML);
-        for ( let i=0; i < survey.length; i++){
-            questionnaire.push(survey[i]);
 
         }
-        renderall();
 
-    }
+        function createButtonDelete (index){
+            const btn_d = document.createElement("BUTTON");
+            btn_d.className = "Button Delete fa fa-trash";
+            btn_d.setAttribute("onclick","deleteQuestion("+ index+")");
+            return btn_d;
 
-    <!--Onclick Show the Dropdown Content -->
-    function hideshowdropdowntitle(q_index) {
+        }
 
-        document.getElementById(q_index).getElementsByClassName("dropdown-content")[0].classList.toggle("show");
-    }
+        function createButtonUp(index) {
+            const btn_up = document.createElement("Button");
+            btn_up.className = "Button UP fa fa-arrow-up";
+            btn_up.setAttribute("onclick","pushQuestionUp("+index+")");
+            return btn_up;
+        }
 
-    <!--Close Dropdwon if the User Clicks Outside -->
-    <!-- Problem das man mehrer Dropdown klicken kann ohne das vorherige schließt -->
-    window.onclick = function (event) {
-        if (!event.target.matches('.Buttondropdown')) {
-            const dropdowns = document.getElementsByClassName("dropdown-content");
-            for ( let i = 0; i<dropdowns.length; i++){
-                const openDropdown = dropdowns[i];
-                if (openDropdown.classList.contains("show")){
-                    openDropdown.classList.remove("show");
+        function createButtonDown(index) {
+            const btn_down = document.createElement("Button");
+            btn_down.className="Button DOWN fa fa-arrow-down";
+            btn_down.setAttribute("onclick","pushQuestionDown("+index+")");
+            return btn_down;
+
+        }
+
+        function createButtonnewAnswer(index){
+            const btn_newAnswer = document.createElement("Button");
+            btn_newAnswer.className="Button NewAnswer";
+            btn_newAnswer.innerHTML="Add new Answer";
+            btn_newAnswer.setAttribute("onclick","addnewAnswer("+index+")");
+
+            return btn_newAnswer;
+        }
+
+        function deleteQuestion(index) {
+            saveInputs();
+            questionnaire.splice(index,1);
+            renderall();
+        }
+
+        function pushQuestionUp(index){
+            saveInputs();
+            const predecessor = index -1;
+            const question = questionnaire[index];
+            questionnaire[index]= questionnaire[predecessor];
+            questionnaire[predecessor]=question;
+            renderall();
+        }
+
+        function pushQuestionDown(index) {
+            saveInputs();
+            const predecessor = index +1;
+            const question = questionnaire[index];
+            questionnaire[index]= questionnaire[predecessor];
+            questionnaire[predecessor]=question;
+            renderall();
+
+        }
+
+        function addnewAnswer(index){
+            saveInputs();
+            questionnaire[index].answers.push("Answer");
+            renderall();
+        }
+
+        function createButtonCopy(index) {
+            const btn_copy = document.createElement("Button");
+            btn_copy.className="Button DOWN fa fa-clone";
+            btn_copy.setAttribute("onclick","copyQuestion("+index+")");
+            return btn_copy;
+
+        }
+
+        function createButtonDeleteAnswer(index, answerindex) {
+            const btn_deleteAnswer = document.createElement("Button");
+            btn_deleteAnswer.className = "Button ButtonAnswer fa fa-times";
+            btn_deleteAnswer.setAttribute("onclick","deleteanswer("+index+","+answerindex+")");
+            return btn_deleteAnswer;
+        }
+
+        function createButtonUpAnswer(index,answerindex){
+            const btn_upAnswer = document.createElement("Button");
+            btn_upAnswer.className = "Button ButtonAnswer fa fa-arrow-up";
+            btn_upAnswer.setAttribute("onclick", "pushAnswerup("+index+","+answerindex+")");
+            return btn_upAnswer;
+        }
+
+        function createAnswerOptionPart(index, answers){
+
+            const answer_div = document.createElement("DIV");
+            answer_div.className = "Answer";
+            for ( let i =0;i<answers.length;i++){
+                const answeroption = document.createElement("DIV");
+                answeroption.className= ("Answer Option");
+                const x2 =document.createElement("TEXTAREA");
+                x2.className = ("Textarea Answers");
+                x2.defaultValue = answers[i];
+                x2.setAttribute("id",i.toString());
+                answeroption.appendChild(x2);
+
+                if (i > 0) {
+                    answeroption.appendChild(createButtonUpAnswer(index,i));
+                }
+                if (i+1 !== answers.length && answers.length >1){
+                    answeroption.appendChild(createButtonDownAnswer(index,i));
+                }
+
+                answeroption.appendChild(createButtonDeleteAnswer(index,i));
+                answer_div.appendChild(answeroption);
+
+
+            }
+            return answer_div;
+        }
+
+        function pushAnswerup(q_index, a_index) {
+            saveInputs();
+            swapAnswer(q_index,(a_index-1),a_index);
+            renderall();
+
+        }
+
+
+        function createButtonDownAnswer(index,answerindex){
+            const btn_downAnswer = document.createElement("Button");
+            btn_downAnswer.className = "Button ButtonAnswer fa fa-arrow-down";
+            btn_downAnswer.setAttribute("onclick", "pushAnswerdown("+index+","+answerindex+")");
+            return btn_downAnswer;
+        }
+
+        function pushAnswerdown(q_index, a_index) {
+            saveInputs();
+            swapAnswer(q_index, a_index, (a_index+1));
+            renderall();
+
+        }
+
+        function swapAnswer (q_index, a1_index, a2_index){
+            const predecessor = questionnaire[q_index].answers[a1_index];
+            questionnaire[q_index].answers[a1_index]= questionnaire[q_index].answers[a2_index];
+            questionnaire[q_index].answers[a2_index] =predecessor;
+        }
+
+        function deleteanswer(indexq,indexa) {
+            saveInputs();
+            questionnaire[indexq].answers.splice(indexa,1);
+            renderall();
+
+        }
+
+        function copyQuestion(index) {
+            saveInputs();
+            questionnaire.push(questionnaire[index]);
+            renderall();
+
+        }
+
+        function createTitleDropdown(q_index, q_type) {
+
+            const title = document.createElement("DIV");
+            title.className = ("Title dropdown");
+
+            const btn_dropdown = document.createElement("Button");
+            btn_dropdown.className= ("Buttondropdown");
+            btn_dropdown.setAttribute("onclick","hideshowdropdowntitle("+q_index+")");
+            btn_dropdown.innerHTML = (q_index+1) +". "+q_type;
+
+            title.appendChild(btn_dropdown);
+
+            const dropdown_content = document.createElement("DIV");
+            dropdown_content.setAttribute("id","dropdown-content");
+            dropdown_content.className=("dropdown-content");
+
+            if (q_type !== "YesNo") {
+
+                const btn_changetoYesNO = document.createElement("Button");
+                btn_changetoYesNO.className = ("BtnDropDown");
+                btn_changetoYesNO.innerHTML = ("YesNo");
+                btn_changetoYesNO.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 1 + ")");
+                dropdown_content.appendChild(btn_changetoYesNO);
+
+            }
+
+            if (q_type !== "DropDown") {
+
+                const btn_changetoDropDown = document.createElement("Button");
+                btn_changetoDropDown.className = ("BtnDropDown");
+                btn_changetoDropDown.innerHTML = ("DropDown");
+                btn_changetoDropDown.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 3 + ")");
+                dropdown_content.appendChild(btn_changetoDropDown);
+
+            }
+
+            if (q_type !== "MultipleChoice") {
+
+                const btn_changetoMultipleChoice = document.createElement("Button");
+                btn_changetoMultipleChoice.className = ("BtnDropDown");
+                btn_changetoMultipleChoice.innerHTML = ("MultipleChoice");
+                btn_changetoMultipleChoice.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 2 + ")");
+                dropdown_content.appendChild(btn_changetoMultipleChoice);
+
+            }
+
+            if (q_type !== "SingleChoice") {
+
+                const btn_changetoSingleChoice = document.createElement("Button");
+                btn_changetoSingleChoice.className = ("BtnDropDown");
+                btn_changetoSingleChoice.innerHTML = ("SingleChoice");
+                btn_changetoSingleChoice.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 4 + ")");
+                dropdown_content.appendChild(btn_changetoSingleChoice);
+
+            }
+
+            if (q_type !== "FreeText") {
+
+                const btn_changetoFreeText = document.createElement("Button");
+                btn_changetoFreeText.className = ("BtnDropDown");
+                btn_changetoFreeText.innerHTML = ("FreeText");
+                btn_changetoFreeText.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 5 + ")");
+                dropdown_content.appendChild(btn_changetoFreeText);
+
+            }
+            title.appendChild(dropdown_content);
+
+            return title;
+
+
+        }
+
+        <!--1 - YesNo 2-MultipleChoice 3-Dropdown 4-SingleQuestion 5-FreeText -->
+        function changeQuestionTyp(index,questiontyp) {
+            saveInputs();
+            debugger;
+            if (questiontyp ===1){
+                questionnaire[index].type = "YesNo";
+                if (questionnaire[index].answers){
+                    delete questionnaire[index].answers;
                 }
             }
+            else if (questiontyp ===5){
+                questionnaire[index].type = "FreeText";
+                if (questionnaire[index].answers){
+                    delete questionnaire[index].answers;
+                }
+            }
+            else if (questiontyp ===4){
+                questionnaire[index].type = "SingleChoice";
+                if (!questionnaire[index].answers){
+                    questionnaire[index].answers=[];
+                }
+            }
+            else if (questiontyp ===2){
+                questionnaire[index].type = "MultipleChoice";
+                if (!questionnaire[index].answers){
+                    questionnaire[index].answers=[];
+                }
+            }
+            else if (questiontyp ===3){
+                questionnaire[index].type = "DropDown";
+                if (!questionnaire[index].answers){
+                    questionnaire[index].answers=[];
+                }
+            }
+
+            renderall();
+
         }
 
-    }
+        function loadsurveystring (){
+            const survey = JSON.parse(document.getElementById("json").innerHTML);
+            for ( let i=0; i < survey.length; i++){
+                questionnaire.push(survey[i]);
 
-    window.onload = function(){
-        loadsurveystring();
-        renderall();
-    }
+            }
+            renderall();
+
+        }
+
+        <!--Onclick Show the Dropdown Content -->
+        function hideshowdropdowntitle(q_index) {
+
+            document.getElementById(q_index).getElementsByClassName("dropdown-content")[0].classList.toggle("show");
+        }
+
+        <!--Close Dropdwon if the User Clicks Outside -->
+        <!-- Problem das man mehrer Dropdown klicken kann ohne das vorherige schließt -->
+        window.onclick = function (event) {
+            if (!event.target.matches('.Buttondropdown')) {
+                const dropdowns = document.getElementsByClassName("dropdown-content");
+                for ( let i = 0; i<dropdowns.length; i++){
+                    const openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains("show")){
+                        openDropdown.classList.remove("show");
+                    }
+                }
+            }
+
+        }
+
+        window.onload = function(){
+            loadsurveystring();
+            renderall();
+        }
 
 
 
-    $(document).ready(function () {
-        $("form").submit(function () {
-            saveInputs();
-        })
-    })
+        $(document).ready(function () {
+            $("form").submit(function () {
+                saveInputs();
+            })
+        });
 
-</script>
+    </script>
+
 </body>
 </html>
