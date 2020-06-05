@@ -143,18 +143,15 @@
             question_header.className = "font-weight-light";
 
             //Number on the top left
-            const index_number_box = document.createElement("DIV");
-            index_number_box.className = "col-md-auto p-0";
             const index_number = document.createElement("h3");
             index_number.className = "text-light text-center index-number"
             index_number.innerHTML = index;
             const left = document.createElement("DIV");
-            left.className = "col-md-7 pl-0";
+            left.className = "col-md-8 pl-0";
             const right = document.createElement("DIV");
-            right.className = "col-md-4";
+            right.className = "col-md-4 pr-0";
 
-            index_number_box.appendChild(index_number);
-            row1.appendChild(index_number_box);
+            left.appendChild(index_number);
             row1.appendChild(left);
             row1.appendChild(right);
             col11.appendChild(question_header);
@@ -565,7 +562,7 @@
             title.className = ("Title dropdown");
 
             const btn_dropdown = document.createElement("Button");
-            btn_dropdown.className= ("btn btn-link dropdown-toggle question-headline font-weight-light lead");
+            btn_dropdown.className= ("btn btn-link dropdown-toggle question-headline font-weight-light");
             btn_dropdown.setAttribute("type","button");
             btn_dropdown.setAttribute("id","dropdownMenuButton("+q_index+")");
             btn_dropdown.setAttribute("data-toggle","dropdown");
