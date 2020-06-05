@@ -1,5 +1,24 @@
+body {
+    --tu_blue: rgb(0, 37, 87);
+}
+
 .btn-text-right{
     text-align: right !important;
+}
+
+.index-number {
+    background-color: var(--tu_blue);
+    border-top-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    height: 3rem;
+    width: 3rem;
+    line-height: 3rem;
+}
+.question-headline {
+    height: 3rem;
+    line-height: 3rem;
+    color: grey !important;
+    text-decoration: none !important;
 }
 
 .Answer {
@@ -39,10 +58,6 @@
     min-height: 2rem;
 }
 
-.question-headline {
-    color: grey !important;
-    text-decoration: none !important;
-}
 .options {
   text-decoration: none !important;
   color: grey;

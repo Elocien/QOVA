@@ -134,13 +134,33 @@
 
             const row1 = document.createElement("DIV");
             row1.className = "row";
+            const row11 = document.createElement("DIV");
+            row11.className = "row";
+            const col11 = document.createElement("DIV");
+            col11.className = "col-md-auto";
             const question_header = document.createElement("H7");
             question_header.innerHTML = "QUESTION:"
             question_header.className = "font-weight-light";
+
+            //Number on the top left
+            const index_number_box = document.createElement("DIV");
+            index_number_box.className = "col-md-auto p-0";
+            const index_number = document.createElement("h3");
+            index_number.className = "text-light text-center index-number"
+            index_number.innerHTML = index;
             const left = document.createElement("DIV");
-            left.className = "col-md-6";
+            left.className = "col-md-7 pl-0";
             const right = document.createElement("DIV");
-            right.className = "col-md-6";
+            right.className = "col-md-4";
+
+            index_number_box.appendChild(index_number);
+            row1.appendChild(index_number_box);
+            row1.appendChild(left);
+            row1.appendChild(right);
+            col11.appendChild(question_header);
+            row11.appendChild(col11);
+            x.appendChild(row1);
+            x.appendChild(row11);
 
             //Question Initilisation
             const row2 = document.createElement("DIV");
@@ -148,6 +168,7 @@
             const middle_col = document.createElement("DIV");
             middle_col.className = "col-md-12";
             row2.appendChild(middle_col)
+            x.appendChild(row2);
 
             //Answere Initilisation
             const answere_header = document.createElement("H7");
@@ -167,7 +188,6 @@
                 x.setAttribute("id",index);
 
                 left.appendChild(createTitleDropdown(index,value.type));
-                left.appendChild(question_header);
                 right.appendChild(createButtonDelete(index));
                 right.appendChild(createButtonCopy(index));
                 if (index > 0) {
@@ -176,9 +196,6 @@
                 if (index+1 !== array.length && array.length >1){
                     right.appendChild(createButtonDown(index));
                 }
-                row1.appendChild(left);
-                row1.appendChild(right);
-                x.appendChild(row1);
 
                 //Textarea for the question input
                 const text_area = document.createElement("TEXTAREA");
@@ -186,7 +203,6 @@
                 text_area.setAttribute("placeholder", value.question)
                 text_area.setAttribute("id",index);
                 middle_col.appendChild(text_area);
-                x.appendChild(row2);
 
             }
 
@@ -197,7 +213,6 @@
                 x.setAttribute("id",index);
 
                 left.appendChild(createTitleDropdown(index,value.type));
-                left.appendChild(question_header);
                 right.appendChild(createButtonDelete(index));
                 right.appendChild(createButtonCopy(index));
                 if (index > 0) {
@@ -206,9 +221,6 @@
                 if (index+1 !== array.length && array.length >1){
                     right.appendChild(createButtonDown(index));
                 }
-                row1.appendChild(left);
-                row1.appendChild(right);
-                x.appendChild(row1);
 
                 //Textarea for the question input
                 const text_area = document.createElement("TEXTAREA");
@@ -216,7 +228,6 @@
                 text_area.setAttribute("id",index);
                 text_area.setAttribute("placeholder", value.question)
                 middle_col.appendChild(text_area);
-                x.appendChild(row2);
 
             }
 
@@ -227,7 +238,6 @@
                 x.setAttribute("id",index);
 
                 left.appendChild(createTitleDropdown(index,value.type));
-                left.appendChild(question_header);
                 right.appendChild(createButtonDelete(index));
                 right.appendChild(createButtonCopy(index));
                 if (index > 0) {
@@ -236,9 +246,6 @@
                 if (index+1 !== array.length && array.length >1){
                     right.appendChild(createButtonDown(index));
                 }
-                row1.appendChild(left);
-                row1.appendChild(right);
-                x.appendChild(row1);
 
                 //Textarea for the question input
                 const text_area = document.createElement("TEXTAREA");
@@ -246,7 +253,6 @@
                 text_area.setAttribute("id",index);
                 text_area.setAttribute("placeholder", value.question)
                 middle_col.appendChild(text_area);
-                x.appendChild(row2);
 
                 //Answer Option Part
                 last_col.setAttribute("id",index);
@@ -265,7 +271,6 @@
                 x.setAttribute("id",index);
 
                 left.appendChild(createTitleDropdown(index,value.type));
-                left.appendChild(question_header);
                 right.appendChild(createButtonDelete(index));
                 right.appendChild(createButtonCopy(index));
                 if (index > 0) {
@@ -274,9 +279,6 @@
                 if (index+1 !== array.length && array.length >1){
                     right.appendChild(createButtonDown(index));
                 }
-                row1.appendChild(left);
-                row1.appendChild(right);
-                x.appendChild(row1);
 
                 //Textarea for the question input
                 const text_area = document.createElement("TEXTAREA");
@@ -284,7 +286,6 @@
                 text_area.setAttribute("id",index);
                 text_area.setAttribute("placeholder", value.question)
                 middle_col.appendChild(text_area);
-                x.appendChild(row2);
 
                 //Answer Option Part
                 last_col.setAttribute("id",index);
@@ -303,7 +304,6 @@
                 x.setAttribute("id",index);
 
                 left.appendChild(createTitleDropdown(index,value.type));
-                left.appendChild(question_header);
                 right.appendChild(createButtonDelete(index));
                 right.appendChild(createButtonCopy(index));
                 if (index > 0) {
@@ -312,9 +312,6 @@
                 if (index+1 !== array.length && array.length >1){
                     right.appendChild(createButtonDown(index));
                 }
-                row1.appendChild(left);
-                row1.appendChild(right);
-                x.appendChild(row1);
 
                 //Textarea for the question input
                 const text_area = document.createElement("TEXTAREA");
@@ -322,7 +319,6 @@
                 text_area.setAttribute("id",index);
                 text_area.setAttribute("placeholder", value.question)
                 middle_col.appendChild(text_area);
-                x.appendChild(row2);
 
                 //Answer Option Part
                 last_col.setAttribute("id",index);
@@ -569,13 +565,13 @@
             title.className = ("Title dropdown");
 
             const btn_dropdown = document.createElement("Button");
-            btn_dropdown.className= ("btn btn-link dropdown-toggle question-headline");
+            btn_dropdown.className= ("btn btn-link dropdown-toggle question-headline font-weight-light lead");
             btn_dropdown.setAttribute("type","button");
             btn_dropdown.setAttribute("id","dropdownMenuButton("+q_index+")");
             btn_dropdown.setAttribute("data-toggle","dropdown");
             btn_dropdown.setAttribute("aria-haspopup","true");
             btn_dropdown.setAttribute("aria-expanded","false");
-            btn_dropdown.innerHTML = (q_index+1) +". "+q_type;
+            btn_dropdown.innerHTML = q_type;
 
             title.appendChild(btn_dropdown);
 
