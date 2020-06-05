@@ -10,6 +10,6 @@ import org.springframework.data.repository.CrudRepository;
 @Repository
 public interface ResponseRepository extends CrudRepository <Response, Long> {
     
-    public Iterable<Response> findByCourseAndCourseTypeAndClassNoAndPosition(Course course, CourseType type, Integer classNo, Integer position);
+    public Iterable<Response> findByCourseAndCourseTypeAndClassNo(Course course, CourseType type, Integer classNo);
 
 }

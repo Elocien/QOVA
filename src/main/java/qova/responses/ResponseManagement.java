@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import qova.course.Course;
+import qova.course.CourseRepository;
 import qova.course.CourseType;
 
 @Service
@@ -17,16 +18,23 @@ import qova.course.CourseType;
 public class ResponseManagement {
 
     private final ResponseRepository responses;
+    private final CourseRepository courses;
 
     @Autowired
-    public ResponseManagement(ResponseRepository responses) {
+    public ResponseManagement(ResponseRepository responses, CourseRepository courses) {
         this.responses = Objects.requireNonNull(responses);
+        this.courses = Objects.requireNonNull(courses);
     }
 
     public void generatePDF() throws IOException, Exception {
+
+        Optional<Course> crs = courses.findById("c000000000000001");
+        CourseType type = CourseType.LECTURE;
+        Integer classNo = 1;
+
         //TODO: Get correct responses
         ArrayList<Response> pdfResponses = new ArrayList<Response>();
-        responses.findAll().forEach(pdfResponses::add);
+        responses.findByCourseAndCourseTypeAndClassNo(crs.get(), type, classNo).forEach(pdfResponses::add);
         
         //Generate PDF
         PDFGenerator pdfGen = new PDFGenerator();
@@ -47,6 +55,20 @@ public class ResponseManagement {
 	public Optional<Response> findById(long id) {
 		return responses.findById(id);
 	}
+
+    
+    /**
+     * 
+     * @param course    {@linkplain Course} object
+     * @param type      {@linkplain CourseType}
+     * @param classNo   The number of the corresponding tutorial or seminar (=1 in case CourseType is Lecture) 
+     * 
+     * @return an Iterable containing all Responses that fit criteria
+     */
+	public Iterable<Response> findByCourseAndCourseTypeAndClassNo(Course course, CourseType type, Integer classNo){
+		return responses.findByCourseAndCourseTypeAndClassNo(course, type, classNo);
+	}
+
 
 
 

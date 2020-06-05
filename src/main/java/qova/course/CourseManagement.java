@@ -304,7 +304,7 @@ public class CourseManagement {
 
     /**
 	 * @param id the Course id
-	 * @return an {@linkplain Optional} of a {@linkplain Course}
+	 * @return an {@linkplain Iterable} of a {@linkplain Course}
 	 *         with the given id
 	 */
 	public Iterable<Course> findAll() {

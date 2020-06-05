@@ -35,7 +35,7 @@ public final class PDFGenerator {
 
 
     
-    public void createPdf(ArrayList<Response> allResponses) throws IOException, Exception {
+    public byte[] createPdf(ArrayList<Response> allResponses) throws IOException, Exception {
         
         //Variables
         //List containing all graphs
@@ -71,16 +71,18 @@ public final class PDFGenerator {
 
     
 
-
+        
 
 
         //Step 2:
         //Iterate through map
-        for(int pos = 0; pos < 100; pos++){
+        for(int pos = 0; pos < responses.size(); pos++){
 
+            
 
             //ArrayList of responses for the current Position. These will be from the same Course and have the same: CourseType, classNo, ResponseType and position
             ArrayList<Response> responsesForPos = responses.get(pos);
+
 
 
 
@@ -111,9 +113,7 @@ public final class PDFGenerator {
                     columnTotals.add(0);
                 }
 
-
-
-
+                
 
                 //Main-Loop (Iterate through all Responses)
                 //Accumulate the values for each column (using columnDataList)
@@ -127,14 +127,13 @@ public final class PDFGenerator {
                         throw new Exception("ResponseType does not match that of others at this position, error in Serialisation");
                     }
                     //check OptionsMCDD
-                    else if(r.getOptionsMCDD() != columnTitles){
+                    else if(!(r.getOptionsMCDD().equals(columnTitles))){
                         throw new Exception("optionsMCDD does not match that of others at this position, error in Serialisation");
                     }
                     //check responsePossibilities
                     else if(r.getListMCDD().size() != responsePossibilities){
                         throw new Exception("Length of list of MC or DD responses (ListMCDD) does not match that of others at this position, error in Serialisation");
                     }
-
 
 
                     //iterate through values from list of user responses 
@@ -149,21 +148,18 @@ public final class PDFGenerator {
                 }
 
 
-
-
-
-
                 //Initialise the DataSet
                 DefaultCategoryDataset dataSet = new DefaultCategoryDataset();
 
                 //Iterate through the columnDataList and add the data to the dataSet
                 for (int j = 0; j < responsePossibilities; j++) {
-                    dataSet.setValue(columnTotals.get(j), "total", columnTitles.get(0));
+                    dataSet.setValue(columnTotals.get(j), "total", columnTitles.get(j));
                 }
                 
 
                 //Chart Configuration
-                JFreeChart chart = ChartFactory.createBarChart(responsesForPos.get(0).getQuestion(), // Title of BarGraph = Question in Survey
+                JFreeChart chart = ChartFactory.createBarChart(
+                        responsesForPos.get(0).getQuestion(), // Title of BarGraph = Question in Survey
                         "Response", // x-axis heading
                         "Total", // y-axis heading
                         dataSet, // dataset
@@ -174,7 +170,7 @@ public final class PDFGenerator {
                 );
 
                 //Chart Dimensions
-                int width = 800;
+                int width = 600;
                 int height = 600;
 
 
@@ -223,18 +219,14 @@ public final class PDFGenerator {
 
         //Create PDF Document
 
-        //TODO: create PDF as ByteArray OutputStream, instead of saving to file. Tradeoff occurs here: Save to file, and don't regenerate PDF to save time, but use lots of storage
-        String dest = "src/main/resources/test.pdf";
-
-        //Initialize PDF writer
-        PdfWriter writer = new PdfWriter(dest);
-
-        //Initialize PDF document
-        PdfDocument pdf = new PdfDocument(writer);
+        Document document = new Document();
+ 
+        ByteArrayOutputStream stream = new ByteArrayOutputStream();
+        PdfWriter.getInstance(document, stream);
         
-        // Initialize document
-        Document document = new Document(pdf);
-
+        document.open();
+        
+        //build the PDF here
 
         for (Image img: ImageList){
             document.add(img);
@@ -243,8 +235,9 @@ public final class PDFGenerator {
         
         //Close document
         document.close();
-
-
+        
+          
+        return stream.toByteArray();
 
         
     }
