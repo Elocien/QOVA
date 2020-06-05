@@ -463,7 +463,7 @@
         function createButtonDeleteAnswer(index, answerindex) {
 
             const btn_deleteAnswer = document.createElement("Button");
-            btn_deleteAnswer.className = "btn btn-link nounderline";
+            btn_deleteAnswer.className = "btn btn-link btn-answere nounderline";
             btn_deleteAnswer.setAttribute("onclick","deleteanswer("+index+","+answerindex+")");
 
             const btn_icon = document.createElement("i");
@@ -476,7 +476,7 @@
         function createButtonUpAnswer(index,answerindex){
 
             const btn_upAnswer = document.createElement("Button");
-            btn_upAnswer.className = "btn btn-link nounderline";
+            btn_upAnswer.className = "btn btn-link btn-answere nounderline";
             btn_upAnswer.setAttribute("onclick", "pushAnswerup("+index+","+answerindex+")");
 
             const btn_icon = document.createElement("i");
@@ -525,7 +525,7 @@
         function createButtonDownAnswer(index,answerindex){
 
             const btn_downAnswer = document.createElement("Button");
-            btn_downAnswer.className = "btn btn-link nounderline";
+            btn_downAnswer.className = "btn btn-link btn-answere nounderline";
             btn_downAnswer.setAttribute("onclick", "pushAnswerdown("+index+","+answerindex+")");
 
             const btn_icon = document.createElement("i");
