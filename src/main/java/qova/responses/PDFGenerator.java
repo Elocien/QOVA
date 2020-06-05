@@ -1,5 +1,6 @@
 package qova.responses;
 
+import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -8,19 +9,24 @@ import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
+import com.itextpdf.layout.Style;
+import com.itextpdf.layout.borders.SolidBorder;
+import com.itextpdf.layout.element.AreaBreak;
 import com.itextpdf.layout.element.Image;
-import com.itextpdf.layout.element.List;
 import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
+import com.itextpdf.layout.property.AreaBreakType;
+import com.itextpdf.layout.property.TextAlignment;
+import com.itextpdf.layout.property.UnitValue;
+import com.itextpdf.text.Chunk;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -31,15 +37,21 @@ import org.jfree.data.category.DefaultCategoryDataset;
  
 
 public final class PDFGenerator {
-    
 
-
-    
-    public byte[] createPdf(ArrayList<Response> allResponses) throws IOException, Exception {
+    public byte[] createPdf(ArrayList<Response> allResponses, String PdfTitle) throws IOException, Exception {
         
+        //SETUP
+        //----------------------------------------------------------------------------------------------------------------------
+
         //Variables
-        //List containing all graphs
+        //List of all BarGraphs (Multiple Choice and Drop Down)
         ArrayList<Image> ImageList = new ArrayList<Image>();
+
+        //List of all Tables (TextResponse)
+        ArrayList<Table> TableList = new ArrayList<Table>();
+
+        //List of all Paragraphs (BinaryAnswer)
+        ArrayList<Paragraph> ParagraphList = new ArrayList<Paragraph>();
 
 
         //Map that contains responses/ The key is the position of response objects in ArrayList
@@ -69,8 +81,29 @@ public final class PDFGenerator {
             }
         }
 
-    
 
+        
+        //Initialise PDF Document and create OutputStream, PdfWriter 
+        var stream = new ByteArrayOutputStream();
+        var writer = new PdfWriter(stream);
+        var pdf = new PdfDocument(writer);
+        var document = new Document(pdf);
+
+
+        //Set Fonts (This has to be done within an instance of the PDF)
+        PdfFont font = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
+        PdfFont bold = PdfFontFactory.createFont(StandardFonts.TIMES_BOLD);
+        
+        Style titleFont = new Style();
+        titleFont.setFont(bold).setFontSize(36);
+        titleFont.setTextAlignment(TextAlignment.CENTER);
+
+        Style header = new Style();
+        header.setFont(font).setFontSize(24);
+        header.setTextAlignment(TextAlignment.CENTER);
+        
+        
+        //----------------------------------------------------------------------------------------------------------------------
         
 
 
@@ -174,8 +207,6 @@ public final class PDFGenerator {
 
 
 
-
-
                 //Create OutputStream of the graph
                 ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
                 try {
@@ -188,20 +219,84 @@ public final class PDFGenerator {
                 ImageData data = ImageDataFactory.create(pngOutputStream.toByteArray());
                 Image img = new Image(data); 
 
+
+                //Add
                 ImageList.add(img);
 
 
             }
+
+
+
+
+
+            //Create Table for all TextResponses
             else if(responseType == ResponseType.TEXT_RESPONSE){
+                Table table = new Table(UnitValue.createPercentArray(1)).useAllAvailableWidth();
+
+                for (Response r: responsesForPos){
+                    table.addCell(r.getTextResponse());
+                }
+
+                //Add table to List of Tables;
+                TableList.add(table);
 
             }
 
+
+
+
+
+            //Create Box with Totals for all BinaryAnswers
             else if(responseType == ResponseType.BINARY_ANSWER){
+                
+                //Create new Paragraph
+                Paragraph para = new Paragraph();
+                
+                //Format Paragraph
+                para.setTextAlignment(TextAlignment.CENTER);
+                para.setBorder(new SolidBorder(1));
+
+                
+                //Count percentages of yes/no responses
+                double yes = 0;
+                double no = 0;
+
+                //Iterate through all responses to get totals
+                for (Response r: responsesForPos){
+                    if(r.getBinaryAnswer().equals(false)){
+                        no++;
+                    }
+                    else{
+                        yes++;
+                    }
+                }
+
+                //More variables for totals and percentages
+                int total = (int)(yes+no); 
+                String yesPercent = String.format("%.2f", (yes/total)*100) + "%";
+                String noPercent = String.format("%.2f", (no/total)*100) + "%";
+                
+            //add Text
+                //Total    
+                para.add("Total Responses: ");
+                para.add(new Text(String.valueOf(total) + "\n").setFont(bold)); 
+
+                //Yes Percentage
+                para.add("Total Yes: ");
+                para.add(new Text(yesPercent + "\n").setFont(bold)); 
+
+                //Yes Percentage
+                para.add("Total No: ");
+                para.add(new Text(noPercent).setFont(bold)); 
+
+                //Add table to List of Tables;
+                ParagraphList.add(para);
 
             }
 
             else{
-                throw new Exception("");
+                throw new Exception("ResponseType matched none of the required values");
             }
         }
 
@@ -210,25 +305,51 @@ public final class PDFGenerator {
 
 
 
-        //Create PDF Document
+        //Set the Title of the PDF
+        Paragraph title = new Paragraph();
 
-        var stream = new ByteArrayOutputStream();
-        var writer = new PdfWriter(stream);
-        var pdf = new PdfDocument(writer);
-        var document = new Document(pdf);
+        //Title text is given as function argument 
+        title.add(new Text(PdfTitle).addStyle(titleFont));
+
+        //Line underneath title
+        //title.addline
+
+        //Bottom margin
+        title.setMarginBottom(10);
+
+        //Add title to pdf
+        document.add(title);
 
 
-        for (Image img: ImageList){
+
+        //Tables containing text responses
+        document.add(new Paragraph("Mehrfachauswahl und Dropdown-Liste").addStyle(header));
+        //Bar charts containing multiple choice and drop down responses
+        for(Image img: ImageList){
             document.add(img);
+            document.add(new AreaBreak(AreaBreakType.NEXT_AREA));
         }
 
+
+        //Tables containing text responses
+        document.add(new Paragraph("Freitexte").addStyle(header));
+
+        for(Table tbl: TableList){
+            document.add(tbl);
+            document.add(new AreaBreak(AreaBreakType.NEXT_AREA));
+        }
+
+
+        //Paragraph containing binary answer responses
+        document.add(new Paragraph("Ja/Nein Fragen").addStyle(header));
+
+        for(Paragraph par: ParagraphList){
+            document.add(par);
+            document.add(new Paragraph("\n \n \n"));
+        }
         
         //Close document
         document.close();
-
-
-        
-        
 
         //Return PDF as byte[]
         return stream.toByteArray();

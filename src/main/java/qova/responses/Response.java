@@ -258,7 +258,7 @@ public class Response {
 
 
     //Text response fields
-    public String gettextResponse(){
+    public String getTextResponse(){
         return this.textResponse;
     }
 

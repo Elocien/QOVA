@@ -242,7 +242,6 @@ public class CourseController {
 
             else{
                 //Method from courseManager which sets the survey for the relevant surveyType
-                System.out.println("THIS worked");
                 courseManagement.setSurveyforType(id, type, form);
             }
 

@@ -39,7 +39,7 @@ public class ResponseManagement {
         
         //Generate PDF
         PDFGenerator pdfGen = new PDFGenerator();
-        return pdfGen.createPdf(pdfResponses);
+        return pdfGen.createPdf(pdfResponses, crs.get().getName());
     }
 
 
