@@ -113,7 +113,6 @@ public final class PDFGenerator {
                     columnTotals.add(0);
                 }
 
-                
 
                 //Main-Loop (Iterate through all Responses)
                 //Accumulate the values for each column (using columnDataList)
@@ -211,22 +210,13 @@ public final class PDFGenerator {
 
 
 
-
-
-
-
-
-
         //Create PDF Document
 
-        Document document = new Document();
- 
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        PdfWriter.getInstance(document, stream);
-        
-        document.open();
-        
-        //build the PDF here
+        var stream = new ByteArrayOutputStream();
+        var writer = new PdfWriter(stream);
+        var pdf = new PdfDocument(writer);
+        var document = new Document(pdf);
+
 
         for (Image img: ImageList){
             document.add(img);
@@ -235,10 +225,14 @@ public final class PDFGenerator {
         
         //Close document
         document.close();
-        
-          
-        return stream.toByteArray();
+
 
         
+        
+
+        //Return PDF as byte[]
+        return stream.toByteArray();
+
+
     }
 }

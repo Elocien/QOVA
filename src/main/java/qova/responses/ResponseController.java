@@ -4,13 +4,19 @@ import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import qova.course.Course;
 import qova.course.CourseRepository;
@@ -84,10 +90,24 @@ public class ResponseController {
         return "home";
     }
 
-    // test method
-    @GetMapping("/pdfGen")
-    public String barchartTest() throws Exception {
-        responseManagement.generatePDF();
-        return "home";
+    
+
+    @GetMapping("/genpdf")
+    public HttpEntity<byte[]> generatePdf(HttpServletResponse response) throws Exception {
+    
+        //generate filename
+        String filename = "testPdf";
+
+        //Generate QRCode
+        byte[] pdf = responseManagement.generatePDF();
+
+        //Set HTTP headers and return HttpEntity
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_PDF);
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
+        header.setContentLength(pdf.length);
+
+        return new HttpEntity<byte[]>(pdf, header);
     }
+    
 }

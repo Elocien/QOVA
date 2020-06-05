@@ -26,8 +26,9 @@ public class ResponseManagement {
         this.courses = Objects.requireNonNull(courses);
     }
 
-    public void generatePDF() throws IOException, Exception {
+    public byte[] generatePDF() throws IOException, Exception {
 
+        //placeholder
         Optional<Course> crs = courses.findById("c000000000000001");
         CourseType type = CourseType.LECTURE;
         Integer classNo = 1;
@@ -38,7 +39,7 @@ public class ResponseManagement {
         
         //Generate PDF
         PDFGenerator pdfGen = new PDFGenerator();
-        pdfGen.createPdf(pdfResponses);
+        return pdfGen.createPdf(pdfResponses);
     }
 
 
