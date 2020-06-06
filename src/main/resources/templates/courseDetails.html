@@ -49,12 +49,12 @@
                                     <tbody>
                                         <tr>
                                             <th scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
-                                            <td class="editable" th:text="#{'course.faculty.' + ${course.faculty}}">NAME</td>
+                                            <td class="editable" id="faculty" th:text="#{'course.faculty.' + ${course.faculty}}">NAME</td>
                                             <td></td>
                                         </tr>
                                         <tr>
                                             <th scope="row" th:text="#{course.courseInstance}">YEAR</th>
-                                            <td class="editable" th:with="year = ${course.courseInstance}" th:text="${#strings.replace(#strings.replace(year, '-04-01', ' SoSe'), '-10-01', ' WiSe')}">XXXX</td>
+                                            <td class="editable" id="semester" th:with="year = ${course.courseInstance}" th:text="${#strings.replace(#strings.replace(year, '-04-01', ' SoSe'), '-10-01', ' WiSe')}">XXXX</td>
                                             <td></td>
                                         </tr>
                                         <tr>
@@ -228,48 +228,72 @@
 
     function replace_with_input(replace_me) {
         //initilisation of the input
-        const input_box = document.createElement("INPUT");
-        input_box.className = "form-control";
 
         if(replace_me.id === "bool") {
+
+            const replacer = document.createElement("LABEL");
+            replacer.className = "switch mt-2";
+
+            const input_box = document.createElement("INPUT");
+            input_box.className = "form-control";
             input_box.type = "checkbox";
-
-            const input_box_wrapper = document.createElement("LABEL");
-            input_box_wrapper.className = "switch mt-2";
-            const input_box_slider = document.createElement("SPAN");
-            input_box_slider.className = "slider round";
-
-            input_box_wrapper.appendChild(input_box);
-            input_box_wrapper.appendChild(input_box_slider);
-
             if(replace_me.innerHTML === "Yes") {
                 input_box.checked = true;
             }
+            
+            const input_box_slider = document.createElement("SPAN");
+            input_box_slider.className = "slider round";
 
+            replacer.appendChild(input_box);
+            replacer.appendChild(input_box_slider);
             replace_me.innerHTML = "";
-            replace_me.appendChild(input_box_wrapper);
+            replace_me.appendChild(replacer);
+
         }
+        /*
         else if (replace_me.id === "faculty") {
-            /*
-            <label for="courseFaculty" th:text="#{new.courseFaculty}">COURSE FACULTY</label>
-            <select class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
-                <option class="dropdown-item" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}">FACULTY</option>
-            </select>
-            */
+            //<select class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
+            //    <option class="dropdown-item" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}">FACULTY</option>
+            //</select>
+            const replacer = document.createElement("select");
+            replacer.className = "custom-select form-control"
+            replacer.setAttribute("th:with", "faculties = ${T(qova.course.CourseFaculty).values()}");
+
+            const option = document.createElement("option");
+            option.className = "dropdown-item";
+            option.setAttribute("th:each", "faculty : ${#lists.sort(faculties)}");
+            option.setAttribute("th:text", "#{'course.faculty.' + ${faculty}}");
+
+            replacer.appendChild(option);
+            replace_me.innerHTML = "";
+            replace_me.appendChild(replacer);
         }
+        */
         else if (replace_me.id === "semester") {
-            /*    
-            <label for="semesterOfStudents" th:text="#{course.courseInstance}">COURSE SEMESTER</label>
-            <select class="custom-select form-control">
-                <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
-            </select>
-            */
+            //<select class="custom-select form-control">
+            //    <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+            //</select>
+            const replacer = document.createElement("select");
+            replacer.className = "custom-select form-control"
+
+            const option = document.createElement("option");
+            option.className = "dropdown-item";
+            option.setAttribute("th:each", "year : ${semesterDates}");
+            option.setAttribute("th:text", "${year}");
+            option.setAttribute("th:value", "${year}");
+
+            replacer.appendChild(option);                
+            replace_me.innerHTML = "";
+            replace_me.appendChild(replacer);
         }
         else {
-            input_box.type = "text";
-            input_box.setAttribute("placeholder", replace_me.innerHTML);
+            const replacer = document.createElement("INPUT");
+            replacer.className = "form-control";
+            replacer.type = "text";
+            replacer.setAttribute("placeholder", replace_me.innerHTML);
+                
             replace_me.innerHTML = "";
-            replace_me.appendChild(input_box);
+            replace_me.appendChild(replacer);
         }
     }
     
