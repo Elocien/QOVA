@@ -9,10 +9,11 @@
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/toggle_checkbox.css}" />
     
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-    
+
     <script src="https://kit.fontawesome.com/5b9febade6.js" crossorigin="anonymous"></script>
 
     <title th:text="#{home.title}">TITLE</title>
@@ -38,6 +39,7 @@
                             <div class="row">
                                 <h5 class="font-weight-light text-left" th:text="#{course.details}">COURSE DETAILS</h5>
                                 <button type="button" class="btn edit_details btn-link p-0 ml-4 align-middle" onclick="edit_mode()" data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}"><i class="far fa-edit"></i></button>
+                                <button type="button" id="finishEdit" class="btn edit_details btn-link p-0 ml-4 align-middle" style="visibility: hidden;" data-toggle="tooltip" data-placement="right" th:title="#{detail.finishEdit}"><i class="fas fa-check"></i></button>
                                 <!--th:href="@{/course/edit?id={id}(id=${course.id})}" href="#"-->
                             </div>
 
@@ -231,17 +233,44 @@
 
         if(replace_me.id === "bool") {
             input_box.type = "checkbox";
-            input_box.setAttribute("data-toggle", "toggle");
+
+            const input_box_wrapper = document.createElement("LABEL");
+            input_box_wrapper.className = "switch mt-2";
+            const input_box_slider = document.createElement("SPAN");
+            input_box_slider.className = "slider round";
+
+            input_box_wrapper.appendChild(input_box);
+            input_box_wrapper.appendChild(input_box_slider);
+
             if(replace_me.innerHTML === "Yes") {
                 input_box.checked = true;
             }
+
+            replace_me.innerHTML = "";
+            replace_me.appendChild(input_box_wrapper);
+        }
+        else if (replace_me.id === "faculty") {
+            /*
+            <label for="courseFaculty" th:text="#{new.courseFaculty}">COURSE FACULTY</label>
+            <select class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
+                <option class="dropdown-item" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}">FACULTY</option>
+            </select>
+            */
+        }
+        else if (replace_me.id === "semester") {
+            /*    
+            <label for="semesterOfStudents" th:text="#{course.courseInstance}">COURSE SEMESTER</label>
+            <select class="custom-select form-control">
+                <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+            </select>
+            */
         }
         else {
             input_box.type = "text";
             input_box.setAttribute("placeholder", replace_me.innerHTML);
+            replace_me.innerHTML = "";
+            replace_me.appendChild(input_box);
         }
-        replace_me.innerHTML = "";
-        replace_me.appendChild(input_box);
     }
     
     function edit_mode() {
@@ -249,6 +278,7 @@
         for (let index = 0; index < editables.length; ++index) {
             replace_with_input(editables[index]);
         }
+        document.getElementById("finishEdit").style.visibility = "visible";
     }
 </script>
 </html>
