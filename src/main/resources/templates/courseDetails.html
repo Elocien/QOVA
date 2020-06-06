@@ -12,8 +12,7 @@
     
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
+    
     <script src="https://kit.fontawesome.com/5b9febade6.js" crossorigin="anonymous"></script>
 
     <title th:text="#{home.title}">TITLE</title>
@@ -85,11 +84,11 @@
                                                     <td class="editable text-center">1</td>
                                                     <div th:switch="${course.lectureSurvey}">
                                                         <div th:case="'-'">
-                                                            <td class="editable text-center" th:text="#{No}">!EXISTS</td>
+                                                            <td class="editable text-center" id="bool" th:text="#{No}">!EXISTS</td>
                                                             <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a></td>
                                                         </div>
                                                         <div th:case="*">
-                                                            <td class="editable text-center" th:text="#{Yes}">EXISTS</td>
+                                                            <td class="editable text-center" id="bool" th:text="#{Yes}">EXISTS</td>
                                                             <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a></td>
                                                         </div>
                                                     </div>
@@ -109,11 +108,11 @@
                                                 <div th:case="TRUE">
                                                     <div th:switch="${course.tutorialSurvey}">
                                                         <div th:case="'-'">
-                                                            <td class="editable text-center" th:text="#{No}">!EXISTS</td>
+                                                            <td class="editable text-center" id="bool" th:text="#{No}">!EXISTS</td>
                                                             <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a></td>
                                                         </div>
                                                         <div th:case="*">
-                                                            <td class="editable text-center" th:text="#{Yes}">EXISTS</td>
+                                                            <td class="editable text-center" id="bool" th:text="#{Yes}">EXISTS</td>
                                                             <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a></td>
                                                         </div>
                                                     </div>
@@ -132,11 +131,11 @@
                                                 <div th:case="TRUE">
                                                     <div th:switch="${course.seminarSurvey}">
                                                         <div th:case="'-'">
-                                                            <td class="editable text-center" th:text="#{No}">!EXISTS</td>
+                                                            <td class="editable text-center" id="bool" th:text="#{No}">!EXISTS</td>
                                                             <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a></td>
                                                         </div>
                                                         <div th:case="*">
-                                                            <td class="editable text-center" th:text="#{Yes}">EXISTS</td>
+                                                            <td class="editable text-center" id="bool" th:text="#{Yes}">EXISTS</td>
                                                             <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a></td>
                                                         </div>
                                                     </div>
@@ -224,17 +223,27 @@
     $( document ).ready(function() {
         $('[data-toggle="tooltip"]').tooltip();
     });
-</script>
-<script>
+
     function replace_with_input(replace_me) {
+        //initilisation of the input
         const input_box = document.createElement("INPUT");
         input_box.className = "form-control";
-        input_box.type = "text";
-        input_box.setAttribute("placeholder", replace_me.innerHTML);
-        
+
+        if(replace_me.id === "bool") {
+            input_box.type = "checkbox";
+            input_box.setAttribute("data-toggle", "toggle");
+            if(replace_me.innerHTML === "Yes") {
+                input_box.checked = true;
+            }
+        }
+        else {
+            input_box.type = "text";
+            input_box.setAttribute("placeholder", replace_me.innerHTML);
+        }
         replace_me.innerHTML = "";
         replace_me.appendChild(input_box);
     }
+    
     function edit_mode() {
         const editables = document.getElementsByClassName("editable");
         for (let index = 0; index < editables.length; ++index) {

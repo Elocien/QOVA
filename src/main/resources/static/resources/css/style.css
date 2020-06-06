@@ -1,6 +1,6 @@
 body {
   --tu_blue: rgb(0, 37, 87);
-  --tu_blue_highlight: rgb(200, 200, 200);
+  --tu_blue_highlight: rgb(230, 230, 255);
   background: url(..//images/seamless-bg.jpg);
   background-size: 300px 300px;
   min-height: 100vh;
