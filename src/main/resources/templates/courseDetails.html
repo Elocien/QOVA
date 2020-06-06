@@ -51,7 +51,7 @@
                                         </tr>
                                         <tr>
                                             <th scope="row" th:text="#{course.courseInstance}">YEAR</th>
-                                            <td th:with="year = ${course.courseInstance}" th:text="${#strings.replace(#strings.replace(year, '-04-01', ' SoSe'), '-10-01', ' WiSe')}">XXXX</td>
+                                            <td th:with="year = ${course.semesterUI}" th:text="${#strings.replace(#strings.replace(year, '-04-01', ' SoSe'), '-10-01', ' WiSe')}">XXXX</td>
                                             <td></td>
                                         </tr>
                                         <tr>

@@ -35,7 +35,7 @@
                     <tbody class="text-center">
                         <tr th:each="course : ${courseList}" style="cursor: pointer" th:onclick="'window.location.href = \'' + @{/course/details?id={id}(id=${course.id})} + '\''">
                             <td th:text="${course.name}">NAME</td>
-                            <td th:text="${course.courseInstance}">SEMESTER</td>
+                            <td th:text="${course.semesterUI}">SEMESTER</td>
                             <td th:text="${course.semesterOfStudents}">YEAR</td>
                         </tr>
                     </tbody>

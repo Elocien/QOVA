@@ -1,15 +1,12 @@
-package qova.course;
+package qova.response;
 
 import org.junit.jupiter.api.Test;
 
 import qova.AbstractIntegrationTest;
 
-import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-
-public class courseTest extends AbstractIntegrationTest {
-
+public class responseTest extends AbstractIntegrationTest {
     @Test
 	public void courseConstructorTest(){
         var name = "test";
@@ -44,5 +41,6 @@ public class courseTest extends AbstractIntegrationTest {
         assertEquals(semesterUI, crs.getSemesterUI());
 
 	}
-
 }
+
+

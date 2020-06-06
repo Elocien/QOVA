@@ -51,8 +51,9 @@ public class CourseManagement {
         var semesterOfStudents = form.getSemesterOfStudents();
         var faculty = form.getFaculty();
         var courseInstance = parseSemesterString(form.getCourseInstance());
+        var semesterUIString = form.getCourseInstance();
 
-        Course crs  = new Course(name, lectureExists, tutorialExists, seminarExists, "", "", "", classTotalTutorial, classTotalSeminar, semesterOfStudents, faculty, courseInstance);
+        Course crs  = new Course(name, lectureExists, tutorialExists, seminarExists, "", "", "", classTotalTutorial, classTotalSeminar, semesterOfStudents, faculty, semesterUIString, courseInstance);
         courses.save(crs);
         
         return crs.getId();
@@ -130,8 +131,9 @@ public class CourseManagement {
 
 
 
-    //QRCode Generator
+
     /**
+     * QR-Code Generator
      * 
      * @param text Takes a string as input (in our case a url)
      * @return A byte[] with the image of the QRCode
@@ -139,8 +141,14 @@ public class CourseManagement {
      * @throws IOException
      */
     public byte[] generateQRCodeImage(String text) throws WriterException, IOException {
+
+        //configure width and height
+        int height = 300;
+        int width = 300;
+
+
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, 300, 300);
+        BitMatrix bitMatrix = qrCodeWriter.encode(text, BarcodeFormat.QR_CODE, width, height);
 
         ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
         MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream);
@@ -247,6 +255,8 @@ public class CourseManagement {
 
 
 
+
+
     //Parse Semester String and convert to date
     public LocalDate parseSemesterString(String semString){   
         
@@ -349,8 +359,9 @@ public class CourseManagement {
         var classTotalSeminar = 5;
         var semester = 3;
         var faculty = CourseFaculty.CHEMISTRY;
+        var semesterUIString = "SoSe 2020";
 
-        courses.save(new Course(name, lectureExists, tutorialExists, seminarExists, "", "", "", classTotalTutorial, classTotalSeminar, semester, faculty, LocalDate.now()));
+        courses.save(new Course(name, lectureExists, tutorialExists, seminarExists, "", "", "", classTotalTutorial, classTotalSeminar, semester, faculty, semesterUIString, LocalDate.now()));
     }
 
    
