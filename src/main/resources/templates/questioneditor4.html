@@ -477,7 +477,12 @@
 
         function addnewAnswer(index){
             saveInputs();
-            questionnaire[index].answers.push("Answer");
+            if(questionnaire[index].answers.length<10) {
+                questionnaire[index].answers.push("Answer");
+            }
+            else{
+                alert("The maximum for possible answers is 10.");
+            }
             renderall();
         }
 
@@ -516,7 +521,7 @@
                 answeroption.className= ("Answer Option");
                 const x2 =document.createElement("TEXTAREA");
                 x2.className = ("Textarea Answers");
-                if (answers[i]=="Answer"){
+                if (answers[i]==="Answer"|| answers[i]===""){
                     x2.placeholder = "Answer";
                 }
                 else {
