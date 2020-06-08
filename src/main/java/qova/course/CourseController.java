@@ -1,13 +1,8 @@
 package qova.course;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Base64;
 import java.util.Objects;
-
-import java.util.List;
-import java.util.Arrays;
 
 import java.util.Optional;
 
@@ -228,8 +223,27 @@ public class CourseController {
         if (form.getQuestionnairejson().length()==0) {
             return "redirect:../course/details" + "?id=" + id;          //TODO: Redirects back course at the moment, think about where this should go
         }
+
+    //--------------------------------------------------------------------------------------------
+        //Validate that the questionnaire does not exceed max length
+        String JsonString = form.getQuestionnairejson();
+
+        //Remove [] to parse JSON
+        JsonString = JsonString.substring(1,JsonString.length()-1);
+
+
+        //TODO: iterate through array and check length
+
+        //example string
+        // [{"type":"YesNo","question":""},{"type":"MultipleChoice","question":"","answers":["1","2","3","4","5"]},{"type":"DropDown","question":"","answers":["Answer","Answer","Answer"]}]
+
+    //--------------------------------------------------------------------------------------------
+
+
+
+
         
-        //fetch course and go to details if present
+        //fetch course 
         Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()){
 

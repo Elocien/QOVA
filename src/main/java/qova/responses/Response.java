@@ -27,6 +27,7 @@ public class Response {
     //Course and CourseType are used for more detailed search purposes (primarily when compiling responses into results pdf)
     @ManyToOne
     private Course course;
+    
     private CourseType courseType;
 
     //Used to indicate to which Tutorial or Seminar the response corresponds, as a tutorial and seminar can have multiple instances for a single course 
@@ -68,6 +69,7 @@ public class Response {
     @Lob
     private ArrayList<Boolean> answerMCDD;
 
+    @Lob
     private ArrayList<String> optionsMCDD;
 
     
@@ -156,7 +158,7 @@ public class Response {
         //Drop down and Multiple Choice
         this.responsePossibilities = responsePossibilites;
 
-        //Initialise arrayList and popilate with false
+        //Initialise arrayList and populate with false
         this.answerMCDD = new ArrayList<Boolean>(); 
         for(int i = 0; i < responsePossibilites; i++){
             this.answerMCDD.add(false);
@@ -168,7 +170,7 @@ public class Response {
 
 
         //Throw Exception is the two arrays do not match in length. If they do not match, then there is no deterministic matching from possible options to the actual response given.
-        if(responseOptions.size() != answerMCDD.size()){
+        if( responseOptions.size() != answerMCDD.size() | responsePossibilites != answerMCDD.size() ){
             throw new Exception("Array of responses, does not match the amount of options");
         }
 
@@ -203,9 +205,11 @@ public class Response {
 
         this.optionsMCDD = responseOptions;
 
-        if(responseOptions.size() != answerMCDD.size()){
+        if( responseOptions.size() != answerMCDD.size() | responsePossibilites != answerMCDD.size() ){
             throw new Exception("Array of responses, does not match the amount of options");
         }
+
+        
 
         //Text response
         this.textResponse = null;

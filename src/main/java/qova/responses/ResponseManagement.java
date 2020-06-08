@@ -18,28 +18,21 @@ import qova.course.CourseType;
 public class ResponseManagement {
 
     private final ResponseRepository responses;
-    private final CourseRepository courses;
 
     @Autowired
-    public ResponseManagement(ResponseRepository responses, CourseRepository courses) {
+    public ResponseManagement(ResponseRepository responses) {
         this.responses = Objects.requireNonNull(responses);
-        this.courses = Objects.requireNonNull(courses);
     }
 
-    public byte[] generatePDF() throws IOException, Exception {
+    public byte[] generatePDF(Course course, CourseType courseType, Integer classNo) throws IOException, Exception {
 
-        //placeholder
-        Optional<Course> crs = courses.findById("c000000000000001");
-        CourseType type = CourseType.LECTURE;
-        Integer classNo = 1;
 
-        //TODO: Get correct responses
         ArrayList<Response> pdfResponses = new ArrayList<Response>();
-        responses.findByCourseAndCourseTypeAndClassNo(crs.get(), type, classNo).forEach(pdfResponses::add);
+        responses.findByCourseAndCourseTypeAndClassNo(course, courseType, classNo).forEach(pdfResponses::add);
         
         //Generate PDF
         PDFGenerator pdfGen = new PDFGenerator();
-        return pdfGen.createPdf(pdfResponses, crs.get().getName());
+        return pdfGen.createPdf(pdfResponses, course.getName());
     }
 
 

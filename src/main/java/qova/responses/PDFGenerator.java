@@ -1,6 +1,5 @@
 package qova.responses;
 
-import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -22,7 +21,6 @@ import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.AreaBreakType;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
-import com.itextpdf.text.Chunk;
 
 import java.io.IOException;
 import java.util.ArrayList;
