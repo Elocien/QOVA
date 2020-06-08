@@ -42,9 +42,10 @@
                             <button type="button" class="btn btn-secondary btn-text-right" onclick="addFreeTextQuestion()">FREE TEXT<i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-secondary btn-text-right" onclick="addDropDownQuestion()">DROPDOWN<i class="fas fa-plus-square ml-2"></i></button>
                         </div>
-                        <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}">
+                        <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="submitsurvey">
                             <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
-                            <button class="btn btn-primary mt-2" type="submit">SUBMIT</button> </form>
+                            <button class="btn btn-primary mt-2" type="submit">SUBMIT</button>
+                        </form>
                         <div class="Json" id="json" th:text="${survey}"></div>
                     </div>
                 </div>
@@ -65,7 +66,7 @@
             saveInputs();
             const yesnoQuestion = {
                 type: "YesNo",
-                question: "Frage"
+                question: "Question"
             };
             questionnaire.push(yesnoQuestion);
             renderall();
@@ -75,7 +76,7 @@
             saveInputs();
             const multiplechoiceQuestion = {
                 type: "MultipleChoice",
-                question: "Frage",
+                question: "Question",
                 answers: []
             };
             questionnaire.push(multiplechoiceQuestion);
@@ -87,7 +88,7 @@
             saveInputs();
             const dropdownQuestion = {
                 type: "DropDown",
-                question: "Frage",
+                question: "Question",
                 answers: []
             };
             questionnaire.push(dropdownQuestion);
@@ -98,7 +99,7 @@
             saveInputs();
             const singlechoiceQuestion = {
                 type: "SingleChoice",
-                question: "Frage",
+                question: "Question",
                 answers: []
             };
             questionnaire.push(singlechoiceQuestion);
@@ -109,7 +110,7 @@
             saveInputs();
             const freetextQuestion={
                 type: "FreeText",
-                question: "Frage",
+                question: "Question",
             };
             questionnaire.push(freetextQuestion);
             renderall();
@@ -199,7 +200,12 @@
                 //Textarea for the question input
                 const text_area = document.createElement("TEXTAREA");
                 text_area.className = "Textarea Question";
-                text_area.setAttribute("placeholder", value.question)
+                if (value.question === "Question"||value.question === ""){
+                    text_area.placeholder = "Question"
+                }
+                else {
+                    text_area.defaultValue = value.question;
+                }
                 text_area.setAttribute("id",index);
                 middle_col.appendChild(text_area);
 
@@ -225,7 +231,12 @@
                 const text_area = document.createElement("TEXTAREA");
                 text_area.className = "Textarea Question";
                 text_area.setAttribute("id",index);
-                text_area.setAttribute("placeholder", value.question)
+                if (value.question === "Question"||value.question === ""){
+                    text_area.placeholder = "Question"
+                }
+                else {
+                    text_area.defaultValue = value.question;
+                }
                 middle_col.appendChild(text_area);
 
             }
@@ -250,7 +261,12 @@
                 const text_area = document.createElement("TEXTAREA");
                 text_area.className = "Textarea Question";
                 text_area.setAttribute("id",index);
-                text_area.setAttribute("placeholder", value.question)
+                if (value.question === "Question"||value.question === ""){
+                    text_area.placeholder = "Question"
+                }
+                else {
+                    text_area.defaultValue = value.question;
+                }
                 middle_col.appendChild(text_area);
 
                 //Answer Option Part
@@ -283,7 +299,12 @@
                 const text_area = document.createElement("TEXTAREA");
                 text_area.className = "Textarea Question";
                 text_area.setAttribute("id",index);
-                text_area.setAttribute("placeholder", value.question)
+                if (value.question === "Question"||value.question === ""){
+                    text_area.placeholder = "Question"
+                }
+                else {
+                    text_area.defaultValue = value.question;
+                }
                 middle_col.appendChild(text_area);
 
                 //Answer Option Part
@@ -316,7 +337,12 @@
                 const text_area = document.createElement("TEXTAREA");
                 text_area.className = "Textarea Question ";
                 text_area.setAttribute("id",index);
-                text_area.setAttribute("placeholder", value.question)
+                if (value.question === "Question"||value.question === "") {
+                    text_area.placeholder = "Question"
+                }
+                else {
+                    text_area.defaultValue = value.question;
+                }
                 middle_col.appendChild(text_area);
 
                 //Answer Option Part
@@ -451,7 +477,12 @@
 
         function addnewAnswer(index){
             saveInputs();
-            questionnaire[index].answers.push("Answer");
+            if(questionnaire[index].answers.length<10) {
+                questionnaire[index].answers.push("Answer");
+            }
+            else{
+                alert("The maximum for possible answers is 10.");
+            }
             renderall();
         }
 
@@ -490,7 +521,12 @@
                 answeroption.className= ("Answer Option");
                 const x2 =document.createElement("TEXTAREA");
                 x2.className = ("Textarea Answers");
-                x2.defaultValue = answers[i];
+                if (answers[i]==="Answer"|| answers[i]===""){
+                    x2.placeholder = "Answer";
+                }
+                else {
+                    x2.defaultValue = answers[i];
+                }
                 x2.setAttribute("id",i.toString());
                 answeroption.appendChild(x2);
 
@@ -716,6 +752,12 @@
                 saveInputs();
             })
         });
+
+        $('#submitsurvey').submit(function () {
+            saveInputs();
+            document.getElementById("questionnairejson").value = JSON.stringify(questionnaire);
+            return true;
+        })
 
     </script>
 
