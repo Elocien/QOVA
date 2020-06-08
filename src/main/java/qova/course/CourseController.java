@@ -117,7 +117,7 @@ public class CourseController {
         model.addAttribute("semesterDates", courseManagement.findSemesters());
 
         LocalDate dateNow = LocalDate.now();
-        var NewCourse = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.ARCHITECTURE, "1-5", dateNow);
+        var NewCourse = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.EDUCATION, "1-5", dateNow);
         model.addAttribute("course", NewCourse);
 
         return "courseDetails";
@@ -220,6 +220,18 @@ public class CourseController {
         model.addAttribute("typeID", type);
         model.addAttribute("id", id);
         model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
+        
+        //Not sure if this is needed:
+        Optional<Course> course = courseManagement.findById(id);
+        model.addAttribute("coursename", course.get().getName());
+
+        /*
+        //Just for testing:
+        LocalDate dateNow = LocalDate.now();
+        var course = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.EDUCATION, "1-5", dateNow);
+        model.addAttribute("coursename", course.getName());
+        */
+        
         return "questioneditor4";
     }
 
