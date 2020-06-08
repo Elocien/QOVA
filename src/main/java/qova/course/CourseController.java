@@ -336,7 +336,8 @@ public class CourseController {
    
     /**
      * Returns a HttpEntity (QRCode) of type PNG
-     * @param response
+     * 
+     * @param response 
      * @param type
      * @param id
      * @return
@@ -344,7 +345,7 @@ public class CourseController {
      * @throws WriterException
      */
     @GetMapping("/qrcode")
-    public HttpEntity<byte[]> qrcode(HttpServletResponse response, @RequestParam String type, @RequestParam(required = false) String id) throws IOException, WriterException  {
+    public HttpEntity<byte[]> qrcode(HttpServletResponse response, @RequestParam String type, @RequestParam String id) throws IOException, WriterException  {
 
         //QRCode URL (Redirects to a courses survey when scanned). Generated using pathvariables
         String url = "localhost:8080/survey?type=" + type + "&id=" + id;  

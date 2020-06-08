@@ -26,9 +26,18 @@ public class ResponseManagement {
 
     public byte[] generatePDF(Course course, CourseType courseType, Integer classNo) throws IOException, Exception {
 
-
+        //Responses used to gen pdg
         ArrayList<Response> pdfResponses = new ArrayList<Response>();
-        responses.findByCourseAndCourseTypeAndClassNo(course, courseType, classNo).forEach(pdfResponses::add);
+
+        //Add responses to arrayList
+        if(classNo > 0){
+            responses.findByCourseAndCourseTypeAndClassNo(course, courseType, classNo).forEach(pdfResponses::add);
+        }
+        //if classNo is 0, add responses for all classNo's
+        else{
+            responses.findByCourseAndCourseType(course, courseType).forEach(pdfResponses::add);
+        }
+        
         
         //Generate PDF
         PDFGenerator pdfGen = new PDFGenerator();
@@ -63,6 +72,17 @@ public class ResponseManagement {
 		return responses.findByCourseAndCourseTypeAndClassNo(course, type, classNo);
 	}
 
+
+     /**
+     * 
+     * @param course    {@linkplain Course} object
+     * @param type      {@linkplain CourseType}
+     * 
+     * @return an Iterable containing all Responses that fit criteria
+     */
+	public Iterable<Response> findByCourseAndCourseType(Course course, CourseType type){
+		return responses.findByCourseAndCourseType(course, type);
+	}
 
 
 

@@ -64,7 +64,7 @@ public class ResponseController {
 
     //PDF Generation
     @GetMapping("/PdfGen")
-    public HttpEntity<byte[]> generatePdf(HttpServletResponse response, @RequestParam String id, @RequestParam String type, @RequestParam String classNo) throws Exception {
+    public HttpEntity<byte[]> generatePdf(@RequestParam String id, @RequestParam String type, @RequestParam String classNo, HttpServletResponse response) throws Exception {
     
         //generate filename
         String filename = "testPdf";

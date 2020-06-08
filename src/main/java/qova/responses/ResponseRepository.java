@@ -12,4 +12,6 @@ public interface ResponseRepository extends CrudRepository <Response, Long> {
     
     public Iterable<Response> findByCourseAndCourseTypeAndClassNo(Course course, CourseType type, Integer classNo);
 
+    public Iterable<Response> findByCourseAndCourseType(Course course, CourseType type);
+
 }
