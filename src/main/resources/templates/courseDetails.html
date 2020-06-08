@@ -47,9 +47,10 @@
                             <div class="row">
                                 <table class="table mb-4">
                                     <tbody>
+                                        <!--Faculty-->
                                         <tr>
                                             <th scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
-                                            <td id="faculty_original"><span th:id="${course.faculty}" th:text="#{'course.faculty.' + ${course.faculty}}">FACULTY</span></td>
+                                            <td id="faculty_original"><span th:id="'og: ' + ${course.faculty}" th:text="#{'course.faculty.' + ${course.faculty}}">FACULTY</span></td>
                                             <td id="faculty_dropdown" style="display: none">
                                                 <select id="faculty_select" class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
                                                     <option class="dropdown-item" th:id="${faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
@@ -57,11 +58,13 @@
                                             </td>
                                             <td></td>
                                         </tr>
+                                        <!--Semester Period-->
                                         <tr>
                                             <th scope="row" th:text="#{course.courseInstance}">YEAR</th>
                                             <td class="editable" th:text="${course.semesterUI}">XXXX</td>
                                             <td></td>
                                         </tr>
+                                        <!--Semester of Students-->
                                         <tr>
                                             <th scope="row" th:text="#{course.semesterOfStudents}">SEMESTER</th>
                                             <td id="semester_original"><span th:id="${course.semesterOfStudents}" th:text="${course.semesterOfStudents}">IDK - XXXX</span></td>
@@ -258,7 +261,6 @@
             replace_me.appendChild(replacer);
         }
         else {
-            console.log("normal");
             const replacer = document.createElement("INPUT");
             replacer.className = "form-control";
             replacer.type = "text";
@@ -306,7 +308,9 @@
         sort_options(document.getElementById("faculty_select"));
         faculty_original.style.display = "none";
         document.getElementById("faculty_dropdown").style.display = "block";
-        document.getElementById(faculty_original.querySelector("span").id).setAttribute("selected", "selected");
+        //select new default value
+        const key = faculty_original.querySelector("span").id;
+        document.getElementById(key.slice(4, key.length)).setAttribute("selected", "selected");
 
         //semester replacement
         const semester_original = document.getElementById("semester_original");
