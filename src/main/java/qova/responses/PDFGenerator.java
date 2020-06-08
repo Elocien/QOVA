@@ -1,6 +1,5 @@
 package qova.responses;
 
-import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -8,18 +7,20 @@ import com.itextpdf.kernel.font.PdfFont;
 import com.itextpdf.kernel.font.PdfFontFactory;
 import com.itextpdf.kernel.pdf.PdfDocument;
 import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.kernel.pdf.canvas.draw.DashedLine;
+import com.itextpdf.kernel.pdf.canvas.draw.SolidLine;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.Style;
 import com.itextpdf.layout.borders.SolidBorder;
 import com.itextpdf.layout.element.AreaBreak;
 import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.LineSeparator;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.element.Text;
 import com.itextpdf.layout.property.AreaBreakType;
 import com.itextpdf.layout.property.TextAlignment;
 import com.itextpdf.layout.property.UnitValue;
-import com.itextpdf.text.Chunk;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -47,8 +48,10 @@ public final class PDFGenerator {
         //List of all BarGraphs (Multiple Choice and Drop Down)
         ArrayList<Image> ImageList = new ArrayList<Image>();
 
-        //List of all Tables (TextResponse)
+        //List of all Tables (TextResponse) and their corresponding titles
+        ArrayList<Paragraph> TableQuestionList = new ArrayList<Paragraph>();
         ArrayList<Table> TableList = new ArrayList<Table>();
+        
 
         //List of all Paragraphs (BinaryAnswer)
         ArrayList<Paragraph> ParagraphList = new ArrayList<Paragraph>();
@@ -99,7 +102,11 @@ public final class PDFGenerator {
         titleFont.setTextAlignment(TextAlignment.CENTER);
 
         Style header = new Style();
-        header.setFont(font).setFontSize(24);
+        header.setFont(bold).setFontSize(30);
+        header.setTextAlignment(TextAlignment.CENTER);
+
+        Style header_2 = new Style();
+        header.setFont(font).setFontSize(18);
         header.setTextAlignment(TextAlignment.CENTER);
         
         
@@ -117,8 +124,6 @@ public final class PDFGenerator {
             ArrayList<Response> responsesForPos = responses.get(pos);
 
 
-
-
             //Get ResponseType for Responses of given position (pos). We assume this to be the same for every Response of that position (if error occurs, check serialisation of Responses)
             //------------------------------------------------------------------------
             //This is used to determine what graphic to add to the PDF 
@@ -128,6 +133,11 @@ public final class PDFGenerator {
             ResponseType responseType = responsesForPos.get(0).getResponseType();
 
 
+
+
+
+
+            //----------------------------------------------------------------------------------------------------------------
             //Bar chart is created, if ResponseType was either Multiple_Choice or Drop_Down
             if(responseType.equals(ResponseType.MULTIPLE_CHOICE) || responseType.equals(ResponseType.DROP_DOWN)){
 
@@ -223,17 +233,30 @@ public final class PDFGenerator {
                 //Add
                 ImageList.add(img);
 
-
             }
+            //----------------------------------------------------------------------------------------------------------------
+
 
 
 
 
 
             //Create Table for all TextResponses
+            //----------------------------------------------------------------------------------------------------------------
+
             else if(responseType == ResponseType.TEXT_RESPONSE){
+
+                //Add Corresponding question to questionList
+                Paragraph questionpara = new Paragraph();
+                questionpara.setTextAlignment(TextAlignment.CENTER);
+                questionpara.add(new Text(responsesForPos.get(0).getQuestion()).addStyle(header_2));
+                TableQuestionList.add(questionpara);
+
+
+                //Create Table
                 Table table = new Table(UnitValue.createPercentArray(1)).useAllAvailableWidth();
 
+                //Iterate through all responses at this position and add the textResponse to the table
                 for (Response r: responsesForPos){
                     table.addCell(r.getTextResponse());
                 }
@@ -242,15 +265,25 @@ public final class PDFGenerator {
                 TableList.add(table);
 
             }
+            //----------------------------------------------------------------------------------------------------------------
+
 
 
 
 
 
             //Create Box with Totals for all BinaryAnswers
+            //----------------------------------------------------------------------------------------------------------------
             else if(responseType == ResponseType.BINARY_ANSWER){
+
+                //Create new Paragraph for Question
+                Paragraph questionpara = new Paragraph();
+                questionpara.setTextAlignment(TextAlignment.CENTER);
+                questionpara.add(new Text(responsesForPos.get(0).getQuestion()).addStyle(header_2));
+                ParagraphList.add(questionpara);
+
                 
-                //Create new Paragraph
+                //Create new Paragraph for Results
                 Paragraph para = new Paragraph();
                 
                 //Format Paragraph
@@ -264,6 +297,8 @@ public final class PDFGenerator {
 
                 //Iterate through all responses to get totals
                 for (Response r: responsesForPos){
+                    
+
                     if(r.getBinaryAnswer().equals(false)){
                         no++;
                     }
@@ -294,6 +329,7 @@ public final class PDFGenerator {
                 ParagraphList.add(para);
 
             }
+            //----------------------------------------------------------------------------------------------------------------
 
             else{
                 throw new Exception("ResponseType matched none of the required values");
@@ -306,10 +342,12 @@ public final class PDFGenerator {
 
 
         //Set the Title of the PDF
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         Paragraph title = new Paragraph();
 
         //Title text is given as function argument 
         title.add(new Text(PdfTitle).addStyle(titleFont));
+        title.setTextAlignment(TextAlignment.CENTER);
 
         //Line underneath title
         //title.addline
@@ -319,11 +357,40 @@ public final class PDFGenerator {
 
         //Add title to pdf
         document.add(title);
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        //Add Line to seperate title from the rest of the document
+        SolidLine line = new SolidLine(1f);
+        
+        LineSeparator ls = new LineSeparator(line);
+        ls.setMarginTop(-5);
+        ls.setMarginBottom(20);
+
+        document.add(ls);
+
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        //Create dashed line separator 
+        DashedLine dashedLine = new DashedLine(1f);
+        LineSeparator lsDashed = new LineSeparator(dashedLine);
+        lsDashed.setMarginBottom(10);
+        //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 
 
         //Tables containing text responses
+
+        //Add title for questions of this type and a dashed line underneath
         document.add(new Paragraph("Mehrfachauswahl und Dropdown-Liste").addStyle(header));
+        document.add(lsDashed);
+
+
         //Bar charts containing multiple choice and drop down responses
         for(Image img: ImageList){
             document.add(img);
@@ -332,22 +399,45 @@ public final class PDFGenerator {
 
 
         //Tables containing text responses
-        document.add(new Paragraph("Freitexte").addStyle(header));
 
-        for(Table tbl: TableList){
-            document.add(tbl);
+        //Add title for questions of this type and a dashed line underneath
+        document.add(new Paragraph("Freitexte").addStyle(header));
+        document.add(lsDashed);
+
+
+        for(int i = 0; i < TableList.size(); i++){
+            document.add(TableQuestionList.get(i));
+            document.add(TableList.get(i));
             document.add(new AreaBreak(AreaBreakType.NEXT_AREA));
         }
 
+        
 
         //Paragraph containing binary answer responses
-        document.add(new Paragraph("Ja/Nein Fragen").addStyle(header));
 
-        for(Paragraph par: ParagraphList){
-            document.add(par);
+        //Add title for questions of this type and a dashed line underneath
+        document.add(new Paragraph("Ja/Nein Fragen").addStyle(header));
+        document.add(lsDashed);
+
+        //Iterate through the list, in jumps of 2, because there are pairs of paragraphs
+        for(int i = 0; i < ParagraphList.size(); i = i + 2){
+            
+            //Add Title of Binary Answer (The question itself)
+            document.add(ParagraphList.get(i));
+
+            //Add Block with results
+            document.add(ParagraphList.get(i+1));
+
+            //Add whitespace
             document.add(new Paragraph("\n \n \n"));
         }
         
+
+
+
+
+
+
         //Close document
         document.close();
 

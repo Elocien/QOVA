@@ -6,7 +6,6 @@ import qova.AbstractIntegrationTest;
 
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class courseTest extends AbstractIntegrationTest {
@@ -25,8 +24,9 @@ public class courseTest extends AbstractIntegrationTest {
         var semesterOfStudents = 6;
         var faculty = CourseFaculty.COMPUTER_SCIENCE;
         var courseInstance = LocalDate.of(2020, 10, 4);
+        var semesterUI = "SoSe 2020";
 
-        Course crs  = new Course(name, lectureExists, tutorialExists, seminarExists, lectureSurvey, tutorialSurvey, seminarSurvey, classTotalTutorial, classTotalSeminar, semesterOfStudents, faculty, courseInstance);
+        Course crs  = new Course(name, lectureExists, tutorialExists, seminarExists, lectureSurvey, tutorialSurvey, seminarSurvey, classTotalTutorial, classTotalSeminar, semesterOfStudents, faculty, semesterUI, courseInstance);
 
 
         assertEquals(name, crs.getName());
@@ -41,6 +41,7 @@ public class courseTest extends AbstractIntegrationTest {
         assertEquals(semesterOfStudents, crs.getSemesterOfStudents());
         assertEquals(faculty, crs.getFaculty());
         assertEquals(courseInstance, crs.getCourseInstance());
+        assertEquals(semesterUI, crs.getSemesterUI());
 
 	}
 

@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/toggle_checkbox.css}" />
     
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
@@ -37,7 +38,9 @@
                             <!--Headline-->
                             <div class="row">
                                 <h5 class="font-weight-light text-left" th:text="#{course.details}">COURSE DETAILS</h5>
-                                <a type="button" class="btn edit_details btn-link p-0 ml-4 align-middle" th:href="@{/course/edit?id={id}(id=${course.id})}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}"><i class="far fa-edit"></i></a>
+                                <button type="button" id="startEdit" class="btn edit_details btn-link p-0 ml-4 align-middle" onclick="edit_mode()" data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}"><i class="far fa-edit"></i></button>
+                                <button type="button" id="finishEdit" class="btn edit_details btn-link p-0 ml-4 align-middle" style="display: none;" data-toggle="tooltip" data-placement="right" th:title="#{detail.finishEdit}"><i class="fas fa-check"></i></button>
+                                <!--th:href="@{/course/edit?id={id}(id=${course.id})}" href="#"-->
                             </div>
 
                             <!--1st Table-->
@@ -46,17 +49,27 @@
                                     <tbody>
                                         <tr>
                                             <th scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
-                                            <td th:text="#{'course.faculty.' + ${course.faculty}}">NAME</td>
+                                            <td id="faculty_original"><span id="${course.faculty}" th:text="#{'course.faculty.' + ${course.faculty}}">FACULTY</span></td>
+                                            <td id="faculty_dropdown" style="display: none">
+                                                <select class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
+                                                    <option class="dropdown-item" id="${course.faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
+                                                </select>
+                                            </td>
                                             <td></td>
                                         </tr>
                                         <tr>
                                             <th scope="row" th:text="#{course.courseInstance}">YEAR</th>
-                                            <td th:with="year = ${course.courseInstance}" th:text="${#strings.replace(#strings.replace(year, '-04-01', ' SoSe'), '-10-01', ' WiSe')}">XXXX</td>
+                                            <td class="editable" th:text="${course.semesterUI}">XXXX</td>
                                             <td></td>
                                         </tr>
                                         <tr>
                                             <th scope="row" th:text="#{course.semesterOfStudents}">SEMESTER</th>
-                                            <td th:text="${course.semesterOfStudents}">XX</td>
+                                            <td id="semester_original"><span th:id="${course.semesterOfStudents}" th:text="${course.semesterOfStudents}">IDK - XXXX</span></td>
+                                            <td id="semester_dropdown" style="display: none">
+                                                <select class="custom-select form-control">
+                                                    <option class="dropdown-item" th:id="${course.semesterOfStudents}" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+                                                </select>
+                                            </td>
                                             <td></td>
                                         </tr>
                                     </tbody>
@@ -79,22 +92,22 @@
                                         <tr>
                                             <td scope="row" th:text="#{new.lecture}">LECTURE</td>
                                             <div th:switch="${course.lectureExists}">
-                                                <div  th:case="TRUE">
-                                                    <td class="text-center">1</td>
+                                                <div th:case="TRUE">
+                                                    <td class="editable text-center">1</td>
                                                     <div th:switch="${course.lectureSurvey}">
                                                         <div th:case="'-'">
-                                                            <td class="text-center" th:text="#{No}">!EXISTS</td>
+                                                            <td class="editable text-center" id="bool" th:text="#{No}">!EXISTS</td>
                                                             <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a></td>
                                                         </div>
                                                         <div th:case="*">
-                                                            <td class="text-center" th:text="#{Yes}">EXISTS</td>
+                                                            <td class="editable text-center" id="bool" th:text="#{Yes}">EXISTS</td>
                                                             <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a></td>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div th:case="FALSE">
-                                                    <td class="text-center">0</td>
-                                                    <td class="text-center">-</td>
+                                                    <td class="editable text-center">0</td>
+                                                    <td class="editable text-center">-</td>
                                                     <td></td>
                                                 </div>
                                             </div>
@@ -102,22 +115,22 @@
                                         <!--Tutorial-->
                                         <tr>
                                             <td scope="row" th:text="#{new.practice}">TUTORIAL</td>
-                                            <td class="text-center" th:text="${course.classTotalTutorial}">COUNT</td>
+                                            <td class="editable text-center" th:text="${course.classTotalTutorial}">COUNT</td>
                                             <div th:switch="${course.tutorialExists}">
                                                 <div th:case="TRUE">
                                                     <div th:switch="${course.tutorialSurvey}">
                                                         <div th:case="'-'">
-                                                            <td class="text-center" th:text="#{No}">!EXISTS</td>
+                                                            <td class="editable text-center" id="bool" th:text="#{No}">!EXISTS</td>
                                                             <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a></td>
                                                         </div>
                                                         <div th:case="*">
-                                                            <td class="text-center" th:text="#{Yes}">EXISTS</td>
+                                                            <td class="editable text-center" id="bool" th:text="#{Yes}">EXISTS</td>
                                                             <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a></td>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div th:case="FALSE">
-                                                    <td class="text-center">-</td>
+                                                    <td class="editable text-center">-</td>
                                                     <td></td>
                                                 </div>
                                             </div>
@@ -125,22 +138,22 @@
                                         <!--Seminar-->
                                         <tr>
                                             <td scope="row" th:text="#{new.seminar}">SEMINAR</td>
-                                            <td class="text-center" th:text="${course.classTotalSeminar}">COUNT</td>
+                                            <td class="editable text-center" th:text="${course.classTotalSeminar}">COUNT</td>
                                             <div th:switch="${course.seminarExists}">
                                                 <div th:case="TRUE">
                                                     <div th:switch="${course.seminarSurvey}">
                                                         <div th:case="'-'">
-                                                            <td class="text-center" th:text="#{No}">!EXISTS</td>
+                                                            <td class="editable text-center" id="bool" th:text="#{No}">!EXISTS</td>
                                                             <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a></td>
                                                         </div>
                                                         <div th:case="*">
-                                                            <td class="text-center" th:text="#{Yes}">EXISTS</td>
+                                                            <td class="editable text-center" id="bool" th:text="#{Yes}">EXISTS</td>
                                                             <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a></td>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div th:case="FALSE">
-                                                    <td class="text-center">-</td>
+                                                    <td class="editable text-center">-</td>
                                                     <td></td>
                                                 </div>
                                             </div>                                            
@@ -216,10 +229,69 @@
             </div>
         </div>
     </div>
+    <div th:include="footer"></div>
 </body>
 <script>
     $( document ).ready(function() {
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tooltip"]').tooltip(({trigger : 'hover'}));
     });
+
+    function replace_with_input(replace_me) {
+        if(replace_me.id === "bool") {
+
+            const replacer = document.createElement("LABEL");
+            replacer.className = "switch mt-2";
+
+            const input_box = document.createElement("INPUT");
+            input_box.className = "form-control";
+            input_box.type = "checkbox";
+            if(replace_me.innerHTML === "Yes") {
+                input_box.checked = true;
+            }
+            
+            const input_box_slider = document.createElement("SPAN");
+            input_box_slider.className = "slider round";
+
+            replacer.appendChild(input_box);
+            replacer.appendChild(input_box_slider);
+            replace_me.innerHTML = "";
+            replace_me.appendChild(replacer);
+        }
+        else {
+            console.log("normal");
+            const replacer = document.createElement("INPUT");
+            replacer.className = "form-control";
+            replacer.type = "text";
+            replacer.setAttribute("placeholder", replace_me.innerHTML);
+                
+            replace_me.innerHTML = "";
+            replace_me.appendChild(replacer);
+        }
+    }
+
+    function find_original_option(original) {
+        document.getElementById(original).setAttribute("selected", "selected");
+    }
+    
+    function edit_mode() {
+        //replaces simple values with input fields
+        const editables = document.getElementsByClassName("editable");
+        for (let index = 0; index < editables.length; ++index) {
+            replace_with_input(editables[index]);
+        }
+        //turns finish edit button visable & disables edit button
+        document.getElementById("finishEdit").style.display = "block";
+        document.getElementById("startEdit").disabled = true;
+        //faculty replacement
+        const faculty_original = document.getElementById("faculty_original");
+        find_original_option(faculty_original.id);
+        faculty_original.style.display = "none";
+        document.getElementById("faculty_dropdown").style.display = "block";
+        //semester replacement
+        const semester_original = document.getElementById("semester_original");
+        find_original_option(semester_original.id);
+        semester_original.style.display = "none";
+        document.getElementById("semester_dropdown").style.display = "block";
+    }
 </script>
 </html>

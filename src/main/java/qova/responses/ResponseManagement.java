@@ -18,28 +18,30 @@ import qova.course.CourseType;
 public class ResponseManagement {
 
     private final ResponseRepository responses;
-    private final CourseRepository courses;
 
     @Autowired
-    public ResponseManagement(ResponseRepository responses, CourseRepository courses) {
+    public ResponseManagement(ResponseRepository responses) {
         this.responses = Objects.requireNonNull(responses);
-        this.courses = Objects.requireNonNull(courses);
     }
 
-    public byte[] generatePDF() throws IOException, Exception {
+    public byte[] generatePDF(Course course, CourseType courseType, Integer classNo) throws IOException, Exception {
 
-        //placeholder
-        Optional<Course> crs = courses.findById("c000000000000001");
-        CourseType type = CourseType.LECTURE;
-        Integer classNo = 1;
-
-        //TODO: Get correct responses
+        //Responses used to gen pdg
         ArrayList<Response> pdfResponses = new ArrayList<Response>();
-        responses.findByCourseAndCourseTypeAndClassNo(crs.get(), type, classNo).forEach(pdfResponses::add);
+
+        //Add responses to arrayList
+        if(classNo > 0){
+            responses.findByCourseAndCourseTypeAndClassNo(course, courseType, classNo).forEach(pdfResponses::add);
+        }
+        //if classNo is 0, add responses for all classNo's
+        else{
+            responses.findByCourseAndCourseType(course, courseType).forEach(pdfResponses::add);
+        }
+        
         
         //Generate PDF
         PDFGenerator pdfGen = new PDFGenerator();
-        return pdfGen.createPdf(pdfResponses, crs.get().getName());
+        return pdfGen.createPdf(pdfResponses, course.getName());
     }
 
 
@@ -70,6 +72,17 @@ public class ResponseManagement {
 		return responses.findByCourseAndCourseTypeAndClassNo(course, type, classNo);
 	}
 
+
+     /**
+     * 
+     * @param course    {@linkplain Course} object
+     * @param type      {@linkplain CourseType}
+     * 
+     * @return an Iterable containing all Responses that fit criteria
+     */
+	public Iterable<Response> findByCourseAndCourseType(Course course, CourseType type){
+		return responses.findByCourseAndCourseType(course, type);
+	}
 
 
 

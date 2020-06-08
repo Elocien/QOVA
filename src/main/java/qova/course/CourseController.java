@@ -1,13 +1,8 @@
 package qova.course;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Base64;
 import java.util.Objects;
-
-import java.util.List;
-import java.util.Arrays;
 
 import java.util.Optional;
 
@@ -31,7 +26,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
+//Temporary Imports (can be removed later)
+//@Lucian please don't delete me just yet T_T
+import java.util.List;
+import java.util.Arrays;
+import java.time.LocalDate;
+import java.time.LocalTime;
+//END
 
 
 @Controller // This means that this class is a Controller
@@ -65,8 +66,8 @@ public class CourseController {
 
         LocalDate dateNow = LocalDate.now();
 
-        var NewCourse1 = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.ARCHITECTURE, dateNow);
-        var NewCourse2 = new Course("Sausage", true, true, true, "Sausage Lecture Survey 2020", "Sausage Tutorial Survey 2020", "Sausage Seminar Survey 2020", 2, 3, 1, CourseFaculty.BIOLOGY, dateNow);
+        var NewCourse1 = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.ARCHITECTURE, "1-5", dateNow);
+        var NewCourse2 = new Course("Sausage", true, true, true, "Sausage Lecture Survey 2020", "Sausage Tutorial Survey 2020", "Sausage Seminar Survey 2020", 2, 3, 1, CourseFaculty.BIOLOGY, "5-9", dateNow);
         List<Course> courseList = Arrays.asList(NewCourse1, NewCourse2);
         model.addAttribute("courseList", courseList);
 
@@ -79,6 +80,9 @@ public class CourseController {
     @GetMapping("/course/details")
     public String courseDetails(Model model, @RequestParam(required = false) String id) throws Exception {
         
+        //for editing:
+        model.addAttribute("semesterDates", courseManagement.findSemesters());
+
         //redirect 
         if (id == null) {
 			return "redirect:../courses";
@@ -110,9 +114,10 @@ public class CourseController {
     /*@GetMapping("/course/details")
     public String courseDetails(Model model) {
 
-        LocalDate dateNow = LocalDate.now();
+        model.addAttribute("semesterDates", courseManagement.findSemesters());
 
-        var NewCourse = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.ARCHITECTURE, dateNow);
+        LocalDate dateNow = LocalDate.now();
+        var NewCourse = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.ARCHITECTURE, "1-5", dateNow);
         model.addAttribute("course", NewCourse);
 
         return "courseDetails";
@@ -228,8 +233,27 @@ public class CourseController {
         if (form.getQuestionnairejson().length()==0) {
             return "redirect:../course/details" + "?id=" + id;          //TODO: Redirects back course at the moment, think about where this should go
         }
+
+    //--------------------------------------------------------------------------------------------
+        //Validate that the questionnaire does not exceed max length
+        String JsonString = form.getQuestionnairejson();
+
+        //Remove [] to parse JSON
+        JsonString = JsonString.substring(1,JsonString.length()-1);
+
+
+        //TODO: iterate through array and check length
+
+        //example string
+        // [{"type":"YesNo","question":""},{"type":"MultipleChoice","question":"","answers":["1","2","3","4","5"]},{"type":"DropDown","question":"","answers":["Answer","Answer","Answer"]}]
+
+    //--------------------------------------------------------------------------------------------
+
+
+
+
         
-        //fetch course and go to details if present
+        //fetch course 
         Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()){
 
@@ -322,7 +346,8 @@ public class CourseController {
    
     /**
      * Returns a HttpEntity (QRCode) of type PNG
-     * @param response
+     * 
+     * @param response 
      * @param type
      * @param id
      * @return
@@ -330,7 +355,7 @@ public class CourseController {
      * @throws WriterException
      */
     @GetMapping("/qrcode")
-    public HttpEntity<byte[]> qrcode(HttpServletResponse response, @RequestParam String type, @RequestParam(required = false) String id) throws IOException, WriterException  {
+    public HttpEntity<byte[]> qrcode(HttpServletResponse response, @RequestParam String type, @RequestParam String id) throws IOException, WriterException  {
 
         //QRCode URL (Redirects to a courses survey when scanned). Generated using pathvariables
         String url = "localhost:8080/survey?type=" + type + "&id=" + id;  

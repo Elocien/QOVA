@@ -58,25 +58,34 @@ public class Course {
     //The date at which indicates to which semester the course belongs to 
     private LocalDate courseInstance;  
 
+    //The string which is displayed in UI
+    private String semesterUI;
+
 
     //Needed for JPA purposes
     @SuppressWarnings("unused")
 	protected Course() {
     }
     
-
     
     /**
      * Instance of a Course (meaning a Subject [DE Lehrveranstaltung])
      * 
-     * @param name              Name of the course
-     * @param type              Enum which is either: Lecture, Tutorial or Seminar
-     * @param survey            An {@linkplain Survey} Object containg the questions
-     * @param classTotal        How many different tutorial-/seminar groups exist
-     * @param semester          What semester is the Subject taken by students
-     * @param faculty           Enum defining which faculty the subject belongs to 
+     * @param name                      Name of the course
+     * @param lectureExists             Does the course have a lecture
+     * @param tutorialExists            Does the course have a tutorial
+     * @param seminarExists             Does the course have a seminar
+     * @param lectureSurvey             The String containing the JSON of the lectureSurvey 
+     * @param tutorialSurvey            The String containing the JSON of the tutorialSurvey 
+     * @param seminarSurvey             The String containing the JSON of the seminarSurvey 
+     * @param classTotalTutorial        Defines the number of classes of type tutorial (How many different tutorials are offered). This field is used to generate class specific resultsPDF's
+     * @param classTotalSeminar         Defines the number of classes of type seminar (How many different seminars are offered). This field is used to generate class specific resultsPDF's
+     * @param semesterOfStundets        What is the semester of the students attending the subject
+     * @param faculty                   Enum defining which faculty the subject belongs to 
+     * @param semesterString            The string displaying the semester (an instance of a course. E.g. algorithms 1 is offered each year, and this is the instance of Summer semester 2020). This field is primarily used in the UI
+     * @param courseInastance           The time period (start date) of when the course takes placed. This field is primarily used for sorting purposes
      */
-    public Course(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalTutorial, int classTotalSeminar, int semesterOfStundets, CourseFaculty faculty, LocalDate courseInastance){
+    public Course(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalTutorial, int classTotalSeminar, int semesterOfStundets, CourseFaculty faculty, String semesterString, LocalDate courseInastance){
         this.name = name;
         this.lectureExists = lectureExists;
         this.tutorialExists = tutorialExists;
@@ -88,6 +97,7 @@ public class Course {
         this.classTotalSeminar = classTotalSeminar;
         this.semesterOfStudents = semesterOfStundets;
         this.faculty=faculty;
+        this.semesterUI = semesterString;
         this.courseInstance = courseInastance;
     }
 
@@ -189,6 +199,14 @@ public class Course {
 
     public void setCourseInstance(LocalDate date){
         this.courseInstance = date;
+    }
+
+    public String getSemesterUI(){
+        return this.semesterUI;
+    }
+
+    public void setSemesterUI(String str){
+        this.semesterUI = str;
     }
 }
 
