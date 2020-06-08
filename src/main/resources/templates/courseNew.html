@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />	
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/toggle_checkbox.css}" />
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
@@ -29,25 +30,31 @@
                 <form class="border border-dark rounded form_color">
                     <!--Checkboxes-->
                     <div class="form-row justify-content-md-center p-4">
+                        <!--Lecture-->
                         <div class="col-md-auto">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="lectureCheck">
-                                <label class="form-check-label" for="lectureCheck" th:text="#{new.lecture}">LECTURE</label>
-                            </div>
+                            <label class="switch m-0 align-middle">
+                                <input type="checkbox" id="lectureCheck">
+                                <span class="slider round"></span>
+                            </label>
+                            <p class="d-inline m-0 switch-label" th:text="#{new.lecture}">LECTURE</p>
                         </div>
                         <div class="col-md-1"></div>
+                        <!--Practice-->
                         <div class="col-md-auto">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="practiceCheck" data-toggle="collapse" data-target="#collapseTutor"  aria-expanded="false" aria-controls="collapseTutor">
-                                <label class="form-check-label" for="practiceCheck" th:text="#{new.practice}">PRACTICE</label>
-                            </div>
+                            <label class="switch m-0 align-middle">
+                                <input type="checkbox" id="practiceCheck" data-toggle="collapse" data-target="#collapseTutor"  aria-expanded="false" aria-controls="collapseTutor">
+                                <span class="slider round"></span>
+                            </label>
+                            <p class="d-inline m-0 switch-label" th:text="#{new.practice}">PRACTICE</p>
                         </div>
                         <div class="col-md-1"></div>
+                        <!--Seminar-->
                         <div class="col-md-auto">
-                            <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="seminarCheck" data-toggle="collapse" data-target="#collapseSeminar"  aria-expanded="false" aria-controls="collapseSeminar">
-                                <label class="form-check-label" for="seminarCheck" th:text="#{new.seminar}">SEMINAR</label>
-                            </div>
+                            <label class="switch m-0 align-middle">
+                                <input type="checkbox" id="seminarCheck" data-toggle="collapse" data-target="#collapseSeminar"  aria-expanded="false" aria-controls="collapseSeminar">
+                                <span class="slider round"></span>
+                            </label>
+                            <p class="d-inline m-0 switch-label" th:text="#{new.seminar}">PRACTICE</p>
                         </div>
                     </div>
                     <div class="dropdown-divider border-dark m-0"></div>
