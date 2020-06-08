@@ -126,9 +126,15 @@ input[type=number] {
   line-height: 3rem;
   text-decoration: left;
 }
+.logo-home {
+  width: 200px;
+  height: 200px;
+  filter: invert(0.8);
+}
 
 .about_text {
-  background-color: rgba(100, 100, 100, 0.9);
+  border-top: solid 1px var(--tu_blue);
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
 .form-control {
