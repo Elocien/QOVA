@@ -69,7 +69,7 @@
                             <div class="col-md-4">
                                 <label for="courseFaculty" th:text="#{new.courseFaculty}">COURSE FACULTY</label>
                                 <select class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
-                                    <option class="dropdown-item" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}">FACULTY</option>
+                                    <option class="dropdown-item" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
                                 </select>
                             </div>
                             <div class="col-md-2">

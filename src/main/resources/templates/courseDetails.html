@@ -38,8 +38,8 @@
                             <!--Headline-->
                             <div class="row">
                                 <h5 class="font-weight-light text-left" th:text="#{course.details}">COURSE DETAILS</h5>
-                                <button type="button" class="btn edit_details btn-link p-0 ml-4 align-middle" onclick="edit_mode()" data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}"><i class="far fa-edit"></i></button>
-                                <button type="button" id="finishEdit" class="btn edit_details btn-link p-0 ml-4 align-middle" style="visibility: hidden;" data-toggle="tooltip" data-placement="right" th:title="#{detail.finishEdit}"><i class="fas fa-check"></i></button>
+                                <button type="button" id="startEdit" class="btn edit_details btn-link p-0 ml-4 align-middle" onclick="edit_mode()" data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}"><i class="far fa-edit"></i></button>
+                                <button type="button" id="finishEdit" class="btn edit_details btn-link p-0 ml-4 align-middle" style="display: none;" data-toggle="tooltip" data-placement="right" th:title="#{detail.finishEdit}"><i class="fas fa-check"></i></button>
                                 <!--th:href="@{/course/edit?id={id}(id=${course.id})}" href="#"-->
                             </div>
 
@@ -49,17 +49,27 @@
                                     <tbody>
                                         <tr>
                                             <th scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
-                                            <td class="editable" id="faculty" th:text="#{'course.faculty.' + ${course.faculty}}">NAME</td>
+                                            <td id="faculty_original"><span id="${course.faculty}" th:text="#{'course.faculty.' + ${course.faculty}}">FACULTY</span></td>
+                                            <td id="faculty_dropdown" style="display: none">
+                                                <select class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
+                                                    <option class="dropdown-item" id="${course.faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
+                                                </select>
+                                            </td>
                                             <td></td>
                                         </tr>
                                         <tr>
                                             <th scope="row" th:text="#{course.courseInstance}">YEAR</th>
-                                            <td th:with="year = ${course.semesterUI}" th:text="${#strings.replace(#strings.replace(year, '-04-01', ' SoSe'), '-10-01', ' WiSe')}">XXXX</td>
+                                            <td class="editable" th:text="${course.semesterUI}">XXXX</td>
                                             <td></td>
                                         </tr>
                                         <tr>
                                             <th scope="row" th:text="#{course.semesterOfStudents}">SEMESTER</th>
-                                            <td class="editable" th:text="${course.semesterOfStudents}">XX</td>
+                                            <td id="semester_original"><span th:id="${course.semesterOfStudents}" th:text="${course.semesterOfStudents}">IDK - XXXX</span></td>
+                                            <td id="semester_dropdown" style="display: none">
+                                                <select class="custom-select form-control">
+                                                    <option class="dropdown-item" th:id="${course.semesterOfStudents}" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+                                                </select>
+                                            </td>
                                             <td></td>
                                         </tr>
                                     </tbody>
@@ -223,12 +233,10 @@
 </body>
 <script>
     $( document ).ready(function() {
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tooltip"]').tooltip(({trigger : 'hover'}));
     });
 
     function replace_with_input(replace_me) {
-        //initilisation of the input
-
         if(replace_me.id === "bool") {
 
             const replacer = document.createElement("LABEL");
@@ -248,45 +256,9 @@
             replacer.appendChild(input_box_slider);
             replace_me.innerHTML = "";
             replace_me.appendChild(replacer);
-
-        }
-        /*
-        else if (replace_me.id === "faculty") {
-            //<select class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
-            //    <option class="dropdown-item" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}">FACULTY</option>
-            //</select>
-            const replacer = document.createElement("select");
-            replacer.className = "custom-select form-control"
-            replacer.setAttribute("th:with", "faculties = ${T(qova.course.CourseFaculty).values()}");
-
-            const option = document.createElement("option");
-            option.className = "dropdown-item";
-            option.setAttribute("th:each", "faculty : ${#lists.sort(faculties)}");
-            option.setAttribute("th:text", "#{'course.faculty.' + ${faculty}}");
-
-            replacer.appendChild(option);
-            replace_me.innerHTML = "";
-            replace_me.appendChild(replacer);
-        }
-        */
-        else if (replace_me.id === "semester") {
-            //<select class="custom-select form-control">
-            //    <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
-            //</select>
-            const replacer = document.createElement("select");
-            replacer.className = "custom-select form-control"
-
-            const option = document.createElement("option");
-            option.className = "dropdown-item";
-            option.setAttribute("th:each", "year : ${semesterDates}");
-            option.setAttribute("th:text", "${year}");
-            option.setAttribute("th:value", "${year}");
-
-            replacer.appendChild(option);                
-            replace_me.innerHTML = "";
-            replace_me.appendChild(replacer);
         }
         else {
+            console.log("normal");
             const replacer = document.createElement("INPUT");
             replacer.className = "form-control";
             replacer.type = "text";
@@ -296,13 +268,30 @@
             replace_me.appendChild(replacer);
         }
     }
+
+    function find_original_option(original) {
+        document.getElementById(original).setAttribute("selected", "selected");
+    }
     
     function edit_mode() {
+        //replaces simple values with input fields
         const editables = document.getElementsByClassName("editable");
         for (let index = 0; index < editables.length; ++index) {
             replace_with_input(editables[index]);
         }
-        document.getElementById("finishEdit").style.visibility = "visible";
+        //turns finish edit button visable & disables edit button
+        document.getElementById("finishEdit").style.display = "block";
+        document.getElementById("startEdit").disabled = true;
+        //faculty replacement
+        const faculty_original = document.getElementById("faculty_original");
+        find_original_option(faculty_original.id);
+        faculty_original.style.display = "none";
+        document.getElementById("faculty_dropdown").style.display = "block";
+        //semester replacement
+        const semester_original = document.getElementById("semester_original");
+        find_original_option(semester_original.id);
+        semester_original.style.display = "none";
+        document.getElementById("semester_dropdown").style.display = "block";
     }
 </script>
 </html>
