@@ -163,7 +163,7 @@ public class CourseController {
 
     //Delete Course 
     @PostMapping("/course/delete")
-	public String delteCourse(@RequestParam String id) {
+	public String deleteCourse(@RequestParam String id) {
 		courseManagement.deleteCourse(id);
 		return "redirect:../courses";
     }
