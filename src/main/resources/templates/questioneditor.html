@@ -39,8 +39,7 @@
                             <button type="button" class="btn btn-list btn-text-right" onclick="addYesNoQuestion()"><span th:text="#{question.yes-no-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-list btn-text-right" onclick="addMultipleChoiceQuestion()"><span th:text="#{question.multiple-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-list btn-text-right" onclick="addSingleChoiceQuestion()"><span th:text="#{question.single-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
-                            <button type="button" class="btn btn-list btn-text-right" onclick="addFreeTextQuestion()"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
-                            <button type="button" class="btn btn-list-last btn-text-right" onclick="addDropDownQuestion()"><span th:text="#{question.drop-down-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                            <button type="button" class="btn btn-list-last btn-text-right" onclick="addFreeTextQuestion()"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                         </div>
                         <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="submitsurvey">
                             <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
@@ -82,17 +81,6 @@
             questionnaire.push(multiplechoiceQuestion);
             renderall();
 
-        }
-
-        function addDropDownQuestion() {
-            saveInputs();
-            const dropdownQuestion = {
-                type: "DropDown",
-                question: "Question",
-                answers: []
-            };
-            questionnaire.push(dropdownQuestion);
-            renderall();
         }
 
         function addSingleChoiceQuestion() {
@@ -245,44 +233,6 @@
 
                 //Create a html section for a SingleChoice-Question
                 x.className = "container bg-white border border-secondary rounded mt-4 SingleChoice";
-                x.setAttribute("id",index);
-
-                left.appendChild(createTitleDropdown(index,value.type));
-                right.appendChild(createButtonDelete(index));
-                right.appendChild(createButtonCopy(index));
-                if (index > 0) {
-                    right.appendChild(createButtonUp(index));
-                }
-                if (index+1 !== array.length && array.length >1){
-                    right.appendChild(createButtonDown(index));
-                }
-
-                //Textarea for the question input
-                const text_area = document.createElement("TEXTAREA");
-                text_area.className = "Textarea Question";
-                text_area.setAttribute("id",index);
-                if (value.question === "Question"||value.question === ""){
-                    text_area.placeholder = "Question"
-                }
-                else {
-                    text_area.defaultValue = value.question;
-                }
-                middle_col.appendChild(text_area);
-
-                //Answer Option Part
-                last_col.setAttribute("id",index);
-                last_col.appendChild(createAnswerOptionPart(index,value.answers));
-
-                //New Answer Button
-                last_col.appendChild(createButtonnewAnswer(index));
-                x.appendChild(row3);
-
-            }
-
-            else if (value.type === "DropDown"){
-
-                //Create a html section for a DropDown-Question
-                x.className = "container bg-white border border-secondary rounded mt-4 DropDown";
                 x.setAttribute("id",index);
 
                 left.appendChild(createTitleDropdown(index,value.type));
@@ -624,16 +574,6 @@
 
             }
 
-            if (q_type !== "DropDown") {
-
-                const btn_changetoDropDown = document.createElement("a");
-                btn_changetoDropDown.className = ("dropdown-item");
-                btn_changetoDropDown.innerHTML = ("DropDown");
-                btn_changetoDropDown.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 3 + ")");
-                dropdown_menu.appendChild(btn_changetoDropDown);
-
-            }
-
             if (q_type !== "MultipleChoice") {
 
                 const btn_changetoMultipleChoice = document.createElement("a");
@@ -694,12 +634,6 @@
             }
             else if (questiontyp ===2){
                 questionnaire[index].type = "MultipleChoice";
-                if (!questionnaire[index].answers){
-                    questionnaire[index].answers=[];
-                }
-            }
-            else if (questiontyp ===3){
-                questionnaire[index].type = "DropDown";
                 if (!questionnaire[index].answers){
                     questionnaire[index].answers=[];
                 }
