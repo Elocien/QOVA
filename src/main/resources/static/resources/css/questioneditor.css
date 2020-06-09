@@ -74,7 +74,7 @@ body {
 }
 
 .Textarea {
-    resize: vertical;
+    overflow: hidden;
 }
 .Textarea.Question{
     width: 100%;
@@ -82,7 +82,7 @@ body {
     border:none;
     border-radius: 0px;
     border-bottom: 1px solid black;
-    height: 4rem;
+    height: 2rem;
     min-height: 2rem;
 }
 .Textarea.Answers {

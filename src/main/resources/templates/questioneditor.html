@@ -12,7 +12,6 @@
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/questioneditor.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
-        
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -59,6 +58,26 @@
     <div class="pt-4" th:include="footer"></div>
 
     <script>
+        
+        //auto resize for the textareas
+        var tx = document.getElementsByTagName('textarea');
+        function refreshTextareas () {
+            tx = document.getElementsByTagName('textarea');
+            for (let i = 0; i < tx.length; i++) {
+                tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
+                tx[i].addEventListener("input", OnInput, false);
+            }
+            function OnInput() {
+                if (convertRemToPixels(2) < this.scrollHeight) {
+                    this.style.height = 'auto';
+                    this.style.height = (this.scrollHeight) + 'px';
+                }
+            }
+        }
+        function convertRemToPixels(rem) {
+            return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+        }
+        
         const questionnaire = [];
 
         function addYesNoQuestion() {
@@ -116,6 +135,7 @@
             clearquestionnaire();
             questionnaire.forEach(renderquestionnaireelement);
             document.getElementById("questionnairejson").value = JSON.stringify(questionnaire);
+            refreshTextareas();
         }
 
         //Bootsrapped
@@ -682,7 +702,7 @@
             saveInputs();
             document.getElementById("questionnairejson").value = JSON.stringify(questionnaire);
             return true;
-        })
+        });
 
     </script>
 
