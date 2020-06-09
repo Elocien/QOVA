@@ -55,7 +55,7 @@ public class Course {
 
     private CourseFaculty faculty;
 
-    //The date at which indicates to which semester the course belongs to 
+    //The date at which indicates to which semester the course belongs to (used to find courses using repository methods)
     private LocalDate courseInstance;  
 
     //The string which is displayed in UI

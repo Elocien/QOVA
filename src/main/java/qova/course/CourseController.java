@@ -222,10 +222,10 @@ public class CourseController {
         model.addAttribute("typeID", type);
         model.addAttribute("id", id);
 
-        //
+        //Gives the survey JSON to the model, so the current survey can be assembled and added to
         model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
         
-
+        //give course name to model, to show as title
         Optional<Course> course = courseManagement.findById(id);
         model.addAttribute("coursename", course.get().getName());
 
