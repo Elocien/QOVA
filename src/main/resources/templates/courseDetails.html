@@ -186,19 +186,19 @@
                                         </ol>
                                         <div class="carousel-inner">
                                             <div th:if="!${course.lectureSurvey.equals('-')}" class="carousel-item active">
-                                                <img class="d-block w-100 mb-5" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/QR_code_Wi-Fi.png/220px-QR_code_Wi-Fi.png" alt="Lecture slide">
+                                                <img class="d-block w-100 mb-5" th:src="'data:image/jpeg;base64,' + ${LectureQRCode}" alt="Lecture slide">
                                                 <div class="carousel-caption text-dark d-block mb-1">
                                                     <h5>Lecture</h5>
                                                 </div>
                                             </div>
                                             <div th:if="!${course.tutorialSurvey.equals('-')}" th:classappend="${course.lectureSurvey.equals('-')} ? active : userclass" class="carousel-item">
-                                                <img class="d-block w-100 mb-5" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/QR_code_Wi-Fi.png/220px-QR_code_Wi-Fi.png" alt="Tutorial slide">
+                                                <img class="d-block w-100 mb-5" th:src="'data:image/jpeg;base64,' + ${TutorialQRCode}" alt="Tutorial slide">
                                                 <div class="carousel-caption text-dark d-block mb-1">
                                                     <h5>Tutorial</h5>
                                                 </div>
                                             </div>
                                             <div th:if="!${course.seminarSurvey.equals('-')}" th:classappend="${course.lectureSurvey.equals('-') and course.tutorialSurvey.equals('-')} ? active : userclass" class="carousel-item">
-                                                <img class="d-block w-100 mb-5" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/QR_code_Wi-Fi.png/220px-QR_code_Wi-Fi.png" alt="Seminar slide">
+                                                <img class="d-block w-100 mb-5" th:src="'data:image/jpeg;base64,' + ${SeminarQRCode}" alt="Seminar slide">
                                                 <div class="carousel-caption text-dark d-block mb-1">
                                                     <h5>Seminar</h5>
                                                 </div>
@@ -218,9 +218,6 @@
                                             <span class="carousel-control-next-icon" aria-hidden="true"></span>
                                             <span class="sr-only">Next</span>
                                         </a>
-                                        <!--<img th:src="'data:image/jpeg;base64,' + ${LectureQRCode}" class="img-fluid" alt="lecture_image"/>-->
-                                        <!--<img th:src="'data:image/jpeg;base64,' + ${TutorialQRCode}" class="img-fluid" alt="tutorial_image"/>-->
-                                        <!--<img th:src="'data:image/jpeg;base64,' + ${SeminarQRCode}" class="img-fluid" alt="seminar_image"/>-->
                                     </div>
                                 </div>
                             </div>
