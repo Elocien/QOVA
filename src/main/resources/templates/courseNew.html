@@ -1,0 +1,150 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />	
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/toggle_checkbox.css}" />
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+
+    <title th:text="#{home.title}">TITLE</title>
+</head>
+<body class="bg-light"></body>
+
+    <div th:include="navbar"></div>
+
+    <div class="container">
+
+        <div class="row justify-content-md-center">
+            <div class="col-lg-12">
+
+                <h2 class="font-weight-bold text-center mb-4 mt-4" th:text="#{new.headline}">NEW COURSE</h2>
+
+                <form class="border border-dark form_color rounded">
+                    <!--Checkboxes-->
+                    <div class="form-row justify-content-md-center p-4">
+                        <!--Lecture-->
+                        <div class="col-md-auto">
+                            <label class="switch m-0 align-middle">
+                                <input type="checkbox" id="lectureCheck">
+                                <span class="slider round"></span>
+                            </label>
+                            <p class="d-inline m-0 switch-label" th:text="#{new.lecture}">LECTURE</p>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <!--Practice-->
+                        <div class="col-md-auto">
+                            <label class="switch m-0 align-middle">
+                                <input type="checkbox" id="practiceCheck" data-toggle="collapse" data-target="#collapseTutor"  aria-expanded="false" aria-controls="collapseTutor">
+                                <span class="slider round"></span>
+                            </label>
+                            <p class="d-inline m-0 switch-label" th:text="#{new.practice}">PRACTICE</p>
+                        </div>
+                        <div class="col-md-1"></div>
+                        <!--Seminar-->
+                        <div class="col-md-auto">
+                            <label class="switch m-0 align-middle">
+                                <input type="checkbox" id="seminarCheck" data-toggle="collapse" data-target="#collapseSeminar"  aria-expanded="false" aria-controls="collapseSeminar">
+                                <span class="slider round"></span>
+                            </label>
+                            <p class="d-inline m-0 switch-label" th:text="#{new.seminar}">PRACTICE</p>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider border-dark m-0"></div>
+                    <!--Inputs-->
+                    <div class="text-center p-4 bg-light">
+                        <!--Permanent-->
+                        <div class="form-row">
+                            <div class="col-md-4">
+                                <label for="courseName" th:text="#{new.courseName}">COURSE NAME</label>
+                                <input type="text" class="form-control" id="courseName" placeholder="..." required>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="courseFaculty" th:text="#{new.courseFaculty}">COURSE FACULTY</label>
+                                <select id="faculty_select" class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
+                                    <option class="dropdown-item" th:id="${faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="semesterOfStudents" th:text="#{course.semesterOfStudents}">COURSE SEMESTER</label>
+                                <input type="number" class="form-control" id="semesterOfStudents" placeholder="1" min="1" max="20" required>
+                                <div class="invalid-feedback">
+                                    Are you a time traveler?
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <label for="semesterOfStudents" th:text="#{course.courseInstance}">COURSE SEMESTER</label>
+                                <select class="custom-select form-control">
+                                    <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!--Collapsables-->
+                        <div class="form-row">
+                            <div class="col-md-8"></div>
+                            <div class="col-md-2 mt-3 collapse" id="collapseSeminar">
+                                <label for="classTotalSeminar" th:text="#{new.courseSeminar}">COURSE SEMINAR</label>
+                                <input type="number" class="form-control" id="classTotalSeminar" placeholder="0" min="0" required>
+                                <div class="invalid-feedback">
+                                    You do know how numbers work, right?
+                                </div>
+                            </div>
+                            <div class="col-md-2 mt-3 collapse" id="collapseTutor">
+                                <label for="classTotalTutorial" th:text="#{new.courseTutor}">COURSE TUTOR</label>
+                                <input type="number" class="form-control" id="classTotalTutorial" placeholder="0" min="0" required>
+                                <div class="invalid-feedback">
+                                    You do know how numbers work, right?
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dropdown-divider border-dark m-0"></div>
+                    <!--Confirm-->
+                    <div class="form-row p-4">
+                        <div class="col-md-8"></div>
+                        <div class="col-md-4"><button type="submit" class="btn btn-primary btn-tu btn-block" th:text="#{new.submit}">SUBMIT</button></div>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+    
+    <div th:include="footer"></div>
+
+</body>
+<script>
+    $( document ).ready(function() {
+        const select_element = document.getElementById("faculty_select");
+        const all_options = select_element.children;
+        
+        //sorting by innerHTML
+        var sorted_option = [];
+        for (let index = 0; index < all_options.length; ++index) {
+            const option = all_options[index];
+            sorted_option.push([option.id, option.innerHTML]);
+        }
+        sorted_option.sort(function(a, b) { 
+            return a[1] > b[1] ? 1 : -1;
+        });
+
+        //resorting the options in the HTML
+        for (let index = 0; index < all_options.length; ++index) {
+            const new_child = select_element.querySelector("#" + sorted_option[index][0]);
+            if (index === 0) {
+                new_child.setAttribute("selected", "selected");
+            }
+            select_element.removeChild(new_child);
+            select_element.appendChild(new_child);
+        }
+    })
+</script>
+</html>

@@ -1,46 +1,111 @@
-*{
-    box-sizing: border-box;
+body {
+    --tu_blue: rgb(0, 37, 87);
 }
 
-.column {
+.btn-head {
+    background-color: var(--tu_blue);
+    color: white;
+}
+.btn-head:hover {
+    background-color: var(--tu_blue);
+    pointer-events: none;
+}
+.btn-text-right{
+    text-align: right !important;
+}
+.btn-list {
+    background-color: transparent;
+    color: darkslategrey;
+}
+.btn-list:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-top: 1px solid darkslategrey;
+    border-bottom: 1px solid darkslategrey;
+    transition: 0.5s;
+}
+.btn-list-last {
+    background-color: transparent;
+    color: darkslategrey;
+}
+.btn-list-last:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-top: 1px solid darkslategrey;
+    transition: 0.5s;
+}
+
+
+.index-number {
+    background-color: var(--tu_blue);
+    border-top-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    height: 3rem;
+    width: 3rem;
+    line-height: 3rem;
+    margin-top: -1px;
+    margin-left: -1px;
     float: left;
 }
-.column.left {
-    width: 25%;
-    height: 100%;
+.question-headline {
+    height: 3rem;
+    line-height: 3rem;
+    color: grey !important;
+    text-decoration: none !important;
+    float: left;
 }
 
-.column.right {
-    width: 60%;
+.Answer {
+    display: flex;
+    flex-direction: column;
 }
 
-
-.Question.YesNo {
-    margin-top: 20px;
-    margin-bot: 20px;
-
+.Answer.Option {
+    display: initial;
+}
+.btn-answere {
+    visibility: hidden;
+}
+.Answer.Option:hover Button.btn-answere {
+    visibility: visible;
 }
 
 .Textarea {
+    resize: vertical;
+}
+.Textarea.Question{
+    width: 100%;
+    margin: 0.5rem 0rem;
+    border:none;
+    border-radius: 0px;
+    border-bottom: 1px solid black;
+    height: 4rem;
+    min-height: 2rem;
+}
+.Textarea.Answers {
+    width: 60%;
+    margin: 0rem;
+    border:none;
+    border-radius: 0px;
+    border-bottom: 1px solid grey;
+    height: 2rem;
+    min-height: 2rem;
 }
 
-.Button {
-    background-color: #f44336;
-    float: right;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    text-align: center;
-    padding: 10px 15px;
-    margin-left: 10px ;
+.options {
+  text-decoration: none !important;
+  color: grey;
+}
+.options:hover {
+    color: darkgrey;
 }
 
-.Button.NewAnswer {
-    float: left;
+.show {
+    display: block;
+}
+.input {
+    display: none;
 }
 
-.Button.NewQuestion {
-    float: left;
-    margin-left: 30px;
-    margin-top: 10px;
+.Json {
+    display: none;
 }
+

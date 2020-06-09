@@ -1,15 +1,15 @@
 package qova.course;
 
 
+import java.time.LocalDate;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import qova.survey.Survey;
 
-// import java.awt.image.BufferedImage;
 
+//id-generator imports
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import qova.IdGenerator;
@@ -18,21 +18,48 @@ import qova.IdGenerator;
 @Entity
 public class Course {
 
+ 
+
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_gen")
+    @GenericGenerator(
+        name = "custom_gen", 
+        strategy = "qova.IdGenerator", 
+        parameters = {
+            @Parameter(name = IdGenerator.INCREMENT_PARAM, value = "113"),
+            @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "c"),
+            @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%015d") })
+    private String id;
 
     private String name;
-    private CourseType type;
+    
+    private Boolean lectureExists;
 
+    private Boolean tutorialExists;
 
+    private Boolean seminarExists;
 
-    @OneToOne
-    private Survey survey;
+    private String lectureSurvey;
 
-    private int classTotal;
-    private int semester;
+    private String tutorialSurvey;
+
+    private String seminarSurvey;
+
+    private int classTotalTutorial;
+
+    private int classTotalSeminar;
+
+    //The number representing the semester this course is taken by students
+    private int semesterOfStudents;
+
     private CourseFaculty faculty;
+
+    //The date at which indicates to which semester the course belongs to 
+    private LocalDate courseInstance;  
+
+    //The string which is displayed in UI
+    private String semesterUI;
 
 
     //Needed for JPA purposes
@@ -40,28 +67,41 @@ public class Course {
 	protected Course() {
     }
     
-
     
     /**
      * Instance of a Course (meaning a Subject [DE Lehrveranstaltung])
      * 
-     * @param name              Name of the course
-     * @param type              Enum which is either: Lecture, Tutorial or Seminar
-     * @param survey            An {@linkplain Survey} Object containg the questions
-     * @param classTotal        How many different tutorial-/seminar groups exist
-     * @param semester          What semester is the Subject taken by students
-     * @param faculty           Enum defining which faculty the subject belongs to 
+     * @param name                      Name of the course
+     * @param lectureExists             Does the course have a lecture
+     * @param tutorialExists            Does the course have a tutorial
+     * @param seminarExists             Does the course have a seminar
+     * @param lectureSurvey             The String containing the JSON of the lectureSurvey 
+     * @param tutorialSurvey            The String containing the JSON of the tutorialSurvey 
+     * @param seminarSurvey             The String containing the JSON of the seminarSurvey 
+     * @param classTotalTutorial        Defines the number of classes of type tutorial (How many different tutorials are offered). This field is used to generate class specific resultsPDF's
+     * @param classTotalSeminar         Defines the number of classes of type seminar (How many different seminars are offered). This field is used to generate class specific resultsPDF's
+     * @param semesterOfStundets        What is the semester of the students attending the subject
+     * @param faculty                   Enum defining which faculty the subject belongs to 
+     * @param semesterString            The string displaying the semester (an instance of a course. E.g. algorithms 1 is offered each year, and this is the instance of Summer semester 2020). This field is primarily used in the UI
+     * @param courseInastance           The time period (start date) of when the course takes placed. This field is primarily used for sorting purposes
      */
-    public Course(String name, CourseType type, Survey survey, int classTotal, int semester, CourseFaculty faculty){
+    public Course(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalTutorial, int classTotalSeminar, int semesterOfStundets, CourseFaculty faculty, String semesterString, LocalDate courseInastance){
         this.name = name;
-        this.type = type;
-        this.survey = survey;
-        this.classTotal = classTotal;
-        this.semester = semester;
+        this.lectureExists = lectureExists;
+        this.tutorialExists = tutorialExists;
+        this.seminarExists = seminarExists;
+        this.lectureSurvey = lectureSurvey;
+        this.tutorialSurvey = tutorialSurvey;
+        this.seminarSurvey = seminarSurvey;
+        this.classTotalTutorial = classTotalTutorial;
+        this.classTotalSeminar = classTotalSeminar;
+        this.semesterOfStudents = semesterOfStundets;
         this.faculty=faculty;
+        this.semesterUI = semesterString;
+        this.courseInstance = courseInastance;
     }
 
-    public Long getId(){
+    public String getId(){
         return this.id;
     }
 
@@ -73,36 +113,76 @@ public class Course {
         this.name = name;
     }
 
-    public CourseType getType(){
-        return this.type;
+    public Boolean getLectureExists(){
+        return this.lectureExists;
     }
 
-    public void setType(CourseType type){
-        this.type = type;
+    public void setLectureExists(Boolean exists){
+        this.lectureExists = exists;
     }
 
-    public Survey getSurvey(){
-        return this.survey;
+    public Boolean getTutorialExists(){
+        return this.tutorialExists;
     }
 
-    public void setSurvey(Survey survey){
-        this.survey = survey;
+    public void setTutorialExists(Boolean exists){
+        this.tutorialExists = exists;
     }
 
-    public int getClassTotal(){
-        return this.classTotal;
+    public Boolean getSeminarExists(){
+        return this.seminarExists;
     }
 
-    public void setClassTotal(int classTotal){
-        this.classTotal = classTotal;
+    public void setSeminarExists(Boolean exists){
+        this.seminarExists = exists;
     }
 
-    public int getSemester(){
-        return this.semester;
+    public String getLectureSurvey(){
+        return this.lectureSurvey;
     }
 
-    public void setSemester(int semester){
-        this.semester = semester;
+    public void setLectureSurvey(String survey){
+        this.lectureSurvey = survey;
+    }
+
+    public String getTutorialSurvey(){
+        return this.tutorialSurvey;
+    }
+
+    public void setTutorialSurvey(String survey){
+        this.tutorialSurvey = survey;
+    }
+
+    public String getSeminarSurvey(){
+        return this.seminarSurvey;
+    }
+
+    public void setSeminarSurvey(String survey){
+        this.seminarSurvey = survey;
+    }
+
+    public int getClassTotalTutorial(){
+        return this.classTotalTutorial;
+    }
+
+    public void setClassTotalTutorial(int classTotal){
+        this.classTotalTutorial = classTotal;
+    }
+
+    public int getClassTotalSeminar(){
+        return this.classTotalSeminar;
+    }
+
+    public void setClassTotalSeminar(int classTotal){
+        this.classTotalSeminar = classTotal;
+    }
+
+    public int getSemesterOfStudents(){
+        return this.semesterOfStudents;
+    }
+
+    public void setSemesterOfStudents(int semester){
+        this.semesterOfStudents = semester;
     }
 
     public CourseFaculty getFaculty(){
@@ -112,18 +192,21 @@ public class Course {
     public void setFaculty(CourseFaculty faculty){
         this.faculty = faculty;
     }
+
+    public LocalDate getCourseInstance(){
+        return this.courseInstance;
+    }
+
+    public void setCourseInstance(LocalDate date){
+        this.courseInstance = date;
+    }
+
+    public String getSemesterUI(){
+        return this.semesterUI;
+    }
+
+    public void setSemesterUI(String str){
+        this.semesterUI = str;
+    }
 }
 
-
-//id generator for courses
-
-//@Id
-// @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_gen")
-// @GenericGenerator(
-//     name = "custom_gen", 
-//     strategy = "qova.IdGenerator", 
-//     parameters = {
-//         @Parameter(name = IdGenerator.INCREMENT_PARAM, value = "50"),
-//         @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "c"),
-//         @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%05d") })
-// private String id;

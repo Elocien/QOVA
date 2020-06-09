@@ -1,24 +1,184 @@
+/*general*/
+body {
+  --tu_blue: rgb(0, 37, 87);
+  --tu_blue_highlight: rgb(230, 230, 255);
+  background: url(..//images/seamless-bg.jpg);
+  background-size: 300px 300px;
+  min-height: 100vh;
+  position: relative;
+  margin: 0;
+  padding-bottom: 56px;
+}
+
+/*Removes arrows from number input fields*/
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.btn-tu {
+  background-color: var(--tu_blue);
+  border-color: black;
+}
+.btn-tu:hover {
+  background-color: rgba(100, 100, 100, 0);
+  color: black;
+  border-color: black;
+}
+.btn-delete {
+  position: absolute;
+  right: 1rem;
+  color: red;
+}.btn-delete:hover {
+  color: darkred;
+}
+
+/*footer.html*/
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.page-footer {
+  background-color: var(--tu_blue);
+}
+
+/*navbar.html*/
 .navbar {
-    margin-bottom: 0;
-    background-color: #6699cc;
-    z-index: 9999;
-    border: 0;
-    font-size: 12px !important;
-    line-height: 1.42857143 !important;
-    letter-spacing: 4px;
-    border-radius: 0;
-  }
-  
-  .navbar li a, .navbar .navbar-brand {
-    color: #6699cc !important;
-  }
-  
-  .navbar-nav li a:hover, .navbar-nav li.active a {
-    color: #000000 !important;
-    background-color: #fff !important;
-  }
-  
-  .navbar-default .navbar-toggle {
-    border-color: transparent;
-    color: #6699cc !important;
-  }
+  background-color: var(--tu_blue);
+  z-index: 9999;
+  border: 0;
+  margin-bottom: 1rem;
+  padding: 0.3rem;
+  box-shadow: 0px 1px rgba(100, 100, 100, 0.9);
+}
+
+.navbar-brand {
+  padding: 0;
+  border-width: thin;
+  border-style: solid;
+  border-color: white;
+}
+.navbar-brand:hover > .logo_qr {
+  filter: brightness(1000%) grayscale(100%);
+  transition: 0.8s;
+}
+.navbar-brand:hover > .logo_text {
+  filter: opacity(0%);
+  transition: 0.8s;
+}
+.logo {
+  padding: 0.1rem;
+  max-height: 50px;
+  max-width: 50px;
+}
+.logo_text {
+  position: absolute;
+  top: 0.4rem;
+  left: 0.35rem;
+}
+.nav-item {
+  padding: 0rem 1rem;
+}
+.link_to_page {
+  font-size: 1.1rem;
+  line-height: 1.1rem;
+  letter-spacing: 0.2rem;
+  color: white;
+}
+.link_to_page:hover {
+  color: grey;
+  transition: 0.5s;
+}
+.settings_icon {
+  color: white;
+}
+.settings_icon:hover {
+  color: grey;
+  transition: 0.5s;
+}
+.custom-icon-text {
+  line-height: 1.2rem;
+  font-size: 1.2rem;
+}
+.custom-icon {
+  width: 1.2rem;
+  height: 1.2rem;
+  position: relative;
+  margin-right: 0.3rem;
+}
+.ger-icon {
+  background-image: url(..//images/ger.svg);
+}
+.uk-icon {
+  background-image: url(..//images/uk.svg);
+}
+
+/*home.html start*/
+.fancy_text {
+  font-size: xx-large;
+  letter-spacing: 0.4rem;
+  line-height: 3rem;
+  text-decoration: left;
+}
+.logo-home {
+  width: 200px;
+  height: 200px;
+  filter: invert(0.8);
+}
+.about_text {
+  border-top: solid 1px var(--tu_blue);
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+/*IDK*/
+.form-control {
+  background-color: white;
+  border-width: 1px;
+  border-color: grey;
+}
+
+.form_color {
+  background-color: var(--tu_blue_highlight);
+}
+
+/*courseDetails.html*/
+.carousel-caption {
+  bottom: -4rem;
+}
+.carousel-control-prev, .carousel-control-next {
+  bottom: -18.8rem;
+}
+.carousel-item {
+  height: 100%;
+  width: 300px;
+}
+.carousel-indicators {
+  bottom: -0.5rem;
+}
+.carousel-indicators li {
+  background-color: #999;
+  background-color: rgba(70, 70, 70, 0.25);
+}
+.carousel-indicators .active {
+  background-color: #444;
+}
+.carousel-control-prev-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%44444' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E");
+}
+.carousel-control-next-icon {
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%44444' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+}
+.carousel-border{
+  border-color: lightgrey !important;
+}
+.edit_details {
+  margin-bottom: 0.5rem;
+}
+.nounderline {
+  text-decoration: none !important
+}
