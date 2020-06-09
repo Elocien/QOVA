@@ -60,6 +60,7 @@
     <script>
         
         //auto resize for the textareas
+        const line_height = convertRemToPixels(2);
         var tx = document.getElementsByTagName('textarea');
         function refreshTextareas () {
             tx = document.getElementsByTagName('textarea');
@@ -68,7 +69,7 @@
                 tx[i].addEventListener("input", OnInput, false);
             }
             function OnInput() {
-                if (convertRemToPixels(2) < this.scrollHeight) {
+                if (line_height < this.scrollHeight) {
                     this.style.height = 'auto';
                     this.style.height = (this.scrollHeight) + 'px';
                 }

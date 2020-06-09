@@ -32,29 +32,32 @@
                     <div class="form-row justify-content-md-center p-4">
                         <!--Lecture-->
                         <div class="col-md-auto">
-                            <label class="switch m-0 align-middle">
-                                <input type="checkbox" th:field="*{lectureExists}" id="lectureCheck">
+                            <label class="switch m-0 align-middle" for="lectureCheck">
+                                <input type="checkbox" id="lectureCheck" checked="false" onclick="set_hidden_data('lecture')">
                                 <span class="slider round"></span>
                             </label>
                             <p class="d-inline m-0 switch-label" th:text="#{new.lecture}">LECTURE</p>
+                            <input type="checkbox" id="lectureHidden" hidden="true" checked="false" th:field="*{lectureExists}">
                         </div>
                         <div class="col-md-1"></div>
                         <!--Practice-->
                         <div class="col-md-auto">
                             <label class="switch m-0 align-middle">
-                                <input type="checkbox" id="practiceCheck" th:field="*{tutorialExists}" data-toggle="collapse" data-target="#collapseTutor"  aria-expanded="false" aria-controls="collapseTutor">
+                                <input type="checkbox" id="practiceCheck" data-toggle="collapse" data-target="#collapseTutor"  aria-expanded="false" aria-controls="collapseTutor">
                                 <span class="slider round"></span>
                             </label>
                             <p class="d-inline m-0 switch-label" th:text="#{new.practice}">PRACTICE</p>
+                            <input type="checkbox" id="tutorialHidden" hidden="true" checked="false" th:field="*{tutorialExists}">
                         </div>
                         <div class="col-md-1"></div>
                         <!--Seminar-->
                         <div class="col-md-auto">
                             <label class="switch m-0 align-middle">
-                                <input type="checkbox" id="seminarCheck" th:field="*{seminarExists}" data-toggle="collapse" data-target="#collapseSeminar"  aria-expanded="false" aria-controls="collapseSeminar">
+                                <input type="checkbox" id="seminarCheck" data-toggle="collapse" data-target="#collapseSeminar"  aria-expanded="false" aria-controls="collapseSeminar">
                                 <span class="slider round"></span>
                             </label>
                             <p class="d-inline m-0 switch-label" th:text="#{new.seminar}">PRACTICE</p>
+                            <input type="checkbox" id="seminarHidden" hidden="true" checked="false" th:field="*{seminarExists}">
                         </div>
                     </div>
                     <div class="dropdown-divider border-dark m-0"></div>
@@ -145,6 +148,11 @@
             select_element.removeChild(new_child);
             select_element.appendChild(new_child);
         }
-    })
+    });
+
+    function set_hidden_data(type) {
+        document.getElementById(type + "Hidden").checked = document.getElementById(type + "Check").checked;
+    };
+
 </script>
 </html>
