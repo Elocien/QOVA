@@ -306,7 +306,7 @@ public class CourseController {
     public String SuveyView (Model model, @RequestParam String type, @RequestParam(required = false) String id){
         //redirect 
         if (id == null) {
-			return "redirect:../";
+			return "redirect:/";
         }
         
         //fetch course and go to details if present
@@ -314,12 +314,23 @@ public class CourseController {
 
         //Validate that course exists, and that the survey is not empty
         if (course.isPresent()){
-            return "survey";
+            String survey = courseManagement.getSurveyforType(id,type);
+            if (survey.equals("Something went wrong")){
+                return "redirect:/";
+            }
+            else {
+                model.addAttribute("typeID", type);
+                model.addAttribute("id", id);
+                model.addAttribute("survey",survey);
+                model.addAttribute("coursename", course.get().getName());
+                return "survey";
+            }
+
         }
         
         //If condition not met, redirect to home
         else{
-            return "redirect:../";
+            return "redirect:/";
         }
     }
 

@@ -32,8 +32,10 @@ input[type=number] {
 .btn-delete {
   position: absolute;
   right: 1rem;
+}
+.red-link {
   color: red;
-}.btn-delete:hover {
+}.red-link:hover {
   color: darkred;
 }
 

@@ -313,7 +313,6 @@ public class CourseManagement {
 
 
     /**
-	 * @param id the Course id
 	 * @return an {@linkplain Iterable} of a {@linkplain Course}
 	 *         with the given id
 	 */
