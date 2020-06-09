@@ -82,10 +82,10 @@ public class Course {
      * @param classTotalSeminar         Defines the number of classes of type seminar (How many different seminars are offered). This field is used to generate class specific resultsPDF's
      * @param semesterOfStundets        What is the semester of the students attending the subject
      * @param faculty                   Enum defining which faculty the subject belongs to 
-     * @param semesterString            The string displaying the semester (an instance of a course. E.g. algorithms 1 is offered each year, and this is the instance of Summer semester 2020). This field is primarily used in the UI
+     * @param semesterUI            The string displaying the semester (an instance of a course. E.g. algorithms 1 is offered each year, and this is the instance of Summer semester 2020). This field is primarily used in the UI
      * @param courseInastance           The time period (start date) of when the course takes placed. This field is primarily used for sorting purposes
      */
-    public Course(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalTutorial, int classTotalSeminar, int semesterOfStundets, CourseFaculty faculty, String semesterString, LocalDate courseInastance){
+    public Course(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalTutorial, int classTotalSeminar, int semesterOfStundets, CourseFaculty faculty, String semesterUI, LocalDate courseInastance){
         this.name = name;
         this.lectureExists = lectureExists;
         this.tutorialExists = tutorialExists;
@@ -97,7 +97,7 @@ public class Course {
         this.classTotalSeminar = classTotalSeminar;
         this.semesterOfStudents = semesterOfStundets;
         this.faculty=faculty;
-        this.semesterUI = semesterString;
+        this.semesterUI = semesterUI;
         this.courseInstance = courseInastance;
     }
 

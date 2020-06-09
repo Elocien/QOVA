@@ -217,11 +217,15 @@ public class CourseController {
     //Mapping for surveyeditor HTML (called from CourseDetails Page!)
     @GetMapping("/course/surveyeditor")
     public String questioneditor(Model model, @RequestParam String type, @RequestParam(required = false) String id){
+        
+        //Give model the following attributes, which are used to submit the survey, via the post method
         model.addAttribute("typeID", type);
         model.addAttribute("id", id);
+
+        //
         model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
         
-        //Not sure if this is needed:
+
         Optional<Course> course = courseManagement.findById(id);
         model.addAttribute("coursename", course.get().getName());
 
