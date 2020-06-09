@@ -131,6 +131,8 @@ public class CourseController {
 
         model.addAttribute("form", form);
 
+        System.out.println("lol this is a check");
+
         //List of Semesters for Course Creator to pick from
         model.addAttribute("semesterDates", courseManagement.findSemesters());
 		return "courseNew";

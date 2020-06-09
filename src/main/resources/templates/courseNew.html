@@ -27,7 +27,7 @@
 
                 <h2 class="font-weight-bold text-center mb-4 mt-4" th:text="#{new.headline}">NEW COURSE</h2>
 
-                <form class="border border-dark form_color rounded" th:object="${form}" th:action="@{/course/new}">
+                <form id="form" class="border border-dark form_color rounded" th:object="${form}" th:action="@{/course/new}">
                     <!--Checkboxes-->
                     <div class="form-row justify-content-md-center p-4">
                         <!--Lecture-->
@@ -109,7 +109,7 @@
                     <!--Confirm-->
                     <div class="form-row p-4">
                         <div class="col-md-8"></div>
-                        <div class="col-md-4"><button type="submit" class="btn btn-primary btn-tu btn-block" th:text="#{new.submit}">SUBMIT</button></div>
+                        <div class="col-md-4"><a type="submit" class="btn btn-primary btn-tu btn-block" th:text="#{new.submit}" th:href="@{/course/new}">SUBMIT</a></div>
                     </div>
                 </form>
 

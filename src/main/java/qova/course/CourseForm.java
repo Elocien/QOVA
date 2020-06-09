@@ -6,16 +6,12 @@ import javax.validation.constraints.NotNull;
 
 public class CourseForm {
 
-    @NotEmpty
     private String name;
 
-    @NotNull
     private Boolean lectureExists;
 
-    @NotNull
     private Boolean tutorialExists;
 
-    @NotNull
     private Boolean seminarExists;
 
     private String lectureSurvey;
@@ -24,20 +20,15 @@ public class CourseForm {
 
     private String seminarSurvey;
     
-    @NotNull
     private Integer classTotalSeminar;
 
-    @NotNull
     private Integer classTotalTutorial;
 
-    @NotNull
     private Integer semesterOfStudents;
 
-    @NotNull
     private CourseFaculty faculty;
 
     //Taken as String from model
-    @NotNull
     private String courseInstanceString;
 
 
