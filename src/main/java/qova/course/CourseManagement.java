@@ -143,8 +143,8 @@ public class CourseManagement {
     public byte[] generateQRCodeImage(String text) throws WriterException, IOException {
 
         //configure width and height
-        int height = 300;
-        int width = 300;
+        int height = 1500;
+        int width = 1500;
 
 
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
