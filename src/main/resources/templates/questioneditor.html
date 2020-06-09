@@ -125,13 +125,6 @@
 
             const row1 = document.createElement("DIV");
             row1.className = "row";
-            const row11 = document.createElement("DIV");
-            row11.className = "row";
-            const col11 = document.createElement("DIV");
-            col11.className = "col-md-auto";
-            const question_header = document.createElement("H7");
-            question_header.innerHTML = "QUESTION:"
-            question_header.className = "font-weight-light";
 
             //Number on the top left
             const index_number = document.createElement("h3");
@@ -145,10 +138,7 @@
             left.appendChild(index_number);
             row1.appendChild(left);
             row1.appendChild(right);
-            col11.appendChild(question_header);
-            row11.appendChild(col11);
             x.appendChild(row1);
-            x.appendChild(row11);
 
             //Question Initilisation
             const row2 = document.createElement("DIV");
@@ -159,15 +149,11 @@
             x.appendChild(row2);
 
             //Answere Initilisation
-            const answere_header = document.createElement("H7");
-            answere_header.innerHTML = "ANSWERS:";
-            answere_header.className = "font-weight-light";
             const row3 = document.createElement("DIV");
             row3.className = "row";
             const last_col = document.createElement("DIV");
             last_col.className = "col-md-12 ml-5";
-            last_col.appendChild(answere_header);
-            row3.appendChild(last_col)
+            row3.appendChild(last_col);
 
             if (value.type === "YesNo"){
 
@@ -285,7 +271,7 @@
 
                 //Textarea for the question input
                 const text_area = document.createElement("TEXTAREA");
-                text_area.className = "Textarea Question ";
+                text_area.className = "Textarea Question";
                 text_area.setAttribute("id",index);
                 if (value.question === "Question"||value.question === "") {
                     text_area.placeholder = "Question"
@@ -469,6 +455,11 @@
             for ( let i =0;i<answers.length;i++){
                 const answeroption = document.createElement("DIV");
                 answeroption.className= ("Answer Option");
+                
+                const answer_icon = document.createElement("i");
+                answer_icon.className = "answer-icon far fa-circle align-top mt-2";
+                answeroption.appendChild(answer_icon);
+                
                 const x2 =document.createElement("TEXTAREA");
                 x2.className = ("Textarea Answers");
                 if (answers[i]==="Answer"|| answers[i]===""){

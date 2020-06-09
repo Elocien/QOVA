@@ -1,5 +1,6 @@
 body {
     --tu_blue: rgb(0, 37, 87);
+    --fancy_grey: darkslategrey;
 }
 
 .btn-head {
@@ -15,21 +16,21 @@ body {
 }
 .btn-list {
     background-color: transparent;
-    color: darkslategrey;
+    color: var(--fancy_grey);
 }
 .btn-list:hover {
     background-color: rgba(255, 255, 255, 0.8);
-    border-top: 1px solid darkslategrey;
-    border-bottom: 1px solid darkslategrey;
+    border-top: 1px solid var(--fancy_grey);
+    border-bottom: 1px solid var(--fancy_grey);
     transition: 0.5s;
 }
 .btn-list-last {
     background-color: transparent;
-    color: darkslategrey;
+    color: var(--fancy_grey);
 }
 .btn-list-last:hover {
     background-color: rgba(255, 255, 255, 0.8);
-    border-top: 1px solid darkslategrey;
+    border-top: 1px solid var(--fancy_grey);
     transition: 0.5s;
 }
 
@@ -57,9 +58,13 @@ body {
     display: flex;
     flex-direction: column;
 }
-
 .Answer.Option {
     display: initial;
+}
+.answer-icon {
+    width: 2rem;
+    height: 2rem;
+    color: var(--fancy_grey);
 }
 .btn-answere {
     visibility: hidden;
@@ -85,17 +90,17 @@ body {
     margin: 0rem;
     border:none;
     border-radius: 0px;
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid var(--fancy_grey);
     height: 2rem;
     min-height: 2rem;
 }
 
 .options {
   text-decoration: none !important;
-  color: grey;
+  color: var(--fancy_grey);
 }
 .options:hover {
-    color: darkgrey;
+    color: var(--fancy_grey);
 }
 
 .show {
