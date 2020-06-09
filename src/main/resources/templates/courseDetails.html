@@ -38,8 +38,8 @@
                             <!--Headline-->
                             <div class="row">
                                 <h5 class="font-weight-light text-left" th:text="#{course.details}">COURSE DETAILS</h5>
-                                <button type="button" class="btn edit_details btn-link p-0 ml-4 align-middle" onclick="edit_mode()" data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}"><i class="far fa-edit"></i></button>
-                                <button type="button" id="finishEdit" class="btn edit_details btn-link p-0 ml-4 align-middle" style="visibility: hidden;" data-toggle="tooltip" data-placement="right" th:title="#{detail.finishEdit}"><i class="fas fa-check"></i></button>
+                                <button type="button" id="startEdit" class="btn edit_details btn-link p-0 ml-4 align-middle" onclick="edit_mode()" data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}"><i class="far fa-edit"></i></button>
+                                <button type="button" id="finishEdit" class="btn edit_details btn-link p-0 ml-4 align-middle" style="display: none;" data-toggle="tooltip" data-placement="right" th:title="#{detail.finishEdit}"><i class="fas fa-check"></i></button>
                                 <!--th:href="@{/course/edit?id={id}(id=${course.id})}" href="#"-->
                             </div>
 
@@ -47,19 +47,32 @@
                             <div class="row">
                                 <table class="table mb-4">
                                     <tbody>
+                                        <!--Faculty-->
                                         <tr>
                                             <th scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
-                                            <td class="editable" id="faculty" th:text="#{'course.faculty.' + ${course.faculty}}">NAME</td>
+                                            <td id="faculty_original"><span th:id="'og: ' + ${course.faculty}" th:text="#{'course.faculty.' + ${course.faculty}}">FACULTY</span></td>
+                                            <td id="faculty_dropdown" style="display: none">
+                                                <select id="faculty_select" class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
+                                                    <option class="dropdown-item" th:id="${faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
+                                                </select>
+                                            </td>
                                             <td></td>
                                         </tr>
+                                        <!--Semester Period-->
                                         <tr>
                                             <th scope="row" th:text="#{course.courseInstance}">YEAR</th>
-                                            <td th:with="year = ${course.semesterUI}" th:text="${#strings.replace(#strings.replace(year, '-04-01', ' SoSe'), '-10-01', ' WiSe')}">XXXX</td>
+                                            <td class="editable" th:text="${course.semesterUI}">XXXX</td>
                                             <td></td>
                                         </tr>
+                                        <!--Semester of Students-->
                                         <tr>
                                             <th scope="row" th:text="#{course.semesterOfStudents}">SEMESTER</th>
-                                            <td class="editable" th:text="${course.semesterOfStudents}">XX</td>
+                                            <td id="semester_original"><span th:id="${course.semesterOfStudents}" th:text="${course.semesterOfStudents}">IDK - XXXX</span></td>
+                                            <td id="semester_dropdown" style="display: none">
+                                                <select class="custom-select form-control">
+                                                    <option class="dropdown-item" th:id="${course.semesterOfStudents}" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+                                                </select>
+                                            </td>
                                             <td></td>
                                         </tr>
                                     </tbody>
@@ -223,12 +236,10 @@
 </body>
 <script>
     $( document ).ready(function() {
-        $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tooltip"]').tooltip(({trigger : 'hover'}));
     });
 
     function replace_with_input(replace_me) {
-        //initilisation of the input
-
         if(replace_me.id === "bool") {
 
             const replacer = document.createElement("LABEL");
@@ -248,43 +259,6 @@
             replacer.appendChild(input_box_slider);
             replace_me.innerHTML = "";
             replace_me.appendChild(replacer);
-
-        }
-        /*
-        else if (replace_me.id === "faculty") {
-            //<select class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
-            //    <option class="dropdown-item" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}">FACULTY</option>
-            //</select>
-            const replacer = document.createElement("select");
-            replacer.className = "custom-select form-control"
-            replacer.setAttribute("th:with", "faculties = ${T(qova.course.CourseFaculty).values()}");
-
-            const option = document.createElement("option");
-            option.className = "dropdown-item";
-            option.setAttribute("th:each", "faculty : ${#lists.sort(faculties)}");
-            option.setAttribute("th:text", "#{'course.faculty.' + ${faculty}}");
-
-            replacer.appendChild(option);
-            replace_me.innerHTML = "";
-            replace_me.appendChild(replacer);
-        }
-        */
-        else if (replace_me.id === "semester") {
-            //<select class="custom-select form-control">
-            //    <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
-            //</select>
-            const replacer = document.createElement("select");
-            replacer.className = "custom-select form-control"
-
-            const option = document.createElement("option");
-            option.className = "dropdown-item";
-            option.setAttribute("th:each", "year : ${semesterDates}");
-            option.setAttribute("th:text", "${year}");
-            option.setAttribute("th:value", "${year}");
-
-            replacer.appendChild(option);                
-            replace_me.innerHTML = "";
-            replace_me.appendChild(replacer);
         }
         else {
             const replacer = document.createElement("INPUT");
@@ -296,13 +270,52 @@
             replace_me.appendChild(replacer);
         }
     }
+
+    function sort_options(select_element) {
+        const all_options = select_element.children;
+        
+        //sorting by innerHTML
+        var sorted_option = [];
+        for (let index = 0; index < all_options.length; ++index) {
+            const option = all_options[index];
+            sorted_option.push([option.id, option.innerHTML]);
+        }
+        sorted_option.sort(function(a, b) { 
+            return a[1] > b[1] ? 1 : -1;
+        });
+
+        //resorting the options in the HTML
+        for (let index = 0; index < all_options.length; ++index) {
+            const new_child = select_element.querySelector("#" + sorted_option[index][0]);
+            select_element.removeChild(new_child);
+            select_element.appendChild(new_child);
+        }
+    }
     
     function edit_mode() {
+        //turns finish edit button visable & disables edit button
+        document.getElementById("finishEdit").style.display = "block";
+        document.getElementById("startEdit").disabled = true;
+
+        //replaces simple values with input fields
         const editables = document.getElementsByClassName("editable");
         for (let index = 0; index < editables.length; ++index) {
             replace_with_input(editables[index]);
         }
-        document.getElementById("finishEdit").style.visibility = "visible";
+
+        //faculty replacement
+        const faculty_original = document.getElementById("faculty_original");
+        sort_options(document.getElementById("faculty_select"));
+        faculty_original.style.display = "none";
+        document.getElementById("faculty_dropdown").style.display = "block";
+        //select new default value
+        const key = faculty_original.querySelector("span").id;
+        document.getElementById(key.slice(4, key.length)).setAttribute("selected", "selected");
+
+        //semester replacement
+        const semester_original = document.getElementById("semester_original");
+        semester_original.style.display = "none";
+        document.getElementById("semester_dropdown").style.display = "block";
     }
 </script>
 </html>

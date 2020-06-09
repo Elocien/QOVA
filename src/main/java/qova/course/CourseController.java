@@ -26,7 +26,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-
+//Temporary Imports (can be removed later)
+//@Lucian please don't delete me just yet T_T
+import java.util.List;
+import java.util.Arrays;
+import java.time.LocalDate;
+import java.time.LocalTime;
+//END
 
 
 @Controller // This means that this class is a Controller
@@ -60,8 +66,8 @@ public class CourseController {
 
         LocalDate dateNow = LocalDate.now();
 
-        var NewCourse1 = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.ARCHITECTURE, dateNow);
-        var NewCourse2 = new Course("Sausage", true, true, true, "Sausage Lecture Survey 2020", "Sausage Tutorial Survey 2020", "Sausage Seminar Survey 2020", 2, 3, 1, CourseFaculty.BIOLOGY, dateNow);
+        var NewCourse1 = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.ARCHITECTURE, "1-5", dateNow);
+        var NewCourse2 = new Course("Sausage", true, true, true, "Sausage Lecture Survey 2020", "Sausage Tutorial Survey 2020", "Sausage Seminar Survey 2020", 2, 3, 1, CourseFaculty.BIOLOGY, "5-9", dateNow);
         List<Course> courseList = Arrays.asList(NewCourse1, NewCourse2);
         model.addAttribute("courseList", courseList);
 
@@ -74,6 +80,9 @@ public class CourseController {
     @GetMapping("/course/details")
     public String courseDetails(Model model, @RequestParam(required = false) String id) throws Exception {
         
+        //for editing:
+        model.addAttribute("semesterDates", courseManagement.findSemesters());
+
         //redirect 
         if (id == null) {
 			return "redirect:../courses";
@@ -105,9 +114,10 @@ public class CourseController {
     /*@GetMapping("/course/details")
     public String courseDetails(Model model) {
 
-        LocalDate dateNow = LocalDate.now();
+        model.addAttribute("semesterDates", courseManagement.findSemesters());
 
-        var NewCourse = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.ARCHITECTURE, dateNow);
+        LocalDate dateNow = LocalDate.now();
+        var NewCourse = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.EDUCATION, "1-5", dateNow);
         model.addAttribute("course", NewCourse);
 
         return "courseDetails";
@@ -210,6 +220,18 @@ public class CourseController {
         model.addAttribute("typeID", type);
         model.addAttribute("id", id);
         model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
+        
+        //Not sure if this is needed:
+        Optional<Course> course = courseManagement.findById(id);
+        model.addAttribute("coursename", course.get().getName());
+
+        /*
+        //Just for testing:
+        LocalDate dateNow = LocalDate.now();
+        var course = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.EDUCATION, "1-5", dateNow);
+        model.addAttribute("coursename", course.getName());
+        */
+        
         return "questioneditor4";
     }
 

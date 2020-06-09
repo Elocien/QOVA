@@ -27,7 +27,7 @@
 
                 <h2 class="font-weight-bold text-center mb-4 mt-4" th:text="#{new.headline}">NEW COURSE</h2>
 
-                <form class="border border-dark rounded form_color">
+                <form class="border border-dark form_color rounded">
                     <!--Checkboxes-->
                     <div class="form-row justify-content-md-center p-4">
                         <!--Lecture-->
@@ -68,8 +68,8 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="courseFaculty" th:text="#{new.courseFaculty}">COURSE FACULTY</label>
-                                <select class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
-                                    <option class="dropdown-item" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}">FACULTY</option>
+                                <select id="faculty_select" class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
+                                    <option class="dropdown-item" th:id="${faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
                                 </select>
                             </div>
                             <div class="col-md-2">
@@ -107,7 +107,7 @@
                     </div>
                     <div class="dropdown-divider border-dark m-0"></div>
                     <!--Confirm-->
-                    <div class="form-row justify-content-md-center p-4">
+                    <div class="form-row p-4">
                         <div class="col-md-8"></div>
                         <div class="col-md-4"><button type="submit" class="btn btn-primary btn-tu btn-block" th:text="#{new.submit}">SUBMIT</button></div>
                     </div>
@@ -121,4 +121,30 @@
     <div th:include="footer"></div>
 
 </body>
+<script>
+    $( document ).ready(function() {
+        const select_element = document.getElementById("faculty_select");
+        const all_options = select_element.children;
+        
+        //sorting by innerHTML
+        var sorted_option = [];
+        for (let index = 0; index < all_options.length; ++index) {
+            const option = all_options[index];
+            sorted_option.push([option.id, option.innerHTML]);
+        }
+        sorted_option.sort(function(a, b) { 
+            return a[1] > b[1] ? 1 : -1;
+        });
+
+        //resorting the options in the HTML
+        for (let index = 0; index < all_options.length; ++index) {
+            const new_child = select_element.querySelector("#" + sorted_option[index][0]);
+            if (index === 0) {
+                new_child.setAttribute("selected", "selected");
+            }
+            select_element.removeChild(new_child);
+            select_element.appendChild(new_child);
+        }
+    })
+</script>
 </html>

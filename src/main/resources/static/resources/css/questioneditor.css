@@ -2,9 +2,37 @@ body {
     --tu_blue: rgb(0, 37, 87);
 }
 
+.btn-head {
+    background-color: var(--tu_blue);
+    color: white;
+}
+.btn-head:hover {
+    background-color: var(--tu_blue);
+    pointer-events: none;
+}
 .btn-text-right{
     text-align: right !important;
 }
+.btn-list {
+    background-color: transparent;
+    color: darkslategrey;
+}
+.btn-list:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-top: 1px solid darkslategrey;
+    border-bottom: 1px solid darkslategrey;
+    transition: 0.5s;
+}
+.btn-list-last {
+    background-color: transparent;
+    color: darkslategrey;
+}
+.btn-list-last:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-top: 1px solid darkslategrey;
+    transition: 0.5s;
+}
+
 
 .index-number {
     background-color: var(--tu_blue);
@@ -78,6 +106,6 @@ body {
 }
 
 .Json {
-    display:none;
+    display: none;
 }
 

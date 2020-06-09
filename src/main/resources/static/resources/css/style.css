@@ -1,3 +1,4 @@
+/*general*/
 body {
   --tu_blue: rgb(0, 37, 87);
   --tu_blue_highlight: rgb(230, 230, 255);
@@ -7,12 +8,6 @@ body {
   position: relative;
   margin: 0;
   padding-bottom: 56px;
-}
-
-footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
 }
 
 /*Removes arrows from number input fields*/
@@ -34,7 +29,6 @@ input[type=number] {
   color: black;
   border-color: black;
 }
-
 .btn-delete {
   position: absolute;
   right: 1rem;
@@ -43,10 +37,17 @@ input[type=number] {
   color: darkred;
 }
 
+/*footer.html*/
+footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
 .page-footer {
   background-color: var(--tu_blue);
 }
 
+/*navbar.html*/
 .navbar {
   background-color: var(--tu_blue);
   z-index: 9999;
@@ -80,11 +81,9 @@ input[type=number] {
   top: 0.4rem;
   left: 0.35rem;
 }
-
 .nav-item {
   padding: 0rem 1rem;
 }
-
 .link_to_page {
   font-size: 1.1rem;
   line-height: 1.1rem;
@@ -95,7 +94,6 @@ input[type=number] {
   color: grey;
   transition: 0.5s;
 }
-
 .settings_icon {
   color: white;
 }
@@ -120,17 +118,24 @@ input[type=number] {
   background-image: url(..//images/uk.svg);
 }
 
+/*home.html start*/
 .fancy_text {
   font-size: xx-large;
   letter-spacing: 0.4rem;
   line-height: 3rem;
   text-decoration: left;
 }
-
+.logo-home {
+  width: 200px;
+  height: 200px;
+  filter: invert(0.8);
+}
 .about_text {
-  background-color: rgba(100, 100, 100, 0.9);
+  border-top: solid 1px var(--tu_blue);
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
+/*IDK*/
 .form-control {
   background-color: white;
   border-width: 1px;
