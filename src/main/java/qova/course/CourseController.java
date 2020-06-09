@@ -238,7 +238,7 @@ public class CourseController {
         model.addAttribute("coursename", course.getName());
         */
         
-        return "questioneditor4";
+        return "questioneditor";
     }
 
 
