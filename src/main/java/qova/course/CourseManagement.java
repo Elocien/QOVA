@@ -53,7 +53,7 @@ public class CourseManagement {
         var courseInstance = parseSemesterString(form.getCourseInstance());
         var semesterUIString = form.getCourseInstance();
 
-        Course crs  = new Course(name, lectureExists, tutorialExists, seminarExists, "", "", "", classTotalTutorial, classTotalSeminar, semesterOfStudents, faculty, semesterUIString, courseInstance);
+        Course crs  = new Course(name, lectureExists, tutorialExists, seminarExists, "[]", "[]", "[]", classTotalTutorial, classTotalSeminar, semesterOfStudents, faculty, semesterUIString, courseInstance);
         courses.save(crs);
         
         return crs.getId();
@@ -360,7 +360,7 @@ public class CourseManagement {
         var faculty = CourseFaculty.CHEMISTRY;
         var semesterUIString = "SoSe 2020";
 
-        courses.save(new Course(name, lectureExists, tutorialExists, seminarExists, "", "", "", classTotalTutorial, classTotalSeminar, semester, faculty, semesterUIString, LocalDate.now()));
+        courses.save(new Course(name, lectureExists, tutorialExists, seminarExists, "[]", "[]", "[]", classTotalTutorial, classTotalSeminar, semester, faculty, semesterUIString, LocalDate.now()));
     }
 
    
