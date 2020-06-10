@@ -175,12 +175,6 @@ public class CourseManagement {
         int currentYear = dateNow.getYear();
         int currentMonth = dateNow.getMonthValue();
 
-        //Future Semesters to add (Given in years)
-        int x = 1;
-
-        //Previous Semesters to add (Given in years)
-        int y = 1;
-
 
 
         //List sent to controller
@@ -193,58 +187,46 @@ public class CourseManagement {
 
         //if winter semester and in year xx
         if(currentMonth <4){
-            //previous semesters
-            for(int i=x; i > 0; i--){
-                semesters.add("WiSe " + String.valueOf(currentYear-(2+i)) + "/" + String.valueOf(currentYear-(1+i)));
-                semesters.add("SoSe " + String.valueOf(currentYear-(1+i)));
-            }
+            
+            //previous semesters  
+            semesters.add("WiSe " + String.valueOf(currentYear- 2) + "/" + String.valueOf(currentYear- 1));
+            semesters.add("SoSe " + String.valueOf(currentYear -1));
 
             //current Semester
             semesters.add("WiSe " + String.valueOf(currentYear-1) + "/" + String.valueOf(currentYear));
 
             //future semesters
-            for(int i = 0; i < y; i++){
-                semesters.add("SoSe " + String.valueOf(currentYear+i));
-                semesters.add("WiSe " + String.valueOf(currentYear+i) + "/" + String.valueOf(currentYear + (i + 1)));
-            }
+            semesters.add("SoSe " + String.valueOf(currentYear));
+            semesters.add("WiSe " + String.valueOf(currentYear) + "/" + String.valueOf(currentYear + 1));
         }
         
         //if winter semster and in year yy
         else if(currentMonth >= 10){
             //previous semesters
-            for(int i=x; i > 0; i--){
-                semesters.add("WiSe " + String.valueOf(currentYear-(1+i)) + "/" + String.valueOf(currentYear-(i)));
-                semesters.add("SoSe " + String.valueOf(currentYear-i));
-            }
+            semesters.add("WiSe " + String.valueOf(currentYear- 1 + "/" + String.valueOf(currentYear)));
+            semesters.add("SoSe " + String.valueOf(currentYear));
 
             //current Semester
             semesters.add("WiSe " + String.valueOf(currentYear) + "/" + String.valueOf(currentYear + 1));
 
             //future semesters
-            for(int i=0; i < y; i++){
-                semesters.add("SoSe " + String.valueOf(currentYear+(1+i)));
-                semesters.add("WiSe " + String.valueOf(currentYear+(1+i)) + "/" + String.valueOf(currentYear+(2+i)));
-            }
+            semesters.add("SoSe " + String.valueOf(currentYear + 1));
+            semesters.add("WiSe " + String.valueOf(currentYear + 1) + "/" + String.valueOf(currentYear + 2));
         }
 
 
         //if summer semester
         else{
             //previous semesters
-            for(int i=x; i > 0; i--){
-                semesters.add("SoSe " + String.valueOf(currentYear-(1+i)));
-                semesters.add("WiSe " + String.valueOf(currentYear-(1+i)) + "/" + String.valueOf(currentYear- i));
-            }
+            semesters.add("SoSe " + String.valueOf(currentYear - 1));
+            semesters.add("WiSe " + String.valueOf(currentYear - 1) + "/" + String.valueOf(currentYear));
 
             //current Semester
             semesters.add("SoSe " + String.valueOf(currentYear));
 
             //future semesters
-            for(int i=0; i < y; i++){
-                semesters.add("WiSe " + String.valueOf(currentYear+i) + "/" + String.valueOf(currentYear + (i + 2)));
-                semesters.add("SoSe " + String.valueOf(currentYear+(1+i)));
-                
-            }
+            semesters.add("WiSe " + String.valueOf(currentYear) + "/" + String.valueOf(currentYear + 1));
+            semesters.add("SoSe " + String.valueOf(currentYear + 1));
         }
         
 
