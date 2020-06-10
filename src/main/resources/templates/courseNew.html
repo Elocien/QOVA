@@ -84,8 +84,8 @@
                             </div>
                             <div class="col-md-2">
                                 <label for="courseInstanceString" th:text="#{course.courseInstance}">COURSE SEMESTER</label>
-                                <select class="custom-select form-control">
-                                    <option class="dropdown-item" th:field="*{courseInstanceString}" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+                                <select class="custom-select form-control" th:field="*{courseInstanceString}">
+                                    <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
                                 </select>
                             </div>
                         </div>
