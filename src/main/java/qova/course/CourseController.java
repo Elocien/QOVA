@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-//Temporary Imports (can be removed later)
+//TODO: Temporary Imports (can be removed later)
 //@Lucian please don't delete me just yet T_T
 import java.util.List;
 import java.util.Arrays;
@@ -113,12 +113,13 @@ public class CourseController {
     }
 
     /*@GetMapping("/course/details")
-    public String courseDetails(Model model) {
+    public String courseDetails(Model model, CourseForm form) {
 
+        model.addAttribute("form", form);
         model.addAttribute("semesterDates", courseManagement.findSemesters());
 
         LocalDate dateNow = LocalDate.now();
-        var NewCourse = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.EDUCATION, "1-5", dateNow);
+        var NewCourse = new Course("Cheese", false, true, true, "-", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.EDUCATION, "1-5", dateNow);
         model.addAttribute("course", NewCourse);
 
         return "courseDetails";
@@ -227,11 +228,11 @@ public class CourseController {
 
         //Gives the survey JSON to the model, so the current survey can be assembled and added to
         model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
-        
+
         //give course name to model, to show as title
         Optional<Course> course = courseManagement.findById(id);
         model.addAttribute("coursename", course.get().getName());
-
+        
         /*
         //Just for testing:
         LocalDate dateNow = LocalDate.now();

@@ -38,13 +38,14 @@
 
                         <!--Course Details-->
                         <div class="col-md-6">
-                            <form>
+                            <form method="post" th:object="${form}" th:action="@{/course/edit}">
 
-                                <!--Headline-->
+                                <!--Headline & Buttons-->
                                 <div class="row">
                                     <h5 class="font-weight-light text-left" th:text="#{course.details}">COURSE DETAILS</h5>
                                     <button type="button" id="startEdit" class="btn edit_details btn-link p-0 ml-4 align-middle" onclick="edit_mode()" data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}"><i class="far fa-edit"></i></button>
-                                    <button type="button" id="finishEdit" class="btn edit_details btn-link p-0 ml-4 align-middle" style="display: none;" data-toggle="tooltip" data-placement="right" th:title="#{detail.finishEdit}"><i class="fas fa-check"></i></button>
+                                    <button type="button" onClick="window.location.reload();" class="btn edit_details btn-link p-0 ml-4 align-middle show_me" style="display: none;" data-toggle="tooltip" data-placement="right" th:title="#{detail.cancelEdit}"><i class="fas fa-times"></i></button>
+                                    <button type="submit" class="btn edit_details btn-link p-0 ml-4 align-middle show_me" style="display: none;" data-toggle="tooltip" data-placement="right" th:title="#{detail.finishEdit}"><i class="fas fa-check"></i></button>
                                 </div>
 
                                 <!--1st Table-->
@@ -56,7 +57,7 @@
                                                 <th scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
                                                 <td class="hide_me" id="faculty_original"><span th:id="'og: ' + ${course.faculty}" th:text="#{'course.faculty.' + ${course.faculty}}">FACULTY</span></td>
                                                 <td class="show_me" id="faculty_dropdown" style="display: none">
-                                                    <select id="faculty_select" class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
+                                                    <select id="faculty_select" class="custom-select form-control" th:field="*{faculty}" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
                                                         <option class="dropdown-item" th:id="${faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
                                                     </select>
                                                 </td>
@@ -67,7 +68,7 @@
                                                 <th scope="row" th:text="#{course.courseInstance}">YEAR</th>
                                                 <td class="hide_me" th:text="${course.semesterUI}">XXXX</td>
                                                 <td class="show_me" style="display: none;">
-                                                    <input class="form-control" type="text" th:placeholder="${course.semesterUI}">
+                                                    <input class="form-control" type="text" th:placeholder="${course.semesterUI}" th:field="*{courseInstanceString}">
                                                 </td>
                                                 <td></td>
                                             </tr>
@@ -76,7 +77,7 @@
                                                 <th scope="row" th:text="#{course.semesterOfStudents}">SEMESTER</th>
                                                 <td class="hide_me"><span th:id="${course.semesterOfStudents}" th:text="${course.semesterOfStudents}">IDK - XXXX</span></td>
                                                 <td class="show_me" style="display: none">
-                                                    <select class="custom-select form-control">
+                                                    <select class="custom-select form-control" th:field="*{semesterOfStudents}">
                                                         <option class="dropdown-item" th:id="${course.semesterOfStudents}" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
                                                     </select>
                                                 </td>
@@ -108,27 +109,31 @@
                                                     <div th:case="TRUE">
                                                         <td class="text-center hide_me">1</td>
                                                         <td class="show_me" style="display: none;">
-                                                            <input class="form-control" type="text" placeholder="1">
+                                                            <input class="form-control" type="text" placeholder="1" min="0" max="1">
                                                         </td>
                                                     </div>
                                                     <div th:case="FALSE">
                                                         <td class="text-center hide_me">0</td>
                                                         <td class="show_me" style="display: none;">
-                                                            <input class="form-control" type="text" placeholder="0">
+                                                            <input class="form-control" type="text" placeholder="0" min="0" max="1">
                                                         </td>
                                                     </div>
                                                 </div>
                                                 <!--3rd & 4th Col-->
+                                                <td class="show_me" style="display: none;">
+                                                    <div class="col-md-auto">
+                                                        <label class="switch m-0 align-middle" th:switch="${course.lectureSurvey}">
+                                                            <input th:case="'-'" type="checkbox" id="lectureSurveyCheck" onclick="set_hidden_data('lectureSurvey')">
+                                                            <input th:case="*" type="checkbox" id="lectureSurveyCheck" checked onclick="set_hidden_data('lectureSurvey')">
+                                                            <span class="slider round"></span>
+                                                        </label>
+                                                    </div>
+                                                    <div th:switch="${course.lectureSurvey}" hidden="true">
+                                                        <input th:case="'-'" type="checkbox" id="lectureSurveyHidden">
+                                                        <input th:case="*" type="checkbox" id="lectureSurveyHidden" checked>
+                                                    </div>
+                                                </td>
                                                 <div th:switch="${course.lectureSurvey}">
-                                                    <td class="show_me" style="display: none;">
-                                                        <div class="col-md-auto">
-                                                            <label class="switch m-0 align-middle">
-                                                                <input type="checkbox" id="lectureSurveyCheck" checked="false" onclick="set_hidden_data('lectureSurvey')">
-                                                                <span class="slider round"></span>
-                                                            </label>
-                                                        </div>
-                                                        <input type="checkbox" id="lectureSurveyHidden" hidden="true" checked="false">
-                                                    </td>
                                                     <div th:case="'-'">
                                                         <td class="text-center hide_me" th:text="#{No}">!EXISTS</td>
                                                         <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a></td>
@@ -147,17 +152,21 @@
                                                 <!--2nd Col-->
                                                 <td class="text-center hide_me" th:text="${course.classTotalTutorial}">COUNT</td>
                                                 <td class="show_me" style="display: none;">
-                                                    <input class="form-control" type="text" th:placeholder="${course.classTotalTutorial}">
+                                                    <input class="form-control" type="text" th:field="*{classTotalTutorial}" th:placeholder="${course.classTotalTutorial}">
                                                 </td>
                                                 <!--3rd & 4th Col-->
                                                 <td class="show_me" style="display: none;">
                                                     <div class="col-md-auto">
-                                                        <label class="switch m-0 align-middle">
-                                                            <input type="checkbox" id="tutorialSurveyCheck" checked="false" onclick="set_hidden_data('tutorialSurvey')">
+                                                        <label class="switch m-0 align-middle" th:switch="${course.tutorialSurvey}">
+                                                            <input th:case="'-'" type="checkbox" id="tutorialSurveyCheck" onclick="set_hidden_data('tutorialSurvey')">
+                                                            <input th:case="*" type="checkbox" id="tutorialSurveyCheck" onclick="set_hidden_data('tutorialSurvey')" checked>
                                                             <span class="slider round"></span>
                                                         </label>
                                                     </div>
-                                                    <input type="checkbox" id="tutorialSurveyHidden" hidden="true" checked="false">
+                                                    <div th:switch="${course.tutorialSurvey}" hidden="true">
+                                                        <input th:case="'-'" type="checkbox" id="tutorialSurveyHidden">
+                                                        <input th:case="*" type="checkbox" id="tutorialSurveyHidden" checked>
+                                                    </div>
                                                 </td>
                                                 <div th:switch="${course.tutorialSurvey}">
                                                     <div th:case="'-'">
@@ -178,17 +187,21 @@
                                                 <!--2nd Col-->
                                                 <td class="text-center hide_me" th:text="${course.classTotalSeminar}">COUNT</td>
                                                 <td class="show_me" style="display: none;">
-                                                    <input class="form-control" type="text" th:placeholder="${course.classTotalSeminar}">
+                                                    <input class="form-control" type="text" th:field="*{classTotalSeminar}" th:placeholder="${course.classTotalSeminar}">
                                                 </td>
                                                 <!--3rd & 4th Col-->
                                                 <td class="show_me" style="display: none;">
                                                     <div class="col-md-auto">
-                                                        <label class="switch m-0 align-middle">
-                                                            <input type="checkbox" id="seminarSurveyCheck" checked="false" onclick="set_hidden_data('seminarSurvey')">
+                                                        <label class="switch m-0 align-middle" th:switch="${course.seminarSurvey}">
+                                                            <input th:case="'-'" type="checkbox" id="seminarSurveyCheck" onclick="set_hidden_data('seminarSurvey')">
+                                                            <input th:case="*" type="checkbox" id="seminarSurveyCheck" onclick="set_hidden_data('seminarSurvey')" checked>
                                                             <span class="slider round"></span>
                                                         </label>
                                                     </div>
-                                                    <input type="checkbox" id="seminarSurveyHidden" hidden="true" checked="false">
+                                                    <div th:switch="${course.seminarSurvey}" hidden="true">
+                                                        <input th:case="'-'" type="checkbox" id="seminarSurveyHidden">
+                                                        <input th:case="*" type="checkbox" id="seminarSurveyHidden" checked>
+                                                    </div>
                                                 </td>
                                                 <div th:switch="${course.seminarSurvey}">
                                                     <div th:case="'-'">
@@ -317,7 +330,6 @@
     
     function edit_mode() {
         //turns finish edit button visable & disables edit button
-        document.getElementById("finishEdit").style.display = "block";
         document.getElementById("startEdit").disabled = true;
 
         //faculty replacement
