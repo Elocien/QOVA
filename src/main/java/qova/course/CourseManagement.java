@@ -50,8 +50,8 @@ public class CourseManagement {
 
         var semesterOfStudents = form.getSemesterOfStudents();
         var faculty = form.getFaculty();
-        var courseInstance = parseSemesterString(form.getCourseInstance());
-        var semesterUIString = form.getCourseInstance();
+        var courseInstance = parseSemesterString(form.getCourseInstanceString());
+        var semesterUIString = form.getCourseInstanceString();
 
         Course crs  = new Course(name, lectureExists, tutorialExists, seminarExists, "[]", "[]", "[]", classTotalTutorial, classTotalSeminar, semesterOfStudents, faculty, semesterUIString, courseInstance);
         courses.save(crs);
@@ -82,7 +82,7 @@ public class CourseManagement {
             course.setClassTotalSeminar(form.getClassTotalSeminar());
             course.setSemesterOfStudents(form.getSemesterOfStudents());
             course.setFaculty(form.getFaculty());
-            course.setCourseInstance(parseSemesterString(form.getCourseInstance()));
+            course.setCourseInstance(parseSemesterString(form.getCourseInstanceString()));
         }
     }
 

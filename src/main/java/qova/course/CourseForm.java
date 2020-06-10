@@ -6,12 +6,16 @@ import javax.validation.constraints.NotNull;
 
 public class CourseForm {
 
+    @NotEmpty
     private String name;
 
+    @NotNull
     private Boolean lectureExists;
 
+    @NotNull
     private Boolean tutorialExists;
 
+    @NotNull
     private Boolean seminarExists;
 
     private String lectureSurvey;
@@ -24,12 +28,16 @@ public class CourseForm {
 
     private Integer classTotalTutorial;
 
+    @NotNull
     private Integer semesterOfStudents;
 
+    @NotNull
     private CourseFaculty faculty;
 
     //Taken as String from model
+    @NotNull
     private String courseInstanceString;
+
 
 
     public CourseForm(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, Integer classTotalSeminar, Integer classTotalTutorial, Integer semesterOfStudents, CourseFaculty faculty, String courseInstanceString){
@@ -91,7 +99,7 @@ public class CourseForm {
         return this.faculty;
     }
 
-    public String getCourseInstance(){
+    public String getCourseInstanceString(){
         return this.courseInstanceString;
     }
 

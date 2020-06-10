@@ -133,7 +133,7 @@ public class CourseController {
         model.addAttribute("form", form);
 
         //List of Semesters for Course Creator to pick from
-        model.addAttribute("semesterDates", courseManagement.findSemesters();
+        model.addAttribute("semesterDates", courseManagement.findSemesters());
 		return "courseNew";
 	}
 
@@ -144,7 +144,8 @@ public class CourseController {
 	public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
 			BindingResult result) {
 
-        System.out.println(form.getName());
+        System.out.println(result.getAllErrors());
+
 
 		if (result.hasErrors()) {
 			return createCourse(model, form);

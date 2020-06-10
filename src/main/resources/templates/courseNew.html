@@ -27,7 +27,7 @@
 
                 <h2 class="font-weight-bold text-center mb-4 mt-4" th:text="#{new.headline}">NEW COURSE</h2>
 
-                <form id="form" class="border border-dark form_color rounded" th:object="${form}" th:action="@{/course/new}">
+                <form id="form" method="post" class="border border-dark form_color rounded" th:object="${form}" th:action="@{/course/new}">
                     <!--Checkboxes-->
                     <div class="form-row justify-content-md-center p-4">
                         <!--Lecture-->
@@ -67,11 +67,11 @@
                         <div class="form-row">
                             <div class="col-md-4">
                                 <label for="courseName" th:text="#{new.courseName}">COURSE NAME</label>
-                                <input type="text" class="form-control" id="courseName" th:field="*{name}" placeholder="..." required>
+                                <input type="text" class="form-control" id="name" th:field="*{name}" placeholder="..." required>
                             </div>
                             <div class="col-md-4">
                                 <label for="courseFaculty" th:text="#{new.courseFaculty}">COURSE FACULTY</label>
-                                <select id="faculty_select" class="custom-select form-control" th:field="*{faculty}" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
+                                <select id="faculty" class="custom-select form-control" th:field="*{faculty}" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
                                     <option class="dropdown-item" th:id="${faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
                                 </select>
                             </div>
@@ -83,9 +83,9 @@
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <label for="semesterOfStudents" th:text="#{course.courseInstance}">COURSE SEMESTER</label>
+                                <label for="courseInstanceString" th:text="#{course.courseInstance}">COURSE SEMESTER</label>
                                 <select class="custom-select form-control">
-                                    <option class="dropdown-item" th:field="*{courseInstance}" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+                                    <option class="dropdown-item" th:field="*{courseInstanceString}" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
                                 </select>
                             </div>
                         </div>
@@ -112,7 +112,9 @@
                     <!--Confirm-->
                     <div class="form-row p-4">
                         <div class="col-md-8"></div>
-                        <div class="col-md-4"><a type="submit" class="btn btn-primary btn-tu btn-block" th:text="#{new.submit}" th:href="@{/course/new}">SUBMIT</a></div>
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-primary btn-tu btn-block" th:text="#{new.submit}" >SUBMIT</button>
+                        </div>
                     </div>
                 </form>
 
