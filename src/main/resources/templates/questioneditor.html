@@ -5,34 +5,707 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/questioneditor.css}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
     <title th:text="#{home.title}">TITLE</title>
 </head>
-<body>
-<div th:include="navbar"></div>
-<h1 id="Name">
-    Fragen für den Fragebogen
-</h1>
-<select id="questiontyp" >
-    <option value="yes-no-question" selected="selected" th:text="#{question.yes-no-question}"></option>
-    <option value="multiple-choice" th:text="#{question.multiple-choice}"></option>
-    <option value="single-choice" th:text="#{question.single-choice}"></option>
-    <option value="free-text-question" th:text="#{question.free-text-question}"></option>
-</select>
-<button onclick="addQuestion()">Füge eine Frage hinzu</button>
-<h3 id="questionlist" >
-</h3>
-<script>
-    var questionlist = [];
+<body class="bg-light">
 
-    function addQuestion(){
-            var questiontyp = document.getElementById("questiontyp");
-            var questiontypselect = questiontyp.options[questiontyp.selectedIndex].value;
-            questionlist.push(questiontypselect.toString());
-            return document.getElementById("questionlist").innerHTML = questionlist;
-    }
-</script>
+    <div th:include="navbar"></div>
+
+    <div class="row">
+        <div class="col-lg-12 mt-4">
+            
+            <h2 class="font-weight-bold text-center" th:text="#{editor.headline}">SURVEY EDITOR</h2>
+            <h5 class="font-weight-light text-center"><span th:text="${coursename} + ': '"></span><span th:text="#{'editor.' + ${typeID}}"></span></h5>
+
+            <div class="row">       
+                <div class="col-md-1"></div>     
+                <!--Menu-->
+                <div class="col-md-2 text-right">
+                    <div class="container">
+                        <div class="btn-group-vertical mt-4 border border-dark rounded" role="group" aria-label="First group">
+                            <button type="button" class="btn btn-head btn-text-right" th:text="#{question.new}">NEW QUESTION</button>
+                            <button type="button" class="btn btn-list btn-text-right" onclick="addYesNoQuestion()"><span th:text="#{question.yes-no-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                            <button type="button" class="btn btn-list btn-text-right" onclick="addMultipleChoiceQuestion()"><span th:text="#{question.multiple-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                            <button type="button" class="btn btn-list btn-text-right" onclick="addSingleChoiceQuestion()"><span th:text="#{question.single-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                            <button type="button" class="btn btn-list-last btn-text-right" onclick="addFreeTextQuestion()"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                        </div>
+                        <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="submitsurvey">
+                            <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
+                            <button class="btn btn-primary mt-2" type="submit" th:text="#{question.submit}">SUBMIT</button>
+                        </form>
+                        <div class="Json" id="json" th:text="${survey}"></div>
+                    </div>
+                </div>
+                <!--Questions-->
+                <div class="col-md-6" id="questionnaire"></div>
+                <div class="col-md-3"></div>
+            </div>
+
+        </div>
+    </div>
+    
+    <div class="pt-4" th:include="footer"></div>
+
+    <script>
+        
+        //auto resize for the textareas
+        const line_height = convertRemToPixels(2);
+        var tx = document.getElementsByTagName('textarea');
+        function refreshTextareas () {
+            tx = document.getElementsByTagName('textarea');
+            for (let i = 0; i < tx.length; i++) {
+                tx[i].setAttribute('style', 'height:' + (tx[i].scrollHeight) + 'px;overflow-y:hidden;');
+                tx[i].addEventListener("input", OnInput, false);
+            }
+            function OnInput() {
+                if (line_height < this.scrollHeight) {
+                    this.style.height = 'auto';
+                    this.style.height = (this.scrollHeight) + 'px';
+                }
+            }
+        }
+        function convertRemToPixels(rem) {
+            return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
+        }
+        
+        const questionnaire = [];
+
+        function addYesNoQuestion() {
+            saveInputs();
+            const yesnoQuestion = {
+                type: "YesNo",
+                question: "Question"
+            };
+            questionnaire.push(yesnoQuestion);
+            renderall();
+        }
+
+        function addMultipleChoiceQuestion(){
+            saveInputs();
+            const multiplechoiceQuestion = {
+                type: "MultipleChoice",
+                question: "Question",
+                answers: []
+            };
+            questionnaire.push(multiplechoiceQuestion);
+            renderall();
+
+        }
+
+        function addSingleChoiceQuestion() {
+            saveInputs();
+            const singlechoiceQuestion = {
+                type: "SingleChoice",
+                question: "Question",
+                answers: []
+            };
+            questionnaire.push(singlechoiceQuestion);
+            renderall();
+        }
+
+        function addFreeTextQuestion() {
+            saveInputs();
+            const freetextQuestion={
+                type: "FreeText",
+                question: "Question",
+            };
+            questionnaire.push(freetextQuestion);
+            renderall();
+
+        }
+
+        function getJson() {
+            saveInputs();
+            document.getElementById("json").innerHTML= JSON.stringify(questionnaire);
+            renderall();
+
+        }
+
+        function renderall(){
+            clearquestionnaire();
+            questionnaire.forEach(renderquestionnaireelement);
+            document.getElementById("questionnairejson").value = JSON.stringify(questionnaire);
+            refreshTextareas();
+        }
+
+        //Bootsrapped
+        function renderquestionnaireelement (value, index, array){
+
+            const x = document.createElement("DIV");
+
+            const row1 = document.createElement("DIV");
+            row1.className = "row";
+
+            //Number on the top left
+            const index_number = document.createElement("h3");
+            index_number.className = "text-light text-center index-number"
+            index_number.innerHTML = index;
+            const left = document.createElement("DIV");
+            left.className = "col-md-8 pl-0";
+            const right = document.createElement("DIV");
+            right.className = "col-md-4 pr-0";
+
+            left.appendChild(index_number);
+            row1.appendChild(left);
+            row1.appendChild(right);
+            x.appendChild(row1);
+
+            //Question Initilisation
+            const row2 = document.createElement("DIV");
+            row2.className = "row";
+            const middle_col = document.createElement("DIV");
+            middle_col.className = "col-md-12";
+            row2.appendChild(middle_col)
+            x.appendChild(row2);
+
+            //Answere Initilisation
+            const row3 = document.createElement("DIV");
+            row3.className = "row";
+            const last_col = document.createElement("DIV");
+            last_col.className = "col-md-12 ml-5";
+            row3.appendChild(last_col);
+
+            if (value.type === "YesNo"){
+
+                //Create a html section for a YesNo-Question
+                x.className = "container bg-white border border-secondary rounded mt-4 YesNo";
+                x.setAttribute("id",index);
+
+                left.appendChild(createTitleDropdown(index,value.type));
+                right.appendChild(createButtonDelete(index));
+                right.appendChild(createButtonCopy(index));
+                if (index > 0) {
+                    right.appendChild(createButtonUp(index));
+                }
+                if (index+1 !== array.length && array.length >1){
+                    right.appendChild(createButtonDown(index));
+                }
+
+                //Textarea for the question input
+                const text_area = document.createElement("TEXTAREA");
+                text_area.className = "Textarea Question";
+                if (value.question === "Question"||value.question === ""){
+                    text_area.placeholder = "Question"
+                }
+                else {
+                    text_area.defaultValue = value.question;
+                }
+                text_area.setAttribute("id",index);
+                middle_col.appendChild(text_area);
+
+            }
+
+            else if (value.type ==="FreeText"){
+
+                //Create a html section for a FreeText-Question
+                x.className = "container bg-white border border-secondary rounded mt-4 FreeText";
+                x.setAttribute("id",index);
+
+                left.appendChild(createTitleDropdown(index,value.type));
+                right.appendChild(createButtonDelete(index));
+                right.appendChild(createButtonCopy(index));
+                if (index > 0) {
+                    right.appendChild(createButtonUp(index));
+                }
+                if (index+1 !== array.length && array.length >1){
+                    right.appendChild(createButtonDown(index));
+                }
+
+                //Textarea for the question input
+                const text_area = document.createElement("TEXTAREA");
+                text_area.className = "Textarea Question";
+                text_area.setAttribute("id",index);
+                if (value.question === "Question"||value.question === ""){
+                    text_area.placeholder = "Question"
+                }
+                else {
+                    text_area.defaultValue = value.question;
+                }
+                middle_col.appendChild(text_area);
+
+            }
+
+            else if (value.type === "SingleChoice"){
+
+                //Create a html section for a SingleChoice-Question
+                x.className = "container bg-white border border-secondary rounded mt-4 SingleChoice";
+                x.setAttribute("id",index);
+
+                left.appendChild(createTitleDropdown(index,value.type));
+                right.appendChild(createButtonDelete(index));
+                right.appendChild(createButtonCopy(index));
+                if (index > 0) {
+                    right.appendChild(createButtonUp(index));
+                }
+                if (index+1 !== array.length && array.length >1){
+                    right.appendChild(createButtonDown(index));
+                }
+
+                //Textarea for the question input
+                const text_area = document.createElement("TEXTAREA");
+                text_area.className = "Textarea Question";
+                text_area.setAttribute("id",index);
+                if (value.question === "Question"||value.question === ""){
+                    text_area.placeholder = "Question"
+                }
+                else {
+                    text_area.defaultValue = value.question;
+                }
+                middle_col.appendChild(text_area);
+
+                //Answer Option Part
+                last_col.setAttribute("id",index);
+                last_col.appendChild(createAnswerOptionPart(index,value.answers));
+
+                //New Answer Button
+                last_col.appendChild(createButtonnewAnswer(index));
+                x.appendChild(row3);
+
+            }
+
+            else if (value.type === "MultipleChoice"){
+
+                //Create a html section for a MultipleChoice-Question
+                x.className = "container bg-white border border-secondary rounded mt-4 MultipleChoice";
+                x.setAttribute("id",index);
+
+                left.appendChild(createTitleDropdown(index,value.type));
+                right.appendChild(createButtonDelete(index));
+                right.appendChild(createButtonCopy(index));
+                if (index > 0) {
+                    right.appendChild(createButtonUp(index));
+                }
+                if (index+1 !== array.length && array.length >1){
+                    right.appendChild(createButtonDown(index));
+                }
+
+                //Textarea for the question input
+                const text_area = document.createElement("TEXTAREA");
+                text_area.className = "Textarea Question";
+                text_area.setAttribute("id",index);
+                if (value.question === "Question"||value.question === "") {
+                    text_area.placeholder = "Question"
+                }
+                else {
+                    text_area.defaultValue = value.question;
+                }
+                middle_col.appendChild(text_area);
+
+                //Answer Option Part
+                last_col.setAttribute("id",index);
+                last_col.appendChild(createAnswerOptionPart(index,value.answers));
+
+                //New Answer Button
+                last_col.appendChild(createButtonnewAnswer(index));
+                x.appendChild(row3);
+
+            }
+
+            document.getElementById("questionnaire").appendChild(x);
+
+        }
+
+        function clearquestionnaire() {
+            const questionnaire = document.getElementById("questionnaire");
+            while (questionnaire.firstChild){
+                questionnaire.removeChild(questionnaire.lastChild);
+            }
+
+        }
+
+        function saveInputs() {
+            const textareas_question = document.getElementsByClassName("Textarea Question");
+            for (let i=0;i<textareas_question.length;i++){
+                const questionid = textareas_question[i].id;
+                questionnaire[questionid].question = textareas_question[i].value;
+
+            }
+
+            const textareas_answer = document.getElementsByClassName("Textarea Answers");
+            for (let i=0;i<textareas_answer.length;i++){
+                const questionid = textareas_answer[i].parentElement.parentElement.parentElement.id;
+                const answerid = textareas_answer[i].id;
+                questionnaire[questionid].answers[answerid] = textareas_answer[i].value;
+
+            }
+
+        }
+
+        //Relevant for Frontend
+        function createButtonDelete (index){
+
+            const btn_d = document.createElement("BUTTON");
+            btn_d.className = "btn btn-link nounderline pull-right m-1";
+            btn_d.setAttribute("onclick","deleteQuestion("+ index+")");
+
+            const btn_icon = document.createElement("i");
+            btn_icon.className = "fa fa-trash";
+            btn_d.appendChild(btn_icon);
+
+            return btn_d;
+
+        }
+
+        function createButtonCopy(index) {
+
+            const btn_copy = document.createElement("Button");
+            btn_copy.className="btn btn-link nounderline pull-right m-1";
+            btn_copy.setAttribute("onclick","copyQuestion("+index+")");
+
+            const btn_icon = document.createElement("i");
+            btn_icon.className = "fa fa-clone";
+            btn_copy.appendChild(btn_icon);
+
+            return btn_copy;
+
+        }
+
+        function createButtonUp(index) {
+
+            const btn_up = document.createElement("Button");
+            btn_up.className = "btn btn-link nounderline pull-right m-1";
+            btn_up.setAttribute("onclick","pushQuestionUp("+index+")");
+
+            const btn_icon = document.createElement("i");
+            btn_icon.className = "fa fa-arrow-up";
+            btn_up.appendChild(btn_icon);
+
+            return btn_up;
+        }
+
+        function createButtonDown(index) {
+
+            const btn_down = document.createElement("Button");
+            btn_down.className="btn btn-link nounderline pull-right m-1";
+            btn_down.setAttribute("onclick","pushQuestionDown("+index+")");
+
+            const btn_icon = document.createElement("i");
+            btn_icon.className = "fa fa-arrow-down";
+            btn_down.appendChild(btn_icon);
+
+            return btn_down;
+
+        }
+
+        function createButtonnewAnswer(index){
+            const btn_newAnswer = document.createElement("Button");
+            btn_newAnswer.className="btn btn-primary mb-2";
+            btn_newAnswer.innerHTML="Add new Answer";
+            btn_newAnswer.setAttribute("onclick","addnewAnswer("+index+")");
+
+            return btn_newAnswer;
+        }
+
+        function deleteQuestion(index) {
+            saveInputs();
+            questionnaire.splice(index,1);
+            renderall();
+        }
+
+        function pushQuestionUp(index){
+            saveInputs();
+            const predecessor = index -1;
+            const question = questionnaire[index];
+            questionnaire[index]= questionnaire[predecessor];
+            questionnaire[predecessor]=question;
+            renderall();
+        }
+
+        function pushQuestionDown(index) {
+            saveInputs();
+            const predecessor = index +1;
+            const question = questionnaire[index];
+            questionnaire[index]= questionnaire[predecessor];
+            questionnaire[predecessor]=question;
+            renderall();
+
+        }
+
+        function addnewAnswer(index){
+            saveInputs();
+            if(questionnaire[index].answers.length<10) {
+                questionnaire[index].answers.push("Answer");
+            }
+            else{
+                alert("The maximum for possible answers is 10.");
+            }
+            renderall();
+        }
+
+        function createButtonDeleteAnswer(index, answerindex) {
+
+            const btn_deleteAnswer = document.createElement("Button");
+            btn_deleteAnswer.className = "btn btn-link btn-answere nounderline";
+            btn_deleteAnswer.setAttribute("onclick","deleteanswer("+index+","+answerindex+")");
+
+            const btn_icon = document.createElement("i");
+            btn_icon.className = "fa fa-times";
+            btn_deleteAnswer.appendChild(btn_icon);
+
+            return btn_deleteAnswer;
+        }
+
+        function createButtonUpAnswer(index,answerindex){
+
+            const btn_upAnswer = document.createElement("Button");
+            btn_upAnswer.className = "btn btn-link btn-answere nounderline";
+            btn_upAnswer.setAttribute("onclick", "pushAnswerup("+index+","+answerindex+")");
+
+            const btn_icon = document.createElement("i");
+            btn_icon.className = "fa fa-arrow-up";
+            btn_upAnswer.appendChild(btn_icon);
+
+            return btn_upAnswer;
+        }
+
+        function createAnswerOptionPart(index, answers){
+
+            const answer_div = document.createElement("DIV");
+            answer_div.className = "Answer";
+            for ( let i =0;i<answers.length;i++){
+                const answeroption = document.createElement("DIV");
+                answeroption.className= ("Answer Option");
+                
+                const answer_icon = document.createElement("i");
+                answer_icon.className = "answer-icon far fa-circle align-top mt-2";
+                answeroption.appendChild(answer_icon);
+                
+                const x2 =document.createElement("TEXTAREA");
+                x2.className = ("Textarea Answers");
+                if (answers[i]==="Answer"|| answers[i]===""){
+                    x2.placeholder = "Answer";
+                }
+                else {
+                    x2.defaultValue = answers[i];
+                }
+                x2.setAttribute("id",i.toString());
+                answeroption.appendChild(x2);
+
+                if (i > 0) {
+                    answeroption.appendChild(createButtonUpAnswer(index,i));
+                }
+                if (i+1 !== answers.length && answers.length >1){
+                    answeroption.appendChild(createButtonDownAnswer(index,i));
+                }
+
+                answeroption.appendChild(createButtonDeleteAnswer(index,i));
+                answer_div.appendChild(answeroption);
+
+
+            }
+            return answer_div;
+        }
+
+        function pushAnswerup(q_index, a_index) {
+            saveInputs();
+            swapAnswer(q_index,(a_index-1),a_index);
+            renderall();
+
+        }
+
+
+        function createButtonDownAnswer(index,answerindex){
+
+            const btn_downAnswer = document.createElement("Button");
+            btn_downAnswer.className = "btn btn-link btn-answere nounderline";
+            btn_downAnswer.setAttribute("onclick", "pushAnswerdown("+index+","+answerindex+")");
+
+            const btn_icon = document.createElement("i");
+            btn_icon.className = "fa fa-arrow-down";
+            btn_downAnswer.appendChild(btn_icon);
+
+            return btn_downAnswer;
+        }
+
+        function pushAnswerdown(q_index, a_index) {
+            saveInputs();
+            swapAnswer(q_index, a_index, (a_index+1));
+            renderall();
+
+        }
+
+        function swapAnswer (q_index, a1_index, a2_index){
+            const predecessor = questionnaire[q_index].answers[a1_index];
+            questionnaire[q_index].answers[a1_index]= questionnaire[q_index].answers[a2_index];
+            questionnaire[q_index].answers[a2_index] =predecessor;
+        }
+
+        function deleteanswer(indexq,indexa) {
+            saveInputs();
+            questionnaire[indexq].answers.splice(indexa,1);
+            renderall();
+
+        }
+
+        function copyQuestion(index) {
+            saveInputs();
+            questionnaire.push(questionnaire[index]);
+            renderall();
+
+        }
+
+        //Bootsrapped
+        function createTitleDropdown(q_index, q_type) {
+
+            const title = document.createElement("DIV");
+            title.className = ("Title dropdown");
+
+            const btn_dropdown = document.createElement("Button");
+            btn_dropdown.className= ("btn btn-link dropdown-toggle question-headline font-weight-light");
+            btn_dropdown.setAttribute("type","button");
+            btn_dropdown.setAttribute("id","dropdownMenuButton("+q_index+")");
+            btn_dropdown.setAttribute("data-toggle","dropdown");
+            btn_dropdown.setAttribute("aria-haspopup","true");
+            btn_dropdown.setAttribute("aria-expanded","false");
+            btn_dropdown.innerHTML = q_type;
+
+            title.appendChild(btn_dropdown);
+
+            const dropdown_menu = document.createElement("DIV");
+            dropdown_menu.setAttribute("id","dropdown-menu");
+            dropdown_menu.className=("dropdown-menu");
+            
+            if (q_type !== "YesNo") {
+
+                const btn_changetoYesNO = document.createElement("a");
+                btn_changetoYesNO.className = ("dropdown-item");
+                btn_changetoYesNO.innerHTML = ("YesNo");
+                btn_changetoYesNO.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 1 + ")");
+                dropdown_menu.appendChild(btn_changetoYesNO);
+
+            }
+
+            if (q_type !== "MultipleChoice") {
+
+                const btn_changetoMultipleChoice = document.createElement("a");
+                btn_changetoMultipleChoice.className = ("dropdown-item");
+                btn_changetoMultipleChoice.innerHTML = ("MultipleChoice");
+                btn_changetoMultipleChoice.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 2 + ")");
+                dropdown_menu.appendChild(btn_changetoMultipleChoice);
+
+            }
+
+            if (q_type !== "SingleChoice") {
+
+                const btn_changetoSingleChoice = document.createElement("a");
+                btn_changetoSingleChoice.className = ("dropdown-item");
+                btn_changetoSingleChoice.innerHTML = ("SingleChoice");
+                btn_changetoSingleChoice.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 4 + ")");
+                dropdown_menu.appendChild(btn_changetoSingleChoice);
+
+            }
+
+            if (q_type !== "FreeText") {
+
+                const btn_changetoFreeText = document.createElement("a");
+                btn_changetoFreeText.className = ("dropdown-item");
+                btn_changetoFreeText.innerHTML = ("FreeText");
+                btn_changetoFreeText.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 5 + ")");
+                dropdown_menu.appendChild(btn_changetoFreeText);
+
+            }
+
+            title.appendChild(dropdown_menu);
+
+            return title;
+
+        }
+
+        //1-YesNo 2-MultipleChoice 3-Dropdown 4-SingleQuestion 5-FreeText
+        function changeQuestionTyp(index,questiontyp) {
+            saveInputs();
+            debugger;
+            if (questiontyp ===1){
+                questionnaire[index].type = "YesNo";
+                if (questionnaire[index].answers){
+                    delete questionnaire[index].answers;
+                }
+            }
+            else if (questiontyp ===5){
+                questionnaire[index].type = "FreeText";
+                if (questionnaire[index].answers){
+                    delete questionnaire[index].answers;
+                }
+            }
+            else if (questiontyp ===4){
+                questionnaire[index].type = "SingleChoice";
+                if (!questionnaire[index].answers){
+                    questionnaire[index].answers=[];
+                }
+            }
+            else if (questiontyp ===2){
+                questionnaire[index].type = "MultipleChoice";
+                if (!questionnaire[index].answers){
+                    questionnaire[index].answers=[];
+                }
+            }
+
+            renderall();
+
+        }
+
+        function loadsurveystring (){
+            const survey = JSON.parse(document.getElementById("json").innerHTML);
+            for ( let i=0; i < survey.length; i++){
+                questionnaire.push(survey[i]);
+
+            }
+            renderall();
+
+        }
+
+        //Onclick Show the Dropdown Content
+        function hideshowdropdowntitle(q_index) {
+
+            document.getElementById(q_index).getElementsByClassName("dropdown-content")[0].classList.toggle("show");
+        }
+
+        //Close Dropdwon if the User Clicks Outside
+        //Problem das man mehrer Dropdown klicken kann ohne das vorherige schließt
+        window.onclick = function (event) {
+            if (!event.target.matches('.Buttondropdown')) {
+                const dropdowns = document.getElementsByClassName("dropdown-content");
+                for ( let i = 0; i<dropdowns.length; i++){
+                    const openDropdown = dropdowns[i];
+                    if (openDropdown.classList.contains("show")){
+                        openDropdown.classList.remove("show");
+                    }
+                }
+            }
+
+        }
+
+        window.onload = function(){
+            loadsurveystring();
+            renderall();
+        }
+
+
+
+        $(document).ready(function () {
+            $("form").submit(function () {
+                saveInputs();
+            })
+        });
+
+        $('#submitsurvey').submit(function () {
+            saveInputs();
+            document.getElementById("questionnairejson").value = JSON.stringify(questionnaire);
+            return true;
+        });
+
+    </script>
+
 </body>
 </html>
