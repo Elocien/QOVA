@@ -20,19 +20,76 @@
 <body class="bg-light">
 <div th:include="navbar"></div>
 
-<h2 class="font-weight-bold text-center"><span th:text="${coursename} +' '+#{survey}+ ': '"></span><span th:text="#{'editor.' + ${typeID}}"></span></h2>
-
-<div id="row">
-	<div id="survey"></div>
+<!--Für welchen Typ die Umfrage ist würde ich vielleicht kicken, weil ich das ja weiß, wenn ich drinnen sitzte-->
+<div class="row">
+	<div class="col-lg-12 mt-4">
+		<h2 class="font-weight-bold text-center title"><span th:text="${coursename} +' : '"></span><span th:text="#{'editor.' + ${typeID}}"></span></h2>
+		<div class="row">
+			<div class="col-md-3"></div>
+			<!-- Survey-->
+			<div class="col-md-6" id="survey"></div>
+			<div class="col-md-3"></div>
+		</div>
+	</div>
 </div>
 
 
-<div th:include="footer"></div>
+<div class="pt-4" th:include="footer"></div>
 
 <script>
-	debugger;
 	const survey = [(${survey})];
 	console.log(survey);
+
+	//onload buildt the survey clientside
+	window.onload = function () {
+		survey.forEach(renderquestion);
+
+	}
+
+	function renderquestion (value,index,array){
+
+		const x = document.createElement("DIV");
+
+		//Part for the question
+		const row_question = document.createElement("DIV");
+		const question = document.createElement("h4");
+		question.innerText = value.question;
+
+		row_question.appendChild(question);
+		x.appendChild(row_question);
+
+		if (value.type == "YesNo"){
+			x.className ="container bg-white border border-secondary rounded mt-4 YesNo";
+			x.setAttribute("id",index);
+
+		}
+		else if (value.type ==="FreeText") {
+
+			x.className = "container bg-white border border-secondary rounded mt-4 FreeText";
+			x.setAttribute("id", index);
+		}
+
+		else if (value.type === "SingleChoice") {
+
+				x.className = "container bg-white border border-secondary rounded mt-4 SingleChoice";
+				x.setAttribute("id", index);
+
+
+		}
+		else if (value.type === "MultipleChoice") {
+
+			//Create a html section for a MultipleChoice-Question
+			x.className = "container bg-white border border-secondary rounded mt-4 MultipleChoice";
+			x.setAttribute("id", index);
+		}
+
+		document.getElementById("survey").appendChild(x);
+
+
+	}
+
+
+
 </script>
 </body>
 </html>

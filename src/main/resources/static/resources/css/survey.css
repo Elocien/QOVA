@@ -1,3 +1,30 @@
-.survey.string {
-    display: none;
+/*The addressees are mainly mobile phones.
+If the display is larger, it is adapted for these devices, which improves the performance for mobile phones.
+I read that somewhere ;) */
+.title {
+    font-size: 5vw;
+}
+
+.row.survey {
+}
+
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+
+    .title {
+        font-size: 4vw;
+    }
+
+}
+
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+
+    .title {
+        font-size: 3vw;
+    }
+
+
 }
