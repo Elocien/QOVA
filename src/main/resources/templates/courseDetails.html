@@ -157,7 +157,7 @@
                                             <!--Tutorial-->
                                             <tr>
                                                 <!--1st Col-->
-                                                <td scope="row" th:text="#{new.practice}">TUTORIAL</td>
+                                                <td scope="row" th:text="#{new.tutorial}">TUTORIAL</td>
                                                 <!--2nd Col-->
                                                 <td class="text-center hide_me" th:text="${course.classTotalTutorial}">COUNT</td>
                                                 <td class="show_me" style="display: none;">
@@ -290,7 +290,10 @@
                                 </div>
                             </div>
                             <div class="row justify-content-md-center mt-3">
-                                <a type="button" class="btn btn-primary" th:text="#{detail.download}" th:target="_blank" th:href="${'/qrcode?type=LECTURE&id='  + {course.id}}" href="#">DOWNLOAD</a>
+                                <button type="button" class="btn btn-primary" th:text="#{detail.download}" onClick="download_all()">DOWNLOAD</button>
+                                <a class="download" hidden th:href="${'/qrcode?type=LECTURE&id='  + {course.id}}" href="#">DOWNLOAD</a>
+                                <a class="download" hidden th:href="${'/qrcode?type=TUTORIAL&id='  + {course.id}}" href="#">DOWNLOAD</a>
+                                <a class="download" hidden th:href="${'/qrcode?type=SEMINAR&id='  + {course.id}}" href="#">DOWNLOAD</a>
                             </div>
 
                         </div>
@@ -307,6 +310,13 @@
     $( document ).ready(function() {
         $('[data-toggle="tooltip"]').tooltip(({trigger : 'hover'}));
     });
+
+    function download_all() {
+        const all_downloads = document.getElementsByClassName("download")
+        for (let index = 0; index < all_downloads.length; ++index) {
+            all_downloads[index].click();
+        }
+    }
 
     function set_hidden_data(type) {
         document.getElementById(type + "Hidden").checked = document.getElementById(type + "Check").checked;
