@@ -14,9 +14,7 @@ import com.google.zxing.WriterException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -192,8 +190,6 @@ public class CourseController {
     //---------------------------------------------------------------------------
 
 
-
-
     //Mapping for surveyeditor HTML (called from CourseDetails Page!)
     @GetMapping("/course/surveyeditor")
     public String questioneditor(Model model, @RequestParam String type, @RequestParam(required = false) String id){
@@ -230,7 +226,13 @@ public class CourseController {
             return "redirect:../course/details" + "?id=" + id;          //TODO: Redirects back course at the moment, think about where this should go
         }
 
-    //--------------------------------------------------------------------------------------------
+
+
+
+
+
+
+   
         //Validate that the questionnaire does not exceed max length
         String JsonString = form.getQuestionnairejson();
 
@@ -243,7 +245,7 @@ public class CourseController {
         //example string
         // [{"type":"YesNo","question":""},{"type":"MultipleChoice","question":"","answers":["1","2","3","4","5"]},{"type":"DropDown","question":"","answers":["Answer","Answer","Answer"]}]
 
-    //--------------------------------------------------------------------------------------------
+
 
 
 
@@ -350,11 +352,11 @@ public class CourseController {
     //to test
     //http://localhost:8080/qrcode?type=LECTURE&id=c000000000000001
 
-   
+    
     /**
-     * Returns a HttpEntity (QRCode) of type PNG
+     * This method takes id and CourseType as parameters
      * 
-     * @param response 
+     * @param response HttpResponse
      * @param type
      * @param id
      * @return
@@ -389,7 +391,15 @@ public class CourseController {
 
 
 
+    //Default-Survey methods
+    //---------------------------------------------------------------------------
 
+    @GetMapping
+    public String adminLogin(){
+        
+
+        return "adminLogin.html";
+    }
 
 
 
