@@ -289,11 +289,14 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="row justify-content-md-center mt-3">
-                                <button type="button" class="btn btn-primary" th:text="#{detail.download}" onClick="download_all()">DOWNLOAD</button>
-                                <a class="download" hidden th:href="${'/qrcode?type=LECTURE&id='  + {course.id}}" href="#">DOWNLOAD</a>
-                                <a class="download" hidden th:href="${'/qrcode?type=TUTORIAL&id='  + {course.id}}" href="#">DOWNLOAD</a>
-                                <a class="download" hidden th:href="${'/qrcode?type=SEMINAR&id='  + {course.id}}" href="#">DOWNLOAD</a>
+                            <!--Download Button-->
+                            <div class="container text-center mt-3">
+                                <div class="btn-group" role="group" aria-label="First group">
+                                    <a class="btn btn-primary btn-sm" th:text="#{new.lecture}" th:href="${'/qrcode?type=LECTURE&id='  + {course.id}}" target="_blank" href="#">LECTURE</a>
+                                    <a class="btn btn-primary btn-sm" th:text="#{new.tutorial}" th:href="${'/qrcode?type=TUTORIAL&id='  + {course.id}}" target="_blank" href="#">TUTORIAL</a>
+                                    <a class="btn btn-primary btn-sm" th:text="#{new.seminar}" th:href="${'/qrcode?type=SEMINAR&id='  + {course.id}}" target="_blank" href="#">SEMINAR</a>
+                                </div>
+                                <p class="m-0 font-weight-light" th:text="#{detail.download}"></p>
                             </div>
 
                         </div>
