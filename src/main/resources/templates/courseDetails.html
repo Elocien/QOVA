@@ -28,7 +28,9 @@
 
                 <div class="mb-4 mt-4">
                     <h2 class="font-weight-bold text-center mb-4 mt-4 hide_me" th:text="${course.name}">COURSE NAME</h2>
-                    <input class="input-group headline-edit show_me" style="display: none;" th:placeholder="${course.name}"></input>
+                    <form method="post" class="show_me" style="display: none;"  th:action="@{/course/edit?id={id}(id=${course.id})}" th:object="${form}">
+                        <input type="text" class="input-group headline-edit" th:placeholder="${course.name}" th:value="${course.name}" th:field="*{name}"></input>
+                    </form>
                 </div>
 
                 <div class="container bg-light border border-dark rounded p-0">
@@ -41,7 +43,7 @@
 
                         <!--Course Details-->
                         <div class="col-md-6">
-                            <form id="form" method="post" th:action="@{/course/edit?id={id}(id=${course.id})}" th:object="${form}" >
+                            <form id="form" method="post" th:action="@{/course/edit?id={id}(id=${course.id})}" th:object="${form}">
 
                                 <!--Headline & Buttons-->
                                 <div class="row">
@@ -70,19 +72,19 @@
                                             <tr>
                                                 <th scope="row" th:text="#{course.courseInstance}">YEAR</th>
                                                 <td class="hide_me" th:text="${course.semesterUI}">XXXX</td>
-                                                <td class="show_me" style="display: none;">
-                                                    <input class="form-control" type="text" th:placeholder="${course.semesterUI}" th:field="*{courseInstanceString}">
+                                                <td class="show_me" style="display: none">
+                                                    <select class="custom-select form-control" th:field="*{courseInstanceString}">
+                                                        <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+                                                    </select>
                                                 </td>
                                                 <td></td>
                                             </tr>
                                             <!--Semester of Students-->
                                             <tr>
                                                 <th scope="row" th:text="#{course.semesterOfStudents}">SEMESTER</th>
-                                                <td class="hide_me"><span th:id="${course.semesterOfStudents}" th:text="${course.semesterOfStudents}">IDK - XXXX</span></td>
-                                                <td class="show_me" style="display: none">
-                                                    <select class="custom-select form-control" th:field="*{semesterOfStudents}">
-                                                        <option class="dropdown-item" th:id="${course.semesterOfStudents}" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
-                                                    </select>
+                                                <td class="hide_me"><span th:text="${course.semesterOfStudents}">IDK - XXXX</span></td>
+                                                <td class="show_me" style="display: none;">
+                                                    <input class="form-control" type="text" th:placeholder="${course.semesterOfStudents}" th:field="*{semesterOfStudents}">
                                                 </td>
                                                 <td></td>
                                             </tr>
