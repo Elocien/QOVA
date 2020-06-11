@@ -174,36 +174,14 @@ public class CourseController {
     
 
 
-
-
-    //Edit Course
-    @GetMapping("/course/edit")
-	public String editCourse(Model model, CourseForm form, @RequestParam(required = false) String id) {
-
-		if (id == null) {
-			return "redirect:../courses";
-		}
-
-		Optional<Course> crs = courseManagement.findById(id);
-		if (crs.isPresent()) {
-            model.addAttribute("form", form);
-            model.addAttribute("semesterDates", courseManagement.findSemesters());
-			model.addAttribute("course", crs.get());
-			return "courseEdit";
-		} else {
-			return "redirect:../courses";
-		}
-    }
-
-
     
     //Edit Course Validation (when course is updated, check wether the fields are all appropriately set e.g. NotNull)
     @PostMapping("/course/edit")
 	public String editCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
-			BindingResult result, @RequestParam String id) {
+			BindingResult result, @RequestParam String id) throws Exception {
 
 		if (result.hasErrors()) {
-			return editCourse(model, form, id);
+			return courseDetails(model, form, id);
 		}
 
 		courseManagement.updateCourseDetails(id, form);

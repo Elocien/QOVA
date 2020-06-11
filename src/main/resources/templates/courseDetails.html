@@ -38,8 +38,7 @@
 
                         <!--Course Details-->
                         <div class="col-md-6">
-                            <form method="post" th:object="${form}" th:action="@{/course/edit}">
-
+                            <form id="form" method="post" th:action="@{/course/edit?id={id}(id=${course.id})}" th:object="${form}" >
                                 <!--Headline & Buttons-->
                                 <div class="row">
                                     <h5 class="font-weight-light text-left" th:text="#{course.details}">COURSE DETAILS</h5>

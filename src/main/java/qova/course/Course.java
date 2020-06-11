@@ -1,13 +1,14 @@
 package qova.course;
 
 
+import java.sql.Clob;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
+import javax.persistence.Lob;
 
 //id-generator imports
 import org.hibernate.annotations.GenericGenerator;
@@ -40,10 +41,13 @@ public class Course {
 
     private Boolean seminarExists;
 
+    @Lob
     private String lectureSurvey;
 
+    @Lob
     private String tutorialSurvey;
 
+    @Lob
     private String seminarSurvey;
 
     private int classTotalTutorial;
