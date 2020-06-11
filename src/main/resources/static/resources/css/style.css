@@ -40,6 +40,10 @@ input[type=number] {
   color: darkred;
 }
 
+.text-light-grey {
+  color: rgb(200, 200, 200)
+}
+
 /*footer.html*/
 footer {
   position: absolute;
