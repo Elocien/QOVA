@@ -373,7 +373,7 @@ public class CourseController {
         Optional<Course> crs = courseManagement.findById(id);
 
         //generate filename
-        String filename = crs.get().getName() + type + "QRCode";
+        String filename = crs.get().getName() + "_" + type + "_" + "QRCode";
 
         //Generate QRCode
         byte[] qrcode = courseManagement.generateQRCodeImage(url);
