@@ -1,7 +1,5 @@
 package qova.course;
 
-
-import java.sql.Clob;
 import java.time.LocalDate;
 
 import javax.persistence.Entity;

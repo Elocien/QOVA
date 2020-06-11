@@ -145,8 +145,6 @@ public class CourseController {
 	public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
 			BindingResult result) {
 
-        System.out.println(result.getAllErrors());
-
 
 		if (result.hasErrors()) {
 			return createCourse(model, form);
