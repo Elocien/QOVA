@@ -37,27 +37,27 @@
                                 <span class="slider round"></span>
                             </label>
                             <p class="d-inline m-0 switch-label" th:text="#{new.lecture}">LECTURE</p>
-                            <input type="checkbox" id="lectureHidden" hidden="true" th:field="*{lectureExists}">
+                            <input type="checkbox" id="lectureHidden" hidden th:field="*{lectureExists}">
                         </div>
                         <div class="col-md-1"></div>
-                        <!--Practice-->
+                        <!--Tutorial-->
                         <div class="col-md-auto">
                             <label class="switch m-0 align-middle">
-                                <input type="checkbox" id="practiceCheck" data-toggle="collapse" data-target="#collapseTutor"  aria-expanded="false" aria-controls="collapseTutor">
+                                <input type="checkbox" id="tutorialCheck" onclick="set_hidden_data('tutorial')" data-toggle="collapse" data-target="#collapseTutor"  aria-expanded="false" aria-controls="collapseTutor">
                                 <span class="slider round"></span>
                             </label>
-                            <p class="d-inline m-0 switch-label" th:text="#{new.practice}">PRACTICE</p>
-                            <input type="checkbox" id="tutorialHidden" hidden="true" th:field="*{tutorialExists}">
+                            <p class="d-inline m-0 switch-label" th:text="#{new.tutorial}">TUTORIAL</p>
+                            <input type="checkbox" id="tutorialHidden" hidden th:field="*{tutorialExists}">
                         </div>
                         <div class="col-md-1"></div>
                         <!--Seminar-->
                         <div class="col-md-auto">
                             <label class="switch m-0 align-middle">
-                                <input type="checkbox" id="seminarCheck" data-toggle="collapse" data-target="#collapseSeminar"  aria-expanded="false" aria-controls="collapseSeminar">
+                                <input type="checkbox" id="seminarCheck" onclick="set_hidden_data('seminar')" data-toggle="collapse" data-target="#collapseSeminar"  aria-expanded="false" aria-controls="collapseSeminar">
                                 <span class="slider round"></span>
                             </label>
-                            <p class="d-inline m-0 switch-label" th:text="#{new.seminar}">PRACTICE</p>
-                            <input type="checkbox" id="seminarHidden" hidden="true" th:field="*{seminarExists}">
+                            <p class="d-inline m-0 switch-label" th:text="#{new.seminar}">SEMINAR</p>
+                            <input type="checkbox" id="seminarHidden" hidden th:field="*{seminarExists}">
                         </div>
                     </div>
                     <div class="dropdown-divider border-dark m-0"></div>
@@ -100,7 +100,7 @@
                                 </div>
                             </div>
                             <div class="col-md-2 mt-3 collapse" id="collapseTutor">
-                                <label for="classTotalTutorial" th:text="#{new.courseTutor}">COURSE TUTOR</label>
+                                <label for="classTotalTutorial" th:text="#{new.courseTutor}">COURSE TUTORIAL</label>
                                 <input type="number" class="form-control" id="classTotalTutorial" th:field="*{classTotalTutorial}" placeholder="0" min="0" value="0">
                                 <div class="invalid-feedback">
                                     You do know how numbers work, right?
