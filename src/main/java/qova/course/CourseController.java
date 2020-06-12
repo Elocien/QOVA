@@ -394,19 +394,23 @@ public class CourseController {
     //Default-Survey methods
     //---------------------------------------------------------------------------
 
-    @GetMapping
+    @GetMapping("defaultSurveyAdministration")
     public String adminLogin(){
         
 
         return "adminLogin.html";
     }
 
+    //---------------------------------------------------------------------------
 
 
 
 
 
-
+    @GetMapping("/easterEgg/tim")
+    public String easterEgg(){
+        return "subject.html";
+    }
 
 
 
