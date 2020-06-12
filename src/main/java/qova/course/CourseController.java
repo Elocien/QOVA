@@ -407,10 +407,11 @@ public class CourseController {
 
 
 
+
+
+    
     @GetMapping("/easterEgg/tim")
-    public String easterEgg(){
-        return "subject.html";
-    }
+    public String easterEgg(){return "subject.html";}
 
 
 
