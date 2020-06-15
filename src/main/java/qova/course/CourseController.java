@@ -394,11 +394,11 @@ public class CourseController {
     //Default-Survey methods
     //---------------------------------------------------------------------------
 
-    @GetMapping
+    @GetMapping("/admin")
     public String adminLogin(){
         
 
-        return "adminLogin.html";
+        return "questioneditor";
     }
 
 
