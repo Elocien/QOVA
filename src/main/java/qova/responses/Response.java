@@ -47,6 +47,7 @@ public class Response {
     //------------------------------------------------------------------------
 
     //Container in case of text response
+    @Lob
     private String textResponse;
 
 

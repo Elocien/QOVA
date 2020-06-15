@@ -272,6 +272,7 @@ public class CourseController {
             return "redirect:../course/details" + "?id=" + id;
         }
         else{
+            //TODO: need more feedback here for the user. Change this!
             return "redirect:../courses";
         }
     }
@@ -391,17 +392,7 @@ public class CourseController {
 
 
 
-    //Default-Survey methods
-    //---------------------------------------------------------------------------
-
-    @GetMapping("/admin")
-    public String adminLogin(){
-        
-
-        return "questioneditor";
-    }
-
-
+    
 
 
 
