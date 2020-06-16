@@ -25,9 +25,8 @@
     <div class="row">
         <div class="col-lg-12 mt-4">
             
-            <h2 class="font-weight-bold text-center" th:text="#{editor.headline}">SURVEY EDITOR</h2>
-            <h5 class="font-weight-light text-center"><span th:text="${coursename} + ': '"></span><span th:text="#{'editor.' + ${typeID}}"></span></h5>
-
+            <h2 class="font-weight-bold text-center" th:text="#{admin.editorHeadline}">SURVEY EDITOR</h2>
+        
             <div class="row">       
                 <div class="col-md-1"></div>     
                 <!--Menu-->
@@ -40,7 +39,7 @@
                             <button type="button" class="btn btn-list btn-text-right" onclick="addSingleChoiceQuestion()"><span th:text="#{question.single-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-list-last btn-text-right" onclick="addFreeTextQuestion()"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                         </div>
-                        <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="submitsurvey">
+                        <form th:action="@{/admin/updateDefaultSurvey}" method="post" th:object="${form}" id="submitsurvey">
                             <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
                             <button class="btn btn-primary mt-2" type="submit" th:text="#{question.submit}">SUBMIT</button>
                         </form>

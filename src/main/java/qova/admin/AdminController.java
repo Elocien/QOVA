@@ -47,7 +47,7 @@ public class AdminController {
 
 
     //Mapping to submit a questionaire 
-    @PostMapping("/admin/")
+    @PostMapping("/admin/updateDefaultSurvey")
     public String defaultSurveySubmit(SurveyForm form) throws Exception {
 
         adminManagement.updateDefaultSurvey(form);

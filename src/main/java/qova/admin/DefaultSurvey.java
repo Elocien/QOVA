@@ -16,6 +16,11 @@ public class DefaultSurvey {
     private String defaultSurveyJson;
 
 
+    //Needed for JPA purposes
+    @SuppressWarnings("unused")
+	protected DefaultSurvey() {
+    }
+
 
     //Constructor
     public DefaultSurvey(String surveyJson){
