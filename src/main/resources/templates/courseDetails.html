@@ -97,19 +97,32 @@
                                     <table class="table mb-0">
                                         <thead>
                                             <tr>
+                                                <th class="border-0 col-md-2 show_me" style="display: none;"></th>
                                                 <th class="border-0 col-md-2" scope="col" th:text="#{detail.classType}">TYPE</th>
                                                 <th class="border-0 text-center col-md-2" scope="col" data-toggle="tooltip" data-placement="top" title="AMOUNT" th:title="#{detail.classAmount}">#</th>
                                                 <th class="border-0 text-center col-md-2" scope="col" th:text="#{detail.classSurvey}">SURVEY</th>
-                                                <th class="border-0"></th>
+                                                <th class="border-0 hide_me"></th>
                                             </tr>
                                         </thead>
                                         <tbody>
 
                                             <!--Lecture-->
-                                            <tr>
+                                            <tr th:classappend="!${course.lectureExists} ? text-light-grey : userclass" id="lectureLine">
                                                 <!--1st Col-->
-                                                <td scope="row" th:text="#{new.lecture}">LECTURE</td>
+                                                <td class="show_me" style="display: none;">
+                                                    <div class="col-md-auto">
+                                                        <label class="switch m-0 align-middle" th:switch="${course.lectureExists}">
+                                                            <input th:case="FALSE" type="checkbox" id="lectureCheck" onclick="set_hidden_data('lecture')">
+                                                            <input th:case="TRUE"  type="checkbox" id="lectureCheck" onclick="set_hidden_data('lecture')" checked>
+                                                            <span class="slider round"></span>
+                                                        </label>
+                                                    </div>
+                                                    <input th:if="!${course.lectureSurvey}" type="checkbox" id="lectureHidden" th:field="*{lectureExists}" hidden>
+                                                    <input th:if="${course.lectureSurvey}"  type="checkbox" id="lectureHidden" th:field="*{lectureExists}" hidden checked>
+                                                </td>
                                                 <!--2nd Col-->
+                                                <td scope="row" th:text="#{new.lecture}">LECTURE</td>
+                                                <!--3rd Col-->
                                                 <div th:switch="${course.lectureExists}">
                                                     <div th:case="TRUE">
                                                         <td class="text-center hide_me">1</td>
@@ -124,29 +137,16 @@
                                                         </td>
                                                     </div>
                                                 </div>
-                                                <!--3rd & 4th Col-->
-                                                <td class="show_me" style="display: none;">
-                                                    <div class="col-md-auto">
-                                                        <label class="switch m-0 align-middle" th:switch="${course.lectureSurvey}">
-                                                            <input th:case="'[]'" type="checkbox" id="lectureSurveyCheck" onclick="set_hidden_data('lectureSurvey')">
-                                                            <input th:case="*" type="checkbox" id="lectureSurveyCheck" checked onclick="set_hidden_data('lectureSurvey')">
-                                                            <span class="slider round"></span>
-                                                        </label>
-                                                    </div>
-                                                    <div th:switch="${course.lectureSurvey}" hidden="true">
-                                                        <input th:case="'[]'" type="checkbox" id="lectureSurveyHidden">
-                                                        <input th:case="*" type="checkbox" id="lectureSurveyHidden" checked>
-                                                    </div>
-                                                </td>
+                                                <!--4th Col-->
                                                 <div th:switch="${course.lectureSurvey}">
                                                     <div th:case="'[]'">
-                                                        <td class="text-center hide_me" th:text="#{No}">!EXISTS</td>
+                                                        <td class="text-center" th:text="#{No}">!EXISTS</td>
                                                         <td th:switch="${course.lectureExists}">
                                                             <a th:case="TRUE" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
                                                         </td>
                                                     </div>
                                                     <div th:case="*">
-                                                        <td class="text-center hide_me" id="lectureSurveyExists_original" th:text="#{Yes}">EXISTS</td>
+                                                        <td class="text-center" id="lectureSurveyExists_original" th:text="#{Yes}">EXISTS</td>
                                                         <td th:switch="${course.lectureExists}">
                                                             <a th:case="TRUE" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
                                                         </td>
@@ -155,37 +155,36 @@
                                             </tr>
 
                                             <!--Tutorial-->
-                                            <tr>
+                                            <tr th:classappend="!${course.tutorialExists} ? text-light-grey : userclass" id="tutorialLine">
                                                 <!--1st Col-->
-                                                <td scope="row" th:text="#{new.tutorial}">TUTORIAL</td>
+                                                <td class="show_me" style="display: none;">
+                                                    <div class="col-md-auto">
+                                                        <label class="switch m-0 align-middle" th:switch="${course.tutorialExists}">
+                                                            <input th:case="FALSE" type="checkbox" id="tutorialCheck" onclick="set_hidden_data('tutorial')">
+                                                            <input th:case="TRUE"  type="checkbox" id="tutorialCheck" onclick="set_hidden_data('tutorial')" checked>
+                                                            <span class="slider round"></span>
+                                                        </label>
+                                                    </div>
+                                                    <input th:if="!${course.tutorialExists}" type="checkbox" id="tutorialHidden" th:field="*{tutorialExists}" hidden>
+                                                    <input th:if="${course.tutorialExists}"  type="checkbox" id="tutorialHidden" th:field="*{tutorialExists}" hidden checked>
+                                                </td>
                                                 <!--2nd Col-->
+                                                <td scope="row" th:text="#{new.tutorial}">TUTORIAL</td>
+                                                <!--3rd Col-->
                                                 <td class="text-center hide_me" th:text="${course.classTotalTutorial}">COUNT</td>
                                                 <td class="show_me" style="display: none;">
                                                     <input class="form-control" type="text" th:field="*{classTotalTutorial}" th:placeholder="${course.classTotalTutorial}">
                                                 </td>
-                                                <!--3rd & 4th Col-->
-                                                <td class="show_me" style="display: none;">
-                                                    <div class="col-md-auto">
-                                                        <label class="switch m-0 align-middle" th:switch="${course.tutorialSurvey}">
-                                                            <input th:case="'[]'" type="checkbox" id="tutorialSurveyCheck" onclick="set_hidden_data('tutorialSurvey')">
-                                                            <input th:case="*" type="checkbox" id="tutorialSurveyCheck" onclick="set_hidden_data('tutorialSurvey')" checked>
-                                                            <span class="slider round"></span>
-                                                        </label>
-                                                    </div>
-                                                    <div th:switch="${course.tutorialSurvey}" hidden="true">
-                                                        <input th:case="'[]'" type="checkbox" id="tutorialSurveyHidden">
-                                                        <input th:case="*" type="checkbox" id="tutorialSurveyHidden" checked>
-                                                    </div>
-                                                </td>
+                                                <!--4th Col-->
                                                 <div th:switch="${course.tutorialSurvey}">
                                                     <div th:case="'[]'">
-                                                        <td class="text-center hide_me" id="bool" th:text="#{No}">!EXISTS</td>
+                                                        <td class="text-center" id="bool" th:text="#{No}">!EXISTS</td>
                                                         <td th:switch="${course.tutorialExists}">
                                                             <a th:case="TRUE" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
                                                         </td>
                                                     </div>
                                                     <div th:case="*">
-                                                        <td class="text-center hide_me" id="bool" th:text="#{Yes}">EXISTS</td>
+                                                        <td class="text-center" id="bool" th:text="#{Yes}">EXISTS</td>
                                                         <td th:switch="${course.tutorialExists}">
                                                             <a th:case="TRUE" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
                                                         </td>
@@ -194,37 +193,36 @@
                                             </tr>
 
                                             <!--Seminar-->
-                                            <tr>
+                                            <tr th:classappend="!${course.seminarExists} ? text-light-grey : userclass" id="seminarLine">
                                                 <!--1st Col-->
-                                                <td scope="row" th:text="#{new.seminar}">TUTORIAL</td>
+                                                <td class="show_me" style="display: none;">
+                                                    <div class="col-md-auto">
+                                                        <label class="switch m-0 align-middle" th:switch="${course.seminarExists}">
+                                                            <input th:case="FALSE" type="checkbox" id="seminarCheck" onclick="set_hidden_data('seminar')">
+                                                            <input th:case="TRUE"  type="checkbox" id="seminarCheck" onclick="set_hidden_data('seminar')" checked>
+                                                            <span class="slider round"></span>
+                                                        </label>
+                                                    </div>
+                                                    <input th:if="!${course.seminarExists}" type="checkbox" id="seminarHidden" th:field="*{seminarExists}" hidden>
+                                                    <input th:if="${course.seminarExists}"  type="checkbox" id="seminarHidden" th:field="*{seminarExists}" hidden checked>
+                                                </td>
                                                 <!--2nd Col-->
+                                                <td scope="row" th:text="#{new.seminar}">TUTORIAL</td>
+                                                <!--3rd Col-->
                                                 <td class="text-center hide_me" th:text="${course.classTotalSeminar}">COUNT</td>
                                                 <td class="show_me" style="display: none;">
                                                     <input class="form-control" type="text" th:field="*{classTotalSeminar}" th:placeholder="${course.classTotalSeminar}">
                                                 </td>
-                                                <!--3rd & 4th Col-->
-                                                <td class="show_me" style="display: none;">
-                                                    <div class="col-md-auto">
-                                                        <label class="switch m-0 align-middle" th:switch="${course.seminarSurvey}">
-                                                            <input th:case="'[]'" type="checkbox" id="seminarSurveyCheck" onclick="set_hidden_data('seminarSurvey')">
-                                                            <input th:case="*" type="checkbox" id="seminarSurveyCheck" onclick="set_hidden_data('seminarSurvey')" checked>
-                                                            <span class="slider round"></span>
-                                                        </label>
-                                                    </div>
-                                                    <div th:switch="${course.seminarSurvey}" hidden="true">
-                                                        <input th:case="'[]'" type="checkbox" id="seminarSurveyHidden">
-                                                        <input th:case="*" type="checkbox" id="seminarSurveyHidden" checked>
-                                                    </div>
-                                                </td>
+                                                <!--4th Col-->
                                                 <div th:switch="${course.seminarSurvey}">
                                                     <div th:case="'[]'">
-                                                        <td class="text-center hide_me" id="bool" th:text="#{No}">!EXISTS</td>
+                                                        <td class="text-center" id="bool" th:text="#{No}">!EXISTS</td>
                                                         <td th:switch="${course.seminarExists}">
                                                             <a th:case="TRUE" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
                                                         </td>
                                                     </div>
                                                     <div th:case="*">
-                                                        <td class="text-center hide_me" id="bool" th:text="#{Yes}">EXISTS</td>
+                                                        <td class="text-center" id="bool" th:text="#{Yes}">EXISTS</td>
                                                         <td th:switch="${course.seminarExists}">
                                                             <a th:case="TRUE" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
                                                         </td>
@@ -279,11 +277,11 @@
                                             </div>
                                         </div>
                                         <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="carousel-control-prev-icon" aria-hidden></span>
                                             <span class="sr-only">Previous</span>
                                         </a>
                                         <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="carousel-control-next-icon" aria-hidden></span>
                                             <span class="sr-only">Next</span>
                                         </a>
                                     </div>
@@ -291,12 +289,12 @@
                             </div>
                             <!--Download Button-->
                             <div class="container text-center mt-3">
-                                <div class="btn-group" role="group" aria-label="First group">
-                                    <a class="btn btn-primary btn-sm" th:text="#{new.lecture}" th:href="${'/qrcode?type=LECTURE&id='  + {course.id}}" target="_blank" href="#">LECTURE</a>
-                                    <a class="btn btn-primary btn-sm" th:text="#{new.tutorial}" th:href="${'/qrcode?type=TUTORIAL&id='  + {course.id}}" target="_blank" href="#">TUTORIAL</a>
-                                    <a class="btn btn-primary btn-sm" th:text="#{new.seminar}" th:href="${'/qrcode?type=SEMINAR&id='  + {course.id}}" target="_blank" href="#">SEMINAR</a>
-                                </div>
                                 <p class="m-0 font-weight-light" th:text="#{detail.download}"></p>
+                                <div class="btn-group" role="group" aria-label="First group">
+                                    <a th:if="!${course.lectureSurvey.equals('[]')}" class="btn btn-primary btn-sm" th:text="#{new.lecture}" th:href="${'/qrcode?type=LECTURE&id='  + {course.id}}" target="_blank" href="#">LECTURE</a>
+                                    <a th:if="!${course.tutorialSurvey.equals('[]')}"  class="btn btn-primary btn-sm" th:text="#{new.tutorial}" th:href="${'/qrcode?type=TUTORIAL&id='  + {course.id}}" target="_blank" href="#">TUTORIAL</a>
+                                    <a th:if="!${course.seminarSurvey.equals('[]')}"  class="btn btn-primary btn-sm" th:text="#{new.seminar}" th:href="${'/qrcode?type=SEMINAR&id='  + {course.id}}" target="_blank" href="#">SEMINAR</a>
+                                </div>
                             </div>
 
                         </div>
@@ -322,7 +320,14 @@
     }
 
     function set_hidden_data(type) {
-        document.getElementById(type + "Hidden").checked = document.getElementById(type + "Check").checked;
+        const hidden_input = document.getElementById(type + "Hidden");
+        hidden_input.checked = document.getElementById(type + "Check").checked;
+        if (hidden_input.checked === false) {
+            document.getElementById(type + "Line").className = "text-light-grey";
+        }
+        else {
+            document.getElementById(type + "Line").className = "";
+        }
     };
 
     function sort_options(select_element) {
