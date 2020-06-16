@@ -23,7 +23,10 @@ public class ResponseManagement {
         this.responses = Objects.requireNonNull(responses);
     }
 
-    public byte[] generatePDF(Course course, CourseType courseType, Integer classNo) throws IOException, Exception {
+    
+    
+    //PDF Generation (ENGLISH)
+    public byte[] generatePDF_en(Course course, CourseType courseType, Integer classNo) throws IOException, Exception {
 
         //Responses used to gen pdg
         ArrayList<Response> pdfResponses = new ArrayList<Response>();
@@ -38,9 +41,33 @@ public class ResponseManagement {
         }
         
         
-        //Generate PDF
+        //Generate PDF 
         PDFGenerator pdfGen = new PDFGenerator();
         return pdfGen.createPdf(pdfResponses, course.getName());
+    }
+
+
+
+
+    //CSV Generation (ENGLISH)
+    public byte[] generateCSV_en(Course course, CourseType courseType, Integer classNo) throws IOException, Exception {
+
+        //Responses used to gen pdg
+        ArrayList<Response> csvResponses = new ArrayList<Response>();
+
+        //Add responses to arrayList
+        if(classNo > 0){
+            responses.findByCourseAndCourseTypeAndClassNo(course, courseType, classNo).forEach(csvResponses::add);
+        }
+        //if classNo is 0, add responses for all classNo's
+        else{
+            responses.findByCourseAndCourseType(course, courseType).forEach(csvResponses::add);
+        }
+        
+        
+        //Generate PDF
+        CSVGenerator csvGen = new CSVGenerator();
+        return csvGen.createCSV(csvResponses);
     }
 
 

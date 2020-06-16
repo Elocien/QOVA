@@ -1,16 +1,11 @@
 package qova.responses;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import com.itextpdf.io.IOException;
 import com.opencsv.CSVWriter;
 
 public class CSVGenerator {

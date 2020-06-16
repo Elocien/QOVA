@@ -63,11 +63,11 @@ public class ResponseController {
 
 
     //PDF Generation
-    @GetMapping("/PdfGen")
+    @GetMapping("/generatePDF")
     public HttpEntity<byte[]> generatePdf(@RequestParam String id, @RequestParam String type, @RequestParam String classNo, HttpServletResponse response) throws Exception {
     
         //generate filename
-        String filename = "testPdf";
+        String filename = "testPdf.pdf";
 
         //Get the course;
         Optional<Course> crs = courseManagement.findById(id);
@@ -85,7 +85,7 @@ public class ResponseController {
         else {throw new Exception("No courseType given");}
 
         //Generate PDF
-        byte[] pdf = responseManagement.generatePDF(crs.get(), courseType, Integer.parseInt(classNo));
+        byte[] pdf = responseManagement.generatePDF_en(crs.get(), courseType, Integer.parseInt(classNo));
 
         //Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();
@@ -97,7 +97,45 @@ public class ResponseController {
     }
     
 
+    //CSV Generation
+    @GetMapping("/generateCSV")
+    public HttpEntity<byte[]> generateCsv(@RequestParam String id, @RequestParam String type, @RequestParam String classNo, HttpServletResponse response) throws Exception {
     
+        //generate filename
+        String filename = "testCsv.csv";
+
+        //Get the course;
+        Optional<Course> crs = courseManagement.findById(id);
+
+        //verify that course is present
+        if(!crs.isPresent()){
+            throw new Exception("No course found");
+        }
+
+        //Try to parse the courseType
+        CourseType courseType;
+        if (type.equals("LECTURE")) {courseType = CourseType.LECTURE;}
+        else if (type.equals("TUTORIAL")) {courseType = CourseType.TUTORIAL;}
+        else if (type.equals("SEMINAR")) {courseType = CourseType.SEMINAR;}
+        else {throw new Exception("No courseType given");}
+
+        //Generate PDF
+        byte[] pdf = responseManagement.generateCSV_en(crs.get(), courseType, Integer.parseInt(classNo));
+
+        //Set HTTP headers and return HttpEntity
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_PDF);
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
+        header.setContentLength(pdf.length);
+
+        return new HttpEntity<byte[]>(pdf, header);
+    }
+
+
+
+
+
+
 
     //Mapping for surveys
     @GetMapping("/surveys")
