@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import qova.admin.AdminManagement;
+
 //TODO: Temporary Imports (can be removed later)
 //@Lucian please don't delete me just yet T_T
 import java.util.List;
@@ -41,8 +43,12 @@ public class CourseController {
     private final CourseManagement courseManagement;
 
     @Autowired
-    CourseController(CourseManagement courseManagement) {
+    private final AdminManagement adminManagement;
+
+    @Autowired
+    CourseController(CourseManagement courseManagement, AdminManagement adminManagement) {
         this.courseManagement = Objects.requireNonNull(courseManagement);
+        this.adminManagement = Objects.requireNonNull(adminManagement);
     }
 
     @GetMapping("/")
@@ -192,7 +198,8 @@ public class CourseController {
 
     //Mapping for surveyeditor HTML (called from CourseDetails Page!)
     @GetMapping("/course/surveyeditor")
-    public String questioneditor(Model model, @RequestParam String type, @RequestParam(required = false) String id){
+    public String questioneditor(Model model, @RequestParam String type, @RequestParam(required = false) String id)
+            throws Exception {
         
         //Give model the following attributes, which are used to submit the survey, via the post method
         model.addAttribute("typeID", type);
@@ -200,6 +207,10 @@ public class CourseController {
 
         //Gives the survey JSON to the model, so the current survey can be assembled and added to
         model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
+
+        //Default survey JSON, which is sent to the server
+        model.addAttribute("defaultSurvey", adminManagement.getDefaultSurvey());
+
 
         //give course name to model, to show as title
         Optional<Course> course = courseManagement.findById(id);
