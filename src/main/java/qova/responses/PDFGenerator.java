@@ -139,7 +139,7 @@ public final class PDFGenerator {
 
             //----------------------------------------------------------------------------------------------------------------
             //Bar chart is created, if ResponseType was either Multiple_Choice or Drop_Down
-            if(responseType.equals(ResponseType.MULTIPLE_CHOICE) || responseType.equals(ResponseType.DROP_DOWN)){
+            if(responseType.equals(ResponseType.MULTIPLE_CHOICE) || responseType.equals(ResponseType.SINGLE_CHOICE)){
 
 
                 //The number of response possibilities determines the number of columns in the bar graph

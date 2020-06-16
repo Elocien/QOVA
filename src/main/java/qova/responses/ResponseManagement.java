@@ -154,7 +154,7 @@ public class ResponseManagement {
             }
 
             else if(position % 3 == 1){
-                var responseType = ResponseType.DROP_DOWN;
+                var responseType = ResponseType.SINGLE_CHOICE;
                 var responsePossibilites = 4;
                 var question = "Is this test question good?";
                 ArrayList<String> options = new ArrayList<String>();

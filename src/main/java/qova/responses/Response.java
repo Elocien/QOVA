@@ -143,7 +143,7 @@ public class Response {
     public Response(Course course, CourseType courseType, Integer position, Integer classNo, ResponseType responseType, String question, Integer responsePossibilites, Integer DDresponse, ArrayList<String> responseOptions) throws Exception{
         
         //Throw Exception is the two arrays do not match in length. If they do not match, then there is no deterministic matching from possible options to the actual response given.
-        if(responseType != ResponseType.DROP_DOWN){
+        if(responseType != ResponseType.SINGLE_CHOICE){
             throw new Exception("responseType does not match constructor");
         }
         

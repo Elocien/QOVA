@@ -106,7 +106,7 @@ public class responseTest extends AbstractIntegrationTest {
 
         // create test response (MultipleChoice constructor)
 
-        var responseTypeD = ResponseType.DROP_DOWN;
+        var responseTypeD = ResponseType.SINGLE_CHOICE;
         var DDresponse = 1;
 
         Response rspD;
