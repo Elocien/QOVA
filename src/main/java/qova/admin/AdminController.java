@@ -1,5 +1,6 @@
 package qova.admin;
 
+import java.util.Objects;
 import java.util.Optional;
 
 import org.springframework.stereotype.Controller;
@@ -15,8 +16,10 @@ import qova.course.SurveyForm;
 @Controller
 public class AdminController {
     
+    private final AdminManagement adminManagement;
 
-    AdminController(){
+    AdminController(AdminManagement adminManagement){
+        this.adminManagement = Objects.requireNonNull(adminManagement);
     }
 
 
@@ -26,95 +29,30 @@ public class AdminController {
     //---------------------------------------------------------------------------
 
     @GetMapping("/admin")
-    public String adminLogin(Model model){
-
-        model.addAttribute("defaultSurvey", );
-
-        return "questioneditor";
+    public String adminLogin() {
+        return "adminPanel";
     }
 
 
+    @GetMapping("/admin/updateDefaultSurvey")
+    public String updateDefaultSurvey(Model model) throws Exception {
 
-    //Mapping for surveyeditor HTML (called from CourseDetails Page!)
-    @GetMapping("/course/surveyeditor")
-    public String questioneditor(Model model, @RequestParam String type, @RequestParam(required = false) String id){
-        
-        //Give model the following attributes, which are used to submit the survey, via the post method
-        model.addAttribute("typeID", type);
-        model.addAttribute("id", id);
+        //give previous default survey to model
+        model.addAttribute("defaultSurvey", adminManagement.getDefaultSurvey() );
 
-        //Gives the survey JSON to the model, so the current survey can be assembled and added to
-        model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
 
-        //give course name to model, to show as title
-        Optional<Course> course = courseManagement.findById(id);
-        model.addAttribute("coursename", course.get().getName());
-        
-        /*
-        //Just for testing:
-        LocalDate dateNow = LocalDate.now();
-        var course = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.EDUCATION, "1-5", dateNow);
-        model.addAttribute("coursename", course.getName());
-        */
-        
-        return "questioneditor";
+        return "adminQuestioneditor";
     }
+
 
 
     //Mapping to submit a questionaire 
     @PostMapping("/admin/")
-    public String defaultSurveySubmit(SurveyForm form) {
+    public String defaultSurveySubmit(SurveyForm form) throws Exception {
 
+        adminManagement.updateDefaultSurvey(form);
 
-
-
-
-
-   
-        //Validate that the questionnaire matches criteria (TODO: ask for criteria)
-        String JsonString = form.getQuestionnairejson();
-
-        //Remove [] to parse JSON
-        JsonString = JsonString.substring(1,JsonString.length()-1);
-
-
-        //TODO: iterate through array and check length
-
-
-
-        //example string
-        // [{"type":"YesNo","question":""},{"type":"MultipleChoice","question":"","answers":["1","2","3","4","5"]},{"type":"DropDown","question":"","answers":["Answer","Answer","Answer"]}]
-
-
-
-
-
-
-        
-        //fetch course 
-        Optional<Course> course = courseManagement.findById(id);
-        if (course.isPresent()){
-
-            // if type is none of the correct values, then redirect to homepage
-            if(!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR"))){
-                //TODO: Where to go from here? Maybe send exception to trigger popup?
-                return "redirect:/";
-
-            }
-
-            else{
-                //Method from courseManager which sets the survey for the relevant surveyType
-                courseManagement.setSurveyforType(id, type, form);
-            }
-
-
-            //Redirect back to CourseDetails page
-            return "redirect:../course/details" + "?id=" + id;
-        }
-        else{
-            //TODO: need more feedback here for the user. Change this!
-            return "redirect:../courses";
-        }
+        return "adminPanel";
     }
     
 
