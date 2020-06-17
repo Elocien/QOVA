@@ -50,14 +50,28 @@
 
 		const x = document.createElement("DIV");
 
+		//DIV for Number and Question
+		const row1 = document.createElement("DIV");
+		row1.className = "row";
+
+		//Number on the top left
+		const index_number = document.createElement("h3");
+		index_number.className = "text-light text-center index-number"
+		index_number.innerHTML = index+1;
+		const left = document.createElement("DIV");
+		left.className = "col-md-12 pl-0";
+
+		left.appendChild(index_number);
+
+
 		//Part for the question
-		const row_question = document.createElement("DIV");
-		const question = document.createElement("P");
+		const question = document.createElement("h4");
 		question.className = "Question";
 		question.innerText = value.question;
 
-		row_question.appendChild(question);
-		x.appendChild(row_question);
+		left.appendChild(question);
+		row1.appendChild(left);
+		x.appendChild(row1);
 
 		if (value.type == "YesNo"){
 			x.className ="container bg-white border border-secondary rounded mt-4 YesNo";
@@ -81,8 +95,9 @@
 
 				for (let i = 0; i< value.answers.length;i++){
 
-
+					const fullOption = document.createElement("DIV");
 					const tickbox = document.createElement("INPUT");
+					tickbox.className ="tickbox";
 					tickbox.setAttribute("type","radio");
 					tickbox.setAttribute("value", value.answers[i]);
 					tickbox.setAttribute("id",value.answers[i]);
@@ -92,8 +107,9 @@
 					description.setAttribute("for",value.answers[i]);
 
 
-					selectionOption.appendChild(tickbox);
-					selectionOption.appendChild(description);
+					fullOption.appendChild(tickbox);
+					fullOption.appendChild(description);
+					selectionOption.appendChild(fullOption);
 
 				}
 

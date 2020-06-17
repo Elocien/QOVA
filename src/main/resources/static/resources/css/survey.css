@@ -1,19 +1,41 @@
 /*The addressees are mainly mobile phones.
 If the display is larger, it is adapted for these devices, which improves the performance for mobile phones.
 I read that somewhere ;) */
-.title {
-    font-size: 5vw;
+
+.Question {
+    padding-left: 60px;
 }
 
 .row.survey {
+}
+
+.tickbox {
+    margin-right: 12px;
+}
+
+.index-number {
+    background-color: var(--tu_blue);
+    border-top-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    height: 3rem;
+    width: 3rem;
+    line-height: 3rem;
+    margin-top: -1px;
+    margin-left: -1px;
+    float: left;
+    font-size: 1.75rem;
+}
+
+.Options.SingleChoice{
+    flex-direction: column;
+    display: flex;
 }
 
 
 /* Medium devices (landscape tablets, 768px and up) */
 @media only screen and (min-width: 768px) {
 
-    .title {
-        font-size: 4vw;
+    .Question {
     }
 
 }
@@ -22,8 +44,22 @@ I read that somewhere ;) */
 /* Large devices (laptops/desktops, 992px and up) */
 @media only screen and (min-width: 992px) {
 
-    .title {
-        font-size: 3vw;
+
+    .Question {
+    }
+
+    .index-number {
+        background-color: var(--tu_blue);
+        border-top-left-radius: 0.25rem;
+        border-bottom-right-radius: 0.25rem;
+        height: 3rem;
+        width: 3rem;
+        line-height: 3rem;
+        margin-top: -1px;
+        margin-left: -1px;
+        float: left;
+        font-size: 1.75rem;
+
     }
 
 
