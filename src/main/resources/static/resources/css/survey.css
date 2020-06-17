@@ -1,6 +1,9 @@
 /*The addressees are mainly mobile phones.
 If the display is larger, it is adapted for these devices, which improves the performance for mobile phones.
 I read that somewhere ;) */
+.theone {
+    background-color:red;
+}
 
 .Question {
     padding-left: 60px;
