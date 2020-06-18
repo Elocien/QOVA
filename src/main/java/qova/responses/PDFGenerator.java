@@ -24,8 +24,6 @@ import com.itextpdf.layout.property.UnitValue;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import java.io.ByteArrayOutputStream;
 
@@ -58,7 +56,7 @@ public final class PDFGenerator {
 
 
         //Map that contains responses/ The key is the position of response objects in ArrayList
-        Map<Integer, ArrayList<Response>> responses = new HashMap<Integer, ArrayList<Response>>();
+        ArrayList<ArrayList<Response>> responses = new ArrayList<ArrayList<Response>>();
 
 
         
@@ -75,7 +73,7 @@ public final class PDFGenerator {
             if(tempList == null) {
                 tempList = new ArrayList<Response>();
                 tempList.add(rsp);
-                responses.put(pos, tempList);
+                responses.add(pos, tempList);
             } else {
                 // add if item is not already in list
                 if(!tempList.contains(rsp)){
@@ -148,6 +146,7 @@ public final class PDFGenerator {
                 //ArrayList containing all column titles 
                 ArrayList<String> columnTitles = responsesForPos.get(0).getOptionsMCDD();
 
+                //DIFFERENT FROM columnTITLES!!!
                 //Create an ArrayList, where each element represents a column of the bar graph. The value is the total number of responses for that option
                 ArrayList<Integer> columnTotals = new ArrayList<Integer>(responsePossibilities);
 
