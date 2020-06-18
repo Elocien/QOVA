@@ -19,14 +19,13 @@ public class AdminManagement {
     public AdminManagement(DefaultSurveyRepository repo) {
         this.repo = Objects.requireNonNull(repo);
 
+        //Check if defaultSurvey exists.
         try{
-            DefaultSurvey defaultSurvey = repo.findSpecialInstance();
+            repo.findSpecialInstance();
         }
         catch(IllegalStateException e){
-            DefaultSurvey defaultSurvey = new DefaultSurvey(1L, "[]");
+            repo.save(new DefaultSurvey(1L, "[]"));
         }
-        
-
     }
 
 
