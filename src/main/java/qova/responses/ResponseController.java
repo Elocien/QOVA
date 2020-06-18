@@ -137,24 +137,7 @@ public class ResponseController {
 
 
 
-    //PDF Generation
-    @GetMapping("/pdftest")
-    public HttpEntity<byte[]> pdfTest(HttpServletResponse response) throws Exception {
     
-        //generate filename
-        String filename = "testPdf.pdf";
-
-        //Generate PDF
-        byte[] pdf = responseManagement.generatePDF_test();
-
-        //Set HTTP headers and return HttpEntity
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_PDF);
-        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
-        header.setContentLength(pdf.length);
-
-        return new HttpEntity<byte[]>(pdf, header);
-    }
 
 
 
@@ -192,11 +175,35 @@ public class ResponseController {
         return "home";
     }
 
-    //test method
-    @GetMapping("/pdf")
-    public String pdfTest() throws Exception {
-        
-        return "home";
+    //PDF Generation
+    @GetMapping("/pdftest")
+    public HttpEntity<byte[]> pdfTest(HttpServletResponse response) throws Exception {
+    
+        //generate filename
+        String filename = "testPdf.pdf";
+
+        //Generate PDF
+        byte[] pdf = responseManagement.generatePDF_test();
+
+        //Set HTTP headers and return HttpEntity
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_PDF);
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
+        header.setContentLength(pdf.length);
+
+        return new HttpEntity<byte[]>(pdf, header);
+    }
+
+
+    @GetMapping("json")
+    public void testJSONParsing(){
+
+        //[{"type":"SingleChoice","question":"War die forlesung dsa","answers":["asd","asd","","","","","","","",""]},{"type":"SingleChoice","question":"","answers":[]},{"type":"YesNo","question":""}]
+        //Test String
+        String json = courseManagement.findById("c000000000000906").get().getLectureSurvey();
+
+        // https://stackoverflow.com/questions/2591098/how-to-parse-json-in-java
+
     }
 
 }
