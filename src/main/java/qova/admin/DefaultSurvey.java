@@ -1,8 +1,6 @@
 package qova.admin;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 
@@ -10,7 +8,7 @@ import javax.persistence.Lob;
 public class DefaultSurvey {
 
     //Attributes
-    @Id @GeneratedValue(strategy = GenerationType.AUTO) 
+    @Id 
     private Long id;
     @Lob
     private String defaultSurveyJson;
@@ -23,7 +21,8 @@ public class DefaultSurvey {
 
 
     //Constructor
-    public DefaultSurvey(String surveyJson){
+    public DefaultSurvey(Long id, String surveyJson){
+        this.id = id;
         this.defaultSurveyJson = surveyJson;
     }
 
