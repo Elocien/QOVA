@@ -24,7 +24,8 @@ import com.itextpdf.layout.property.UnitValue;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.Map;
 import java.io.ByteArrayOutputStream;
 
 import org.jfree.chart.ChartFactory;
@@ -56,8 +57,7 @@ public final class PDFGenerator {
 
 
         //Map that contains responses/ The key is the position of response objects in ArrayList
-        ArrayList<ArrayList<Response>> responses = new ArrayList<ArrayList<Response>>();
-
+        Map<Integer, ArrayList<Response>> responses = new HashMap<Integer, ArrayList<Response>>();
 
         
 
@@ -73,7 +73,7 @@ public final class PDFGenerator {
             if(tempList == null) {
                 tempList = new ArrayList<Response>();
                 tempList.add(rsp);
-                responses.add(pos, tempList);
+                responses.put(pos, tempList);
             } else {
                 // add if item is not already in list
                 if(!tempList.contains(rsp)){
