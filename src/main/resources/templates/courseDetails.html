@@ -44,7 +44,7 @@
                             <form id="form" method="post" th:action="@{/course/edit?id={id}(id=${course.id})}" th:object="${form}">
 
                                 <!--Name added into main form-->
-                                <input id="hidden-name-input" type="text" style="display: none;" th:value="${course.name}" th:field="*{course.name}"></input>
+                                <input id="hidden-name-input" type="text" style="display: none;" th:value="${course.name}" th:field="*{name}"></input>
 
                                 <!--Headline & Buttons-->
                                 <div class="row">
@@ -331,9 +331,9 @@
         }
     };
 
-    const name_input = getElementById("name-input")
+    const name_input = document.getElementById("name-input")
     name_input.addEventListener("change", function() {
-        name_input.value = getElementById("hidden-name-input");
+        document.getElementById("hidden-name-input").value  = name_input.value;
     });
 
     function sort_options(select_element) {

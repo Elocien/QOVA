@@ -347,9 +347,6 @@ public class CourseController {
             //Retrieve survey
             String JsonString = courseManagement.getSurveyforType(id, type);
 
-            //Remove [] so JS method can parse the JSON correctly
-            JsonString = JsonString.substring(1,JsonString.length()-1);
-
             //return the JSON
             return JsonString;
         }
