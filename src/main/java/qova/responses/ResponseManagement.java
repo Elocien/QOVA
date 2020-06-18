@@ -215,4 +215,19 @@ public class ResponseManagement {
             }
         }  
     } 
+
+
+
+    public byte[] generatePDF_test() throws IOException, Exception {
+
+        //Responses used to gen pdg
+        ArrayList<Response> pdfResponses = new ArrayList<Response>();
+
+        //Add responses to arrayList
+        responses.findAll().forEach(pdfResponses::add);
+        
+        //Generate PDF 
+        PDFGenerator pdfGen = new PDFGenerator();
+        return pdfGen.createPdf(pdfResponses, "test PDF title");
+    }
 }

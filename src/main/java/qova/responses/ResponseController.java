@@ -137,11 +137,23 @@ public class ResponseController {
 
 
 
-    //Mapping for surveys
-    @GetMapping("/surveys")
-    public String surveys(Model model){
-        model.addAttribute("courseList", courseManagement.findAll());
-        return "surveyResults";
+    //PDF Generation
+    @GetMapping("/pdftest")
+    public HttpEntity<byte[]> pdfTest(HttpServletResponse response) throws Exception {
+    
+        //generate filename
+        String filename = "testPdf.pdf";
+
+        //Generate PDF
+        byte[] pdf = responseManagement.generatePDF_test();
+
+        //Set HTTP headers and return HttpEntity
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_PDF);
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
+        header.setContentLength(pdf.length);
+
+        return new HttpEntity<byte[]>(pdf, header);
     }
 
 
@@ -177,6 +189,13 @@ public class ResponseController {
     public String creatR() throws Exception {
         Optional<Course> crs = courseManagement.findById("c000000000000001");
         responseManagement.TestCreateResponses(crs.get());
+        return "home";
+    }
+
+    //test method
+    @GetMapping("/pdf")
+    public String pdfTest() throws Exception {
+        
         return "home";
     }
 
