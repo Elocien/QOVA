@@ -28,9 +28,7 @@
 
                 <div class="mb-4 mt-4">
                     <h2 class="font-weight-bold text-center mb-4 mt-4 hide_me" th:text="${course.name}">COURSE NAME</h2>
-                    <form method="post" class="show_me" style="display: none;"  th:action="@{/course/edit?id={id}(id=${course.id})}" th:object="${form}">
-                        <input type="text" class="input-group headline-edit" th:placeholder="${course.name}" th:value="${course.name}" th:field="*{name}"></input>
-                    </form>
+                    <input id="name-input" type="text" class="input-group headline-edit show_me" style="display: none;" th:placeholder="${course.name}" th:value="${course.name}"></input>
                 </div>
 
                 <div class="container bg-light border border-dark rounded p-0">
@@ -44,6 +42,9 @@
                         <!--Course Details-->
                         <div class="col-md-6">
                             <form id="form" method="post" th:action="@{/course/edit?id={id}(id=${course.id})}" th:object="${form}">
+
+                                <!--Name added into main form-->
+                                <input id="hidden-name-input" type="text" style="display: none;" th:value="${course.name}" th:field="*{course.name}"></input>
 
                                 <!--Headline & Buttons-->
                                 <div class="row">
@@ -329,6 +330,11 @@
             document.getElementById(type + "Line").className = "";
         }
     };
+
+    const name_input = getElementById("name-input")
+    name_input.addEventListener("change", function() {
+        name_input.value = getElementById("hidden-name-input");
+    });
 
     function sort_options(select_element) {
         const all_options = select_element.children;
