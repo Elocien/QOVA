@@ -198,3 +198,10 @@ footer {
 .nounderline {
   text-decoration: none !important
 }
+input[type="text"]:disabled {
+  border-color: lightgrey;
+  color: lightgrey;
+}
+input[type="text"]:disabled::placeholder {
+  color: lightgrey;
+}
