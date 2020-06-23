@@ -333,7 +333,7 @@
                                 </div>
                             </div>
                             <!--Download Button-->
-                            <div class="container text-center mt-3">
+                            <div th:if="!${course.lectureSurvey.equals('[]') and course.tutorialSurvey.equals('[]') and course.seminarSurvey.equals('[]')}" class="container text-center mt-3">
                                 <p class="m-0 font-weight-light" th:text="#{detail.download}"></p>
                                 <div class="btn-group" role="group" aria-label="First group">
                                     <a th:if="!${course.lectureSurvey.equals('[]')}" class="btn btn-primary btn-sm" th:text="#{new.lecture}" th:href="${'/qrcode?type=LECTURE&id='  + {course.id}}" target="_blank" href="#">LECTURE</a>
