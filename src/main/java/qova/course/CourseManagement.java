@@ -336,13 +336,15 @@ public class CourseManagement {
         var lectureExists = true;
         var tutorialExists = true;
         var seminarExists = true;
-        var classTotalTutorial = 10;
-        var classTotalSeminar = 5;
-        var semester = 3;
+        var practicalExists = true;
+        var tutorialGroupAmount = 10;
+        var seminarGroupAmount = 5;
+        var practicalGroupAmount = 7;
+        var semesterOfStudents = 3;
         var faculty = CourseFaculty.CHEMISTRY;
-        var semesterUIString = "SoSe 2020";
+        var semesterString = "SoSe 2020";
 
-        courses.save(new Course(name, lectureExists, tutorialExists, seminarExists, "[]", "[]", "[]", classTotalTutorial, classTotalSeminar, semester, faculty, semesterUIString, LocalDate.now()));
+        courses.save(new Course(name, lectureExists, tutorialExists, seminarExists, practicalExists, "[]", "[]", "[]", "[]", tutorialGroupAmount, seminarGroupAmount, practicalGroupAmount, lectureInstanceTitles, tutorialInstanceTitles, seminarInstanceTitles, practiceInstanceTitles, semesterOfStudents, faculty, semesterString, LocalDate.now()));
     }
 
    
