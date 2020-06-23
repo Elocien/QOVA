@@ -426,6 +426,15 @@
         for (let index = 0; index < invis.length; ++index) {
             invis[index].style.display = "";
         }
+        const all_types = ["lecture", "tutorial", "seminar", "practical"];
+        for (let index = 0; index < all_types.length; ++index) {
+            set_hidden_data(all_types[index]);
+            console.log(document.getElementById(all_types[index] + "Hidden").checked);
+            if (document.getElementById(all_types[index] + "Hidden").checked === false) {
+                disable_inputs(document.getElementById(all_types[index] + "Line"), true);
+            }
+
+        }
     }
     
     function edit_mode() {
