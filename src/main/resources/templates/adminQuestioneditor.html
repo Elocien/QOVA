@@ -25,9 +25,10 @@
     <div class="row">
         <div class="col-lg-12 mt-4">
             
-            <h2 class="font-weight-bold text-center" th:text="#{admin.editorHeadline}">SURVEY EDITOR</h2>
+            <h2 class="font-weight-bold text-center" th:text="#{admin.editorHeadline}">DEFAULT EDITOR</h2>
+            <h5 class="font-weight-light text-center" th:text="#{admin.editorHeadlineWarning}">WARNING</h5>
         
-            <div class="row">       
+            <div class="row">
                 <div class="col-md-1"></div>     
                 <!--Menu-->
                 <div class="col-md-2 text-right">
@@ -39,10 +40,28 @@
                             <button type="button" class="btn btn-list btn-text-right" onclick="addSingleChoiceQuestion()"><span th:text="#{question.single-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-list-last btn-text-right" onclick="addFreeTextQuestion()"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                         </div>
-                        <form th:action="@{/admin/updateDefaultSurvey}" method="post" th:object="${form}" id="submitsurvey">
-                            <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
-                            <button class="btn btn-primary mt-2" type="submit" th:text="#{question.submit}">SUBMIT</button>
-                        </form>
+
+                        <button class="btn btn-primary mt-2" th:text="#{question.submit}" data-toggle="modal" data-target="#defaultEditModal">SUBMIT</button>
+                        <div class="modal fade" id="defaultEditModal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content text-center">
+                                    <div class="modal-body">
+                                        <p th:text="#{admin.defaultEditModalText1}">R U SURE?!</p>
+                                        <p th:text="#{admin.defaultEditModalText2}" class="font-weight-bold text-warning">RLY?!</p>
+                                    </div>
+                                    <div class="modal-footer text-center">
+                                        <div class="w-100"></div>
+                                        <form th:action="@{/admin/updateDefaultSurvey}" method="post" th:object="${form}" id="submitsurvey">
+                                            <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
+                                            <button class="btn btn-primary mt-2" type="submit" th:text="#{Yes}">YES</button>
+                                        </form>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                                        <div class="w-100"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="Json" id="json" th:text="${survey}"></div>
                     </div>
                 </div>

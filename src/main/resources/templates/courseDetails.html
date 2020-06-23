@@ -51,7 +51,7 @@
                                     <div class="modal-footer text-center">
                                         <div class="w-100"></div>
                                         <button type="submit" class="btn btn-primary">Finish</button>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
                                         <div class="w-100"></div>
                                     </div>
                                 </div>
@@ -73,7 +73,7 @@
                                             <input type="hidden" name="id" th:value="${course.id}"/>
                                             <button type="submit" class="btn btn-primary">Yes</button>
                                         </form>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
                                         <div class="w-100"></div>
                                     </div>
                                 </div>
