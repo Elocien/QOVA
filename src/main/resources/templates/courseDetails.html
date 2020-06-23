@@ -104,7 +104,7 @@
                                         <tbody>
                                             <!--Faculty-->
                                             <tr>
-                                                <th scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
+                                                <th class="col-5" scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
                                                 <td class="hide_me" id="faculty_original"><span th:id="'og: ' + ${course.faculty}" th:text="#{'course.faculty.' + ${course.faculty}}">FACULTY</span></td>
                                                 <td class="show_me" id="faculty_dropdown" style="display: none">
                                                     <select id="faculty_select" class="custom-select form-control" th:field="*{faculty}" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
@@ -115,7 +115,7 @@
                                             </tr>
                                             <!--Semester Period-->
                                             <tr>
-                                                <th scope="row" th:text="#{course.courseInstance}">YEAR</th>
+                                                <th class="col-5" scope="row" th:text="#{course.courseInstance}">YEAR</th>
                                                 <td class="hide_me" th:text="${course.semesterUI}">XXXX</td>
                                                 <td class="show_me" style="display: none">
                                                     <select class="custom-select form-control" th:field="*{courseInstanceString}">
@@ -126,7 +126,7 @@
                                             </tr>
                                             <!--Semester of Students-->
                                             <tr>
-                                                <th scope="row" th:text="#{course.semesterOfStudents}">SEMESTER</th>
+                                                <th class="col-5" scope="row" th:text="#{course.semesterOfStudents}">SEMESTER</th>
                                                 <td class="hide_me"><span th:text="${course.semesterOfStudents}">IDK - XXXX</span></td>
                                                 <td class="show_me" style="display: none;">
                                                     <input class="form-control" type="text" th:placeholder="${course.semesterOfStudents}" th:field="*{semesterOfStudents}">
@@ -360,29 +360,6 @@
         $('#myInput').trigger('focus')
     })
 
-    function download_all() {
-        const all_downloads = document.getElementsByClassName("download")
-        for (let index = 0; index < all_downloads.length; ++index) {
-            all_downloads[index].click();
-        }
-    }
-
-    function set_hidden_data(type) {
-        const hidden_input = document.getElementById(type + "Hidden");
-        hidden_input.checked = document.getElementById(type + "Check").checked;
-        if (hidden_input.checked === false) {
-            document.getElementById(type + "Line").className = "text-light-grey";
-        }
-        else {
-            document.getElementById(type + "Line").className = "";
-        }
-    };
-
-    const name_input = document.getElementById("name-input")
-    name_input.addEventListener("change", function() {
-        document.getElementById("hidden-name-input").value  = name_input.value;
-    });
-
     function sort_options(select_element) {
         const all_options = select_element.children;
         
@@ -403,6 +380,42 @@
             select_element.appendChild(new_child);
         }
     }
+
+    function download_all() {
+        const all_downloads = document.getElementsByClassName("download")
+        for (let index = 0; index < all_downloads.length; ++index) {
+            all_downloads[index].click();
+        }
+    }
+
+    function set_hidden_data(type) {
+        const og_input = document.getElementById(type + "Check");
+        const hidden_input = document.getElementById(type + "Hidden");
+        hidden_input.checked = og_input.checked;
+        const table_line = document.getElementById(type + "Line");
+        if (hidden_input.checked === false) {
+            table_line.className = "text-light-grey";
+            disable_inputs(table_line, true);
+        }
+        else {
+            table_line.className = "";
+            disable_inputs(table_line, false);
+        }
+        og_input.disabled = true;
+        setTimeout(function(){og_input.disabled = false;}, 500)
+    }
+
+    function disable_inputs(f_element, bool) {
+        const all_text_inputs = f_element.querySelectorAll('input[type=text]');
+        for (let index = 0; index < all_text_inputs.length; ++index) {
+            all_text_inputs[index].disabled = bool;
+        }
+    }
+
+    const name_input = document.getElementById("name-input")
+    name_input.addEventListener("change", function() {
+        document.getElementById("hidden-name-input").value  = name_input.value;
+    });
 
     function switcheroo() {
         const vis = document.getElementsByClassName("hide_me");
@@ -425,7 +438,7 @@
         document.getElementById(key.slice(4, key.length)).setAttribute("selected", "selected");
 
         //replaces everything else
-        switcheroo();        
+        switcheroo();
     }
 </script>
 </html>
