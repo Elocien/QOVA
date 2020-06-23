@@ -43,7 +43,7 @@
                         <!--Tutorial-->
                         <div class="col-md-auto">
                             <label class="switch m-0 align-middle">
-                                <input type="checkbox" id="tutorialCheck" onclick="set_hidden_data('tutorial')" data-toggle="collapse" data-target="#collapseTutor"  aria-expanded="false" aria-controls="collapseTutor">
+                                <input type="checkbox" id="tutorialCheck" onclick="set_hidden_data('tutorial')">
                                 <span class="slider round"></span>
                             </label>
                             <p class="d-inline m-0 switch-label" th:text="#{new.tutorial}">TUTORIAL</p>
@@ -53,11 +53,21 @@
                         <!--Seminar-->
                         <div class="col-md-auto">
                             <label class="switch m-0 align-middle">
-                                <input type="checkbox" id="seminarCheck" onclick="set_hidden_data('seminar')" data-toggle="collapse" data-target="#collapseSeminar"  aria-expanded="false" aria-controls="collapseSeminar">
+                                <input type="checkbox" id="seminarCheck" onclick="set_hidden_data('seminar')">
                                 <span class="slider round"></span>
                             </label>
                             <p class="d-inline m-0 switch-label" th:text="#{new.seminar}">SEMINAR</p>
                             <input type="checkbox" id="seminarHidden" hidden th:field="*{seminarExists}">
+                        </div>
+                        <div class="col-md-1"></div>
+                        <!--Practical-->
+                        <div class="col-md-auto">
+                            <label class="switch m-0 align-middle">
+                                <input type="checkbox" id="practicalCheck" onclick="set_hidden_data('practical')">
+                                <span class="slider round"></span>
+                            </label>
+                            <p class="d-inline m-0 switch-label" th:text="#{new.practical}">SEMINAR</p>
+                            <input type="checkbox" id="practicalHidden" hidden><!--TODO: th:field="*{practicalExists}"-->
                         </div>
                     </div>
                     <div class="dropdown-divider border-dark m-0"></div>
@@ -90,21 +100,44 @@
                             </div>
                         </div>
                         <!--Collapsables-->
-                        <div class="form-row">
-                            <div class="col-md-8"></div>
-                            <div class="col-md-2 mt-3 collapse" id="collapseSeminar">
-                                <label for="classTotalSeminar" th:text="#{new.courseSeminar}">COURSE SEMINAR</label>
-                                <input type="number" class="form-control" id="classTotalSeminar" th:field="*{classTotalSeminar}" placeholder="0" min="0" value="0">
-                                <div class="invalid-feedback">
-                                    You do know how numbers work, right?
-                                </div>
-                            </div>
-                            <div class="col-md-2 mt-3 collapse" id="collapseTutor">
-                                <label for="classTotalTutorial" th:text="#{new.courseTutor}">COURSE TUTORIAL</label>
-                                <input type="number" class="form-control" id="classTotalTutorial" th:field="*{classTotalTutorial}" placeholder="0" min="0" value="0">
-                                <div class="invalid-feedback">
-                                    You do know how numbers work, right?
-                                </div>
+                        <div class="form-row mt-3" id="input_table" style="display: none;">
+                            <div class="col w-100"></div>
+                            <div class="col-md-auto">
+                                <table class="table m-0" style="margin-right: -0.5rem;">
+                                    <thead>
+                                        <tr class="slim-line">
+                                            <th class="border-0 col-md-2" scope="col"></th>
+                                            <th class="border-0 col-md-2" scope="col" th:text="#{new.count}">COUNT</th>
+                                            <th class="border-0 col-md-2" scope="col" th:text="#{new.instances}">INSTANCES</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!--Lecture-->
+                                        <tr class="slim-line" id="lectureCollapse" style="display: none">
+                                            <td th:text="#{new.lecture}">LECTURE</td>
+                                            <td><input type="number" class="form-control" placeholder="0" min="0" value="0"><!--TODO: th:field="*{classTotalLecture}"--></td=>
+                                            <td><input type="number" class="form-control" placeholder="0" min="0" value="0"><!--TODO: th:field="*{lectureInstances}"--></td=>
+                                        </tr>
+                                        <!--Tutorial-->
+                                        <tr class="slim-line" id="tutorialCollapse" style="display: none">
+                                            <td th:text="#{new.tutorial}">TUTORIAL</td>
+                                            <td><input type="number" class="form-control" th:field="*{classTotalTutorial}" placeholder="0" min="0" value="0"></td>
+                                            <td><input type="number" class="form-control" placeholder="0" min="0" value="0"><!--TODO:  th:field="*{tutorialInstances}"--></td>
+                                        </tr>
+                                        <!--Seminar-->
+                                        <tr class="slim-line" id="seminarCollapse" style="display: none">
+                                            <td th:text="#{new.seminar}">SEMINAR</td=>
+                                            <td><input type="number" class="form-control" th:field="*{classTotalSeminar}" placeholder="0" min="0" value="0"></td>
+                                            <td><input type="number" class="form-control" placeholder="0" min="0" value="0"><!--TODO:  th:field="*{seminarInstances}"--></td>
+                                        </tr>
+                                        <!--Practical-->
+                                        <tr class="slim-line" id="practicalCollapse" style="display: none">
+                                            <td th:text="#{new.practical}">PRACTICAL</td>
+                                            <td><input type="number" class="form-control" placeholder="0" min="0" value="0"><!--TODO: th:field="*{classTotalPractical}"--></td>
+                                            <td><input type="number" class="form-control" placeholder="0" min="0" value="0"><!--TODO:  th:field="*{practicalInstances}"--></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>
@@ -127,7 +160,7 @@
 
 </body>
 <script>
-    $( document ).ready(function() {
+    $(document).ready(function() {
         const select_element = document.getElementById("faculty_select");
         const all_options = select_element.children;
         
@@ -152,8 +185,32 @@
         }
     });
 
+    function anything_going_on() {
+        var success = 0;
+        const all_types = ["lecture", "tutorial", "seminar", "practical"];
+        for (let index = 0; index < all_types.length; ++index) {
+            if (document.getElementById(all_types[index] + "Hidden").checked == true) {
+                document.getElementById("input_table").style.display = "";
+                success = 1;
+            }
+        }
+        if (success == 0) {
+            document.getElementById("input_table").style.display = "none";
+        }
+    }
+
     function set_hidden_data(type) {
-        document.getElementById(type + "Hidden").checked = document.getElementById(type + "Check").checked;
+        const original = document.getElementById(type + "Check");
+        document.getElementById(type + "Hidden").checked = original.checked;
+        if (original.checked === true) {
+            document.getElementById(type + "Collapse").style.display = "";
+        }
+        else {
+            document.getElementById(type + "Collapse").style.display = "none";
+        }
+        anything_going_on();
+        original.disabled = true;
+        setTimeout(function(){original.disabled = false;}, 500)
     };
 
 </script>
