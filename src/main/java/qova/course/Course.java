@@ -1,6 +1,7 @@
 package qova.course;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,12 +15,24 @@ import org.hibernate.annotations.Parameter;
 import qova.IdGenerator;
 
 
+
+
+
+//Terminology
+
+//course types
+    //meaning either the lecture, tutorial, seminar or practical
+    //auf deutsch:       Vorlesung, übung , seminar oder praktika
+
+
+//
+
+
+
+
 @Entity
 public class Course {
-
  
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_gen")
     @GenericGenerator(
@@ -31,37 +44,50 @@ public class Course {
             @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%015d") })
     private String id;
 
+    //Name of the course
     private String name;
-    
+
+
+    //Booleans representing the existence of each course type
     private Boolean lectureExists;
-
     private Boolean tutorialExists;
-
     private Boolean seminarExists;
+    private Boolean practicalExists;
 
-    @Lob
-    private String lectureSurvey;
 
-    @Lob
-    private String tutorialSurvey;
+    //JSON String of the survey
+    @Lob private String lectureSurvey;
+    @Lob private String tutorialSurvey;
+    @Lob private String seminarSurvey;
+    @Lob private String practicalSurvey;
 
-    @Lob
-    private String seminarSurvey;
 
-    private int classTotalTutorial;
+    //Integer representing how many Groups for a certain course types
+    //No variable for lecture, because it is assumed to be 1.
+    private Integer tutorialGroupAmount;
+    private Integer seminarGroupAmount;
+    private Integer practicalGroupAmount;
 
-    private int classTotalSeminar;
+
+    //Arrays Containing the titles of instances of each course type
+    @Lob ArrayList<String> lectureInstanceTitles;
+    @Lob ArrayList<String> tutorialInstanceTitles;
+    @Lob ArrayList<String> seminarInstanceTitles;
+    @Lob ArrayList<String> practicalInstanceTitles;
+
+
 
     //The number representing the semester this course is taken by students
-    private int semesterOfStudents;
+    private Integer semesterOfStudents;
 
+    //Faculty the course belongs to 
     private CourseFaculty faculty;
 
     //The date at which indicates to which semester the course belongs to (used to find courses using repository methods)
-    private LocalDate courseInstance;  
+    private LocalDate courseDate;  
 
     //The string which is displayed in UI
-    private String semesterUI;
+    private String semesterString;
 
 
     //Needed for JPA purposes
@@ -87,20 +113,27 @@ public class Course {
      * @param semesterUI            The string displaying the semester (an instance of a course. E.g. algorithms 1 is offered each year, and this is the instance of Summer semester 2020). This field is primarily used in the UI
      * @param courseInastance           The time period (start date) of when the course takes placed. This field is primarily used for sorting purposes
      */
-    public Course(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, int classTotalTutorial, int classTotalSeminar, int semesterOfStundets, CourseFaculty faculty, String semesterUI, LocalDate courseInastance){
+    public Course(String name, Boolean lectureExists, Boolean tutorialExists, Boolean seminarExists, Boolean practicalExists, String lectureSurvey, String tutorialSurvey, String seminarSurvey, String practicalSurvey, Integer tutorialGroupAmount, Integer seminarGroupAmount,  Integer practicalGroupAmount, ArrayList<String> lectureInstanceTitles, ArrayList<String> tutorialInstanceTitles, ArrayList<String> seminarInstanceTitles, ArrayList<String> practiceInstanceTitles, Integer semesterOfStudents, CourseFaculty faculty, String semesterString, LocalDate courseDate){
         this.name = name;
         this.lectureExists = lectureExists;
         this.tutorialExists = tutorialExists;
         this.seminarExists = seminarExists;
+        this.practicalExists = practicalExists;
         this.lectureSurvey = lectureSurvey;
         this.tutorialSurvey = tutorialSurvey;
         this.seminarSurvey = seminarSurvey;
-        this.classTotalTutorial = classTotalTutorial;
-        this.classTotalSeminar = classTotalSeminar;
-        this.semesterOfStudents = semesterOfStundets;
+        this.practicalSurvey = practicalSurvey;
+        this.tutorialGroupAmount = tutorialGroupAmount;
+        this.seminarGroupAmount = seminarGroupAmount;
+        this.practicalGroupAmount = practicalGroupAmount;
+        this.lectureInstanceTitles = lectureInstanceTitles;
+        this.tutorialInstanceTitles = tutorialInstanceTitles;
+        this.seminarInstanceTitles = seminarInstanceTitles;
+        this.practicalInstanceTitles = practiceInstanceTitles;
+        this.semesterOfStudents = semesterOfStudents;
         this.faculty=faculty;
-        this.semesterUI = semesterUI;
-        this.courseInstance = courseInastance;
+        this.semesterString = semesterString;
+        this.courseDate = courseDate;
     }
 
     public String getId(){
@@ -114,6 +147,12 @@ public class Course {
     public void setName(String name){
         this.name = name;
     }
+
+
+
+
+
+    //CourseTypes
 
     public Boolean getLectureExists(){
         return this.lectureExists;
@@ -139,6 +178,19 @@ public class Course {
         this.seminarExists = exists;
     }
 
+    public Boolean getPracticalExists(){
+        return this.practicalExists;
+    }
+
+    public void setPracticalExists(Boolean exists){
+        this.practicalExists = exists;
+    }
+
+
+
+
+    //Surveys
+
     public String getLectureSurvey(){
         return this.lectureSurvey;
     }
@@ -163,21 +215,90 @@ public class Course {
         this.seminarSurvey = survey;
     }
 
-    public int getClassTotalTutorial(){
-        return this.classTotalTutorial;
+    public String getPracticalSurvey(){
+        return this.practicalSurvey;
     }
 
-    public void setClassTotalTutorial(int classTotal){
-        this.classTotalTutorial = classTotal;
+    public void setPracticalSurvey(String survey){
+        this.practicalSurvey = survey;
     }
 
-    public int getClassTotalSeminar(){
-        return this.classTotalSeminar;
+
+
+
+
+
+    //Group Totals
+
+    public int getTutorialGroupAmount(){
+        return this.tutorialGroupAmount;
     }
 
-    public void setClassTotalSeminar(int classTotal){
-        this.classTotalSeminar = classTotal;
+    public void setTutorialGroupAmount (int amount){
+        this.tutorialGroupAmount = amount;
     }
+
+    public int getSeminarGroupAmount(){
+        return this.seminarGroupAmount;
+    }
+
+    public void setSeminarGroupAmount (int amount){
+        this.seminarGroupAmount = amount;
+    }
+
+    public int getPracticalGroupAmount(){
+        return this.practicalGroupAmount;
+    }
+
+    public void setPracticalGroupAmount (int amount){
+        this.practicalGroupAmount = amount;
+    }
+
+
+
+
+
+
+
+    //Instance Titles
+
+    public ArrayList<String> getLectureInstanceTitles(){
+        return this.lectureInstanceTitles;
+    }
+
+    public void setLectureInstanceTitels(ArrayList<String> list){
+        this.lectureInstanceTitles = list;
+    }
+
+    public ArrayList<String> getTutorialInstanceTitles(){
+        return this.tutorialInstanceTitles;
+    }
+
+    public void setTutorialInstanceTitels(ArrayList<String> list){
+        this.tutorialInstanceTitles = list;
+    }
+
+    public ArrayList<String> getSeminarInstanceTitles(){
+        return this.seminarInstanceTitles;
+    }
+
+    public void setSeminarInstanceTitels(ArrayList<String> list){
+        this.seminarInstanceTitles = list;
+    }
+
+    public ArrayList<String> getPracticalInstanceTitles(){
+        return this.practicalInstanceTitles;
+    }
+
+    public void setPracticalInstanceTitels(ArrayList<String> list){
+        this.practicalInstanceTitles = list;
+    }
+
+
+
+
+
+    //the rest
 
     public int getSemesterOfStudents(){
         return this.semesterOfStudents;
@@ -195,20 +316,20 @@ public class Course {
         this.faculty = faculty;
     }
 
-    public LocalDate getCourseInstance(){
-        return this.courseInstance;
+    public LocalDate getCourseDate(){
+        return this.courseDate;
     }
 
-    public void setCourseInstance(LocalDate date){
-        this.courseInstance = date;
+    public void setCourseDate(LocalDate date){
+        this.courseDate = date;
     }
 
-    public String getSemesterUI(){
-        return this.semesterUI;
+    public String getSemesterString(){
+        return this.semesterString;
     }
 
-    public void setSemesterUI(String str){
-        this.semesterUI = str;
+    public void setSemesterString(String str){
+        this.semesterString = str;
     }
 }
 

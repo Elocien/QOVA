@@ -28,7 +28,7 @@ public class CSVGenerator {
         //Course Specific Attributes
         Course course = response.getCourse();
         String courseName = course.getName();
-        String courseInstanceSemesterForm = course.getSemesterUI();
+        String courseInstanceSemesterForm = course.getSemesterString();
         String semesterOfStudents = String.valueOf(course.getSemesterOfStudents());
         
 
