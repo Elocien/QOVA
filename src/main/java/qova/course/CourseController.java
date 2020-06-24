@@ -147,7 +147,7 @@ public class CourseController {
     //Validation of Created course
 	@PostMapping("course/new")
 	public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
-			BindingResult result) {
+			BindingResult result) throws Exception {
 
 
 		if (result.hasErrors()) {
@@ -160,8 +160,43 @@ public class CourseController {
         String id = courseManagement.createCourseReturnId(form);
         
         //Redirect to SurveyEditor to start creating survey
+		return "redirect:../course/new2?id=" + id;
+    }
+
+
+    //Create Course
+    @GetMapping("course/new2")
+	public String createCourse_SetInstanceTitles(Model model, InstanceTitleForm form, @RequestParam String id) {
+
+        model.addAttribute("form", form);
+
+        model.addAttribute("lectureInstanceTitles", courseManagement.findById(id).get().getLecture().instanceTitles);
+        model.addAttribute("tutorialInstanceTitles", courseManagement.findById(id).get().getTutorial().instanceTitles);
+        model.addAttribute("seminarInstanceTitles", courseManagement.findById(id).get().getSeminar().instanceTitles);
+        model.addAttribute("practicalInstanceTitles", courseManagement.findById(id).get().getPractical().instanceTitles);
+
+		return "courseNew2";
+    }
+    
+    //Validation of Created course
+	@PostMapping("course/new2")
+	public String createCourse_SetInstanceTitlesValidation(Model model, @Valid @ModelAttribute("form") InstanceTitleForm form, @RequestParam String id,
+			BindingResult result) throws Exception {
+
+
+		if (result.hasErrors()) {
+			return createCourse_SetInstanceTitles(model, form, id);
+        }
+
+
+
+        //Management Method returns String of new Course
+        courseManagement.createCourseSetInstanceTitles(form, id);
+        
+        //Redirect to SurveyEditor to start creating survey
 		return "redirect:../course/details" + "?id=" + id;
     }
+
     
     
 
@@ -401,10 +436,6 @@ public class CourseController {
 
 
 
-
-
-
-    
     @GetMapping("/easterEgg/tim")
     public String easterEgg(){return "subject.html";}
 
@@ -445,7 +476,7 @@ public class CourseController {
 
     //test method
     @GetMapping("/createC")
-    public String createC(){
+    public String createC() throws Exception {
         courseManagement.TestCreateCourse();
         return "home";
     }

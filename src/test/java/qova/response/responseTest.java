@@ -3,6 +3,7 @@ package qova.response;
 import qova.AbstractIntegrationTest;
 import qova.course.Course;
 import qova.course.CourseFaculty;
+import qova.course.CourseInstance;
 import qova.course.CourseType;
 import qova.responses.Response;
 import qova.responses.ResponseType;
@@ -16,24 +17,26 @@ import org.junit.jupiter.api.Test;
 
 public class responseTest extends AbstractIntegrationTest {
     @Test
-    public void courseConstructorTest() {
+    public void courseConstructorTest() throws Exception {
 
-        var name = "test";
-        var lectureExists = true;
-        var tutorialExists = false;
-        var seminarExists = true;
-        var lectureSurvey = "";
-        var tutorialSurvey = "";
-        var seminarSurvey = "";
-        var classTotalSeminar = 10;
-        var classTotalTutorial = 5;
-        var semesterOfStudents = 6;
+        var name = "Rechnernetze";
+
+        String[] lectureTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
+        var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles);
+
+        String[] tutorialTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
+        var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles);
+
+        CourseInstance seminar = null;
+
+        CourseInstance practical = null;
+
+        var semesterOfStudents = 4;
         var faculty = CourseFaculty.COMPUTER_SCIENCE;
-        var courseInstance = LocalDate.of(2020, 10, 4);
-        var semesterUI = "SoSe 2020";
-        Course course = new Course(name, lectureExists, tutorialExists, seminarExists, lectureSurvey, tutorialSurvey,
-                seminarSurvey, classTotalTutorial, classTotalSeminar, semesterOfStudents, faculty, semesterUI,
-                courseInstance);
+        var courseDate = LocalDate.of(2020, 10, 4);
+        var semesterString = "SoSe 2020";
+
+        Course crs  = new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty, semesterString, courseDate);
 
         // ----------------------------------------------------------------------------------------------------------------------
 
@@ -49,7 +52,7 @@ public class responseTest extends AbstractIntegrationTest {
         Response rspB;
 
         try {
-            rspB = new Response(course, courseType, position, classNo, responseTypeB, question, binaryAnswer);
+            rspB = new Response(crs, courseType, position, classNo, responseTypeB, question, binaryAnswer);
 
             assertEquals(responseTypeB, rspB.getResponseType());
             assertEquals(binaryAnswer, rspB.getBinaryAnswer());
@@ -70,7 +73,7 @@ public class responseTest extends AbstractIntegrationTest {
 
         Response rspT;
         try {
-            rspT = new Response(course, courseType, position, classNo, responseTypeT, question, textResponse);
+            rspT = new Response(crs, courseType, position, classNo, responseTypeT, question, textResponse);
 
             assertEquals(responseTypeT, rspT.getResponseType());
             assertEquals(textResponse, rspT.getTextResponse());
@@ -94,7 +97,7 @@ public class responseTest extends AbstractIntegrationTest {
 
         Response rspM;
         try {
-            rspM = new Response(course, courseType, position, classNo, responseTypeM, question, responsePossibilites,
+            rspM = new Response(crs, courseType, position, classNo, responseTypeM, question, responsePossibilites,
                     MCresponse, responseOptions);
 
             assertEquals(MCresponse, rspM.getListMCDD());
@@ -111,7 +114,7 @@ public class responseTest extends AbstractIntegrationTest {
 
         Response rspD;
         try {
-            rspD = new Response(course, courseType, position, classNo, responseTypeD, question, responsePossibilites,
+            rspD = new Response(crs, courseType, position, classNo, responseTypeD, question, responsePossibilites,
                     DDresponse, responseOptions);
                     
                 assertEquals(true, rspD.getListMCDD().get(DDresponse));

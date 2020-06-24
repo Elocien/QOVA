@@ -198,9 +198,12 @@ public class ResponseController {
     @GetMapping("json")
     public void testJSONParsing(){
 
-        //[{"type":"SingleChoice","question":"War die forlesung dsa","answers":["asd","asd","","","","","","","",""]},{"type":"SingleChoice","question":"","answers":[]},{"type":"YesNo","question":""}]
+        //How to use:
+        //Set a survey using questioneditor, for the LECTURE survey with id = c000000000000001 (this is always the first survey generated). Then find the string in the
+        //database to figure out its strucutre. Then try to parse it (using the method below), and see if you can retrieve the intended values.
+
         //Test String
-        String json = courseManagement.findById("c000000000000906").get().getLectureSurvey();
+        String json = courseManagement.findById("c000000000000001").get().getLecture().getSurvey();
 
         // https://stackoverflow.com/questions/2591098/how-to-parse-json-in-java
 
