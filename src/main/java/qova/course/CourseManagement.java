@@ -554,12 +554,22 @@ public class CourseManagement {
         String[] lectureTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
         var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles);
 
+        courseInstancesRepo.save(lecture);
+
         String[] tutorialTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
         var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles);
 
-        CourseInstance seminar = null;
+        courseInstancesRepo.save(tutorial);
 
-        CourseInstance practical = null;
+        String[] seminarTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
+        var seminar = new CourseInstance(CourseType.SEMINAR, 8, 12, seminarTitles);
+
+        courseInstancesRepo.save(seminar);
+
+        String[] pTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
+        var practical = new CourseInstance(CourseType.TUTORIAL, 8, 12, pTitles);
+
+        courseInstancesRepo.save(practical);
 
         var semesterOfStudents = 4;
         var faculty = CourseFaculty.COMPUTER_SCIENCE;
