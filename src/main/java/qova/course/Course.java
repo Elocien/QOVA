@@ -7,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 //id-generator imports
 import org.hibernate.annotations.GenericGenerator;
@@ -46,10 +48,10 @@ public class Course {
     //Name of the course
     private String name;
 
-    @Lob private CourseInstance lecture;
-    @Lob private CourseInstance tutorial;
-    @Lob private CourseInstance seminar;
-    @Lob private CourseInstance practical;
+    @ManyToOne private CourseInstance lecture;
+    @ManyToOne private CourseInstance tutorial;
+    @ManyToOne private CourseInstance seminar;
+    @ManyToOne private CourseInstance practical;
 
     //The number representing the semester this course is taken by students
     private Integer semesterOfStudents;
