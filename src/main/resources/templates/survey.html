@@ -121,6 +121,19 @@
 
 			x.className = "container bg-white border border-secondary rounded mt-4 FreeText";
 			x.setAttribute("id", index);
+
+			const div = document.createElement("DIV");
+			const text_area = document.createElement("TEXTAREA");
+			text_area.className = "Textarea FreeText";
+			text_area.setAttribute("id",index);
+			text_area.placeholder = "Antwort";
+
+			div.appendChild(text_area);
+			x.appendChild(div);
+
+
+
+
 		}
 
 		else if (value.type === "SingleChoice") {
@@ -197,17 +210,6 @@
 
 	}
 
-	//Funktion die nicht Funktioniert, aber notwenidig ist für Multiple CHoice
-	$("input:radio").on("click",function () {
-		var inp=$(this);
-		if (inp.is(".theone")) {
-			inp.prop("checked",false).removeClass("theone");
-		} else {
-			$("input:radio[name='"+inp.prop("name")+"'].theone").removeClass("theone");
-			inp.addClass("theone");
-		}
-
-	});
 
 
 

@@ -1,8 +1,18 @@
 /*The addressees are mainly mobile phones.
 If the display is larger, it is adapted for these devices, which improves the performance for mobile phones.
 I read that somewhere ;) */
-.theone {
-    background-color:red;
+.Textarea {
+    overflow: hidden;
+}
+
+.Textarea.FreeText{
+    width: 100%;
+    margin: 0.5rem 0rem;
+    border:none;
+    border-radius: 0px;
+    border-bottom: 1px solid black;
+    height: 2rem;
+    min-height: 2rem;
 }
 
 .Question {
