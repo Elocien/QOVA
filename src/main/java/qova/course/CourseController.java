@@ -20,6 +20,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -51,9 +52,21 @@ public class CourseController {
         this.adminManagement = Objects.requireNonNull(adminManagement);
     }
 
+    //General Pages (relevant domain wide)
+
     @GetMapping("/")
     public String welcome () {
         return "home";
+    }
+
+    @GetMapping("error")
+    public String error (Model model, @PathVariable int code) {
+        
+        //add error code to model
+        model.addAttribute("errorCode", code);
+
+        //return template
+        return "error";
     }
 
 
