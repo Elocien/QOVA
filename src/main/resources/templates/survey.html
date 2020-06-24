@@ -74,6 +74,47 @@
 			x.className ="container bg-white border border-secondary rounded mt-4 YesNo";
 			x.setAttribute("id",index);
 
+			const selectionOption = document.createElement("DIV");
+			selectionOption.className = "Options YesNo";
+
+
+			//Yes Answer
+			// Deutsch English bei YesNo?
+			const fullOptionYes = document.createElement("DIV");
+			const tickboxYes = document.createElement("INPUT");
+			tickboxYes.className ="tickbox";
+			tickboxYes.setAttribute("type","radio");
+			tickboxYes.setAttribute("value", "Yes");
+			tickboxYes.setAttribute("id", "Yes");
+			tickboxYes.setAttribute("name",index);
+			const descriptionYes = document.createElement("LABEL");
+			descriptionYes.innerText = "Yes";
+			descriptionYes.setAttribute("for","Yes");
+
+			fullOptionYes.appendChild(tickboxYes);
+			fullOptionYes.appendChild(descriptionYes);
+			selectionOption.appendChild(fullOptionYes);
+
+			const fullOptionNo = document.createElement("DIV");
+			const tickboxNo = document.createElement("INPUT");
+			tickboxNo.className ="tickbox";
+			tickboxNo.setAttribute("type","radio");
+			tickboxNo.setAttribute("value", "No");
+			tickboxNo.setAttribute("id", "No");
+			tickboxNo.setAttribute("name",index);
+			const descriptionNo = document.createElement("LABEL");
+			descriptionNo.innerText = "No";
+			descriptionNo.setAttribute("for","No");
+
+			fullOptionNo.appendChild(tickboxNo);
+			fullOptionNo.appendChild(descriptionNo);
+			selectionOption.appendChild(fullOptionNo);
+
+
+
+			x.appendChild(selectionOption);
+
+
 		}
 		else if (value.type ==="FreeText") {
 
@@ -109,10 +150,6 @@
 					selectionOption.appendChild(fullOption);
 
 				}
-
-
-
-
 
 				x.appendChild(selectionOption);
 
