@@ -116,6 +116,7 @@
 
 
 		}
+
 		else if (value.type ==="FreeText") {
 
 			x.className = "container bg-white border border-secondary rounded mt-4 FreeText";
@@ -163,6 +164,32 @@
 			//Create a html section for a MultipleChoice-Question
 			x.className = "container bg-white border border-secondary rounded mt-4 MultipleChoice";
 			x.setAttribute("id", index);
+
+			const selectionOption = document.createElement("DIV");
+			selectionOption.className = "Options MultipleChoice";
+
+
+			for (let i = 0; i< value.answers.length;i++){
+
+				const fullOption = document.createElement("DIV");
+				const tickbox = document.createElement("INPUT");
+				tickbox.className ="tickbox";
+				tickbox.setAttribute("type","checkbox");
+				tickbox.setAttribute("value", value.answers[i]);
+				tickbox.setAttribute("id",value.answers[i]);
+				tickbox.setAttribute("name",index);
+				const description = document.createElement("LABEL");
+				description.innerText = value.answers[i];
+				description.setAttribute("for",value.answers[i]);
+
+
+				fullOption.appendChild(tickbox);
+				fullOption.appendChild(description);
+				selectionOption.appendChild(fullOption);
+
+			}
+
+			x.appendChild(selectionOption);
 		}
 
 		document.getElementById("survey").appendChild(x);
