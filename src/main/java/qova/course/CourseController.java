@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 import com.google.zxing.WriterException;
 
+import org.json.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -275,6 +276,12 @@ public class CourseController {
 
             else{
                 //Method from courseManager which sets the survey for the relevant surveyType
+                try{
+                    JSONArray survey = new JSONArray(form.getQuestionnairejson());
+                } catch (Exception e){
+                    System.out.print(form.getQuestionnairejson());
+                    return "redirect:/";
+                }
                 courseManagement.setSurveyforType(id, type, form);
             }
 
