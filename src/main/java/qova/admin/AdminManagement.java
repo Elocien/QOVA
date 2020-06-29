@@ -18,9 +18,7 @@ public class AdminManagement {
     @Autowired
     public AdminManagement(DefaultSurveyRepository repo) {
         this.repo = Objects.requireNonNull(repo);
-
-        repo.save(new DefaultSurvey(1L, "[]"));
-
+        
         //Check if defaultSurvey exists.
         try{
             repo.findSpecialInstance();
