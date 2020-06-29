@@ -1,10 +1,12 @@
 package qova.course;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.OrderColumn;
 
 @Entity
 public class CourseInstance {
@@ -31,7 +33,7 @@ public class CourseInstance {
 
 
     //Titles of each instance of the given courseType (e.g. there are 12 lectures, each with a unique title)
-    @Lob String[] instanceTitles;
+    @ElementCollection @OrderColumn String[] instanceTitles;
 
 
 
