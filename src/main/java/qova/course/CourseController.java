@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import qova.admin.AdminManagement;
 
@@ -52,6 +51,10 @@ public class CourseController {
         this.courseManagement = Objects.requireNonNull(courseManagement);
         this.adminManagement = Objects.requireNonNull(adminManagement);
     }
+
+    //Error codes
+    int courseNotFound = 1;
+    int internalError = 2;
 
     //General Pages (relevant domain wide)
 
@@ -107,7 +110,7 @@ public class CourseController {
 
         //redirect 
         if (id == null) {
-			return "redirect:../courses";
+			return "error?code=" + courseNotFound;
         }
         
         //fetch course and go to details if present
@@ -131,7 +134,7 @@ public class CourseController {
             
             return "courseDetails";
         } else {
-			return "redirect:../courses";
+			return "error?code=" + courseNotFound;
 		}
     }
 
@@ -163,7 +166,7 @@ public class CourseController {
     //Validation of Created course
 	@PostMapping("course/new")
 	public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
-			BindingResult result) throws Exception {
+			BindingResult result) {
 
 
 		if (result.hasErrors()) {
@@ -238,7 +241,7 @@ public class CourseController {
 		}
 
 		courseManagement.updateCourseDetails(id, form);
-		return "redirect:../courses";
+		return "redirect:../course/details?id=" + id;
 	}
 
 
@@ -320,7 +323,7 @@ public class CourseController {
             // if type is none of the correct values, then redirect to homepage
             if(!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR")) && !(type.equals("PRACTICAL"))){
                 //TODO: redirect to error page with code 02
-                return "redirect:/";
+                return "error?code=" + internalError;
 
             }
 
@@ -341,7 +344,7 @@ public class CourseController {
         }
         else{
             //TODO: need more feedback here for the user. Change this!
-            return "redirect:../courses";
+            return "error?code=" + courseNotFound;
         }
     }
     

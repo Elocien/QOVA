@@ -39,6 +39,10 @@ public class ResponseController {
         this.courseManagement = Objects.requireNonNull(courseManagement);
     }
 
+    //Error codes
+    int courseNotFound = 1;
+    int internalError = 2;
+
 
     //Mapping to which one is redirected to by the QRCode. This is where students enter which group and which topic they are handing their response in for
     //---------------------------------------------------------------------------
@@ -72,7 +76,7 @@ public class ResponseController {
         }
         
         //if course does not exist, redirect to global error page
-        return "error";
+        return "error?code=" + courseNotFound;
     }
 
     //---------------------------------------------------------------------------
@@ -90,8 +94,7 @@ public class ResponseController {
 
         //if anything is null or not an allowed value, redirect back
         if(!crs.isPresent()){
-            //TODO: set error code "Course not present. You are unable to submit a response to this survey"
-            return "error";
+            return "error?code=" + courseNotFound;
         }
         //if type is not one of the defined values
 
@@ -99,49 +102,11 @@ public class ResponseController {
         Course course = crs.get();
 
         if(!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR")) && !(type.equals("PRACTICAL"))){
-            //TODO: redirect to error page with code 02
-            return "error";
+            return "error?code=" + internalError;
         }
 
 
-        //if instanceTitle is not an element of the InstanceTitles
-        else if (type.equals("LECTURE") && !(Arrays.stream(course.getLecture().getInstanceTitles()).anyMatch(instanceTitle::equals))){
-            return "error";   
-        }
-        //if groupAmount exceedes the number set, or is less than 0, redirect to error page
-        else if(type.equals("LECTURE") && groupAmount > course.getLecture().getGroupAmount() || groupAmount < 0){
-            return "error";
-        }
-
-
-        //if instanceTitle is not an element of the InstanceTitles
-        else if (type.equals("TUTORIAL") && !(Arrays.stream(course.getTutorial().getInstanceTitles()).anyMatch(instanceTitle::equals))){
-            return "error";   
-        }
-        //if groupAmount exceedes the number set, or is less than 0, redirect to error page
-        else if(type.equals("TUTORIAL") && groupAmount > course.getTutorial().getGroupAmount() || groupAmount < 0){
-            return "error";
-        }
-
-
-        //if instanceTitle is not an element of the InstanceTitles
-        else if (type.equals("SEMINAR") && !(Arrays.stream(course.getSeminar().getInstanceTitles()).anyMatch(instanceTitle::equals))){
-            return "error";   
-        }
-        //if groupAmount exceedes the number set, or is less than 0, redirect to error page
-        else if(type.equals("SEMINAR") && groupAmount > course.getSeminar().getGroupAmount() || groupAmount < 0){
-            return "error";
-        }
-
-
-        //if instanceTitle is not an element of the InstanceTitles
-        else if (type.equals("PRACTICAL") && !(Arrays.stream(course.getPractical().getInstanceTitles()).anyMatch(instanceTitle::equals))){
-            return "error";   
-        }
-        //if groupAmount exceedes the number set, or is less than 0, redirect to error page
-        else if(type.equals("PRACTICAL") && groupAmount > course.getPractical().getGroupAmount() || groupAmount < 0){
-            return "error";
-        }
+        //TODO validate that parameters only contain valid charachters. E.g. a-zA-Z0-9
 
 
         else{return "survey?type=" + type + "&id=" + id + "instanceTitle=" + instanceTitle + "groupNumber=" + groupAmount;}
@@ -160,7 +125,7 @@ public class ResponseController {
     public String SuveyView (Model model, @RequestParam String type, @RequestParam(required = false) String id){
         //redirect 
         if (id == null) {
-			return "redirect:/";
+			return "error?code=" + courseNotFound;
         }
         
         //fetch course and go to details if present
@@ -184,7 +149,7 @@ public class ResponseController {
         
         //If condition not met, redirect to home
         else{
-            return "redirect:/";
+            return "error?code=" + courseNotFound;
         }
     }
     //----------------------------------------------------------------------------
