@@ -94,8 +94,8 @@
                                 </div>
                             </div>
                             <div class="col-md-2">
-                                <label for="courseInstanceString" th:text="#{course.courseInstance}">COURSE SEMESTER</label>
-                                <select class="custom-select form-control" th:field="*{courseInstanceString}">
+                                <label for="courseInstanceString" th:text="#{course.courseDate}">COURSE SEMESTER</label>
+                                <select class="custom-select form-control" th:field="*{semesterDates}">
                                     <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
                                 </select>
                             </div>
@@ -128,7 +128,7 @@
                                         <!--Seminar-->
                                         <tr class="slim-line" id="seminarCollapse" style="display: none">
                                             <td th:text="#{new.seminar}">SEMINAR</td=>
-                                            <td><input type="number" class="form-control" th:field="*{classTotalSeminar}" placeholder="0" min="0" value="0"></td>
+                                            <td><input type="number" class="form-control" th:field="*{groupAmountSeminar}" placeholder="0" min="0" value="0"></td>
                                             <td><input type="number" class="form-control" placeholder="0" min="0" value="0"><!--TODO:  th:field="*{seminarInstances}"--></td>
                                         </tr>
                                         <!--Practical-->

@@ -38,7 +38,7 @@ public class CourseManagement {
 
 
     //Create Course and get Id from new course
-    public String createCourseReturnId(CourseForm form) {
+    public String createCourseReturnId(CourseForm form) throws Exception {
         Objects.requireNonNull(form);
 
         //Name of Course
@@ -62,6 +62,7 @@ public class CourseManagement {
 
 
     //Method for createing CourseInstances
+
     private Map<CourseType, CourseInstance> createCourseInstance(CourseForm form) {
 
         //Map containing CourseInstances, with CourseType as key
@@ -159,7 +160,9 @@ public class CourseManagement {
 
 
     //update course details
+
     public void updateCourseDetails(String id, CourseForm form) {
+
         Optional<Course> crs = coursesRepo.findById(id);
         if (crs.isPresent()){
 

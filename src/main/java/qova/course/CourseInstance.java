@@ -50,6 +50,7 @@ public class CourseInstance {
      */
     public CourseInstance(CourseType courseType, Integer groupAmount, Integer instanceAmount,
             String[] instanceTitles){
+       
         this.courseType = courseType;
         this.survey = "[]";
         this.groupAmount = groupAmount;
