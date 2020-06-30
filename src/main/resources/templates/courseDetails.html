@@ -115,10 +115,10 @@
                                             </tr>
                                             <!--Semester Period-->
                                             <tr>
-                                                <th class="col-5" scope="row" th:text="#{course.courseInstance}">YEAR</th>
+                                                <th class="col-5" scope="row" th:text="#{course.courseDate}">YEAR</th>
                                                 <td class="hide_me" th:text="${course.semesterUI}">XXXX</td>
                                                 <td class="show_me" style="display: none">
-                                                    <select class="custom-select form-control" th:field="*{courseInstanceString}">
+                                                    <select class="custom-select form-control" th:field="*{semesterString}">
                                                         <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
                                                     </select>
                                                 </td>
@@ -254,9 +254,9 @@
                                                 <!--2nd Col-->
                                                 <td scope="row" th:text="#{new.seminar}">TUTORIAL</td>
                                                 <!--3rd Col-->
-                                                <td class="text-center hide_me" th:text="${course.classTotalSeminar}">COUNT</td>
+                                                <td class="text-center hide_me" th:text="${course.groupAmountSeminar}">COUNT</td>
                                                 <td class="show_me" style="display: none;">
-                                                    <input class="form-control" type="text" th:field="*{classTotalSeminar}" th:placeholder="${course.classTotalSeminar}">
+                                                    <input class="form-control" type="text" th:field="*{groupAmountSeminar}" th:placeholder="${course.groupAmountSeminar}">
                                                 </td>
                                                 <!--4th Col-->
                                                 <div th:switch="${course.seminarSurvey}">
