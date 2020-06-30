@@ -205,3 +205,6 @@ input[type="text"]:disabled {
 input[type="text"]:disabled::placeholder {
   color: lightgrey;
 }
+.disabled-link {
+  color: lightgrey;
+}
