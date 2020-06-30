@@ -38,7 +38,7 @@ public class CourseManagement {
 
 
     //Create Course and get Id from new course
-    public String createCourseReturnId(CourseForm form) throws Exception {
+    public String createCourseReturnId(CourseForm form) {
         Objects.requireNonNull(form);
 
         //Name of Course
@@ -62,7 +62,7 @@ public class CourseManagement {
 
 
     //Method for createing CourseInstances
-    private Map<CourseType, CourseInstance> createCourseInstance(CourseForm form) throws Exception {
+    private Map<CourseType, CourseInstance> createCourseInstance(CourseForm form) {
 
         //Map containing CourseInstances, with CourseType as key
         Map<CourseType, CourseInstance> courseInstances = new HashMap<CourseType, CourseInstance>();
@@ -159,7 +159,7 @@ public class CourseManagement {
 
 
     //update course details
-    public void updateCourseDetails(String id, CourseForm form) throws Exception {
+    public void updateCourseDetails(String id, CourseForm form) {
         Optional<Course> crs = coursesRepo.findById(id);
         if (crs.isPresent()){
 
