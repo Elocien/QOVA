@@ -88,12 +88,8 @@ public class CourseController {
 
     /*@GetMapping("/courses")
     public String courses (Model model) {
-
-        LocalDate dateNow = LocalDate.now();
-
-        var NewCourse1 = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.ARCHITECTURE, "1-5", dateNow);
-        var NewCourse2 = new Course("Sausage", true, true, true, "Sausage Lecture Survey 2020", "Sausage Tutorial Survey 2020", "Sausage Seminar Survey 2020", 2, 3, 1, CourseFaculty.BIOLOGY, "5-9", dateNow);
-        List<Course> courseList = Arrays.asList(NewCourse1, NewCourse2);
+        
+        List<Course> courseList = Arrays.asList(courseManagement.TimTestCreateCourse(), courseManagement.TimTestCreateCourse());
         model.addAttribute("courseList", courseList);
 
         return "courses";
@@ -140,14 +136,11 @@ public class CourseController {
     }
 
     /*@GetMapping("/course/details")
-    public String courseDetails(Model model, CourseForm form) {
+    public String courseDetails(Model model, CourseForm form, String id) {
 
+        id = "5";
+        model.addAttribute("course", courseManagement.TimTestCreateCourse());
         model.addAttribute("form", form);
-        model.addAttribute("semesterDates", courseManagement.findSemesters());
-
-        LocalDate dateNow = LocalDate.now();
-        var NewCourse = new Course("Cheese", false, true, true, "-", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.EDUCATION, "1-5", dateNow);
-        model.addAttribute("course", NewCourse);
 
         return "courseDetails";
     }*/

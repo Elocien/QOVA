@@ -551,7 +551,7 @@ public class CourseManagement {
 
 
     //Test Method, remove in final build
-    public void TestCreateCourse() throws Exception {
+    public void TestCreateCourse() {
         var name = "Rechnernetze";
 
         String[] lectureTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
@@ -580,6 +580,26 @@ public class CourseManagement {
         var semesterString = "SoSe 2020";
 
         coursesRepo.save(new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty, semesterString, courseDate));
+    }
+
+    public Course TimTestCreateCourse() {
+
+        String[] lectureTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
+        var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles);
+        String[] tutorialTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
+        var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles);
+        String[] seminarTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
+        var seminar = new CourseInstance(CourseType.SEMINAR, 8, 12, seminarTitles);
+        String[] pTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
+        var practical = new CourseInstance(CourseType.TUTORIAL, 8, 12, pTitles);
+
+        var name = "Rechnernetze";
+        var semesterOfStudents = 4;
+        var faculty = CourseFaculty.COMPUTER_SCIENCE;
+        var courseDate = LocalDate.of(2020, 10, 4);
+        var semesterString = "SoSe 2020";
+
+        return new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty, semesterString, courseDate);
     }
 
 

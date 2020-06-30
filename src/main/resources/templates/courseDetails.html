@@ -116,7 +116,7 @@
                                             <!--Semester Period-->
                                             <tr>
                                                 <th class="col-5" scope="row" th:text="#{course.courseDate}">YEAR</th>
-                                                <td class="hide_me" th:text="${course.semesterUI}">XXXX</td>
+                                                <td class="hide_me" th:text="${course.semesterString}">XXXX</td>
                                                 <td class="show_me" style="display: none">
                                                     <select class="custom-select form-control" th:field="*{semesterString}">
                                                         <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
@@ -152,23 +152,23 @@
                                         <tbody>
 
                                             <!--Lecture-->
-                                            <tr th:classappend="!${course.lectureExists} ? text-light-grey : userclass" id="lectureLine">
+                                            <tr th:classappend="!${course.getLectureExists()} ? text-light-grey : userclass" id="lectureLine">
                                                 <!--1st Col-->
                                                 <td class="show_me" style="display: none;">
                                                     <div class="col-md-auto">
-                                                        <label class="switch m-0 align-middle" th:switch="${course.lectureExists}">
+                                                        <label class="switch m-0 align-middle" th:switch="${course.getLectureExists()}">
                                                             <input th:case="FALSE" type="checkbox" id="lectureCheck" onclick="set_hidden_data('lecture')">
                                                             <input th:case="TRUE"  type="checkbox" id="lectureCheck" onclick="set_hidden_data('lecture')" checked>
                                                             <span class="slider round"></span>
                                                         </label>
                                                     </div>
-                                                    <input th:if="!${course.lectureSurvey}" type="checkbox" id="lectureHidden" th:field="*{lectureExists}" hidden>
-                                                    <input th:if="${course.lectureSurvey}"  type="checkbox" id="lectureHidden" th:field="*{lectureExists}" hidden checked>
+                                                    <input th:if="!${course.lecture.survey}" type="checkbox" id="lectureHidden" hidden>
+                                                    <input th:if="${course.lecture.survey}"  type="checkbox" id="lectureHidden" hidden checked>
                                                 </td>
                                                 <!--2nd Col-->
                                                 <td scope="row" th:text="#{new.lecture}">LECTURE</td>
                                                 <!--3rd Col-->
-                                                <div th:switch="${course.lectureExists}">
+                                                <div th:switch="${course.getLectureExists()}">
                                                     <div th:case="TRUE">
                                                         <td class="text-center hide_me">1</td>
                                                         <td class="show_me" style="display: none;">
@@ -183,16 +183,16 @@
                                                     </div>
                                                 </div>
                                                 <!--4th Col-->
-                                                <div th:switch="${course.lectureSurvey}">
+                                                <div th:switch="${course.lecture.survey}">
                                                     <div th:case="'[]'">
                                                         <td class="text-center" th:text="#{No}">!EXISTS</td>
-                                                        <td th:switch="${course.lectureExists}">
+                                                        <td th:switch="${course.getLectureExists()}">
                                                             <a th:case="TRUE" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
                                                         </td>
                                                     </div>
                                                     <div th:case="*">
                                                         <td class="text-center" id="lectureSurveyExists_original" th:text="#{Yes}">EXISTS</td>
-                                                        <td th:switch="${course.lectureExists}">
+                                                        <td th:switch="${course.getLectureExists()}">
                                                             <a th:case="TRUE" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
                                                         </td>
                                                     </div>
@@ -200,37 +200,37 @@
                                             </tr>
 
                                             <!--Tutorial-->
-                                            <tr th:classappend="!${course.tutorialExists} ? text-light-grey : userclass" id="tutorialLine">
+                                            <tr th:classappend="!${course.getTutorialExists()} ? text-light-grey : userclass" id="tutorialLine">
                                                 <!--1st Col-->
                                                 <td class="show_me" style="display: none;">
                                                     <div class="col-md-auto">
-                                                        <label class="switch m-0 align-middle" th:switch="${course.tutorialExists}">
+                                                        <label class="switch m-0 align-middle" th:switch="${course.getTutorialExists()}">
                                                             <input th:case="FALSE" type="checkbox" id="tutorialCheck" onclick="set_hidden_data('tutorial')">
                                                             <input th:case="TRUE"  type="checkbox" id="tutorialCheck" onclick="set_hidden_data('tutorial')" checked>
                                                             <span class="slider round"></span>
                                                         </label>
                                                     </div>
-                                                    <input th:if="!${course.tutorialExists}" type="checkbox" id="tutorialHidden" th:field="*{tutorialExists}" hidden>
-                                                    <input th:if="${course.tutorialExists}"  type="checkbox" id="tutorialHidden" th:field="*{tutorialExists}" hidden checked>
+                                                    <input th:if="!${course.getTutorialExists()}" type="checkbox" id="tutorialHidden" hidden>
+                                                    <input th:if="${course.getTutorialExists()}"  type="checkbox" id="tutorialHidden" hidden checked>
                                                 </td>
                                                 <!--2nd Col-->
                                                 <td scope="row" th:text="#{new.tutorial}">TUTORIAL</td>
                                                 <!--3rd Col-->
                                                 <td class="text-center hide_me" th:text="${course.classTotalTutorial}">COUNT</td>
                                                 <td class="show_me" style="display: none;">
-                                                    <input class="form-control" type="text" th:field="*{classTotalTutorial}" th:placeholder="${course.classTotalTutorial}">
+                                                    <input class="form-control" type="text" th:placeholder="${course.classTotalTutorial}">
                                                 </td>
                                                 <!--4th Col-->
-                                                <div th:switch="${course.tutorialSurvey}">
+                                                <div th:switch="${course.tutorial.survey}">
                                                     <div th:case="'[]'">
                                                         <td class="text-center" id="bool" th:text="#{No}">!EXISTS</td>
-                                                        <td th:switch="${course.tutorialExists}">
+                                                        <td th:switch="${course.getTutorialExists()}">
                                                             <a th:case="TRUE" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
                                                         </td>
                                                     </div>
                                                     <div th:case="*">
                                                         <td class="text-center" id="bool" th:text="#{Yes}">EXISTS</td>
-                                                        <td th:switch="${course.tutorialExists}">
+                                                        <td th:switch="${course.getTutorialExists()}">
                                                             <a th:case="TRUE" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
                                                         </td>
                                                     </div>
@@ -238,37 +238,37 @@
                                             </tr>
 
                                             <!--Seminar-->
-                                            <tr th:classappend="!${course.seminarExists} ? text-light-grey : userclass" id="seminarLine">
+                                            <tr th:classappend="!${course.getSeminarExists()} ? text-light-grey : userclass" id="seminarLine">
                                                 <!--1st Col-->
                                                 <td class="show_me" style="display: none;">
                                                     <div class="col-md-auto">
-                                                        <label class="switch m-0 align-middle" th:switch="${course.seminarExists}">
+                                                        <label class="switch m-0 align-middle" th:switch="${course.getSeminarExists()}">
                                                             <input th:case="FALSE" type="checkbox" id="seminarCheck" onclick="set_hidden_data('seminar')">
                                                             <input th:case="TRUE"  type="checkbox" id="seminarCheck" onclick="set_hidden_data('seminar')" checked>
                                                             <span class="slider round"></span>
                                                         </label>
                                                     </div>
-                                                    <input th:if="!${course.seminarExists}" type="checkbox" id="seminarHidden" th:field="*{seminarExists}" hidden>
-                                                    <input th:if="${course.seminarExists}"  type="checkbox" id="seminarHidden" th:field="*{seminarExists}" hidden checked>
+                                                    <input th:if="!${course.getSeminarExists()}" type="checkbox" id="seminarHidden" hidden>
+                                                    <input th:if="${course.getSeminarExists()}"  type="checkbox" id="seminarHidden" hidden checked>
                                                 </td>
                                                 <!--2nd Col-->
                                                 <td scope="row" th:text="#{new.seminar}">TUTORIAL</td>
                                                 <!--3rd Col-->
-                                                <td class="text-center hide_me" th:text="${course.groupAmountSeminar}">COUNT</td>
+                                                <td class="text-center hide_me" th:text="${course.CourseInstance.InstanceAmount}">COUNT</td>
                                                 <td class="show_me" style="display: none;">
-                                                    <input class="form-control" type="text" th:field="*{groupAmountSeminar}" th:placeholder="${course.groupAmountSeminar}">
+                                                    <input class="form-control" type="text" th:placeholder="${course.seminar.instanceAmount}">
                                                 </td>
                                                 <!--4th Col-->
-                                                <div th:switch="${course.seminarSurvey}">
+                                                <div th:switch="${course.seminar.survey}">
                                                     <div th:case="'[]'">
                                                         <td class="text-center" id="bool" th:text="#{No}">!EXISTS</td>
-                                                        <td th:switch="${course.seminarExists}">
+                                                        <td th:switch="${course.getSeminarExists()}">
                                                             <a th:case="TRUE" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
                                                         </td>
                                                     </div>
                                                     <div th:case="*">
                                                         <td class="text-center" id="bool" th:text="#{Yes}">EXISTS</td>
-                                                        <td th:switch="${course.seminarExists}">
+                                                        <td th:switch="${course.getSeminarExists()}">
                                                             <a th:case="TRUE" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
                                                         </td>
                                                     </div>
@@ -291,30 +291,30 @@
                                 <div class="container carousel-border border border-secondary p-1">
                                     <div id="carouselExampleIndicators" class="carousel slide" interval="false">
                                         <ol class="carousel-indicators">
-                                            <li th:if="!${course.lectureSurvey.equals('[]')}" data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                                            <li th:if="!${course.tutorialSurvey.equals('[]')}" data-target="#carouselExampleIndicators" data-slide-to="1" th:classappend="${course.lectureSurvey.equals('[]')} ? active : userclass"></li>
-                                            <li th:if="!${course.seminarSurvey.equals('[]')}" data-target="#carouselExampleIndicators" data-slide-to="2" th:classappend="${course.lectureSurvey.equals('[]') and course.tutorialSurvey.equals('[]')} ? active : userclass"></li>
+                                            <li th:if="!${course.lecture.survey.equals('[]')}" data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                                            <li th:if="!${course.tutorial.survey.equals('[]')}" data-target="#carouselExampleIndicators" data-slide-to="1" th:classappend="${course.lecture.survey.equals('[]')} ? active : userclass"></li>
+                                            <li th:if="!${course.seminar.survey.equals('[]')}" data-target="#carouselExampleIndicators" data-slide-to="2" th:classappend="${course.lecture.survey.equals('[]') and course.tutorial.survey.equals('[]')} ? active : userclass"></li>
                                         </ol>
                                         <div class="carousel-inner">
-                                            <div th:if="!${course.lectureSurvey.equals('[]')}" class="carousel-item active">
+                                            <div th:if="!${course.lecture.survey.equals('[]')}" class="carousel-item active">
                                                 <img class="d-block w-100 mb-5" th:src="'data:image/jpeg;base64,' + ${LectureQRCode}" alt="Lecture slide">
                                                 <div class="carousel-caption text-dark d-block mb-1">
                                                     <h5>Lecture</h5>
                                                 </div>
                                             </div>
-                                            <div th:if="!${course.tutorialSurvey.equals('[]')}" th:classappend="${course.lectureSurvey.equals('[]')} ? active : userclass" class="carousel-item">
+                                            <div th:if="!${course.tutorial.survey.equals('[]')}" th:classappend="${course.lecture.survey.equals('[]')} ? active : userclass" class="carousel-item">
                                                 <img class="d-block w-100 mb-5" th:src="'data:image/jpeg;base64,' + ${TutorialQRCode}" alt="Tutorial slide">
                                                 <div class="carousel-caption text-dark d-block mb-1">
                                                     <h5>Tutorial</h5>
                                                 </div>
                                             </div>
-                                            <div th:if="!${course.seminarSurvey.equals('[]')}" th:classappend="${course.lectureSurvey.equals('[]') and course.tutorialSurvey.equals('[]')} ? active : userclass" class="carousel-item">
+                                            <div th:if="!${course.seminar.survey.equals('[]')}" th:classappend="${course.lecture.survey.equals('[]') and course.tutorial.survey.equals('[]')} ? active : userclass" class="carousel-item">
                                                 <img class="d-block w-100 mb-5" th:src="'data:image/jpeg;base64,' + ${SeminarQRCode}" alt="Seminar slide">
                                                 <div class="carousel-caption text-dark d-block mb-1">
                                                     <h5>Seminar</h5>
                                                 </div>
                                             </div>
-                                            <div th:if="${course.lectureSurvey.equals('[]') and course.tutorialSurvey.equals('[]') and course.seminarSurvey.equals('[]')}" class="carousel-item active">
+                                            <div th:if="${course.lecture.survey.equals('[]') and course.tutorial.survey.equals('[]') and course.seminar.survey.equals('[]')}" class="carousel-item active">
                                                 <img class="d-block w-100 mb-5 bg-dark" src="..." alt="" style="width: 300px; height: 300px;">
                                                 <div class="carousel-caption text-dark d-block mb-0">
                                                     <h5>No Surveys yet</h5>
@@ -333,12 +333,12 @@
                                 </div>
                             </div>
                             <!--Download Button-->
-                            <div th:if="!${course.lectureSurvey.equals('[]') and course.tutorialSurvey.equals('[]') and course.seminarSurvey.equals('[]')}" class="container text-center mt-3">
+                            <div th:if="!${course.lecture.survey.equals('[]') and course.tutorial.survey.equals('[]') and course.seminar.survey.equals('[]')}" class="container text-center mt-3">
                                 <p class="m-0 font-weight-light" th:text="#{detail.download}"></p>
                                 <div class="btn-group" role="group" aria-label="First group">
-                                    <a th:if="!${course.lectureSurvey.equals('[]')}" class="btn btn-primary btn-sm" th:text="#{new.lecture}" th:href="${'/qrcode?type=LECTURE&id='  + {course.id}}" target="_blank" href="#">LECTURE</a>
-                                    <a th:if="!${course.tutorialSurvey.equals('[]')}"  class="btn btn-primary btn-sm" th:text="#{new.tutorial}" th:href="${'/qrcode?type=TUTORIAL&id='  + {course.id}}" target="_blank" href="#">TUTORIAL</a>
-                                    <a th:if="!${course.seminarSurvey.equals('[]')}"  class="btn btn-primary btn-sm" th:text="#{new.seminar}" th:href="${'/qrcode?type=SEMINAR&id='  + {course.id}}" target="_blank" href="#">SEMINAR</a>
+                                    <a th:if="!${course.lecture.survey.equals('[]')}" class="btn btn-primary btn-sm" th:text="#{new.lecture}" th:href="${'/qrcode?type=LECTURE&id='  + {course.id}}" target="_blank" href="#">LECTURE</a>
+                                    <a th:if="!${course.tutorial.survey.equals('[]')}"  class="btn btn-primary btn-sm" th:text="#{new.tutorial}" th:href="${'/qrcode?type=TUTORIAL&id='  + {course.id}}" target="_blank" href="#">TUTORIAL</a>
+                                    <a th:if="!${course.seminar.survey.equals('[]')}"  class="btn btn-primary btn-sm" th:text="#{new.seminar}" th:href="${'/qrcode?type=SEMINAR&id='  + {course.id}}" target="_blank" href="#">SEMINAR</a>
                                 </div>
                             </div>
 

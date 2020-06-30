@@ -34,7 +34,7 @@
                     <tbody class="text-center">
                         <tr th:each="course : ${courseList}">
                             <td th:text="${course.name}">NAME</td>
-                            <td th:text="${course.semesterUI}">SEMESTER</td>
+                            <td th:text="${course.semesterString}">SEMESTER</td>
                             <td scope="col">
                                 <!-- <button class="btn btn-primary" type="submit" th:href="${/PdfGen?id={id}&type=LECTURE&classNo=1(id=${course.id})}">Button</button> -->
                             </td>
