@@ -50,6 +50,7 @@ public class CourseInstance {
      */
     public CourseInstance(CourseType courseType, Integer groupAmount, Integer instanceAmount,
             String[] instanceTitles) throws Exception {
+        
         this.courseType = courseType;
         this.survey = "[]";
         this.groupAmount = groupAmount;
@@ -62,7 +63,6 @@ public class CourseInstance {
             this.instanceAmount = instanceAmount;
             this.instanceTitles = instanceTitles;
         }
-        
     }
 
 

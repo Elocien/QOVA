@@ -5,8 +5,12 @@ import qova.course.Course;
 import qova.course.CourseFaculty;
 import qova.course.CourseInstance;
 import qova.course.CourseType;
-import qova.responses.Response;
-import qova.responses.ResponseType;
+import qova.responseTypes.BinaryResponse;
+import qova.responseTypes.MultipleChoiceResponse;
+import qova.responseTypes.ResponseType;
+import qova.responseTypes.SingleChoiceResponse;
+import qova.responseTypes.TextResponse;
+import qova.responseTypes.UserResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -17,7 +21,7 @@ import org.junit.jupiter.api.Test;
 
 public class responseTest extends AbstractIntegrationTest {
     @Test
-    public void courseConstructorTest() throws Exception {
+    public void UserResponseConstructorTest() throws Exception {
 
         var name = "Rechnernetze";
 
@@ -41,91 +45,128 @@ public class responseTest extends AbstractIntegrationTest {
         // ----------------------------------------------------------------------------------------------------------------------
 
         var courseType = CourseType.LECTURE;
-        var position = 1;
         var classNo = 1;
-        var question = "test";
-        var responsePossibilites = 3;
+        ArrayList<Object> responses = new ArrayList<>();
 
-        // create test response (binaryAnswer constructor)
-        var binaryAnswer = true;
-        var responseTypeB = ResponseType.BINARY_ANSWER;
-        Response rspB;
 
-        try {
-            rspB = new Response(crs, courseType, position, classNo, responseTypeB, question, binaryAnswer);
+        BinaryResponse br = new BinaryResponse("Is this lecture good?", true);
+        responses.add(br);
 
-            assertEquals(responseTypeB, rspB.getResponseType());
-            assertEquals(binaryAnswer, rspB.getBinaryAnswer());
+        TextResponse tr = new TextResponse("What are your thoughts on the lecture?", "It was a great lecture");
+        responses.add(tr);
 
-            // Common parameters
-            assertEquals(courseType, rspB.getCourseType());
-            assertEquals(position, rspB.getPosition());
-            assertEquals(classNo, rspB.getClassNo());
-            assertEquals(question, rspB.getQuestion());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ArrayList<String> singleChoiceOptions = new ArrayList<String>();
+        singleChoiceOptions.add("Not informative");
+        singleChoiceOptions.add("A little informative");
+        singleChoiceOptions.add("Very informative");
 
-        // create test response (TextResponse constructor)
-        var responseTypeT = ResponseType.TEXT_RESPONSE;
-        var textResponse = "some response";
+        ArrayList<Boolean> singleChoiceAnswer = new ArrayList<Boolean>();
+        singleChoiceAnswer.add(false);
+        singleChoiceAnswer.add(true);
+        singleChoiceAnswer.add(false);
 
-        Response rspT;
-        try {
-            rspT = new Response(crs, courseType, position, classNo, responseTypeT, question, textResponse);
+        SingleChoiceResponse scr = new SingleChoiceResponse("How informative was the lecture?", singleChoiceOptions, singleChoiceAnswer);
+        responses.add(scr);
 
-            assertEquals(responseTypeT, rspT.getResponseType());
-            assertEquals(textResponse, rspT.getTextResponse());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ArrayList<String> multipleChoiceOptions = new ArrayList<String>();
+        multipleChoiceOptions.add("The lecture was informative");
+        multipleChoiceOptions.add("The lecture was interesting");
+        multipleChoiceOptions.add("I enjoyed attending the lecture");
 
-        // create test response (MultipleChoice constructor)
+        ArrayList<Boolean> multipleChoiceAnswers = new ArrayList<Boolean>();
+        multipleChoiceAnswers.add(false);
+        multipleChoiceAnswers.add(true);
+        multipleChoiceAnswers.add(true);
+        MultipleChoiceResponse mcr = new MultipleChoiceResponse("Which of these applies to the lecture you attended today?", multipleChoiceOptions, multipleChoiceAnswers);
+        responses.add(mcr);
 
-        var responseTypeM = ResponseType.MULTIPLE_CHOICE;
-        ArrayList<Boolean> MCresponse = new ArrayList<Boolean>();
-        MCresponse.add(false);
-        MCresponse.add(true);
-        MCresponse.add(false);
 
-        ArrayList<String> responseOptions = new ArrayList<String>();
-        responseOptions.add("option1");
-        responseOptions.add("option2");
-        responseOptions.add("option3");
+        UserResponse rsp = new UserResponse(crs, courseType, classNo, responses);
 
-        Response rspM;
-        try {
-            rspM = new Response(crs, courseType, position, classNo, responseTypeM, question, responsePossibilites,
-                    MCresponse, responseOptions);
 
-            assertEquals(MCresponse, rspM.getListMCDD());
-            assertEquals(responseOptions, rspM.getOptionsMCDD());
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        // create test response (MultipleChoice constructor)
-
-        var responseTypeD = ResponseType.SINGLE_CHOICE;
-        var DDresponse = 1;
-
-        Response rspD;
-        try {
-            rspD = new Response(crs, courseType, position, classNo, responseTypeD, question, responsePossibilites,
-                    DDresponse, responseOptions);
-                    
-                assertEquals(true, rspD.getListMCDD().get(DDresponse));
-
-        } 
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        assertEquals(courseType, rsp.getCourseType());
+        assertEquals(classNo, rsp.getClassNo());
+        assertEquals(crs, rsp.getCourse());
+        assertEquals(responses, rsp.getUserResponse());
         
-	}
+    }
+
+    @Test
+    public void BinaryResponseConstructorTest(){
+        
+        var question = "Was the lecture informative";
+        var response = false;
+        
+        BinaryResponse br = new BinaryResponse(question, response);
+        
+        assertEquals(question, br.getQuestion());
+        assertEquals(response, br.getResponse());
+        assertEquals(ResponseType.BINARY_ANSWER, br.getType());
+    }
+
+    @Test
+    public void TextResponseConstructorTest(){
+        
+        var question = "Was the lecture informative";
+        var response = "yes, i enjoyed it as well";
+        
+        TextResponse tr = new TextResponse(question, response);
+        
+        assertEquals(question, tr.getQuestion());
+        assertEquals(response, tr.getResponse());
+        assertEquals(ResponseType.TEXT_RESPONSE, tr.getType());
+    }
+
+    @Test
+    public void SingleChoiceConstructorTest() throws Exception {
+
+        var question = "Was the lecture informative";
+
+        ArrayList<String> singleChoiceOptions = new ArrayList<String>();
+        singleChoiceOptions.add("Not informative");
+        singleChoiceOptions.add("A little informative");
+        singleChoiceOptions.add("Very informative");
+
+        ArrayList<Boolean> singleChoiceAnswer = new ArrayList<Boolean>();
+        singleChoiceAnswer.add(false);
+        singleChoiceAnswer.add(true);
+        singleChoiceAnswer.add(false);
+
+        SingleChoiceResponse scr = new SingleChoiceResponse(question, singleChoiceOptions, singleChoiceAnswer);
+
+        assertEquals(question, scr.getQuestion());
+        assertEquals(singleChoiceOptions, scr.getMutltipleChoiceOptions());
+        assertEquals(singleChoiceAnswer, scr.getMutltipleChoiceAnswer());
+        assertEquals(ResponseType.SINGLE_CHOICE, scr.getType());
+        
+    }
+
+    @Test
+    public void MultipleChoiceConstructorTest() throws Exception {
+        
+        var question = "Was the lecture informative";
+
+        ArrayList<String> multipleChoiceOptions = new ArrayList<String>();
+        multipleChoiceOptions.add("The lecture was informative");
+        multipleChoiceOptions.add("The lecture was interesting");
+        multipleChoiceOptions.add("I enjoyed attending the lecture");
+
+        ArrayList<Boolean> multipleChoiceAnswers = new ArrayList<Boolean>();
+        multipleChoiceAnswers.add(false);
+        multipleChoiceAnswers.add(true);
+        multipleChoiceAnswers.add(true);
+
+        MultipleChoiceResponse mcr = new MultipleChoiceResponse(question, multipleChoiceOptions, multipleChoiceAnswers);
+
+        assertEquals(question, mcr.getQuestion());
+        assertEquals(multipleChoiceOptions, mcr.getMutltipleChoiceOptions());
+        assertEquals(multipleChoiceAnswers, mcr.getMutltipleChoiceAnswers());
+        assertEquals(ResponseType.SINGLE_CHOICE, mcr.getType());
+        
+    }
+
 }
 
 

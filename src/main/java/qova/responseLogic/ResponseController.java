@@ -1,4 +1,4 @@
-package qova.responses;
+package qova.responseLogic;
 
 import java.util.Arrays;
 import java.util.Objects;

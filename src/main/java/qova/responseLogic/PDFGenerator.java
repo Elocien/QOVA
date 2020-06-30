@@ -1,4 +1,4 @@
-package qova.responses;
+package qova.responseLogic;
 
 import com.itextpdf.io.font.constants.StandardFonts;
 import com.itextpdf.io.image.ImageData;
@@ -34,11 +34,13 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import qova.responseTypes.UserResponse;
+
  
 
 public final class PDFGenerator {
 
-    public byte[] createPdf(ArrayList<Response> allResponses, String PdfTitle) throws IOException, Exception {
+    public byte[] createPdf(ArrayList<UserResponse> allResponses, String PdfTitle) throws IOException, Exception {
         
         //SETUP
         //----------------------------------------------------------------------------------------------------------------------
@@ -57,21 +59,21 @@ public final class PDFGenerator {
 
 
         //Map that contains responses/ The key is the position of response objects in ArrayList
-        Map<Integer, ArrayList<Response>> responses = new HashMap<Integer, ArrayList<Response>>();
+        Map<Integer, ArrayList<UserResponse>> responses = new HashMap<Integer, ArrayList<UserResponse>>();
 
         
 
         //Iterate through ArrayList and add each response to the correct ArrayList of the HashMap. The key of the 
         for(int i = 0; i < allResponses.size(); i++){
-            Response rsp = allResponses.get(i);
+            UserResponse rsp = allResponses.get(i);
             Integer pos = rsp.getPosition();
             
             //temporary List which holds the Responses for a given key in the map
-            ArrayList<Response> tempList = responses.get(pos);
+            ArrayList<UserResponse> tempList = responses.get(pos);
 
             // if list does not exist create it
             if(tempList == null) {
-                tempList = new ArrayList<Response>();
+                tempList = new ArrayList<UserResponse>();
                 tempList.add(rsp);
                 responses.put(pos, tempList);
             } else {
@@ -119,7 +121,7 @@ public final class PDFGenerator {
             
 
             //ArrayList of responses for the current Position. These will be from the same Course and have the same: CourseType, classNo, ResponseType and position
-            ArrayList<Response> responsesForPos = responses.get(pos);
+            ArrayList<UserResponse> responsesForPos = responses.get(pos);
 
 
             //Get ResponseType for Responses of given position (pos). We assume this to be the same for every Response of that position (if error occurs, check serialisation of Responses)
@@ -158,7 +160,7 @@ public final class PDFGenerator {
 
                 //Main-Loop (Iterate through all Responses)
                 //Accumulate the values for each column (using columnDataList)
-                for (Response r: responsesForPos){
+                for (UserResponse r: responsesForPos){
 
                     // TODO: Check if this causes performance issues. If so, do random checks outside of loop
                     // checks to make sure response matches those at the same position
@@ -256,7 +258,7 @@ public final class PDFGenerator {
                 Table table = new Table(UnitValue.createPercentArray(1)).useAllAvailableWidth();
 
                 //Iterate through all responses at this position and add the textResponse to the table
-                for (Response r: responsesForPos){
+                for (UserResponse r: responsesForPos){
                     table.addCell(r.getTextResponse());
                 }
 
@@ -295,7 +297,7 @@ public final class PDFGenerator {
                 double no = 0;
 
                 //Iterate through all responses to get totals
-                for (Response r: responsesForPos){
+                for (UserResponse r: responsesForPos){
                     
 
                     if(r.getBinaryAnswer().equals(false)){
