@@ -55,13 +55,17 @@ public class CourseController {
 
     //General Pages (relevant domain wide)
 
+    //-------------------------------------------------------
+    
     @GetMapping("/")
     public String welcome () {
         return "home";
     }
 
     @GetMapping("error")
-    public String error (Model model, @PathVariable int code) {
+
+    public String error (Model model, @PathVariable(required = false) Integer code) {
+
         
         //add error code to model
         model.addAttribute("errorCode", code);
@@ -69,6 +73,9 @@ public class CourseController {
         //return template
         return "error";
     }
+
+
+    //-------------------------------------------------------
 
 
     //Shows a table containing all courses 
