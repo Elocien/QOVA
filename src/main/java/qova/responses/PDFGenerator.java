@@ -163,18 +163,18 @@ public final class PDFGenerator {
                     // TODO: Check if this causes performance issues. If so, do random checks outside of loop
                     // checks to make sure response matches those at the same position
 
-                    //check responseType
-                    if(r.getResponseType() != responseType){
-                        throw new Exception("ResponseType does not match that of others at this position, error in Serialisation");
-                    }
-                    //check OptionsMCDD
-                    else if(!(r.getOptionsMCDD().equals(columnTitles))){
-                        throw new Exception("optionsMCDD does not match that of others at this position, error in Serialisation");
-                    }
-                    //check responsePossibilities
-                    else if(r.getListMCDD().size() != responsePossibilities){
-                        throw new Exception("Length of list of MC or DD responses (ListMCDD) does not match that of others at this position, error in Serialisation");
-                    }
+                    // //check responseType
+                    // if(r.getResponseType() != responseType){
+                    //     throw new Exception("ResponseType does not match that of others at this position, error in Serialisation");
+                    // }
+                    // //check OptionsMCDD
+                    // else if(!(r.getOptionsMCDD().equals(columnTitles))){
+                    //     throw new Exception("optionsMCDD does not match that of others at this position, error in Serialisation");
+                    // }
+                    // //check responsePossibilities
+                    // else if(r.getListMCDD().size() != responsePossibilities){
+                    //     throw new Exception("Length of list of MC or DD responses (ListMCDD) does not match that of others at this position, error in Serialisation");
+                    // }
 
 
                     //iterate through values from list of user responses 
@@ -296,8 +296,6 @@ public final class PDFGenerator {
 
                 //Iterate through all responses to get totals
                 for (Response r: responsesForPos){
-                    
-
                     if(r.getBinaryAnswer().equals(false)){
                         no++;
                     }

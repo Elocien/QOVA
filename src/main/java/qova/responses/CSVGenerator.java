@@ -67,7 +67,7 @@ public class CSVGenerator {
 
 
         //Map that contains responses/ The key is the position of response objects in ArrayList
-            Map<Integer, ArrayList<Response>> responses = new HashMap<Integer, ArrayList<Response>>();
+        Map<Integer, ArrayList<Response>> responses = new HashMap<Integer, ArrayList<Response>>();
 
         //Iterate through ArrayList and add each response to the correct ArrayList of the HashMap. The key of the 
         for(int i = 0; i < allResponses.size(); i++){
@@ -127,18 +127,22 @@ public class CSVGenerator {
             //Multiple Choice or Single Choice
             if(responseType.equals(ResponseType.MULTIPLE_CHOICE) || responseType.equals(ResponseType.SINGLE_CHOICE)){
                 
-                //passes the options given to users, for a single Multiple Choice or Single Choice question, to the method, which appends the header with these
-                header.addAll(responseMultipleChoiceAndSingleChoiceHeader(responsesForPos.get(0).getOptionsMCDD()));
+                //appends each of the multiple choice options to the header
+                header.addAll(responsesForPos.get(0).getOptionsMCDD());
 
                 //passes all responses at the current position to the method, which accumulates them and addes them to the data 
+                for (Response r: responsesForPos){
+
+                }
             }
 
             else if(responseType == ResponseType.TEXT_RESPONSE){
-
+                //appends each of the multiple choice options to the header
+                header.add(responsesForPos.get(0).getQuestion());
             }
 
             else if(responseType == ResponseType.BINARY_ANSWER){
-
+                header.add(responsesForPos.get(0).getQuestion());
             }
 
             else{
@@ -179,36 +183,6 @@ public class CSVGenerator {
 
 
 
-    /**
-     * 
-     * @return an ArrayList containing new header elements for Multiple Choice and Single Choice Responses at a set position
-     */
-    public ArrayList<String> responseMultipleChoiceAndSingleChoiceHeader(ArrayList<String> options){
-        
-        //ArrayList containing options presented to the viewer in the questionaire
-        
-
-
-
-
-        return new ArrayList<String>();
-    }
-
-
-
-    /**
-     * 
-     * @return an ArrayList of data elements for Multiple Choice and Single Choice Responses at a set position
-     */
-    public ArrayList<String> responseMultipleChoiceAndSingleChoiceData(){
-        
-        ArrayList<String> data = new ArrayList<String>();
-
-        
-
-
-
-        return data;
-    }
+    
     
 }
