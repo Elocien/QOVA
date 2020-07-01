@@ -290,6 +290,6 @@ public class ResponseManagement {
         
         //Generate PDF 
         PDFGenerator pdfGen = new PDFGenerator();
-        return pdfGen.createPdf(pdfResponses, "test PDF title");
+        return pdfGen.createPdf(pdfResponses, "test PDF title", LocalizationOption.EN);
     }
 }

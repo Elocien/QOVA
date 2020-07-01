@@ -35,6 +35,8 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import qova.course.LocalizationOption;
+import qova.responseTypes.BinaryResponse;
+import qova.responseTypes.ResponseType;
 import qova.responseTypes.UserResponse;
 
  
@@ -42,7 +44,40 @@ import qova.responseTypes.UserResponse;
 public final class PDFGenerator {
 
     public byte[] createPdf(ArrayList<UserResponse> allResponses, String PdfTitle, LocalizationOption language) throws IOException, Exception {
-        
+
+
+        //Localization variables
+        String total;
+        String responseOptions;
+        String totalResponses;
+        String totalYes;
+        String totalNo;
+        String multipleChoiceAndSingleChoiceResponsesTitle;
+        String textResponsesTitle;
+        String binaryResponsesTitle;
+
+        if(language.equals(LocalizationOption.EN)){
+            total = "Total";
+            responseOptions = "Response Options";
+            totalResponses = "Total Responses: ";
+            totalYes = "Total 'Yes': ";
+            totalNo = "Total 'No': ";
+            multipleChoiceAndSingleChoiceResponsesTitle = "Multiple Choice and Single Choice Responses";
+            textResponsesTitle = "Text Responses";
+            binaryResponsesTitle = "Yes/No Responses";
+        }
+        else if(language.equals(LocalizationOption.DE)){
+            total = "Stimmen Anzahl";
+            responseOptions = "Antwortmöglichkeiten";
+            totalResponses = "Gesamtstimmenanzahl: ";
+            totalYes = "Gesamt 'Ja': ";
+            totalNo = "Gesamt 'Nein': ";
+            multipleChoiceAndSingleChoiceResponsesTitle = "Multiple Choice und Single Choice Fragen";
+            textResponsesTitle = "Freitext Fragen";
+            binaryResponsesTitle = "Ja/Nein Fragen";
+        }
+
+
         //SETUP
         //----------------------------------------------------------------------------------------------------------------------
 
@@ -53,37 +88,13 @@ public final class PDFGenerator {
         //List of all Tables (TextResponse) and their corresponding titles
         ArrayList<Paragraph> TableQuestionList = new ArrayList<Paragraph>();
         ArrayList<Table> TableList = new ArrayList<Table>();
-        
 
         //List of all Paragraphs (BinaryAnswer)
         ArrayList<Paragraph> ParagraphList = new ArrayList<Paragraph>();
 
 
-        //Map that contains responses/ The key is the position of response objects in ArrayList
-        Map<Integer, ArrayList<UserResponse>> responses = new HashMap<Integer, ArrayList<UserResponse>>();
-
+        //IMPORTANT: Assume all UserResponses are for the same Survey (i.e. same course, courseType and classNo)
         
-
-        //Iterate through ArrayList and add each response to the correct ArrayList of the HashMap. The key of the 
-        for(int i = 0; i < allResponses.size(); i++){
-            UserResponse rsp = allResponses.get(i);
-            Integer pos = rsp.getPosition();
-            
-            //temporary List which holds the Responses for a given key in the map
-            ArrayList<UserResponse> tempList = responses.get(pos);
-
-            // if list does not exist create it
-            if(tempList == null) {
-                tempList = new ArrayList<UserResponse>();
-                tempList.add(rsp);
-                responses.put(pos, tempList);
-            } else {
-                // add if item is not already in list
-                if(!tempList.contains(rsp)){
-                    tempList.add(rsp);
-                } 
-            }
-        }
 
 
         
@@ -166,18 +177,18 @@ public final class PDFGenerator {
                     // TODO: Check if this causes performance issues. If so, do random checks outside of loop
                     // checks to make sure response matches those at the same position
 
-                    //check responseType
-                    if(r.getResponseType() != responseType){
-                        throw new Exception("ResponseType does not match that of others at this position, error in Serialisation");
-                    }
-                    //check OptionsMCDD
-                    else if(!(r.getOptionsMCDD().equals(columnTitles))){
-                        throw new Exception("optionsMCDD does not match that of others at this position, error in Serialisation");
-                    }
-                    //check responsePossibilities
-                    else if(r.getListMCDD().size() != responsePossibilities){
-                        throw new Exception("Length of list of MC or DD responses (ListMCDD) does not match that of others at this position, error in Serialisation");
-                    }
+                    // //check responseType
+                    // if(r.getResponseType() != responseType){
+                    //     throw new Exception("ResponseType does not match that of others at this position, error in Serialisation");
+                    // }
+                    // //check OptionsMCDD
+                    // else if(!(r.getOptionsMCDD().equals(columnTitles))){
+                    //     throw new Exception("optionsMCDD does not match that of others at this position, error in Serialisation");
+                    // }
+                    // //check responsePossibilities
+                    // else if(r.getListMCDD().size() != responsePossibilities){
+                    //     throw new Exception("Length of list of MC or DD responses (ListMCDD) does not match that of others at this position, error in Serialisation");
+                    // }
 
 
                     //iterate through values from list of user responses 
@@ -197,15 +208,15 @@ public final class PDFGenerator {
 
                 //Iterate through the columnDataList and add the data to the dataSet
                 for (int j = 0; j < responsePossibilities; j++) {
-                    dataSet.setValue(columnTotals.get(j), "total", columnTitles.get(j));
+                    dataSet.setValue(columnTotals.get(j), total, columnTitles.get(j));
                 }
-                
+
 
                 //Chart Configuration
                 JFreeChart chart = ChartFactory.createBarChart(
                         responsesForPos.get(0).getQuestion(), // Title of BarGraph = Question in Survey
-                        "Response", // x-axis heading
-                        "Total", // y-axis heading
+                        responseOptions, // x-axis heading
+                        total, // y-axis heading
                         dataSet, // dataset
                         PlotOrientation.VERTICAL, // orientation
                         false, // Show legend
@@ -310,21 +321,21 @@ public final class PDFGenerator {
                 }
 
                 //More variables for totals and percentages
-                int total = (int)(yes+no); 
-                String yesPercent = String.format("%.2f", (yes/total)*100) + "%";
-                String noPercent = String.format("%.2f", (no/total)*100) + "%";
+                int tot = (int)(yes+no); 
+                String yesPercent = String.format("%.2f", (yes/tot)*100) + "%";
+                String noPercent = String.format("%.2f", (no/tot)*100) + "%";
                 
             //add Text
                 //Total    
-                para.add("Total Responses: ");
+                para.add(totalResponses);
                 para.add(new Text(String.valueOf(total) + "\n").setFont(bold)); 
 
                 //Yes Percentage
-                para.add("Total Yes: ");
+                para.add(totalYes);
                 para.add(new Text(yesPercent + "\n").setFont(bold)); 
 
                 //Yes Percentage
-                para.add("Total No: ");
+                para.add(totalNo);
                 para.add(new Text(noPercent).setFont(bold)); 
 
                 //Add table to List of Tables;
@@ -389,7 +400,7 @@ public final class PDFGenerator {
         //Tables containing text responses
 
         //Add title for questions of this type and a dashed line underneath
-        document.add(new Paragraph("Mehrfachauswahl und Dropdown-Liste").addStyle(header));
+        document.add(new Paragraph(multipleChoiceAndSingleChoiceResponsesTitle).addStyle(header));
         document.add(lsDashed);
 
 
@@ -403,7 +414,7 @@ public final class PDFGenerator {
         //Tables containing text responses
 
         //Add title for questions of this type and a dashed line underneath
-        document.add(new Paragraph("Freitexte").addStyle(header));
+        document.add(new Paragraph(textResponsesTitle).addStyle(header));
         document.add(lsDashed);
 
 
@@ -418,7 +429,7 @@ public final class PDFGenerator {
         //Paragraph containing binary answer responses
 
         //Add title for questions of this type and a dashed line underneath
-        document.add(new Paragraph("Ja/Nein Fragen").addStyle(header));
+        document.add(new Paragraph(binaryResponsesTitle).addStyle(header));
         document.add(lsDashed);
 
         //Iterate through the list, in jumps of 2, because there are pairs of paragraphs
