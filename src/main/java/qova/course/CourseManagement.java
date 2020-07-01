@@ -38,7 +38,7 @@ public class CourseManagement {
 
 
     //Create Course and get Id from new course
-    public String createCourseReturnId(CourseForm form) throws Exception {
+    public String createCourseReturnId(CourseForm form) {
         Objects.requireNonNull(form);
 
         //Name of Course
