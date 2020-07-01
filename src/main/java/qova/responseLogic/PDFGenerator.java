@@ -34,13 +34,14 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import qova.course.LocalizationOption;
 import qova.responseTypes.UserResponse;
 
  
 
 public final class PDFGenerator {
 
-    public byte[] createPdf(ArrayList<UserResponse> allResponses, String PdfTitle) throws IOException, Exception {
+    public byte[] createPdf(ArrayList<UserResponse> allResponses, String PdfTitle, LocalizationOption language) throws IOException, Exception {
         
         //SETUP
         //----------------------------------------------------------------------------------------------------------------------

@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import qova.course.Course;
 import qova.course.CourseType;
+import qova.course.LocalizationOption;
 import qova.responseTypes.BinaryResponse;
 import qova.responseTypes.MultipleChoiceResponse;
 import qova.responseTypes.SingleChoiceResponse;
@@ -49,7 +50,7 @@ public class ResponseManagement {
         
         //Generate PDF 
         PDFGenerator pdfGen = new PDFGenerator();
-        return pdfGen.createPdf(pdfResponses, course.getName());
+        return pdfGen.createPdf(pdfResponses, course.getName(), LocalizationOption.EN);
     }
 
 
@@ -73,10 +74,8 @@ public class ResponseManagement {
         
         //Generate PDF
         CSVGenerator csvGen = new CSVGenerator();
-        return csvGen.createCSV(csvResponses);
+        return csvGen.createCSV(csvResponses, LocalizationOption.EN);
     }
-
-
 
 
 
