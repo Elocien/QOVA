@@ -107,7 +107,7 @@
                                                 <th class="col-5" scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
                                                 <td class="hide_me" id="faculty_original"><span th:id="'og: ' + ${course.faculty}" th:text="#{'course.faculty.' + ${course.faculty}}">FACULTY</span></td>
                                                 <td class="show_me" id="faculty_dropdown" style="display: none">
-                                                    <select id="faculty_select" class="custom-select form-control" th:field="*{faculty}" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
+                                                    <select id="faculty_select" class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}" th:field="*{faculty}">
                                                         <option class="dropdown-item" th:id="${faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
                                                     </select>
                                                 </td>
@@ -161,8 +161,8 @@
                                                             <span class="slider round"></span>
                                                         </label>
                                                     </div>
-                                                    <input th:if="!${__'course.' + ${course_type} + '.survey'__}" type="checkbox" th:id="${course_type} + 'Hidden'" hidden>
-                                                    <input  th:if="${__'course.' + ${course_type} + '.survey'__}" type="checkbox" th:id="${course_type} + 'Hidden'" hidden checked>
+                                                    <input th:if="!${__'course.' + ${course_type} + '.survey'__}" type="checkbox" th:id="${course_type} + 'Hidden'" th:field="*{__${course_type} + 'Exists'__}" hidden>
+                                                    <input  th:if="${__'course.' + ${course_type} + '.survey'__}" type="checkbox" th:id="${course_type} + 'Hidden'" th:field="*{__${course_type} + 'Exists'__}" hidden checked>
                                                 </td>
                                                 <!--2nd Col-->
                                                 <td scope="row" th:text="#{'new.' + ${course_type}}">LECTURE</td>
@@ -172,7 +172,7 @@
                                                 <!--4th Col-->
                                                 <td class="text-center hide_me" th:text="${__'course.' + ${course_type} + '.groupAmount'__}">COUNT</td>
                                                 <td class="show_me" style="display: none;">
-                                                    <input class="form-control" type="text" th:placeholder="${__'course.' + ${course_type} + '.groupAmount'__}">
+                                                    <input class="form-control" type="text" th:placeholder="${__'course.' + ${course_type} + '.groupAmount'__}" th:field="*{__'groupAmount' + ${#strings.capitalize(course_type)}__}">
                                                 </td>
                                                 <!--5th Col-->
                                                 <div th:switch="${__'course.' + ${course_type} + '.survey'__}">
