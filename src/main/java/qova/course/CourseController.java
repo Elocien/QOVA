@@ -144,6 +144,7 @@ public class CourseController {
         id = "5";
         model.addAttribute("course", courseManagement.TimTestCreateCourse());
         model.addAttribute("form", form);
+        model.addAttribute("semesterDates", courseManagement.findSemesters());
 
         return "courseDetails";
     }*/
@@ -194,8 +195,24 @@ public class CourseController {
         model.addAttribute("seminarInstanceTitles", courseManagement.findById(id).get().getSeminar().instanceTitles);
         model.addAttribute("practicalInstanceTitles", courseManagement.findById(id).get().getPractical().instanceTitles);
 
+        model.addAttribute("lectureInstances", courseManagement.findById(id).get().getLecture().instanceTitles.length);
+        model.addAttribute("tutorialInstances", courseManagement.findById(id).get().getTutorial().instanceTitles.length);
+        model.addAttribute("seminarInstances", courseManagement.findById(id).get().getSeminar().instanceTitles.length);
+        model.addAttribute("practicalInstances", courseManagement.findById(id).get().getPractical().instanceTitles.length);
+
 		return "courseNew2";
     }
+
+    /*@GetMapping("course/new2")
+	public String createCourse_SetInstanceTitles(Model model, InstanceTitleForm form) {
+
+        model.addAttribute("lectureInstances", 2);
+        model.addAttribute("tutorialInstances", 3);
+        model.addAttribute("seminarInstances", 2);
+        model.addAttribute("practicalInstances", 5);
+
+		return "courseNew2";
+    }*/
     
     //Validation of Created course
 	@PostMapping("course/new2")

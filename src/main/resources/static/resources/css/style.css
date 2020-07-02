@@ -211,15 +211,18 @@ input[type="text"]:disabled::placeholder {
 
 /*courseNew.html*/
 .form-col {
-  border-right: solid 1px black;
+  background-color: rgba(255, 255, 255, 0.5);
+  --input-height: 37px;
+  border-right: solid 1px var(--fancy_grey);
+  border-bottom: solid 1px var(--fancy_grey);
 }
-.form-col:last-of-type {
-  border-right: none;
+.form-col:first-of-type, .form-col:nth-of-type(5) {
+  border-left: solid 1px var(--fancy_grey);
 }
 .clean-input > input {
-  height: 37px;
+  height: var(--input-height);
   border: none;
-  border-bottom: solid 1px black;
+  border-bottom: solid 1px var(--fancy_grey);
   border-radius: 0;
   background: transparent;
 }
@@ -227,5 +230,40 @@ input[type="text"]:disabled::placeholder {
   background: transparent;
 }
 .clean-input > span {
-  line-height: 37px;
+  font-size: var(--input-height) * 0.8;
+  line-height: var(--input-height);
+}
+.input-header {
+  background-color: var(--tu_blue_highlight);
+  padding: 0.5rem 1rem;
+  border-top: solid 1px var(--fancy_grey);
+  border-bottom: solid 1px var(--fancy_grey);
+}
+.button-divider {
+  padding: 0;
+  margin: 0;
+  border-left: solid 1px var(--fancy_grey);
+}
+
+.btn-input {
+  border: solid 5px white;
+  border-radius: 0;
+}
+.btn-input.btn-primary {
+  background-color: var(--tu_blue);
+}
+.btn-input.btn-primary:hover {
+  color: var(--tu_blue);
+  border: solid 5px var(--tu_blue);
+  background-color: white;
+  transition: 0.5s;
+}
+.btn-input.btn-danger {
+  background-color: darkred;
+}
+.btn-input.btn-danger:hover {
+  color: darkred;
+  border: solid 5px darkred;
+  background-color: white;
+  transition: 0.5s;
 }
