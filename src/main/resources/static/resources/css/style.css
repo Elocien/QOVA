@@ -208,3 +208,24 @@ input[type="text"]:disabled::placeholder {
 .disabled-link {
   color: lightgrey;
 }
+
+/*courseNew.html*/
+.form-col {
+  border-right: solid 1px black;
+}
+.form-col:last-of-type {
+  border-right: none;
+}
+.clean-input > input {
+  height: 37px;
+  border: none;
+  border-bottom: solid 1px black;
+  border-radius: 0;
+  background: transparent;
+}
+.clean-input > input:focus {
+  background: transparent;
+}
+.clean-input > span {
+  line-height: 37px;
+}

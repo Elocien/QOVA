@@ -1,0 +1,78 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}"/>
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}"/>	
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<title th:text="#{home.title}">TITLE</title>
+</head>
+
+<body>
+<div th:include="navbar"></div>
+
+<div class="container" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
+    <div class="row justify-content-center">
+
+        <!--Headline-->
+        <div class="col-12 text-center mt-4">
+            <h2 class="font-weight-bold">COURSE INSTANCES</h2>
+            <h5 class="font-weight-light">NAME THE INSTANCES OF YOUR COURSE HERE.</h5>
+        </div>
+
+        <!--JS-Template-->
+        <div class="input-group mt-2 mb-2 js-temp" style="display: none;">
+            <span class="index">N</span><span class="mr-2">.</span>
+            <input class="form-control" type="text">
+        </div>
+
+        <!--Input Table-->
+        <form class="w-100 row justify-content-center mt-4" id="form" method="post" th:object="${form}">
+            <div class="col-3 form-col text-center" th:each="course_type: ${type_list}" th:id="${course_type} + '-input-col'">
+                <h5 class="font-weight-light" th:text="#{${course_type}} +' '+ #{new.instances}">COURSE TYPE</h5>
+                <!--Vanilla Inputs-->
+                <div class="input-wrapper">
+                    <div class="input-group mt-2 mb-2 clean-input" th:each="n : ${#numbers.sequence(1, __${course_type} + 'Instances'__)}">
+                        <span class="index" th:text="${n}">N</span><span class="mr-2">.</span>
+                        <input class="form-control" type="text">
+                    </div>
+                </div>
+                <div class="btn-group edit-input-buttons">
+                    <button type="button" class="btn btn-link" th:onclick="add_new_input([[${course_type}]])"><i class="fas fa-plus"></i></button>
+                    <button type="button" class="btn btn-link" th:onclick="remove_input([[${course_type}]])"><i class="fas fa-minus"></i></button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<div th:include="footer"></div>
+</body>
+
+<script>
+    function add_new_input(type) {
+        var new_input = document.getElementsByClassName("js-temp")[0].cloneNode(true);
+        new_input.classList.remove("js-temp");
+        new_input.classList.add("clean-input");
+        new_input.style.display = "";
+
+        const final_destination = document.getElementById(type + "-input-col");
+        new_input.getElementsByClassName("index")[0].innerHTML = (final_destination.getElementsByClassName("clean-input").length + 1);
+        final_destination.getElementsByClassName("input-wrapper")[0].appendChild(new_input);
+    }
+    function remove_input(type) {
+        var target = document.getElementById(type + "-input-col").getElementsByClassName("clean-input");
+        console.log(target.length)
+        target = target[target.length - 1];
+        target.parentNode.removeChild(target);
+    }
+</script>
+
+</html>
