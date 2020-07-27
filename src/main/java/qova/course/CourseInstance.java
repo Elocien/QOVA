@@ -37,6 +37,11 @@ public class CourseInstance {
 
 
 
+    //Needed for JPA purposes
+    @SuppressWarnings("unused")
+	protected CourseInstance() {
+    }
+
     /**
      * Instance of a CourseType
      * 
@@ -57,9 +62,6 @@ public class CourseInstance {
         this.instanceAmount = instanceAmount;
         this.instanceTitles = instanceTitles;
     }
-
-
-
 
     public CourseType getCourseType(){
         return this.courseType;

@@ -348,6 +348,9 @@ public class CourseController {
                 //Method from courseManager which sets the survey for the relevant surveyType
                 try{
                     JSONArray survey = new JSONArray(form.getQuestionnairejson());
+                    System.out.println(survey);
+                    System.out.println(survey.length());
+
                 } catch (Exception e){
                     System.out.print(form.getQuestionnairejson());
                     return "redirect:/";
