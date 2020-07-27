@@ -46,13 +46,19 @@ public class SurveyResponse {
 
     //Used to indicate to which Tutorial or Seminar the response corresponds, as a tutorial and seminar can have multiple instances for a single course 
     //is 1 if CourseType is Lecture
-    private Integer classNo;
+    private Integer groupNumber;
+
+
+    //comment
+    private Integer instanceNumber;
+
+
+    //comment
+    private Integer numberOfSubmissions;
 
 
     //Array of all subtype Objects (BinaryResponse, TextResponse, SingleChoiceResponse and MultipleChoiceResponse)
     @Lob ArrayList<Object> responses;
-
-
 
 
     //Needed for JPA puposes
@@ -60,12 +66,14 @@ public class SurveyResponse {
     public SurveyResponse (){}
 
 
-    public SurveyResponse(Course course, CourseType type, Integer classNo, ArrayList<Object> responses){
+    public SurveyResponse(Course course, CourseType type, Integer instanceNumber, Integer groupNumber, ArrayList<Object> responses){
         this.dateTime = LocalDateTime.now();
         this.course = course;
         this.courseType = type;
-        this.classNo = classNo;
+        this.instanceNumber = instanceNumber;
+        this.groupNumber = groupNumber;
         this.responses = responses;
+        this.numberOfSubmissions = 0;
     }
     
     public LocalDateTime getDateTime(){
@@ -80,8 +88,16 @@ public class SurveyResponse {
         return this.courseType;
     }
 
-    public Integer getClassNo(){
-        return this.classNo;
+    public Integer getGroupNumber(){
+        return this.groupNumber;
+    }
+
+    public Integer getInstanceNumber(){
+        return this.instanceNumber;
+    }
+
+    public Integer getNumberOfSubmission(){
+        return this.numberOfSubmissions;
     }
 
     public ArrayList<Object> getUserResponse(){

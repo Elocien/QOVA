@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,17 +17,17 @@ import qova.responseTypes.BinaryResponse;
 import qova.responseTypes.MultipleChoiceResponse;
 import qova.responseTypes.SingleChoiceResponse;
 import qova.responseTypes.TextResponse;
-import qova.responseTypes.UserResponse;
-import qova.responseTypes.UserResponseRepository;
+import qova.responseTypes.SurveyResponse;
+import qova.responseTypes.SurveyResponseRepository;
 
 @Service
 @Transactional
 public class ResponseManagement {
 
-    private final UserResponseRepository responseRepository;
+    private final SurveyResponseRepository responseRepository;
 
     @Autowired
-    public ResponseManagement(UserResponseRepository responses) {
+    public ResponseManagement(SurveyResponseRepository responses) {
         this.responseRepository = Objects.requireNonNull(responses);
     }
 
@@ -36,7 +37,7 @@ public class ResponseManagement {
     public byte[] generatePDF_en(Course course, CourseType courseType, Integer classNo) throws IOException, Exception {
 
         //Responses used to gen pdg
-        ArrayList<UserResponse> pdfResponses = new ArrayList<UserResponse>();
+        ArrayList<SurveyResponse> pdfResponses = new ArrayList<SurveyResponse>();
 
         //Add responses to arrayList
         if(classNo > 0){
@@ -60,7 +61,7 @@ public class ResponseManagement {
     public byte[] generateCSV_en(Course course, CourseType courseType, Integer classNo) throws IOException, Exception {
 
         //Responses used to gen pdg
-        ArrayList<UserResponse> csvResponses = new ArrayList<UserResponse>();
+        ArrayList<SurveyResponse> csvResponses = new ArrayList<SurveyResponse>();
 
         //Add responses to arrayList
         if(classNo > 0){
@@ -79,14 +80,38 @@ public class ResponseManagement {
 
 
 
+    public Boolean verifyJsonArray(JSONArray json){
+        //example string
+        // [{"type":"YesNo","question":""},{"type":"MultipleChoice","question":"","answers":["1","2","3","4","5"]},{"type":"DropDown","question":"","answers":["Answer","Answer","Answer"]}]
+        return false;
+    }
+
+
+
+
+    public void createSurveyResponse(JSONArray json){
+
+
+        responseRepository.save(new SurveyResponse(course, type, instanceNumber, groupNumber, responses));
+         
+    }
+
+
+
+
+
+
+
+
+
 
 
     /**
 	 * @param id the response id
-	 * @return an {@linkplain Optional} of an {@linkplain UserResponse}
+	 * @return an {@linkplain Optional} of an {@linkplain SurveyResponse}
 	 *         with the given id
 	 */
-	public Optional<UserResponse> findById(long id) {
+	public Optional<SurveyResponse> findById(long id) {
 		return responseRepository.findById(id);
 	}
 
@@ -99,7 +124,7 @@ public class ResponseManagement {
      * 
      * @return an Iterable containing all Responses that fit criteria
      */
-	public Iterable<UserResponse> findByCourseAndCourseTypeAndClassNo(Course course, CourseType type, Integer classNo){
+	public Iterable<SurveyResponse> findByCourseAndCourseTypeAndClassNo(Course course, CourseType type, Integer classNo){
 		return responseRepository.findByCourseAndCourseTypeAndClassNo(course, type, classNo);
 	}
 
@@ -111,7 +136,7 @@ public class ResponseManagement {
      * 
      * @return an Iterable containing all Responses that fit criteria
      */
-	public Iterable<UserResponse> findByCourseAndCourseType(Course course, CourseType type){
+	public Iterable<SurveyResponse> findByCourseAndCourseType(Course course, CourseType type){
 		return responseRepository.findByCourseAndCourseType(course, type);
 	}
 
@@ -261,16 +286,16 @@ public class ResponseManagement {
 
         
         for(int i = 0; i < 15; i++){
-            responseRepository.save(new UserResponse(course, type, classNo, responses1));
+            responseRepository.save(new SurveyResponse(course, type, classNo, responses1));
         }
         for(int i = 0; i < 10; i++){
-            responseRepository.save(new UserResponse(course, type, classNo, responses2));
+            responseRepository.save(new SurveyResponse(course, type, classNo, responses2));
         }
         for(int i = 0; i < 12; i++){
-            responseRepository.save(new UserResponse(course, type, classNo, responses3));
+            responseRepository.save(new SurveyResponse(course, type, classNo, responses3));
         }
         for(int i = 0; i < 8; i++){
-            responseRepository.save(new UserResponse(course, type, classNo, responses4));
+            responseRepository.save(new SurveyResponse(course, type, classNo, responses4));
         }
 
 
@@ -283,7 +308,7 @@ public class ResponseManagement {
     public byte[] generatePDF_test() throws IOException, Exception {
 
         //Responses used to gen pdg
-        ArrayList<UserResponse> pdfResponses = new ArrayList<UserResponse>();
+        ArrayList<SurveyResponse> pdfResponses = new ArrayList<SurveyResponse>();
 
         //Add responses to arrayList
         responseRepository.findAll().forEach(pdfResponses::add);

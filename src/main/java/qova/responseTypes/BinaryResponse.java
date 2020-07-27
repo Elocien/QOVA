@@ -17,33 +17,45 @@ public class BinaryResponse{
     private String question;
 
     //Container for response
-    private Boolean response;
+    private Integer yesTotal;
+    private Integer noTotal;
 
     private final ResponseType responseType = ResponseType.BINARY_ANSWER;
-
 
     //Needed for JPA puposes
     @SuppressWarnings("unused")
 	private BinaryResponse(){
     }
 
-    public BinaryResponse(String question, Boolean response){
+    public BinaryResponse(String question){
         this.question = question;
-        this.response = response;
+        this.yesTotal = 0;
+        this.noTotal = 0;
     }
-    
     
     
     public String getQuestion() {
         return this.question;
     }
 
-    public Boolean getResponse() {
-        return this.response;
+    public Integer getYesTotal() {
+        return this.yesTotal;
+    }
+
+    public Integer getNoTotal() {
+        return this.noTotal;
     }
 
     public ResponseType getType(){
         return this.responseType;
+    }
+
+    public void incrementYes(){
+        this.yesTotal = yesTotal + 1;
+    }
+
+    public void incrementNo(){
+        this.yesTotal = yesTotal + 1;
     }
 
 }

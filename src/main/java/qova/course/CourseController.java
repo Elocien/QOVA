@@ -11,6 +11,7 @@ import javax.validation.Valid;
 
 import com.google.zxing.WriterException;
 
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import qova.admin.AdminManagement;
+import qova.responseLogic.ResponseManagement;
 
 //TODO: Temporary Imports (can be removed later)
 //@Lucian please don't delete me just yet T_T
@@ -44,11 +46,15 @@ public class CourseController {
     private final CourseManagement courseManagement;
 
     @Autowired
+    private final ResponseManagement responseManagement;
+
+    @Autowired
     private final AdminManagement adminManagement;
 
     @Autowired
-    CourseController(CourseManagement courseManagement, AdminManagement adminManagement) {
+    CourseController(CourseManagement courseManagement, ResponseManagement responseManagement, AdminManagement adminManagement) {
         this.courseManagement = Objects.requireNonNull(courseManagement);
+        this.responseManagement = Objects.requireNonNull(responseManagement);
         this.adminManagement = Objects.requireNonNull(adminManagement);
     }
 
@@ -286,32 +292,8 @@ public class CourseController {
         if (form.getQuestionnairejson().length()==0) {
             return "redirect:../course/details" + "?id=" + id;          //TODO: Redirects back course at the moment, think about where this should go
         }
-
-
-
-
-
-
-
-   
-        //Validate that the questionnaire does not exceed max length
-        String JsonString = form.getQuestionnairejson();
-
-        //Remove [] to parse JSON
-        JsonString = JsonString.substring(1,JsonString.length()-1);
-
-
-        //TODO: iterate through array and check length
-
-        //example string
-        // [{"type":"YesNo","question":""},{"type":"MultipleChoice","question":"","answers":["1","2","3","4","5"]},{"type":"DropDown","question":"","answers":["Answer","Answer","Answer"]}]
-
-
-
-
-
-
         
+
         //fetch course 
         Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()){
@@ -324,6 +306,22 @@ public class CourseController {
             }
 
             else{
+                //check if JSON is valid
+                try {JSONArray survey = new JSONArray(form.getQuestionnairejson());} 
+                catch (Exception e) {
+                    e.printStackTrace();
+                    return "redirect:/";
+                }
+
+                //JSON Array with the response from the questioneditor
+                JSONArray survey = new JSONArray(form.getQuestionnairejson());
+
+                //parse JSON to check for correctness
+                responseManagement.verifyJsonArray(survey);
+
+                //Manager method for creating SurveyResponse and corresponding nested objects
+                responseManagement.createSurveyResponse(survey, course, type);
+
                 //Method from courseManager which sets the survey for the relevant surveyType
                 courseManagement.setSurveyforType(id, type, form);
             }

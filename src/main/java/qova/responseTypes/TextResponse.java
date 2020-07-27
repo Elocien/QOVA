@@ -1,5 +1,7 @@
 package qova.responseTypes;
 
+import java.util.ArrayList;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -17,7 +19,7 @@ public class TextResponse{
     private String question;
 
     //Container for response
-    @Lob private String response;
+    @Lob private ArrayList<String> responses;
 
     private final ResponseType responseType = ResponseType.TEXT_RESPONSE;
 
@@ -28,7 +30,7 @@ public class TextResponse{
 
     public TextResponse(String question, String response){
         this.question = question;
-        this.response = response;
+        this.responses = new ArrayList<String>();
     }
     
     
@@ -38,8 +40,12 @@ public class TextResponse{
         return this.question;
     }
 
-    public String getResponse() {
-        return this.response;
+    public ArrayList<String> getResponses() {
+        return this.responses;
+    }
+
+    public void addTextSubmission(String resp){
+        this.responses.add(resp);
     }
 
     public ResponseType getType(){

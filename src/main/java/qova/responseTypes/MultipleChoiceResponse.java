@@ -22,7 +22,7 @@ public class MultipleChoiceResponse{
     @Lob private ArrayList<String> multipleChoiceOptions;
 
     //Array of the user response
-    @Lob private ArrayList<Boolean> multipleChoiceAnswers;
+    @Lob private ArrayList<Integer> multipleChoiceAnswers;
 
     private final ResponseType responseType = ResponseType.MULTIPLE_CHOICE;
 
@@ -31,10 +31,10 @@ public class MultipleChoiceResponse{
 	private MultipleChoiceResponse(){
     }
 
-    public MultipleChoiceResponse(String question, ArrayList<String> multipleChoiceOptions, ArrayList<Boolean> multipleChoiceAnswers){
+    public MultipleChoiceResponse(String question, ArrayList<String> multipleChoiceOptions){
         this.question = question;
         this.multipleChoiceOptions = multipleChoiceOptions;
-        this.multipleChoiceAnswers = multipleChoiceAnswers;
+        this.multipleChoiceAnswers = new ArrayList<Integer>(multipleChoiceOptions.size());
     }
     
     
@@ -46,8 +46,14 @@ public class MultipleChoiceResponse{
         return this.multipleChoiceOptions;
     }
 
-    public ArrayList<Boolean> getMutltipleChoiceAnswers(){
+    public ArrayList<Integer> getMutltipleChoiceAnswers(){
         return this.multipleChoiceAnswers;
+    }
+
+    public void incrementTotals(ArrayList<Integer> totals){
+        for(Integer i : totals){
+            multipleChoiceAnswers.set(i, multipleChoiceAnswers.get(i) + 1);
+        }
     }
 
     public ResponseType getType(){
