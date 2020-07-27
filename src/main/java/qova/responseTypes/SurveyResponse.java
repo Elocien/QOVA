@@ -23,9 +23,10 @@ import qova.course.CourseType;
 //ArrayList, position = index
 
 @Entity
-public class UserResponse {
+public class SurveyResponse {
 
     //Always used
+
     //-----------------------------------------------------------------------
     @Id @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
 
@@ -56,10 +57,10 @@ public class UserResponse {
 
     //Needed for JPA puposes
     @SuppressWarnings("unused")
-    public UserResponse (){}
+    public SurveyResponse (){}
 
 
-    public UserResponse(Course course, CourseType type, Integer classNo, ArrayList<Object> responses){
+    public SurveyResponse(Course course, CourseType type, Integer classNo, ArrayList<Object> responses){
         this.dateTime = LocalDateTime.now();
         this.course = course;
         this.courseType = type;
