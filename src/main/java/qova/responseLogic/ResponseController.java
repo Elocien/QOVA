@@ -246,7 +246,7 @@ public class ResponseController {
 
     //PDF Generation
     @GetMapping("/generatePDF")
-    public HttpEntity<byte[]> generatePdf(@RequestParam String id, @RequestParam String type, @RequestParam String classNo, HttpServletResponse response) throws Exception {
+    public HttpEntity<byte[]> generatePdf(@RequestParam String id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response) throws Exception {
     
         //generate filename
         String filename = "testPdf.pdf";
@@ -267,7 +267,7 @@ public class ResponseController {
         else {throw new Exception("No courseType given");}
 
         //Generate PDF
-        byte[] pdf = responseManagement.generatePDF_en(crs.get(), courseType, Integer.parseInt(classNo));
+        byte[] pdf = responseManagement.generatePDF_en(crs.get(), courseType, Integer.parseInt(groupNumber), Integer.parseInt(instanceNumber));
 
         //Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();
@@ -281,7 +281,7 @@ public class ResponseController {
 
     //CSV Generation
     @GetMapping("/generateCSV")
-    public HttpEntity<byte[]> generateCsv(@RequestParam String id, @RequestParam String type, @RequestParam String classNo, HttpServletResponse response) throws Exception {
+    public HttpEntity<byte[]> generateCsv(@RequestParam String id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response) throws Exception {
     
         //generate filename
         String filename = "testCsv.csv";
@@ -302,7 +302,7 @@ public class ResponseController {
         else {throw new Exception("No courseType given");}
 
         //Generate PDF
-        byte[] pdf = responseManagement.generateCSV_en(crs.get(), courseType, Integer.parseInt(classNo));
+        byte[] pdf = responseManagement.generateCSV_en(crs.get(), courseType, Integer.parseInt(groupNumber), Integer.parseInt(instanceNumber));
 
         //Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();

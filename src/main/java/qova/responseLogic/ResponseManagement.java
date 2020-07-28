@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import qova.course.Course;
+import qova.course.CourseInstance;
 import qova.course.CourseType;
 import qova.course.LocalizationOption;
 import qova.responseTypes.BinaryResponse;
@@ -31,56 +32,55 @@ public class ResponseManagement {
         this.responseRepository = Objects.requireNonNull(responses);
     }
 
+
+    public CourseType parseType(String stringType){
+        
+        CourseType type;
+
+        if(stringType.equals("LECTURE")){type = CourseType.LECTURE;}
+        else if(stringType.equals("TUTORIAL")){type = CourseType.LECTURE;}
+        else if(stringType.equals("SEMINAR")){type = CourseType.LECTURE;}
+        else if(stringType.equals("PRACTICAL")){type = CourseType.LECTURE;}
+        else type = null;
+
+        return type;
+    }
     
     
     //PDF Generation (ENGLISH)
-    public byte[] generatePDF_en(Course course, CourseType courseType, Integer classNo) throws IOException, Exception {
+    public byte[] generatePDF_en(Course course, CourseType type, Integer groupNumber, Integer instanceNumber) throws IOException, Exception {
 
-        //Responses used to gen pdg
-        ArrayList<SurveyResponse> pdfResponses = new ArrayList<SurveyResponse>();
-
-        //Add responses to arrayList
-        if(classNo > 0){
-            responseRepository.findByCourseAndCourseTypeAndClassNo(course, courseType, classNo).forEach(pdfResponses::add);
-        }
-        //if classNo is 0, add responses for all classNo's
-        else{
-            responseRepository.findByCourseAndCourseType(course, courseType).forEach(pdfResponses::add);
-        }
+        //retrieve the SurveyResponse object from repository
+        Optional<SurveyResponse> rsp = responseRepository.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, type, groupNumber, instanceNumber);
         
         
         //Generate PDF 
         PDFGenerator pdfGen = new PDFGenerator();
-        return pdfGen.createPdf(pdfResponses, course.getName(), LocalizationOption.EN);
+        return pdfGen.createPdf(rsp.get(), course.getName(), LocalizationOption.EN);
     }
 
 
 
 
     //CSV Generation (ENGLISH)
-    public byte[] generateCSV_en(Course course, CourseType courseType, Integer classNo) throws IOException, Exception {
+    public byte[] generateCSV_en(Course course, CourseType type, Integer groupNumber, Integer instanceNumber) throws IOException, Exception {
 
-        //Responses used to gen pdg
-        ArrayList<SurveyResponse> csvResponses = new ArrayList<SurveyResponse>();
-
-        //Add responses to arrayList
-        if(classNo > 0){
-            responseRepository.findByCourseAndCourseTypeAndClassNo(course, courseType, classNo).forEach(csvResponses::add);
-        }
-        //if classNo is 0, add responses for all classNo's
-        else{
-            responseRepository.findByCourseAndCourseType(course, courseType).forEach(csvResponses::add);
-        }
-        
+        //retrieve the SurveyResponse object from repository
+        Optional<SurveyResponse> rsp = responseRepository.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, type, groupNumber, instanceNumber);
         
         //Generate PDF
         CSVGenerator csvGen = new CSVGenerator();
-        return csvGen.createCSV(csvResponses, LocalizationOption.EN);
+        return csvGen.createCSV(rsp.get(), LocalizationOption.EN);
     }
 
 
 
     public Boolean verifyJsonArray(JSONArray json){
+        //check for too large surveys (more than 100 quesitons)
+        if(json.length() > 100){
+            return false;
+        }
+
         //example string
         // [{"type":"YesNo","question":""},{"type":"MultipleChoice","question":"","answers":["1","2","3","4","5"]},{"type":"DropDown","question":"","answers":["Answer","Answer","Answer"]}]
         return false;
@@ -89,11 +89,28 @@ public class ResponseManagement {
 
 
 
-    public void createSurveyResponse(JSONArray json){
+    public void createSurveyResponse(JSONArray json, Course course, String stringType){
+        
+        //Resolve type and find correct instance of course (lecture, tutorial, etc.)
+        CourseType type = parseType(stringType);
+        CourseInstance courseInstance = course.getInstance(type);
+
+        //ArrayList with response objects, initialised with the number of questions as size
+        ArrayList<Object> responses = new ArrayList<Object>(json.length());
+
+        //parse json to serialise response objects
 
 
-        responseRepository.save(new SurveyResponse(course, type, instanceNumber, groupNumber, responses));
-         
+        
+        //for each instance, 
+        for(int group = 0; group < courseInstance.getGroupAmount(); group++){
+            for(int instance = 0; instance < courseInstance.getInstanceAmount(); instance++){
+
+
+
+                responseRepository.save(new SurveyResponse(course, type, instance, group, responses));
+            }
+        }
     }
 
 
@@ -124,21 +141,10 @@ public class ResponseManagement {
      * 
      * @return an Iterable containing all Responses that fit criteria
      */
-	public Iterable<SurveyResponse> findByCourseAndCourseTypeAndClassNo(Course course, CourseType type, Integer classNo){
-		return responseRepository.findByCourseAndCourseTypeAndClassNo(course, type, classNo);
+	public Optional<SurveyResponse> findByCourseAndCourseTypeAndClassNo(Course course, CourseType type, Integer groupNumber, Integer instanceNumber){
+		return responseRepository.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, type, groupNumber, instanceNumber);
 	}
 
-
-     /**
-     * 
-     * @param course    {@linkplain Course} object
-     * @param type      {@linkplain CourseType}
-     * 
-     * @return an Iterable containing all Responses that fit criteria
-     */
-	public Iterable<SurveyResponse> findByCourseAndCourseType(Course course, CourseType type){
-		return responseRepository.findByCourseAndCourseType(course, type);
-	}
 
 
 
@@ -188,118 +194,16 @@ public class ResponseManagement {
 
     //Test Method, remove in final build
     public void TestCreateResponses(Course course) throws Exception {
+        
         var type = CourseType.LECTURE;
-        var classNo = 1;
-        ArrayList<Object> responses1 = new ArrayList<>();
-        ArrayList<Object> responses2 = new ArrayList<>();
-        ArrayList<Object> responses3 = new ArrayList<>();
-        ArrayList<Object> responses4 = new ArrayList<>();
-        
-        
-        
-        ArrayList<String> singleChoiceOptions = new ArrayList<String>();
-        singleChoiceOptions.add("Not informative");
-        singleChoiceOptions.add("A little informative");
-        singleChoiceOptions.add("Very informative");
+        var instanceNumber = 12;
+        var groupNumber = 4;
 
-        ArrayList<String> multipleChoiceOptions = new ArrayList<String>();
-        multipleChoiceOptions.add("The lecture was informative");
-        multipleChoiceOptions.add("The lecture was interesting");
-        multipleChoiceOptions.add("I enjoyed attending the lecture");
-
-
-        //-----------------------------------------------------------------------
-
-
-
-        ArrayList<Boolean> singleChoiceAnswer = new ArrayList<Boolean>();
-        singleChoiceAnswer.add(false);
-        singleChoiceAnswer.add(true);
-        singleChoiceAnswer.add(false);
-
-        ArrayList<Boolean> multipleChoiceAnswers = new ArrayList<Boolean>();
-        multipleChoiceAnswers.add(false);
-        multipleChoiceAnswers.add(true);
-        multipleChoiceAnswers.add(true);
-
-
-        responses1.add(new BinaryResponse("Was the lecture interesting?", true));
-        responses1.add(new TextResponse("Do you have any critizisms regarding todays lecture?", "I thought the lecture was paced too slowly"));
-        responses1.add(new SingleChoiceResponse("Was the lecture informative?", singleChoiceOptions, singleChoiceAnswer));
-        responses1.add(new MultipleChoiceResponse("What was good about the lecture?", multipleChoiceOptions, multipleChoiceAnswers));
-
-
-        //responses2 
-        ArrayList<Boolean> singleChoiceAnswer2 = new ArrayList<Boolean>();
-        singleChoiceAnswer.add(true);
-        singleChoiceAnswer.add(false);
-        singleChoiceAnswer.add(false);
-
-        ArrayList<Boolean> multipleChoiceAnswers2 = new ArrayList<Boolean>();
-        multipleChoiceAnswers.add(true);
-        multipleChoiceAnswers.add(false);
-        multipleChoiceAnswers.add(false);
-
-
-        responses1.add(new BinaryResponse("Was the lecture interesting?", true));
-        responses1.add(new TextResponse("Do you have any critizisms regarding todays lecture?", "It was fine"));
-        responses1.add(new SingleChoiceResponse("Was the lecture informative?", singleChoiceOptions, singleChoiceAnswer));
-        responses1.add(new MultipleChoiceResponse("What was good about the lecture?", multipleChoiceOptions, multipleChoiceAnswers));
-
-
-
-        //responses3
-        ArrayList<Boolean> singleChoiceAnswer3 = new ArrayList<Boolean>();
-        singleChoiceAnswer.add(false);
-        singleChoiceAnswer.add(false);
-        singleChoiceAnswer.add(true);
-
-        ArrayList<Boolean> multipleChoiceAnswers3 = new ArrayList<Boolean>();
-        multipleChoiceAnswers.add(false);
-        multipleChoiceAnswers.add(false);
-        multipleChoiceAnswers.add(false);
-
-
-        responses1.add(new BinaryResponse("Was the lecture interesting?", true));
-        responses1.add(new TextResponse("Do you have any critizisms regarding todays lecture?", "It was quite boring"));
-        responses1.add(new SingleChoiceResponse("Was the lecture informative?", singleChoiceOptions, singleChoiceAnswer));
-        responses1.add(new MultipleChoiceResponse("What was good about the lecture?", multipleChoiceOptions, multipleChoiceAnswers));
-
-
-
-        //responses4
-        ArrayList<Boolean> singleChoiceAnswer4 = new ArrayList<Boolean>();
-        singleChoiceAnswer.add(false);
-        singleChoiceAnswer.add(true);
-        singleChoiceAnswer.add(false);
-
-        ArrayList<Boolean> multipleChoiceAnswers4 = new ArrayList<Boolean>();
-        multipleChoiceAnswers.add(true);
-        multipleChoiceAnswers.add(false);
-        multipleChoiceAnswers.add(true);
-
-
-        responses1.add(new BinaryResponse("Was the lecture interesting?", false));
-        responses1.add(new TextResponse("Do you have any critizisms regarding todays lecture?", "I don't have any direct critizisms, but it would be great if Prof. Anderson would increase the volume level of the mic for next time"));
-        responses1.add(new SingleChoiceResponse("Was the lecture informative?", singleChoiceOptions, singleChoiceAnswer));
-        responses1.add(new MultipleChoiceResponse("What was good about the lecture?", multipleChoiceOptions, multipleChoiceAnswers));
+        ArrayList<Object> responses = new ArrayList<Object>();
 
         
-        for(int i = 0; i < 15; i++){
-            responseRepository.save(new SurveyResponse(course, type, classNo, responses1));
-        }
-        for(int i = 0; i < 10; i++){
-            responseRepository.save(new SurveyResponse(course, type, classNo, responses2));
-        }
-        for(int i = 0; i < 12; i++){
-            responseRepository.save(new SurveyResponse(course, type, classNo, responses3));
-        }
-        for(int i = 0; i < 8; i++){
-            responseRepository.save(new SurveyResponse(course, type, classNo, responses4));
-        }
 
-
-
+        responseRepository.save(new SurveyResponse(course, type, instanceNumber, groupNumber, responses));
         
     } 
 
@@ -307,14 +211,11 @@ public class ResponseManagement {
 
     public byte[] generatePDF_test() throws IOException, Exception {
 
-        //Responses used to gen pdg
-        ArrayList<SurveyResponse> pdfResponses = new ArrayList<SurveyResponse>();
-
         //Add responses to arrayList
-        responseRepository.findAll().forEach(pdfResponses::add);
+        Optional<SurveyResponse> rsp = responseRepository.findById(1L);
         
         //Generate PDF 
         PDFGenerator pdfGen = new PDFGenerator();
-        return pdfGen.createPdf(pdfResponses, "test PDF title", LocalizationOption.EN);
+        return pdfGen.createPdf(rsp.get(), "test PDF title", LocalizationOption.EN);
     }
 }

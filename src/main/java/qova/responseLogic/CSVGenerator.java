@@ -9,7 +9,7 @@ import com.opencsv.CSVWriter;
 
 import qova.course.Course;
 import qova.course.LocalizationOption;
-import qova.responseTypes.UserResponse;
+import qova.responseTypes.SurveyResponse;
 
 public class CSVGenerator {
     
@@ -21,36 +21,37 @@ public class CSVGenerator {
      * @return
      * @throws java.io.IOException
      */
-    public byte[] createCSV(ArrayList<UserResponse> allResponses, LocalizationOption language) throws java.io.IOException {
+    public byte[] createCSV(SurveyResponse response, LocalizationOption language) throws java.io.IOException {
         
         //Initialise Data Structures
 
         //Response Attributes
         //We use the Response at position 0, because it has the same Course and CourseType as all other Responses given. See ResponseManagement for details on the retrieval of Responses for generation
-        UserResponse response = allResponses.get(0);
         String courseType = String.valueOf(response.getCourseType());
-        String classNo = String.valueOf(response.getClassNo());
+        String groupNumber = String.valueOf(response.getGroupNumber());
+        String instanceNumber = String.valueOf(response.getInstanceNumber());
         
 
         //Course Specific Attributes
         Course course = response.getCourse();
         String courseName = course.getName();
-        String courseInstanceSemesterForm = course.getSemesterString();
+        String courseInstanceAsSemester = course.getSemesterString();
         String semesterOfStudents = String.valueOf(course.getSemesterOfStudents());
+        
         
         //CSV Header
         ArrayList<String> header = new ArrayList<String>();
 
         // CSV Header Initialisation (The options for all question types must be added after)
         if(language.equals(LocalizationOption.EN)){
-            header.addAll(Arrays.asList("Course Name", "Instance", "Semster of Students", "Course Type", "Class No.", "Survey Questions->"));
+            header.addAll(Arrays.asList("Course Name", "Instance", "Semster of Students", "Course Type", "Tutorial Group", "Instance", "Survey Questions->"));
         }
         else if(language.equals(LocalizationOption.DE)){
-            header.addAll(Arrays.asList("Lehrveranstaltungsname", "Instanz", "Fachsemester der Studenten", "Lehrveranstaltungstyp", "Gruppen Nr.", "Fragebogen Fragen ->"));
+            header.addAll(Arrays.asList("Lehrveranstaltungsname", "Instanz", "Fachsemester der Studenten", "Lehrveranstaltungstyp", "Übungsgruppe", "Instanz", "Fragebogen Fragen ->"));
         }
              
-        // CSV Date 
-        ArrayList<String> data = new ArrayList<String>( Arrays.asList(courseName, courseInstanceSemesterForm, semesterOfStudents, courseType, classNo));
+        // CSV Data
+        ArrayList<String> data = new ArrayList<String>( Arrays.asList(courseName, courseInstanceAsSemester, semesterOfStudents, courseType, groupNumber, instanceNumber));
 
 
 

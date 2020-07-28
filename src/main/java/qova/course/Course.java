@@ -192,5 +192,18 @@ public class Course {
     public void setSemesterString(String str){
         this.semesterString = str;
     }
+
+
+
+    public CourseInstance getInstance(CourseType type){
+        if(type.equals(CourseType.LECTURE)){return lecture;}
+        else if(type.equals(CourseType.TUTORIAL)){return tutorial;}
+        else if(type.equals(CourseType.SEMINAR)){return seminar;}
+        else if(type.equals(CourseType.PRACTICAL)){return practical;}
+        else return null;
+    }
+
 }
+
+
 

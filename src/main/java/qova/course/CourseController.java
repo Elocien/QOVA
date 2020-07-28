@@ -283,7 +283,15 @@ public class CourseController {
     }
 
 
-    //Mapping to submit a questionaire 
+     
+    /** 
+     * Mapping for submitting a created survey. The questioneditor sends JSON containing the survey to the server, and this is checked for length (Can't exceed 100 questions)
+     * and special characters. After this, a new SurveyResponse object is created along with its subclasses (BinaryResponse, TextResponse, etc.)
+     * @param form
+     * @param type
+     * @param id
+     * @return
+     */
     @PostMapping("course/surveyeditor")
     public String questioneditorSubmit(SurveyForm form, @RequestParam String type, @RequestParam(required = false) String id) {
         
@@ -299,31 +307,33 @@ public class CourseController {
         if (course.isPresent()){
 
             // if type is none of the correct values, then redirect to homepage
-            if(!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR")) && !(type.equals("PRACTICAL"))){
+            if(responseManagement.parseType(type).equals(null)){
                 //TODO: redirect to error page with code 02
                 return "redirect:/";
-
             }
 
             else{
                 //check if JSON is valid
                 try {JSONArray survey = new JSONArray(form.getQuestionnairejson());} 
                 catch (Exception e) {
-                    e.printStackTrace();
+                    //TODO: redirect to error page with code 02
                     return "redirect:/";
                 }
 
-                //JSON Array with the response from the questioneditor
+                //Create a JSON Array out of the response from the questioneditor
                 JSONArray survey = new JSONArray(form.getQuestionnairejson());
 
-                //parse JSON to check for correctness
-                responseManagement.verifyJsonArray(survey);
+                //parse JSON to check for correctness (length, special characters)
+                if(responseManagement.verifyJsonArray(survey) == false){
+                    //TODO: redirect to error page with code 02
+                    return "redirect:/";
+                }
 
                 //Manager method for creating SurveyResponse and corresponding nested objects
-                responseManagement.createSurveyResponse(survey, course, type);
+                responseManagement.createSurveyResponse(survey, course.get(), type);
 
-                //Method from courseManager which sets the survey for the relevant surveyType
-                courseManagement.setSurveyforType(id, type, form);
+                //Sets the survey string for a given course
+                courseManagement.setSurveyforType(course.get(), type, form);
             }
 
 
