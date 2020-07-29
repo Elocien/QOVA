@@ -28,7 +28,7 @@ public class TextResponse{
 	private TextResponse(){
     }
 
-    public TextResponse(String question, String response){
+    public TextResponse(String question){
         this.question = question;
         this.responses = new ArrayList<String>();
     }

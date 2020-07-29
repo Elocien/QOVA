@@ -56,8 +56,13 @@ public class MultipleChoiceResponse{
         }
     }
 
+    public Integer getNumberOfOptions(){
+        return this.multipleChoiceOptions.size();
+    }
+
     public ResponseType getType(){
         return this.responseType;
     }
+
 }
 

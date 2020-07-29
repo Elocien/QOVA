@@ -96,8 +96,26 @@ public class SurveyResponse {
         return this.instanceNumber;
     }
 
-    public Integer getNumberOfSubmission(){
+    public Integer getNumberOfSubmissions(){
         return this.numberOfSubmissions;
+    }
+
+    public void updateResponses(){
+        for(Object rsp: responses){
+            if(rsp.getClass().getSimpleName() == "BinaryResponse"){
+                
+            }
+            if(rsp.getClass().getSimpleName() == "TextResponse"){
+                
+            }
+            if(rsp.getClass().getSimpleName() == "MultipleChoiceResponse"){
+                
+            }
+            if(rsp.getClass().getSimpleName() == "SingleChoiceResponse"){
+                
+            }
+        }
+
     }
 
     public ArrayList<Object> getUserResponse(){

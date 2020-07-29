@@ -28,6 +28,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import qova.admin.AdminManagement;
 import qova.responseLogic.ResponseManagement;
+import qova.responseTypes.BinaryResponse;
+import qova.responseTypes.SurveyResponse;
 
 //TODO: Temporary Imports (can be removed later)
 //@Lucian please don't delete me just yet T_T
@@ -352,20 +354,12 @@ public class CourseController {
 
 
 
-
-
-    
-   
-
-
-
-
     //to test
     //http://localhost:8080/qrcode?type=LECTURE&id=c000000000000001
 
     
     /**
-     * This method takes id and CourseType as parameters
+     * This method takes id and CourseType as parameters, and returns a qrcode with the given string that is assembled below
      * 
      * @param response HttpResponse
      * @param type

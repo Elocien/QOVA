@@ -1,5 +1,6 @@
 package qova.responseLogic;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -39,183 +40,178 @@ public class ResponseController {
         this.courseManagement = Objects.requireNonNull(courseManagement);
     }
 
-
-    //Mapping to which one is redirected to by the QRCode. This is where students enter which group and which topic they are handing their response in for
-    //---------------------------------------------------------------------------
+    // Mapping to which one is redirected to by the QRCode. This is where students
+    // enter which group and which topic they are handing their response in for
+    // ---------------------------------------------------------------------------
 
     @GetMapping("suveySelect")
-    public String selectSurvey(Model model, @RequestParam String id, @RequestParam String type){
-        
-        //course name, course type, instance names, groupAmount
+    public String selectSurvey(Model model, @RequestParam String id, @RequestParam String type) {
+
+        // course name, course type, instance names, groupAmount
         Optional<Course> crs = courseManagement.findById(id);
-        if(crs.isPresent()){
+        if (crs.isPresent()) {
             model.addAttribute("courseName", crs.get().getName());
             model.addAttribute("courseType", type);
 
-            if(type.equals("LECTURE")){
+            if (type.equals("LECTURE")) {
                 model.addAttribute("instanceTitles", crs.get().getLecture().getInstanceTitles());
                 model.addAttribute("groupAmount", crs.get().getLecture().getGroupAmount());
             }
-            if(type.equals("TUTORIAL")){
+            if (type.equals("TUTORIAL")) {
                 model.addAttribute("instanceTitles", crs.get().getLecture().getInstanceTitles());
                 model.addAttribute("groupAmount", crs.get().getLecture().getGroupAmount());
             }
-            if(type.equals("SEMINAR")){
+            if (type.equals("SEMINAR")) {
                 model.addAttribute("instanceTitles", crs.get().getLecture().getInstanceTitles());
                 model.addAttribute("groupAmount", crs.get().getLecture().getGroupAmount());
             }
-            if(type.equals("PRACTICAL")){
+            if (type.equals("PRACTICAL")) {
                 model.addAttribute("instanceTitles", crs.get().getLecture().getInstanceTitles());
                 model.addAttribute("groupAmount", crs.get().getLecture().getGroupAmount());
             }
             return "surveySelect";
         }
-        
-        //if course does not exist, redirect to global error page
+
+        // if course does not exist, redirect to global error page
         return "error";
     }
 
-    //---------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------
 
-
-
-
-
-    //TODO: rename path variables
-    //Validation of entry of surveySelect page, and redirect to the actual survey
+    // TODO: rename path variables
+    // Validation of entry of surveySelect page, and redirect to the actual survey
     @PostMapping("surveySelect")
-    public String selectSurveySubmission(Model model, @RequestParam String id, @RequestParam String type, @RequestParam String instanceTitle, @RequestParam Integer groupAmount){
-        
+    public String selectSurveySubmission(Model model, @RequestParam String id, @RequestParam String type,
+            @RequestParam String instanceTitle, @RequestParam Integer groupAmount) {
+
         Optional<Course> crs = courseManagement.findById(id);
 
-        //if anything is null or not an allowed value, redirect back
-        if(!crs.isPresent()){
-            //TODO: set error code "Course not present. You are unable to submit a response to this survey"
+        // if anything is null or not an allowed value, redirect back
+        if (!crs.isPresent()) {
+            // TODO: set error code "Course not present. You are unable to submit a response
+            // to this survey"
             return "error";
         }
-        //if type is not one of the defined values
+        // if type is not one of the defined values
 
-        //for easy access
+        // for easy access
         Course course = crs.get();
 
-        if(!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR")) && !(type.equals("PRACTICAL"))){
-            //TODO: redirect to error page with code 02
+        if (!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR"))
+                && !(type.equals("PRACTICAL"))) {
+            // TODO: redirect to error page with code 02
             return "error";
         }
 
-
-        //if instanceTitle is not an element of the InstanceTitles
-        else if (type.equals("LECTURE") && !(Arrays.stream(course.getLecture().getInstanceTitles()).anyMatch(instanceTitle::equals))){
-            return "error";   
+        // if instanceTitle is not an element of the InstanceTitles
+        else if (type.equals("LECTURE")
+                && !(Arrays.stream(course.getLecture().getInstanceTitles()).anyMatch(instanceTitle::equals))) {
+            return "error";
         }
-        //if groupAmount exceedes the number set, or is less than 0, redirect to error page
-        else if(type.equals("LECTURE") && groupAmount > course.getLecture().getGroupAmount() || groupAmount < 0){
+        // if groupAmount exceedes the number set, or is less than 0, redirect to error
+        // page
+        else if (type.equals("LECTURE") && groupAmount > course.getLecture().getGroupAmount() || groupAmount < 0) {
             return "error";
         }
 
-
-        //if instanceTitle is not an element of the InstanceTitles
-        else if (type.equals("TUTORIAL") && !(Arrays.stream(course.getTutorial().getInstanceTitles()).anyMatch(instanceTitle::equals))){
-            return "error";   
+        // if instanceTitle is not an element of the InstanceTitles
+        else if (type.equals("TUTORIAL")
+                && !(Arrays.stream(course.getTutorial().getInstanceTitles()).anyMatch(instanceTitle::equals))) {
+            return "error";
         }
-        //if groupAmount exceedes the number set, or is less than 0, redirect to error page
-        else if(type.equals("TUTORIAL") && groupAmount > course.getTutorial().getGroupAmount() || groupAmount < 0){
+        // if groupAmount exceedes the number set, or is less than 0, redirect to error
+        // page
+        else if (type.equals("TUTORIAL") && groupAmount > course.getTutorial().getGroupAmount() || groupAmount < 0) {
             return "error";
         }
 
-
-        //if instanceTitle is not an element of the InstanceTitles
-        else if (type.equals("SEMINAR") && !(Arrays.stream(course.getSeminar().getInstanceTitles()).anyMatch(instanceTitle::equals))){
-            return "error";   
+        // if instanceTitle is not an element of the InstanceTitles
+        else if (type.equals("SEMINAR")
+                && !(Arrays.stream(course.getSeminar().getInstanceTitles()).anyMatch(instanceTitle::equals))) {
+            return "error";
         }
-        //if groupAmount exceedes the number set, or is less than 0, redirect to error page
-        else if(type.equals("SEMINAR") && groupAmount > course.getSeminar().getGroupAmount() || groupAmount < 0){
+        // if groupAmount exceedes the number set, or is less than 0, redirect to error
+        // page
+        else if (type.equals("SEMINAR") && groupAmount > course.getSeminar().getGroupAmount() || groupAmount < 0) {
             return "error";
         }
 
-
-        //if instanceTitle is not an element of the InstanceTitles
-        else if (type.equals("PRACTICAL") && !(Arrays.stream(course.getPractical().getInstanceTitles()).anyMatch(instanceTitle::equals))){
-            return "error";   
+        // if instanceTitle is not an element of the InstanceTitles
+        else if (type.equals("PRACTICAL")
+                && !(Arrays.stream(course.getPractical().getInstanceTitles()).anyMatch(instanceTitle::equals))) {
+            return "error";
         }
-        //if groupAmount exceedes the number set, or is less than 0, redirect to error page
-        else if(type.equals("PRACTICAL") && groupAmount > course.getPractical().getGroupAmount() || groupAmount < 0){
+        // if groupAmount exceedes the number set, or is less than 0, redirect to error
+        // page
+        else if (type.equals("PRACTICAL") && groupAmount > course.getPractical().getGroupAmount() || groupAmount < 0) {
             return "error";
         }
 
-
-        else{return "survey?type=" + type + "&id=" + id + "instanceTitle=" + instanceTitle + "groupNumber=" + groupAmount;}
+        else {
+            return "survey?type=" + type + "&id=" + id + "instanceTitle=" + instanceTitle + "groupNumber="
+                    + groupAmount;
+        }
     }
 
+    // Get Survey from Server
+    // ---------------------------------------------------------------------------
 
-
-
-
-
-    //Get Survey from Server 
-    //---------------------------------------------------------------------------
-
-    //Mapping for Survey HTML
+    // Mapping for Survey HTML
     @GetMapping("survey")
-    public String SuveyView (Model model, @RequestParam String type, @RequestParam(required = false) String id){
-        //redirect 
+    public String SuveyView(Model model, @RequestParam String type, @RequestParam(required = false) String id) {
+        // redirect
         if (id == null) {
-			return "redirect:/";
+            return "redirect:/";
         }
-        
-        //fetch course and go to details if present
+
+        // fetch course and go to details if present
         Optional<Course> course = courseManagement.findById(id);
 
-        //Validate that course exists, and that the survey is not empty
-        if (course.isPresent()){
-            String survey = courseManagement.getSurveyforType(id,type);
-            if (survey.equals("Something went wrong")){
+        // Validate that course exists, and that the survey is not empty
+        if (course.isPresent()) {
+            String survey = courseManagement.getSurveyforType(id, type);
+            if (survey.equals("Something went wrong")) {
                 return "redirect:/";
-            }
-            else {
+            } else {
                 model.addAttribute("typeID", type);
                 model.addAttribute("id", id);
-                model.addAttribute("survey",survey);
+                model.addAttribute("survey", survey);
                 model.addAttribute("coursename", course.get().getName());
                 return "survey";
             }
 
         }
-        
-        //If condition not met, redirect to home
-        else{
+
+        // If condition not met, redirect to home
+        else {
             return "redirect:/";
         }
     }
-    //----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-
-    //Mapping to recieve SURVEY (Formatted as JSON) from server
+    // Mapping to recieve SURVEY (Formatted as JSON) from server
     @GetMapping("survey/get")
     @ResponseBody
-    public String sendSurvey( @RequestParam String type, @RequestParam(required = false) String id){
+    public String sendSurvey(@RequestParam String type, @RequestParam(required = false) String id) {
 
-        //redirect 
+        // redirect
         if (id == null) {
-			return null;
+            return null;
         }
 
-        else{
-            //Retrieve survey
+        else {
+            // Retrieve survey
             String JsonString = courseManagement.getSurveyforType(id, type);
 
-            //return the JSON
+            // return the JSON
             return JsonString;
         }
     }
 
-
-
     // PostMapping to submit survey and serialize results
     // ---------------------------------------------------------------------------
     @PostMapping("/survey")
-    public ResponseEntity recieveResponseJSON(SurveyForm form, @RequestParam String type,
-            @RequestParam String id) {
+    public ResponseEntity recieveResponseJSON(SurveyForm form, @RequestParam String type, @RequestParam String id) {
 
         // get JSON Response as string
         String JsonResponse = form.getQuestionnairejson();
@@ -230,46 +226,35 @@ public class ResponseController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-
-
-
-
-
-
-
-
-
-
     // ---------------------------------------------------------------------------
 
-
-
-    //PDF Generation
+    // PDF Generation
     @GetMapping("/generatePDF")
-    public HttpEntity<byte[]> generatePdf(@RequestParam String id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response) throws Exception {
-    
-        //generate filename
+    public HttpEntity<byte[]> generatePdf(@RequestParam String id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
+            throws NumberFormatException, IOException, Exception {
+
+        // generate filename
         String filename = "testPdf.pdf";
 
-        //Get the course;
+        // Get the course;
         Optional<Course> crs = courseManagement.findById(id);
 
-        //verify that course is present
-        if(!crs.isPresent()){
-            throw new Exception("No course found");
+        // verify that course is present
+        if (!crs.isPresent()) {
+            return null;
         }
 
-        //Try to parse the courseType
-        CourseType courseType;
-        if (type.equals("LECTURE")) {courseType = CourseType.LECTURE;}
-        else if (type.equals("TUTORIAL")) {courseType = CourseType.TUTORIAL;}
-        else if (type.equals("SEMINAR")) {courseType = CourseType.SEMINAR;}
-        else {throw new Exception("No courseType given");}
+        // Try to parse the courseType
+        CourseType courseType = responseManagement.parseType(type);
+        if (courseType == null) {
+            return null;
+        }
 
-        //Generate PDF
-        byte[] pdf = responseManagement.generatePDF_en(crs.get(), courseType, Integer.parseInt(groupNumber), Integer.parseInt(instanceNumber));
+        // Generate PDF
+        byte[] pdf = responseManagement.generatePDF_en(crs.get(), courseType, Integer.parseInt(groupNumber),
+                Integer.parseInt(instanceNumber));
 
-        //Set HTTP headers and return HttpEntity
+        // Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_PDF);
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
@@ -277,11 +262,11 @@ public class ResponseController {
 
         return new HttpEntity<byte[]>(pdf, header);
     }
-    
 
-    //CSV Generation
+    // CSV Generation
     @GetMapping("/generateCSV")
-    public HttpEntity<byte[]> generateCsv(@RequestParam String id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response) throws Exception {
+    public HttpEntity<byte[]> generateCsv(@RequestParam String id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
+            throws NumberFormatException, IOException, Exception {
     
         //generate filename
         String filename = "testCsv.csv";
@@ -291,15 +276,14 @@ public class ResponseController {
 
         //verify that course is present
         if(!crs.isPresent()){
-            throw new Exception("No course found");
+            return null;
         }
 
         //Try to parse the courseType
-        CourseType courseType;
-        if (type.equals("LECTURE")) {courseType = CourseType.LECTURE;}
-        else if (type.equals("TUTORIAL")) {courseType = CourseType.TUTORIAL;}
-        else if (type.equals("SEMINAR")) {courseType = CourseType.SEMINAR;}
-        else {throw new Exception("No courseType given");}
+        CourseType courseType = responseManagement.parseType(type);
+        if(courseType == null){
+            return null;
+        }
 
         //Generate PDF
         byte[] pdf = responseManagement.generateCSV_en(crs.get(), courseType, Integer.parseInt(groupNumber), Integer.parseInt(instanceNumber));
