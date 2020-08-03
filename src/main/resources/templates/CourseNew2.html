@@ -22,8 +22,8 @@
 
         <!--Headline-->
         <div class="col-12 text-center mt-4">
-            <h2 class="font-weight-bold">COURSE INSTANCES</h2>
-            <h5 class="font-weight-light">NAME THE INSTANCES OF YOUR COURSE HERE.</h5>
+            <h2 class="font-weight-bold" th:text="#{new2.headline}">COURSE INSTANCES</h2>
+            <h5 class="font-weight-light" th:text="#{new2.description}">NAME THE INSTANCES OF YOUR COURSE HERE.</h5>
         </div>
 
         <!--JS-Template-->
@@ -32,23 +32,26 @@
             <input class="form-control" type="text">
         </div>
 
+        <a class="btn btn-primary btn-tu mt-3 mb-3" th:text="#{new2.committing}" th:href="@{/course/new2}">NEW COURSE</a>
+
         <!--Input Table-->
-        <form class="w-100 row justify-content-center mt-4" id="form" method="post" th:object="${form}">
-            <div class="col-3 form-col justify-content-center text-center p-0" th:each="course_type: ${type_list}" th:id="${course_type} + '-input-col'">
-                <h5 class="font-weight-light input-header" th:text="#{${course_type}} +' '+ #{new.instances}">COURSE TYPE</h5>
-                <!--Vanilla Inputs-->
-                <div class="input-wrapper m-2">
-                    <div class="input-group mt-2 mb-2 clean-input" th:each="n : ${#numbers.sequence(1, __${course_type} + 'Instances'__)}">
-                        <span class="index" th:text="${n}">N</span><span class="mr-2">.</span>
-                        <input class="form-control" type="text">
+        <form class="w-100 row justify-content-center" id="form" method="post" th:object="${form}">
+            <div class="col-3 justify-content-center text-center p-0" th:if="${__${course_type}+'Exists'__}" th:each="course_type: ${type_list}" th:id="${course_type} + '-input-col'">
+                <div class="mr-3 ml-3" >
+                    <div class="form-col">
+                        <h5 class="font-weight-light input-header" th:text="#{${course_type}} +' '+ #{new.instances}">COURSE TYPE</h5>
+                        <!--Vanilla Inputs-->
+                        <div class="input-wrapper m-2">
+                            <div class="input-group mt-2 mb-2 clean-input" th:each="n : ${#numbers.sequence(1, __${course_type} + 'Instances'__)}">
+                                <span class="index" th:text="${n}">N</span><span class="mr-2">.</span>
+                                <input class="form-control" type="text">
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-            <div class="col-3 form-col justify-content-center text-center p-0" th:each="course_type: ${type_list}" th:id="${course_type} + '-input-col'">
-                <div class="btn-group text-center w-100">
-                    <button type="button" class="btn btn-primary btn-input w-100" th:onclick="add_new_input([[${course_type}]])"><i class="fas fa-plus"></i></button>
-                    <div class="button-divider"></div>
-                    <button type="button" class="btn btn-danger btn-input w-100" th:onclick="remove_input([[${course_type}]])"><i class="fas fa-minus"></i></button>
+                    <div class="btn-group mt-2 text-center w-100">
+                        <button type="button" class="btn btn-primary btn-input w-100" th:onclick="add_new_input([[${course_type}]])"><i class="fas fa-plus"></i></button>
+                        <button type="button" class="btn btn-danger btn-input w-100" th:onclick="remove_input([[${course_type}]])"><i class="fas fa-minus"></i></button>
+                    </div>
                 </div>
             </div>
         </form>
