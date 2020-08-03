@@ -24,11 +24,12 @@ input[type=number] {
 
 .btn-tu {
   background-color: var(--tu_blue);
+  color: white !important;
   border-color: black;
 }
 .btn-tu:hover {
   background-color: rgba(100, 100, 100, 0);
-  color: black;
+  color: black !important;
   border-color: black;
 }
 .btn-delete {
@@ -257,4 +258,14 @@ input[type="text"]:disabled::placeholder {
 .btn-input.btn-danger:hover {
   background-color: red;
   transition: 0.5s;
+}
+
+.btn-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.btn-more-details {
+  right: 0;
 }
