@@ -24,7 +24,7 @@ public class SingleChoiceResponse{
     //Array of the user response
     @Lob private ArrayList<Integer> singleChoiceAnswers;
 
-    private final ResponseType responseType = ResponseType.MULTIPLE_CHOICE;
+    private final ResponseType responseType = ResponseType.SINGLE_CHOICE;
 
     //Needed for JPA puposes
     @SuppressWarnings("unused")
@@ -34,7 +34,10 @@ public class SingleChoiceResponse{
     public SingleChoiceResponse(String question, ArrayList<String> singleChoiceOptions){
         this.question = question;
         this.singleChoiceOptions = singleChoiceOptions;
-        this.singleChoiceAnswers = new ArrayList<Integer>(singleChoiceOptions.size());
+        this.singleChoiceAnswers = new ArrayList<Integer>(this.singleChoiceOptions.size());
+        for(String s : singleChoiceOptions){
+            singleChoiceAnswers.add(0);
+        }
     }
     
     
@@ -51,7 +54,8 @@ public class SingleChoiceResponse{
     }
 
     public void incrementTotal(Integer pos){
-        singleChoiceAnswers.set(pos, singleChoiceAnswers.get(pos) + 1);
+        Integer totalAtPosition = singleChoiceAnswers.get(pos) + 1;
+        singleChoiceAnswers.set(pos, totalAtPosition);
     }
 
     public ResponseType getType(){

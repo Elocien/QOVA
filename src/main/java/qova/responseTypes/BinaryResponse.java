@@ -55,7 +55,7 @@ public class BinaryResponse{
     }
 
     public void incrementNo(){
-        this.yesTotal = yesTotal + 1;
+        this.noTotal = noTotal + 1;
     }
 
 }

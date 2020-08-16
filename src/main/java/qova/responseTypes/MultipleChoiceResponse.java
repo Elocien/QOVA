@@ -34,7 +34,10 @@ public class MultipleChoiceResponse{
     public MultipleChoiceResponse(String question, ArrayList<String> multipleChoiceOptions){
         this.question = question;
         this.multipleChoiceOptions = multipleChoiceOptions;
-        this.multipleChoiceAnswers = new ArrayList<Integer>(multipleChoiceOptions.size());
+        this.multipleChoiceAnswers = new ArrayList<Integer>(this.multipleChoiceOptions.size());
+        for(String s : multipleChoiceOptions){
+            multipleChoiceAnswers.add(0);
+        }
     }
     
     

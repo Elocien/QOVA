@@ -66,18 +66,18 @@ public class responseTest extends AbstractIntegrationTest {
         MultipleChoiceResponse mcr = new MultipleChoiceResponse("From 1 to 5, what would you rate the lecture?", mcOptions);
 
         ArrayList<Integer> mcAnswers1 = new ArrayList<Integer>();
+        mcAnswers1.add(0);
         mcAnswers1.add(1);
-        mcAnswers1.add(2);
-        mcAnswers1.add(4);
+        mcAnswers1.add(3);
 
         ArrayList<Integer> mcAnswers2 = new ArrayList<Integer>();
-        mcAnswers2.add(2);
-        mcAnswers2.add(5);
+        mcAnswers2.add(1);
+        mcAnswers2.add(4);
 
 
         ArrayList<Integer> mcAnswers3 = new ArrayList<Integer>();
-        mcAnswers3.add(3);
-        mcAnswers3.add(5);
+        mcAnswers3.add(2);
+        mcAnswers3.add(4);
 
         for(int i = 0; i < 25 ; i++){mcr.incrementTotals(mcAnswers1);}
         for(int i = 0; i < 15 ; i++){mcr.incrementTotals(mcAnswers2);}
@@ -97,13 +97,15 @@ public class responseTest extends AbstractIntegrationTest {
         responses.add(mcr);
         responses.add(txr);
         SurveyResponse rsp = new SurveyResponse(crs, type, instanceNumber, groupNumber, responses);
+        
+        
 
-
-        assertEquals(type, rsp.getCourseType());
-        assertEquals(instanceNumber, rsp.getInstanceNumber());
-        assertEquals(groupNumber, rsp.getGroupNumber());
         assertEquals(crs, rsp.getCourse());
-        assertEquals(responses, rsp.getUserResponse());
+        assertEquals(type, rsp.getCourseType());
+        assertEquals(groupNumber, rsp.getGroupNumber());
+        assertEquals(instanceNumber, rsp.getInstanceNumber());
+        // assertEquals(expected, rsp.getNumberOfSubmissions());
+        assertEquals(responses, rsp.getUserResponses());
         
     }
 
@@ -134,53 +136,86 @@ public class responseTest extends AbstractIntegrationTest {
         assertEquals(ResponseType.TEXT_RESPONSE, tr.getType());
     }
 
-    // @Test
-    // public void SingleChoiceConstructorTest() throws Exception {
-
-    //     var question = "Was the lecture informative";
-
-    //     ArrayList<String> singleChoiceOptions = new ArrayList<String>();
-    //     singleChoiceOptions.add("Not informative");
-    //     singleChoiceOptions.add("A little informative");
-    //     singleChoiceOptions.add("Very informative");
-
-    //     ArrayList<Boolean> singleChoiceAnswer = new ArrayList<Boolean>();
-    //     singleChoiceAnswer.add(false);
-    //     singleChoiceAnswer.add(true);
-    //     singleChoiceAnswer.add(false);
-
-    //     SingleChoiceResponse scr = new SingleChoiceResponse(question, singleChoiceOptions, singleChoiceAnswer);
-
-    //     assertEquals(question, scr.getQuestion());
-    //     assertEquals(singleChoiceOptions, scr.getMutltipleChoiceOptions());
-    //     assertEquals(singleChoiceAnswer, scr.getMutltipleChoiceAnswer());
-    //     assertEquals(ResponseType.SINGLE_CHOICE, scr.getType());
+    @Test
+    public void SingleChoiceConstructorTest() throws Exception {
         
-    // }
+        String question = "Rate the lecutre from 1 to 5";
 
-    // @Test
-    // public void MultipleChoiceConstructorTest() throws Exception {
+        ArrayList<String> scOptions = new ArrayList<String>();
+        scOptions.add("1");
+        scOptions.add("2");
+        scOptions.add("3");
+        scOptions.add("4");
+        scOptions.add("5");
+        SingleChoiceResponse scr = new SingleChoiceResponse(question, scOptions);
+
+
+        for(int i = 0; i < 3 ; i++){scr.incrementTotal(0);}
+        for(int i = 0; i < 8; i++){scr.incrementTotal(1);}
+        for(int i = 0; i < 16 ; i++){scr.incrementTotal(2);}
+        for(int i = 0; i < 15 ; i++){scr.incrementTotal(3);}
+        for(int i = 0; i < 8 ; i++){scr.incrementTotal(4);}
+
+
+        ArrayList<Integer> totals = new ArrayList<Integer>();
+        totals.add(3);
+        totals.add(8);
+        totals.add(16);
+        totals.add(15);
+        totals.add(8);
+
+        assertEquals(question, scr.getQuestion());
+        assertEquals(scOptions, scr.getMutltipleChoiceOptions());
+        assertEquals(totals, scr.getMutltipleChoiceAnswers());
+        assertEquals(ResponseType.SINGLE_CHOICE, scr.getType());
+    }
+
+    @Test
+    public void MultipleChoiceConstructorTest() throws Exception {
         
-    //     var question = "Was the lecture informative";
+        String question = "What was good about the lecture (multiple options can be selected)";
 
-    //     ArrayList<String> multipleChoiceOptions = new ArrayList<String>();
-    //     multipleChoiceOptions.add("The lecture was informative");
-    //     multipleChoiceOptions.add("The lecture was interesting");
-    //     multipleChoiceOptions.add("I enjoyed attending the lecture");
+        ArrayList<String> mcOptions = new ArrayList<String>();
+        mcOptions.add("It was informative");
+        mcOptions.add("It was interesting");
+        mcOptions.add("I learned something new");
+        mcOptions.add("I enjoyed attending the lecture");
+        mcOptions.add("I would recommend the lecture to others");
+        MultipleChoiceResponse mcr = new MultipleChoiceResponse(question, mcOptions);
 
-    //     ArrayList<Boolean> multipleChoiceAnswers = new ArrayList<Boolean>();
-    //     multipleChoiceAnswers.add(false);
-    //     multipleChoiceAnswers.add(true);
-    //     multipleChoiceAnswers.add(true);
+        ArrayList<Integer> mcAnswers1 = new ArrayList<Integer>();
+        mcAnswers1.add(0);
+        mcAnswers1.add(1);
+        mcAnswers1.add(3);
 
-    //     MultipleChoiceResponse mcr = new MultipleChoiceResponse(question, multipleChoiceOptions, multipleChoiceAnswers);
+        ArrayList<Integer> mcAnswers2 = new ArrayList<Integer>();
+        mcAnswers2.add(1);
+        mcAnswers2.add(4);
 
-    //     assertEquals(question, mcr.getQuestion());
-    //     assertEquals(multipleChoiceOptions, mcr.getMutltipleChoiceOptions());
-    //     assertEquals(multipleChoiceAnswers, mcr.getMutltipleChoiceAnswers());
-    //     assertEquals(ResponseType.SINGLE_CHOICE, mcr.getType());
-        
-    // }
+
+        ArrayList<Integer> mcAnswers3 = new ArrayList<Integer>();
+        mcAnswers3.add(2);
+        mcAnswers3.add(4);
+
+        for(int i = 0; i < 25 ; i++){mcr.incrementTotals(mcAnswers1);}
+        for(int i = 0; i < 15 ; i++){mcr.incrementTotals(mcAnswers2);}
+        for(int i = 0; i < 10 ; i++){mcr.incrementTotals(mcAnswers3);}
+
+
+        //arraylist containing the totals set above, used to check against actual arraylist
+        ArrayList<Integer> totals = new ArrayList<Integer>(mcOptions.size());
+        totals.add(25);
+        totals.add(40);
+        totals.add(10);
+        totals.add(25);
+        totals.add(25);
+
+        assertEquals(question, mcr.getQuestion());
+        assertEquals(mcOptions, mcr.getMutltipleChoiceOptions());
+        assertEquals(totals, mcr.getMutltipleChoiceAnswers());
+        assertEquals(5, mcr.getNumberOfOptions());
+        assertEquals(ResponseType.MULTIPLE_CHOICE, mcr.getType());
+    }
 
 }
 

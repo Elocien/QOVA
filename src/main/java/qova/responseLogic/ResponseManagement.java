@@ -209,12 +209,12 @@ public class ResponseManagement {
         
         
         ArrayList<String> mcOptions = new ArrayList<String>();
-        mcOptions.add("1");
-        mcOptions.add("2");
-        mcOptions.add("3");
-        mcOptions.add("4");
-        mcOptions.add("5");
-        MultipleChoiceResponse mcr = new MultipleChoiceResponse("From 1 to 5, what would you rate the lecture?", mcOptions);
+        mcOptions.add("It was informative");
+        mcOptions.add("It was interesting");
+        mcOptions.add("I learned something new");
+        mcOptions.add("I enjoyed attending the lecture");
+        mcOptions.add("I would recommend the lecture to others");
+        MultipleChoiceResponse mcr = new MultipleChoiceResponse("What was good about the lecture (multiple options can be selected)", mcOptions);
 
         ArrayList<Integer> mcAnswers1 = new ArrayList<Integer>();
         mcAnswers1.add(1);
