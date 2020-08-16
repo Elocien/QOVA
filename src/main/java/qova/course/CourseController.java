@@ -24,7 +24,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import qova.admin.AdminManagement;
 import qova.responseLogic.ResponseManagement;
@@ -60,15 +59,23 @@ public class CourseController {
         this.adminManagement = Objects.requireNonNull(adminManagement);
     }
 
+    //Error codes
+    int courseNotFound = 1;
+    int internalError = 2;
+
     //General Pages (relevant domain wide)
 
+    //-------------------------------------------------------
+    
     @GetMapping("/")
     public String welcome () {
         return "home";
     }
 
     @GetMapping("error")
-    public String error (Model model, @PathVariable int code) {
+
+    public String error (Model model, @PathVariable(required = false) Integer code) {
+
         
         //add error code to model
         model.addAttribute("errorCode", code);
@@ -76,6 +83,9 @@ public class CourseController {
         //return template
         return "error";
     }
+
+
+    //-------------------------------------------------------
 
 
     //Shows a table containing all courses 
@@ -88,12 +98,8 @@ public class CourseController {
 
     /*@GetMapping("/courses")
     public String courses (Model model) {
-
-        LocalDate dateNow = LocalDate.now();
-
-        var NewCourse1 = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.ARCHITECTURE, "1-5", dateNow);
-        var NewCourse2 = new Course("Sausage", true, true, true, "Sausage Lecture Survey 2020", "Sausage Tutorial Survey 2020", "Sausage Seminar Survey 2020", 2, 3, 1, CourseFaculty.BIOLOGY, "5-9", dateNow);
-        List<Course> courseList = Arrays.asList(NewCourse1, NewCourse2);
+        
+        List<Course> courseList = Arrays.asList(courseManagement.TimTestCreateCourse(), courseManagement.TimTestCreateCourse());
         model.addAttribute("courseList", courseList);
 
         return "courses";
@@ -111,7 +117,7 @@ public class CourseController {
 
         //redirect 
         if (id == null) {
-			return "redirect:../courses";
+			return "error?code=" + courseNotFound;
         }
         
         //fetch course and go to details if present
@@ -135,19 +141,17 @@ public class CourseController {
             
             return "courseDetails";
         } else {
-			return "redirect:../courses";
+			return "error?code=" + courseNotFound;
 		}
     }
 
     /*@GetMapping("/course/details")
-    public String courseDetails(Model model, CourseForm form) {
+    public String courseDetails(Model model, CourseForm form, String id) {
 
+        id = "5";
+        model.addAttribute("course", courseManagement.TimTestCreateCourse());
         model.addAttribute("form", form);
         model.addAttribute("semesterDates", courseManagement.findSemesters());
-
-        LocalDate dateNow = LocalDate.now();
-        var NewCourse = new Course("Cheese", false, true, true, "-", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.EDUCATION, "1-5", dateNow);
-        model.addAttribute("course", NewCourse);
 
         return "courseDetails";
     }*/
@@ -170,7 +174,7 @@ public class CourseController {
     //Validation of Created course
 	@PostMapping("course/new")
 	public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
-			BindingResult result) throws Exception {
+			BindingResult result) {
 
 
 		if (result.hasErrors()) {
@@ -198,8 +202,36 @@ public class CourseController {
         model.addAttribute("seminarInstanceTitles", courseManagement.findById(id).get().getSeminar().instanceTitles);
         model.addAttribute("practicalInstanceTitles", courseManagement.findById(id).get().getPractical().instanceTitles);
 
+        model.addAttribute("lectureInstances", courseManagement.findById(id).get().getLecture().instanceTitles.length);
+        model.addAttribute("tutorialInstances", courseManagement.findById(id).get().getTutorial().instanceTitles.length);
+        model.addAttribute("seminarInstances", courseManagement.findById(id).get().getSeminar().instanceTitles.length);
+        model.addAttribute("practicalInstances", courseManagement.findById(id).get().getPractical().instanceTitles.length);
+        
+        model.addAttribute("lectureExists", true);
+        model.addAttribute("tutorialExists", true);
+        model.addAttribute("seminarExists", true);
+        model.addAttribute("practicalExists", true);
+
 		return "courseNew2";
     }
+
+    /*@GetMapping("course/new2")
+	public String createCourse_SetInstanceTitles(Model model, InstanceTitleForm form) {
+
+        model.addAttribute("lectureInstances", 2);
+        model.addAttribute("lectureExists", true);
+
+        model.addAttribute("tutorialInstances", 3);
+        model.addAttribute("tutorialExists", true);
+
+        model.addAttribute("seminarInstances", 2);
+        model.addAttribute("seminarExists", false);
+
+        model.addAttribute("practicalInstances", 5);
+        model.addAttribute("practicalExists", true);
+
+		return "courseNew2";
+    }*/
     
     //Validation of Created course
 	@PostMapping("course/new2")
@@ -245,7 +277,7 @@ public class CourseController {
 		}
 
 		courseManagement.updateCourseDetails(id, form);
-		return "redirect:../courses";
+		return "redirect:../course/details?id=" + id;
 	}
 
 
@@ -344,7 +376,7 @@ public class CourseController {
         }
         else{
             //TODO: need more feedback here for the user. Change this!
-            return "redirect:../courses";
+            return "error?code=" + courseNotFound;
         }
     }
     

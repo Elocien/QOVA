@@ -4,26 +4,29 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />	
-    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />		
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}"/>
+    
     <title th:text="#{home.title}">TITLE</title>
 </head>
 <body class="bg-light"></body>
 
     <div th:include="navbar"></div>
 
-    <div class="container">
+    <div class="container" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
 
         <div class="row text-center">
             <div class="col-lg-12 mt-4">
 
                 <h2 class="font-weight-bold" th:text="#{navbar.course}">COURSE MANAGEMENT</h2>
                 <h5 class="font-weight-light" th:text="#{course.description}">COURSE DESCRIPTION</h5>
-                <a class="btn btn-primary btn-tu mt-4 mb-4" th:text="#{course.new}" th:href="@{/course/new}">NEW COURSE</a>
-                <h5 class="font-weight-light" th:text="#{course.table_headline}">COURSE TABLE</h5>
 
+                <a class="btn btn-primary btn-tu mt-4 mb-4" th:text="#{course.new}" th:href="@{/course/new}">NEW COURSE</a>
+                
+                <h5 class="font-weight-light" th:text="#{course.table_headline}">COURSE TABLE</h5>
                 <table class="table table-hover">
                     <thead class="thead-dark">
                         <tr>
@@ -33,11 +36,49 @@
                         </tr>
                     </thead>
                     <tbody class="text-center">
-                        <tr th:each="course : ${courseList}" style="cursor: pointer" th:onclick="'window.location.href = \'' + @{/course/details?id={id}(id=${course.id})} + '\''">
-                            <td th:text="${course.name}">NAME</td>
-                            <td th:text="${course.semesterUI}">SEMESTER</td>
-                            <td th:text="${course.semesterOfStudents}">YEAR</td>
-                        </tr>
+                        <div th:each="course : ${courseList}">
+                            <!--Permanent-->
+                            <tr class="permanent" style="cursor: pointer" th:onclick="expand.call(this)">
+                                <td th:text="${course.name}">NAME</td>
+                                <td th:text="${course.semesterString}">SEMESTER</td>
+                                <td th:text="${course.semesterOfStudents}">YEAR</td>
+                            </tr>
+                            <!--Togglable-->
+                            <tr class="expand" style="display: none;">
+                                <td class="table-light" colspan="3">
+                                    <div class="row">
+                                        <div class="col-2">
+                                            <a class="btn btn-primary btn-tu btn-center text-center" th:onclick="'window.location.href = \'' + @{/course/details?id={id}(id=${course.id})} + '\''">MORE DETAILS</a>
+                                        </div>
+                                        <div class="col-2"></div>
+                                        <div class="col-3 text-right m-auto">
+                                            <h5 class="font-weight-light">VIEW SURVEY RESULTS:</h5>
+                                        </div>
+                                        <div class="col-3 text-right">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                                                    <span class="input-group-text border-dark course-input-prepend" id="l1">COURSE:</span>
+                                                </div>
+                                                <select class="form-control border-dark">
+                                                    <option class="dropdown-item" th:each="course_type: ${type_list}" th:text="${course_type}" th:value="${course_type}" placeholder="COURSE" aria-label="Username" aria-describedby="l1">YEAR</option>
+                                                </select>
+                                            </div>
+                                            <div class="input-group">
+                                                <div class="input-group-prepend mt-2">
+                                                    <span class="input-group-text border-dark course-input-prepend" id="l2">GROUP:</span>
+                                                </div>
+                                                <select class="form-control border-dark mt-2">
+                                                    <option class="dropdown-item" th:each="i: ${#numbers.sequence(0, 10)}" th:text="${i}" th:value="${i}" placeholder="COURSE" aria-label="Username" aria-describedby="l2">YEAR</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-2 text-left">
+                                            <a class="btn btn-primary text-white btn-center">VIEW</a>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </div>
                     </tbody>
                 </table>
                 
@@ -49,4 +90,38 @@
     <div th:include="footer"></div>
 
 </body>
+<script>
+    function expand() {
+        const target = this.nextElementSibling;
+        const vis = document.getElementsByClassName("expand");
+        const permanent = document.getElementsByClassName("permanent");
+        for (let index = 0; index < vis.length; ++index) {
+            if (vis[index] === target) {
+                if (target.style.display == "none") {
+                    target.style.display = "";
+                }
+                else {
+                    target.style.display = "none";
+                }
+            }
+            else {
+                vis[index].classList.remove("table-light");
+                vis[index].style.display = "none";
+            }
+        }
+        for (let index = 0; index < permanent.length; ++index) {
+            if (permanent[index] === this) {
+                if (this.classList.contains("table-light")) {
+                    this.classList.remove("table-light");
+                }
+                else {
+                    this.classList.add("table-light");
+                }
+            }
+            else {
+                permanent[index].classList.remove("table-light");
+            }
+        }
+    }
+</script>
 </html>

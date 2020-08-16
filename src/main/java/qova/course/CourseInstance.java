@@ -37,6 +37,11 @@ public class CourseInstance {
 
 
 
+    //Needed for JPA purposes
+    @SuppressWarnings("unused")
+	protected CourseInstance() {
+    }
+
     /**
      * Instance of a CourseType
      * 
@@ -49,24 +54,14 @@ public class CourseInstance {
      * @throws Exception
      */
     public CourseInstance(CourseType courseType, Integer groupAmount, Integer instanceAmount,
-            String[] instanceTitles) throws Exception {
-        
+            String[] instanceTitles){
+       
         this.courseType = courseType;
         this.survey = "[]";
         this.groupAmount = groupAmount;
-
-        //Check to make sure that instanceAmount matches the length of array, otherwise not enough/too many titles were assigned
-        if(!(instanceAmount == instanceTitles.length)){
-            throw new Exception("InstanceAmount does not match the number of InstanceTitles; either too many or too few titles were assigned");
-        }
-        else{
-            this.instanceAmount = instanceAmount;
-            this.instanceTitles = instanceTitles;
-        }
+        this.instanceAmount = instanceAmount;
+        this.instanceTitles = instanceTitles;
     }
-
-
-
 
     public CourseType getCourseType(){
         return this.courseType;

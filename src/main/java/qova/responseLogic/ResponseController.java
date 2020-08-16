@@ -40,9 +40,13 @@ public class ResponseController {
         this.courseManagement = Objects.requireNonNull(courseManagement);
     }
 
-    // Mapping to which one is redirected to by the QRCode. This is where students
-    // enter which group and which topic they are handing their response in for
-    // ---------------------------------------------------------------------------
+    //Error codes
+    int courseNotFound = 1;
+    int internalError = 2;
+
+
+    //Mapping to which one is redirected to by the QRCode. This is where students enter which group and which topic they are handing their response in for
+    //---------------------------------------------------------------------------
 
     @GetMapping("suveySelect")
     public String selectSurvey(Model model, @RequestParam String id, @RequestParam String type) {
@@ -71,9 +75,9 @@ public class ResponseController {
             }
             return "surveySelect";
         }
-
-        // if course does not exist, redirect to global error page
-        return "error";
+        
+        //if course does not exist, redirect to global error page
+        return "error?code=" + courseNotFound;
     }
 
     // ---------------------------------------------------------------------------
@@ -86,66 +90,21 @@ public class ResponseController {
 
         Optional<Course> crs = courseManagement.findById(id);
 
-        // if anything is null or not an allowed value, redirect back
-        if (!crs.isPresent()) {
-            // TODO: set error code "Course not present. You are unable to submit a response
-            // to this survey"
-            return "error";
+        //if anything is null or not an allowed value, redirect back
+        if(!crs.isPresent()){
+            return "error?code=" + courseNotFound;
         }
         // if type is not one of the defined values
 
         // for easy access
         Course course = crs.get();
 
-        if (!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR"))
-                && !(type.equals("PRACTICAL"))) {
-            // TODO: redirect to error page with code 02
-            return "error";
+        if(!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR")) && !(type.equals("PRACTICAL"))){
+            return "error?code=" + internalError;
         }
 
-        // if instanceTitle is not an element of the InstanceTitles
-        else if (type.equals("LECTURE")
-                && !(Arrays.stream(course.getLecture().getInstanceTitles()).anyMatch(instanceTitle::equals))) {
-            return "error";
-        }
-        // if groupAmount exceedes the number set, or is less than 0, redirect to error
-        // page
-        else if (type.equals("LECTURE") && groupAmount > course.getLecture().getGroupAmount() || groupAmount < 0) {
-            return "error";
-        }
 
-        // if instanceTitle is not an element of the InstanceTitles
-        else if (type.equals("TUTORIAL")
-                && !(Arrays.stream(course.getTutorial().getInstanceTitles()).anyMatch(instanceTitle::equals))) {
-            return "error";
-        }
-        // if groupAmount exceedes the number set, or is less than 0, redirect to error
-        // page
-        else if (type.equals("TUTORIAL") && groupAmount > course.getTutorial().getGroupAmount() || groupAmount < 0) {
-            return "error";
-        }
-
-        // if instanceTitle is not an element of the InstanceTitles
-        else if (type.equals("SEMINAR")
-                && !(Arrays.stream(course.getSeminar().getInstanceTitles()).anyMatch(instanceTitle::equals))) {
-            return "error";
-        }
-        // if groupAmount exceedes the number set, or is less than 0, redirect to error
-        // page
-        else if (type.equals("SEMINAR") && groupAmount > course.getSeminar().getGroupAmount() || groupAmount < 0) {
-            return "error";
-        }
-
-        // if instanceTitle is not an element of the InstanceTitles
-        else if (type.equals("PRACTICAL")
-                && !(Arrays.stream(course.getPractical().getInstanceTitles()).anyMatch(instanceTitle::equals))) {
-            return "error";
-        }
-        // if groupAmount exceedes the number set, or is less than 0, redirect to error
-        // page
-        else if (type.equals("PRACTICAL") && groupAmount > course.getPractical().getGroupAmount() || groupAmount < 0) {
-            return "error";
-        }
+        //TODO validate that parameters only contain valid charachters. E.g. a-zA-Z0-9
 
         else {
             return "survey?type=" + type + "&id=" + id + "instanceTitle=" + instanceTitle + "groupNumber="
@@ -161,7 +120,7 @@ public class ResponseController {
     public String SuveyView(Model model, @RequestParam String type, @RequestParam(required = false) String id) {
         // redirect
         if (id == null) {
-            return "redirect:/";
+			return "error?code=" + courseNotFound;
         }
 
         // fetch course and go to details if present
@@ -181,10 +140,10 @@ public class ResponseController {
             }
 
         }
-
-        // If condition not met, redirect to home
-        else {
-            return "redirect:/";
+        
+        //If condition not met, redirect to home
+        else{
+            return "error?code=" + courseNotFound;
         }
     }
     // ----------------------------------------------------------------------------

@@ -1,6 +1,7 @@
 /*general*/
 body {
   --tu_blue: rgb(0, 37, 87);
+  --tu_blue_light: rgb(0, 74, 174);
   --tu_blue_highlight: rgb(230, 230, 255);
   --fancy_grey: darkslategrey;
   background: url(../images/seamless-bg.jpg);
@@ -23,11 +24,12 @@ input[type=number] {
 
 .btn-tu {
   background-color: var(--tu_blue);
+  color: white !important;
   border-color: black;
 }
 .btn-tu:hover {
   background-color: rgba(100, 100, 100, 0);
-  color: black;
+  color: black !important;
   border-color: black;
 }
 .btn-delete {
@@ -204,4 +206,93 @@ input[type="text"]:disabled {
 }
 input[type="text"]:disabled::placeholder {
   color: lightgrey;
+}
+.disabled-link {
+  color: lightgrey;
+}
+
+/*courseNew.html*/
+.form-col {
+  background-color: rgba(255, 255, 255, 0.5);
+  --input-height: 37px;
+  border-right: solid 1px var(--fancy_grey);
+  border-bottom: solid 1px var(--fancy_grey);
+}
+.form-col:first-of-type, .form-col:nth-of-type(5) {
+  border-left: solid 1px var(--fancy_grey);
+}
+.clean-input > input {
+  height: var(--input-height);
+  border: none;
+  border-bottom: solid 1px var(--fancy_grey);
+  border-radius: 0;
+  background: transparent;
+}
+.clean-input > input:focus {
+  background: transparent;
+}
+.clean-input > span {
+  font-size: var(--input-height) * 0.8;
+  line-height: var(--input-height);
+}
+.input-header {
+  background-color: var(--tu_blue_highlight);
+  padding: 0.5rem 1rem;
+  border-top: solid 1px var(--fancy_grey);
+  border-bottom: solid 1px var(--fancy_grey);
+}
+.btn-input {
+  border: solid 0px white;
+  border-radius: 0;
+}
+.btn-input.btn-primary {
+  background-color: var(--tu_blue);
+}
+.btn-input.btn-primary:hover {
+  background-color: var(--tu_blue_light);
+  transition: 0.5s;
+}
+.btn-input.btn-danger {
+  background-color: darkred;
+}
+.btn-input.btn-danger:hover {
+  background-color: red;
+  transition: 0.5s;
+}
+
+.btn-center {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+.course-input-prepend {
+  width: 5rem;
+}
+select {
+  background:
+    linear-gradient(45deg, transparent 50%, black 50%),
+    linear-gradient(135deg, black 50%, transparent 50%),
+    transparent;
+  background-position:
+    calc(100% - 21px) calc(1em + 2px),
+    calc(100% - 16px) calc(1em + 2px),
+    100% 0;
+  background-size:
+    5px 5px,
+    5px 5px,
+    2.5em 2.5em;
+  background-repeat: no-repeat;
+
+  font: 300 1em/100% "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.5em;
+  padding: 0.5em 3.5em 0.5em 1em;
+
+  border-radius: 0;
+  margin: 0;      
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-appearance:none;
+  -moz-appearance:none;
 }

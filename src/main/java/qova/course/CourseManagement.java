@@ -38,7 +38,7 @@ public class CourseManagement {
 
 
     //Create Course and get Id from new course
-    public String createCourseReturnId(CourseForm form) throws Exception {
+    public String createCourseReturnId(CourseForm form) {
         Objects.requireNonNull(form);
 
         //Name of Course
@@ -62,7 +62,8 @@ public class CourseManagement {
 
 
     //Method for createing CourseInstances
-    private Map<CourseType, CourseInstance> createCourseInstance(CourseForm form) throws Exception {
+
+    private Map<CourseType, CourseInstance> createCourseInstance(CourseForm form) {
 
         //Map containing CourseInstances, with CourseType as key
         Map<CourseType, CourseInstance> courseInstances = new HashMap<CourseType, CourseInstance>();
@@ -159,7 +160,9 @@ public class CourseManagement {
 
 
     //update course details
-    public void updateCourseDetails(String id, CourseForm form) throws Exception {
+
+    public void updateCourseDetails(String id, CourseForm form) {
+
         Optional<Course> crs = coursesRepo.findById(id);
         if (crs.isPresent()){
 
@@ -541,7 +544,7 @@ public class CourseManagement {
 
 
     //Test Method, remove in final build
-    public void TestCreateCourse() throws Exception {
+    public void TestCreateCourse() {
         var name = "Rechnernetze";
 
         String[] lectureTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
@@ -570,6 +573,26 @@ public class CourseManagement {
         var semesterString = "SoSe 2020";
 
         coursesRepo.save(new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty, semesterString, courseDate));
+    }
+
+    public Course TimTestCreateCourse() {
+
+        String[] lectureTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
+        var lecture = new CourseInstance(CourseType.LECTURE, 1, 11, lectureTitles);
+        String[] tutorialTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
+        var tutorial = new CourseInstance(CourseType.TUTORIAL, 2, 12, tutorialTitles);
+        String[] seminarTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
+        var seminar = new CourseInstance(CourseType.SEMINAR, 3, 13, seminarTitles);
+        String[] pTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
+        var practical = new CourseInstance(CourseType.TUTORIAL, 4, 14, pTitles);
+
+        var name = "Rechnernetze";
+        var semesterOfStudents = 4;
+        var faculty = CourseFaculty.COMPUTER_SCIENCE;
+        var courseDate = LocalDate.of(2020, 10, 4);
+        var semesterString = "SoSe 2020";
+
+        return new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty, semesterString, courseDate);
     }
 
 
