@@ -6,9 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 
 //id-generator imports
 import org.hibernate.annotations.GenericGenerator;
@@ -194,5 +192,18 @@ public class Course {
     public void setSemesterString(String str){
         this.semesterString = str;
     }
+
+
+
+    public CourseInstance getInstance(CourseType type){
+        if(type.equals(CourseType.LECTURE)){return lecture;}
+        else if(type.equals(CourseType.TUTORIAL)){return tutorial;}
+        else if(type.equals(CourseType.SEMINAR)){return seminar;}
+        else if(type.equals(CourseType.PRACTICAL)){return practical;}
+        else return null;
+    }
+
 }
+
+
 

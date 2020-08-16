@@ -1,5 +1,6 @@
-package qova.responses;
+package qova.responseLogic;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -48,27 +49,27 @@ public class ResponseController {
     //---------------------------------------------------------------------------
 
     @GetMapping("suveySelect")
-    public String selectSurvey(Model model, @RequestParam String id, @RequestParam String type){
-        
-        //course name, course type, instance names, groupAmount
+    public String selectSurvey(Model model, @RequestParam String id, @RequestParam String type) {
+
+        // course name, course type, instance names, groupAmount
         Optional<Course> crs = courseManagement.findById(id);
-        if(crs.isPresent()){
+        if (crs.isPresent()) {
             model.addAttribute("courseName", crs.get().getName());
             model.addAttribute("courseType", type);
 
-            if(type.equals("LECTURE")){
+            if (type.equals("LECTURE")) {
                 model.addAttribute("instanceTitles", crs.get().getLecture().getInstanceTitles());
                 model.addAttribute("groupAmount", crs.get().getLecture().getGroupAmount());
             }
-            if(type.equals("TUTORIAL")){
+            if (type.equals("TUTORIAL")) {
                 model.addAttribute("instanceTitles", crs.get().getLecture().getInstanceTitles());
                 model.addAttribute("groupAmount", crs.get().getLecture().getGroupAmount());
             }
-            if(type.equals("SEMINAR")){
+            if (type.equals("SEMINAR")) {
                 model.addAttribute("instanceTitles", crs.get().getLecture().getInstanceTitles());
                 model.addAttribute("groupAmount", crs.get().getLecture().getGroupAmount());
             }
-            if(type.equals("PRACTICAL")){
+            if (type.equals("PRACTICAL")) {
                 model.addAttribute("instanceTitles", crs.get().getLecture().getInstanceTitles());
                 model.addAttribute("groupAmount", crs.get().getLecture().getGroupAmount());
             }
@@ -79,26 +80,23 @@ public class ResponseController {
         return "error?code=" + courseNotFound;
     }
 
-    //---------------------------------------------------------------------------
+    // ---------------------------------------------------------------------------
 
-
-
-
-
-    //TODO: rename path variables
-    //Validation of entry of surveySelect page, and redirect to the actual survey
+    // TODO: rename path variables
+    // Validation of entry of surveySelect page, and redirect to the actual survey
     @PostMapping("surveySelect")
-    public String selectSurveySubmission(Model model, @RequestParam String id, @RequestParam String type, @RequestParam String instanceTitle, @RequestParam Integer groupAmount){
-        
+    public String selectSurveySubmission(Model model, @RequestParam String id, @RequestParam String type,
+            @RequestParam String instanceTitle, @RequestParam Integer groupAmount) {
+
         Optional<Course> crs = courseManagement.findById(id);
 
         //if anything is null or not an allowed value, redirect back
         if(!crs.isPresent()){
             return "error?code=" + courseNotFound;
         }
-        //if type is not one of the defined values
+        // if type is not one of the defined values
 
-        //for easy access
+        // for easy access
         Course course = crs.get();
 
         if(!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR")) && !(type.equals("PRACTICAL"))){
@@ -108,39 +106,35 @@ public class ResponseController {
 
         //TODO validate that parameters only contain valid charachters. E.g. a-zA-Z0-9
 
-
-        else{return "survey?type=" + type + "&id=" + id + "instanceTitle=" + instanceTitle + "groupNumber=" + groupAmount;}
+        else {
+            return "survey?type=" + type + "&id=" + id + "instanceTitle=" + instanceTitle + "groupNumber="
+                    + groupAmount;
+        }
     }
 
+    // Get Survey from Server
+    // ---------------------------------------------------------------------------
 
-
-
-
-
-    //Get Survey from Server 
-    //---------------------------------------------------------------------------
-
-    //Mapping for Survey HTML
+    // Mapping for Survey HTML
     @GetMapping("survey")
-    public String SuveyView (Model model, @RequestParam String type, @RequestParam(required = false) String id){
-        //redirect 
+    public String SuveyView(Model model, @RequestParam String type, @RequestParam(required = false) String id) {
+        // redirect
         if (id == null) {
 			return "error?code=" + courseNotFound;
         }
-        
-        //fetch course and go to details if present
+
+        // fetch course and go to details if present
         Optional<Course> course = courseManagement.findById(id);
 
-        //Validate that course exists, and that the survey is not empty
-        if (course.isPresent()){
-            String survey = courseManagement.getSurveyforType(id,type);
-            if (survey.equals("Something went wrong")){
+        // Validate that course exists, and that the survey is not empty
+        if (course.isPresent()) {
+            String survey = courseManagement.getSurveyforType(id, type);
+            if (survey.equals("Something went wrong")) {
                 return "redirect:/";
-            }
-            else {
+            } else {
                 model.addAttribute("typeID", type);
                 model.addAttribute("id", id);
-                model.addAttribute("survey",survey);
+                model.addAttribute("survey", survey);
                 model.addAttribute("coursename", course.get().getName());
                 return "survey";
             }
@@ -152,35 +146,31 @@ public class ResponseController {
             return "error?code=" + courseNotFound;
         }
     }
-    //----------------------------------------------------------------------------
+    // ----------------------------------------------------------------------------
 
-
-    //Mapping to recieve SURVEY (Formatted as JSON) from server
+    // Mapping to recieve SURVEY (Formatted as JSON) from server
     @GetMapping("survey/get")
     @ResponseBody
-    public String sendSurvey( @RequestParam String type, @RequestParam(required = false) String id){
+    public String sendSurvey(@RequestParam String type, @RequestParam(required = false) String id) {
 
-        //redirect 
+        // redirect
         if (id == null) {
-			return null;
+            return null;
         }
 
-        else{
-            //Retrieve survey
+        else {
+            // Retrieve survey
             String JsonString = courseManagement.getSurveyforType(id, type);
 
-            //return the JSON
+            // return the JSON
             return JsonString;
         }
     }
 
-
-
     // PostMapping to submit survey and serialize results
     // ---------------------------------------------------------------------------
     @PostMapping("/survey")
-    public ResponseEntity recieveResponseJSON(SurveyForm form, @RequestParam String type,
-            @RequestParam String id) {
+    public ResponseEntity recieveResponseJSON(SurveyForm form, @RequestParam String type, @RequestParam String id) {
 
         // get JSON Response as string
         String JsonResponse = form.getQuestionnairejson();
@@ -195,46 +185,35 @@ public class ResponseController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-
-
-
-
-
-
-
-
-
-
     // ---------------------------------------------------------------------------
 
-
-
-    //PDF Generation
+    // PDF Generation
     @GetMapping("/generatePDF")
-    public HttpEntity<byte[]> generatePdf(@RequestParam String id, @RequestParam String type, @RequestParam String classNo, HttpServletResponse response) throws Exception {
-    
-        //generate filename
+    public HttpEntity<byte[]> generatePdf(@RequestParam String id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
+            throws NumberFormatException, IOException, Exception {
+
+        // generate filename
         String filename = "testPdf.pdf";
 
-        //Get the course;
+        // Get the course;
         Optional<Course> crs = courseManagement.findById(id);
 
-        //verify that course is present
-        if(!crs.isPresent()){
-            throw new Exception("No course found");
+        // verify that course is present
+        if (!crs.isPresent()) {
+            return null;
         }
 
-        //Try to parse the courseType
-        CourseType courseType;
-        if (type.equals("LECTURE")) {courseType = CourseType.LECTURE;}
-        else if (type.equals("TUTORIAL")) {courseType = CourseType.TUTORIAL;}
-        else if (type.equals("SEMINAR")) {courseType = CourseType.SEMINAR;}
-        else {throw new Exception("No courseType given");}
+        // Try to parse the courseType
+        CourseType courseType = responseManagement.parseType(type);
+        if (courseType == null) {
+            return null;
+        }
 
-        //Generate PDF
-        byte[] pdf = responseManagement.generatePDF_en(crs.get(), courseType, Integer.parseInt(classNo));
+        // Generate PDF
+        byte[] pdf = responseManagement.generatePDF_en(crs.get(), courseType, Integer.parseInt(groupNumber),
+                Integer.parseInt(instanceNumber));
 
-        //Set HTTP headers and return HttpEntity
+        // Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_PDF);
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
@@ -242,11 +221,11 @@ public class ResponseController {
 
         return new HttpEntity<byte[]>(pdf, header);
     }
-    
 
-    //CSV Generation
+    // CSV Generation
     @GetMapping("/generateCSV")
-    public HttpEntity<byte[]> generateCsv(@RequestParam String id, @RequestParam String type, @RequestParam String classNo, HttpServletResponse response) throws Exception {
+    public HttpEntity<byte[]> generateCsv(@RequestParam String id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
+            throws NumberFormatException, IOException, Exception {
     
         //generate filename
         String filename = "testCsv.csv";
@@ -256,18 +235,17 @@ public class ResponseController {
 
         //verify that course is present
         if(!crs.isPresent()){
-            throw new Exception("No course found");
+            return null;
         }
 
         //Try to parse the courseType
-        CourseType courseType;
-        if (type.equals("LECTURE")) {courseType = CourseType.LECTURE;}
-        else if (type.equals("TUTORIAL")) {courseType = CourseType.TUTORIAL;}
-        else if (type.equals("SEMINAR")) {courseType = CourseType.SEMINAR;}
-        else {throw new Exception("No courseType given");}
+        CourseType courseType = responseManagement.parseType(type);
+        if(courseType == null){
+            return null;
+        }
 
         //Generate PDF
-        byte[] pdf = responseManagement.generateCSV_en(crs.get(), courseType, Integer.parseInt(classNo));
+        byte[] pdf = responseManagement.generateCSV_en(crs.get(), courseType, Integer.parseInt(groupNumber), Integer.parseInt(instanceNumber));
 
         //Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();
@@ -337,26 +315,7 @@ public class ResponseController {
         header.setContentLength(pdf.length);
 
         return new HttpEntity<byte[]>(pdf, header);
-    }
-
-
-    @GetMapping("json")
-    public void testJSONParsing(){
-
-        //How to use:
-        //Set a survey using questioneditor, for the LECTURE survey with id = c000000000000001 (this is always the first survey generated). Then find the string in the
-        //database to figure out its strucutre. Then try to parse it (using the method below), and see if you can retrieve the intended values.
-
-        //Test String
-        String json = courseManagement.findById("c000000000000001").get().getLecture().getSurvey();
-
-        // https://stackoverflow.com/questions/2591098/how-to-parse-json-in-java
-
-    }
-
-
-
-    
+    }    
 
 }
     

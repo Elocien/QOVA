@@ -292,6 +292,8 @@ public class CourseManagement {
         }
     }
 
+    
+    
 
 
     //Gets the relevant Survey in the course objects, based on the given surveyType
@@ -317,31 +319,22 @@ public class CourseManagement {
 
 
 
-
-
-
     //Sets the relevant Survey in the course objects, based on the given surveyType
-    public void setSurveyforType (String id, String type, SurveyForm form){
-        Optional<Course> crs = coursesRepo.findById(id);
-        if (crs.isPresent()){
-
-            Course course = crs.get();
-
-            //if CourseType is Lecture, then save Survey as lectureSurvey
-            if(type.equals("LECTURE")) {
-                course.getLecture().setSurvey(form.getQuestionnairejson());
-            }
-            else if(type.equals("TUTORIAL")) {
-                course.getTutorial().setSurvey(form.getQuestionnairejson());
-            }
-            else if (type.equals("SEMINAR")){
-                course.getSeminar().setSurvey(form.getQuestionnairejson());
-            }
-            else if (type.equals("PRACTICAL")){
-                course.getPractical().setSurvey(form.getQuestionnairejson());
-            }
+    public void setSurveyforType (Course course, String type, SurveyForm form){
+        //if CourseType is Lecture, then save Survey as lectureSurvey
+        if(type.equals("LECTURE")) {
+            course.getLecture().setSurvey(form.getQuestionnairejson());
         }
-    }
+        else if(type.equals("TUTORIAL")) {
+            course.getTutorial().setSurvey(form.getQuestionnairejson());
+        }
+        else if (type.equals("SEMINAR")){
+            course.getSeminar().setSurvey(form.getQuestionnairejson());
+        }
+        else if (type.equals("PRACTICAL")){
+            course.getPractical().setSurvey(form.getQuestionnairejson());
+        }
+}
 
 
 

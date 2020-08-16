@@ -11,7 +11,7 @@ import javax.validation.Valid;
 
 import com.google.zxing.WriterException;
 
-import org.json.*;
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +26,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import qova.admin.AdminManagement;
+import qova.responseLogic.ResponseManagement;
+import qova.responseTypes.BinaryResponse;
+import qova.responseTypes.SurveyResponse;
 
 //TODO: Temporary Imports (can be removed later)
 //@Lucian please don't delete me just yet T_T
@@ -44,11 +47,15 @@ public class CourseController {
     private final CourseManagement courseManagement;
 
     @Autowired
+    private final ResponseManagement responseManagement;
+
+    @Autowired
     private final AdminManagement adminManagement;
 
     @Autowired
-    CourseController(CourseManagement courseManagement, AdminManagement adminManagement) {
+    CourseController(CourseManagement courseManagement, ResponseManagement responseManagement, AdminManagement adminManagement) {
         this.courseManagement = Objects.requireNonNull(courseManagement);
+        this.responseManagement = Objects.requireNonNull(responseManagement);
         this.adminManagement = Objects.requireNonNull(adminManagement);
     }
 
@@ -310,7 +317,15 @@ public class CourseController {
     }
 
 
-    //Mapping to submit a questionaire 
+     
+    /** 
+     * Mapping for submitting a created survey. The questioneditor sends JSON containing the survey to the server, and this is checked for length (Can't exceed 100 questions)
+     * and special characters. After this, a new SurveyResponse object is created along with its subclasses (BinaryResponse, TextResponse, etc.)
+     * @param form
+     * @param type
+     * @param id
+     * @return
+     */
     @PostMapping("course/surveyeditor")
     public String questioneditorSubmit(SurveyForm form, @RequestParam String type, @RequestParam(required = false) String id) {
         
@@ -319,55 +334,40 @@ public class CourseController {
         if (form.getQuestionnairejson().length()==0) {
             return "redirect:../course/details" + "?id=" + id;          //TODO: Redirects back course at the moment, think about where this should go
         }
-
-
-
-
-
-
-
-   
-        //Validate that the questionnaire does not exceed max length
-        String JsonString = form.getQuestionnairejson();
-
-        //Remove [] to parse JSON
-        JsonString = JsonString.substring(1,JsonString.length()-1);
-
-
-        //TODO: iterate through array and check length
-
-        //example string
-        // [{"type":"YesNo","question":""},{"type":"MultipleChoice","question":"","answers":["1","2","3","4","5"]},{"type":"DropDown","question":"","answers":["Answer","Answer","Answer"]}]
-
-
-
-
-
-
         
+
         //fetch course 
         Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()){
 
             // if type is none of the correct values, then redirect to homepage
-            if(!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR")) && !(type.equals("PRACTICAL"))){
+            if(responseManagement.parseType(type).equals(null)){
                 //TODO: redirect to error page with code 02
-                return "error?code=" + internalError;
-
+                return "redirect:/";
             }
 
             else{
-                //Method from courseManager which sets the survey for the relevant surveyType
-                try{
-                    JSONArray survey = new JSONArray(form.getQuestionnairejson());
-                    System.out.println(survey);
-                    System.out.println(survey.length());
-
-                } catch (Exception e){
-                    System.out.print(form.getQuestionnairejson());
+                //check if JSON is valid
+                try {JSONArray survey = new JSONArray(form.getQuestionnairejson());} 
+                catch (Exception e) {
+                    //TODO: redirect to error page with code 02
                     return "redirect:/";
                 }
-                courseManagement.setSurveyforType(id, type, form);
+
+                //Create a JSON Array out of the response from the questioneditor
+                JSONArray survey = new JSONArray(form.getQuestionnairejson());
+
+                //parse JSON to check for correctness (length, special characters)
+                if(responseManagement.verifyJsonArray(survey) == false){
+                    //TODO: redirect to error page with code 02
+                    return "redirect:/";
+                }
+
+                //Manager method for creating SurveyResponse and corresponding nested objects
+                responseManagement.createSurveyResponse(survey, course.get(), type);
+
+                //Sets the survey string for a given course
+                courseManagement.setSurveyforType(course.get(), type, form);
             }
 
 
@@ -386,20 +386,12 @@ public class CourseController {
 
 
 
-
-
-    
-   
-
-
-
-
     //to test
     //http://localhost:8080/qrcode?type=LECTURE&id=c000000000000001
 
     
     /**
-     * This method takes id and CourseType as parameters
+     * This method takes id and CourseType as parameters, and returns a qrcode with the given string that is assembled below
      * 
      * @param response HttpResponse
      * @param type
