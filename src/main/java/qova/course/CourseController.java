@@ -341,7 +341,7 @@ public class CourseController {
         if (course.isPresent()){
 
             // if type is none of the correct values, then redirect to homepage
-            if(responseManagement.parseType(type).equals(null)){
+            if(responseManagement.parseCourseType(type).equals(null)){
                 //TODO: redirect to error page with code 02
                 return "redirect:/";
             }

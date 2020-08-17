@@ -204,7 +204,7 @@ public class ResponseController {
         }
 
         // Try to parse the courseType
-        CourseType courseType = responseManagement.parseType(type);
+        CourseType courseType = responseManagement.parseCourseType(type);
         if (courseType == null) {
             return null;
         }
@@ -239,7 +239,7 @@ public class ResponseController {
         }
 
         //Try to parse the courseType
-        CourseType courseType = responseManagement.parseType(type);
+        CourseType courseType = responseManagement.parseCourseType(type);
         if(courseType == null){
             return null;
         }

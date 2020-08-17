@@ -16,6 +16,7 @@ import qova.course.CourseType;
 import qova.course.LocalizationOption;
 import qova.responseTypes.BinaryResponse;
 import qova.responseTypes.MultipleChoiceResponse;
+import qova.responseTypes.ResponseType;
 import qova.responseTypes.SingleChoiceResponse;
 import qova.responseTypes.TextResponse;
 import qova.responseTypes.SurveyResponse;
@@ -33,7 +34,7 @@ public class ResponseManagement {
     }
 
 
-    public CourseType parseType(String stringType){
+    public CourseType parseCourseType(String stringType){
         
         CourseType type;
 
@@ -44,6 +45,24 @@ public class ResponseManagement {
         else type = null;
 
         return type;
+    }
+
+    public ResponseType parseResponseType(Object obj){
+        if(rsp.getClass().getSimpleName() == "BinaryResponse"){
+            return ResponseType.BINARY_ANSWER;
+        }
+        else if(rsp.getClass().getSimpleName() == "TextResponse"){
+            return ResponseType.TEXT_RESPONSE;
+        }
+        else if(rsp.getClass().getSimpleName() == "MultipleChoiceResponse"){
+            return ResponseType.MULTIPLE_CHOICE;
+        }
+        else if(rsp.getClass().getSimpleName() == "SingleChoiceResponse"){
+            return ResponseType.SINGLE_CHOICE;
+        }
+        else{
+            return null;
+        }
     }
     
     
@@ -56,7 +75,7 @@ public class ResponseManagement {
         
         //Generate PDF 
         PDFGenerator pdfGen = new PDFGenerator();
-        return pdfGen.createPdf(rsp.get(), course.getName(), LocalizationOption.EN);
+        return pdfGen.createPdf(rsp.get(), LocalizationOption.EN);
     }
 
 
@@ -92,7 +111,7 @@ public class ResponseManagement {
     public void createSurveyResponse(JSONArray json, Course course, String stringType){
         
         //Resolve type and find correct instance of course (lecture, tutorial, etc.)
-        CourseType type = parseType(stringType);
+        CourseType type = parseCourseType(stringType);
         CourseInstance courseInstance = course.getInstance(type);
 
         //ArrayList with response objects, initialised with the number of questions as size
@@ -260,6 +279,6 @@ public class ResponseManagement {
         
         //Generate PDF 
         PDFGenerator pdfGen = new PDFGenerator();
-        return pdfGen.createPdf(rsp.get(), "test PDF title", LocalizationOption.EN);
+        return pdfGen.createPdf(rsp.get(), LocalizationOption.EN);
     }
 }
