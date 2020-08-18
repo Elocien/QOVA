@@ -47,7 +47,6 @@ import qova.responseTypes.TextResponse;
 
 public final class PDFGenerator{
 
-    @Autowired
     private final ResponseManagement responseManagement;
 
     /**

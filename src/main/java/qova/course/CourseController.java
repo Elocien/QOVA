@@ -63,8 +63,9 @@ public class CourseController {
     int courseNotFound = 1;
     int internalError = 2;
 
-    //General Pages (relevant domain wide)
 
+
+    //General Pages (relevant domain wide)
     //-------------------------------------------------------
     
     @GetMapping("/")
@@ -197,15 +198,15 @@ public class CourseController {
 
         model.addAttribute("form", form);
 
-        model.addAttribute("lectureInstanceTitles", courseManagement.findById(id).get().getLecture().instanceTitles);
-        model.addAttribute("tutorialInstanceTitles", courseManagement.findById(id).get().getTutorial().instanceTitles);
-        model.addAttribute("seminarInstanceTitles", courseManagement.findById(id).get().getSeminar().instanceTitles);
-        model.addAttribute("practicalInstanceTitles", courseManagement.findById(id).get().getPractical().instanceTitles);
+        model.addAttribute("lectureInstanceTitles", courseManagement.findById(id).get().getLecture().getInstanceTitles());
+        model.addAttribute("tutorialInstanceTitles", courseManagement.findById(id).get().getTutorial().getInstanceTitles());
+        model.addAttribute("seminarInstanceTitles", courseManagement.findById(id).get().getSeminar().getInstanceTitles());
+        model.addAttribute("practicalInstanceTitles", courseManagement.findById(id).get().getPractical().getInstanceTitles());
 
-        model.addAttribute("lectureInstances", courseManagement.findById(id).get().getLecture().instanceTitles.length);
-        model.addAttribute("tutorialInstances", courseManagement.findById(id).get().getTutorial().instanceTitles.length);
-        model.addAttribute("seminarInstances", courseManagement.findById(id).get().getSeminar().instanceTitles.length);
-        model.addAttribute("practicalInstances", courseManagement.findById(id).get().getPractical().instanceTitles.length);
+        model.addAttribute("lectureInstances", courseManagement.findById(id).get().getLecture().getInstanceAmount());
+        model.addAttribute("tutorialInstances", courseManagement.findById(id).get().getTutorial().getInstanceAmount());
+        model.addAttribute("seminarInstances", courseManagement.findById(id).get().getSeminar().getInstanceAmount());
+        model.addAttribute("practicalInstances", courseManagement.findById(id).get().getPractical().getInstanceAmount());
         
         model.addAttribute("lectureExists", true);
         model.addAttribute("tutorialExists", true);

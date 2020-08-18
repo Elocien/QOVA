@@ -33,7 +33,7 @@ public class CourseInstance {
 
 
     //Titles of each instance of the given courseType (e.g. there are 12 lectures, each with a unique title)
-    @ElementCollection @OrderColumn String[] instanceTitles;
+    private @ElementCollection @OrderColumn String[] instanceTitles;
 
 
 
