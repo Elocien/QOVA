@@ -24,8 +24,6 @@ import com.itextpdf.layout.property.UnitValue;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.io.ByteArrayOutputStream;
 
 import org.jfree.chart.ChartFactory;
@@ -45,7 +43,31 @@ import qova.responseTypes.TextResponse;
 
  
 
-public final class PDFGenerator{
+public class PDFGenerator{
+
+    //Localization variables
+    private String total;
+    private String responseOptions;
+    private String totalResponses;
+    private String totalYes;
+    private String totalNo;
+    private String multipleChoiceAndSingleChoiceResponsesTitle;
+    private String textResponsesTitle;
+    private String binaryResponsesTitle;
+
+
+    //Variables
+    //List of all BarGraphs (Multiple Choice and Drop Down)
+    private ArrayList<Image> ImageList = new ArrayList<>();
+
+    //List of all Tables (TextResponse) and their corresponding titles
+    private ArrayList<Paragraph> TableQuestionList = new ArrayList<>();
+    private ArrayList<Table> TableList = new ArrayList<>();
+
+    //List of all Paragraphs (BinaryAnswer)
+    private ArrayList<Paragraph> ParagraphList = new ArrayList<>();
+    
+
 
     /**
      * Generates PDF Documents based on the given SurveyResponse object. 
@@ -57,16 +79,6 @@ public final class PDFGenerator{
      * @throws Exception
      */
     public byte[] createPdf(SurveyResponse response, LocalizationOption language) throws IOException, Exception {
-
-        //Localization variables
-        String total;
-        String responseOptions;
-        String totalResponses;
-        String totalYes;
-        String totalNo;
-        String multipleChoiceAndSingleChoiceResponsesTitle;
-        String textResponsesTitle;
-        String binaryResponsesTitle;
 
         if(language.equals(LocalizationOption.EN)){
             total = "Total";
@@ -93,18 +105,6 @@ public final class PDFGenerator{
         //SETUP
         //----------------------------------------------------------------------------------------------------------------------
 
-        //Variables
-        //List of all BarGraphs (Multiple Choice and Drop Down)
-        ArrayList<Image> ImageList = new ArrayList<Image>();
-
-        //List of all Tables (TextResponse) and their corresponding titles
-        ArrayList<Paragraph> TableQuestionList = new ArrayList<Paragraph>();
-        ArrayList<Table> TableList = new ArrayList<Table>();
-
-        //List of all Paragraphs (BinaryAnswer)
-        ArrayList<Paragraph> ParagraphList = new ArrayList<Paragraph>();
-
-
         //Initialise PDF Document and create OutputStream, PdfWriter 
         var stream = new ByteArrayOutputStream();
         var writer = new PdfWriter(stream);
@@ -127,7 +127,7 @@ public final class PDFGenerator{
         Style header_2 = new Style();
         header.setFont(font).setFontSize(18);
         header.setTextAlignment(TextAlignment.CENTER);
-        
+
         
         //----------------------------------------------------------------------------------------------------------------------
         
@@ -135,8 +135,8 @@ public final class PDFGenerator{
         //ArrayList containing all user responses.
         
         //Recap:
-        //The SurveyResponse represents the questionnaire itself. Each of the objects returned by the getUserResponses() method
-        //is 
+        //The SurveyResponse represents the questionnaire itself, but an instance of it (depending on Group and Instance number). 
+        //Each of the objects returned by the getUserResponses() method is of the type BinaryResponse, TextResponse, MultipleChoiceResponse or SingleChoiceResponse
         ArrayList<Object> rsp = response.getUserResponses();
 
         //Step 2:
@@ -144,20 +144,12 @@ public final class PDFGenerator{
         for(int i = 0; i < rsp.size(); i++){
 
             //Get the ResponseType of the next Object in the ArrayList 
-            ResponseType currentResponseType;
-            if(rsp.get(i) instanceof qova.responseTypes.BinaryResponse){
-                currentResponseType = ResponseType.BINARY_ANSWER;
+            ResponseType currentResponseType = parseResponseType(rsp);
+            
+            //Break if type can't be parsed
+            if(currentResponseType == null){
+                break;
             }
-            else if(rsp.get(i) instanceof qova.responseTypes.TextResponse){
-                currentResponseType = ResponseType.TEXT_RESPONSE;
-            }
-            else if(rsp.get(i) instanceof qova.responseTypes.SingleChoiceResponse){
-                currentResponseType = ResponseType.SINGLE_CHOICE;
-            }
-            else if(rsp.get(i) instanceof qova.responseTypes.MultipleChoiceResponse){
-                currentResponseType = ResponseType.MULTIPLE_CHOICE;
-            }
-            else break;
             
                         
             //------------------------------------------------------------------------
@@ -169,131 +161,29 @@ public final class PDFGenerator{
 
 
             //----------------------------------------------------------------------------------------------------------------
-            //Bar chart is created, if ResponseType is Multiple_Choice 
+            //Bar chart is created, if ResponseType is MultipleChoiceResponse
             if(currentResponseType.equals(ResponseType.MULTIPLE_CHOICE)){
 
+                //Get the MultipleChoiceResponse Object
                 MultipleChoiceResponse mcr = (MultipleChoiceResponse) rsp.get(i);
 
-
-                //The number of response possibilities determines the number of columns in the bar graph
-                Integer responsePossibilities = mcr.getNumberOfOptions();
-
-                //ArrayList containing all column titles 
-                ArrayList<String> columnTitles = mcr.getMutltipleChoiceOptions();
-
-                //DIFFERENT FROM columnTITLES!!!
-                //Create an ArrayList, where each element represents a column of the bar graph. The value is the total number of responses for that option
-                ArrayList<Integer> columnTotals = mcr.getMutltipleChoiceAnswers();
-
-
-                //Initialise the DataSet
-                DefaultCategoryDataset dataSet = new DefaultCategoryDataset();
-
-                //Iterate through the columnDataList and add the data to the dataSet
-                for (int j = 0; j < responsePossibilities; j++) {
-                    dataSet.setValue(columnTotals.get(j), total, columnTitles.get(j));
-                }
-
-
-                //Chart Configuration
-                JFreeChart chart = ChartFactory.createBarChart(
-                        mcr.getQuestion(), // Title of BarGraph = Question in Survey
-                        responseOptions, // x-axis heading
-                        total, // y-axis heading
-                        dataSet, // dataset
-                        PlotOrientation.VERTICAL, // orientation
-                        false, // Show legend
-                        true, // Use Tooltips
-                        false // Configure chart to generate URL's
-                );
-
-                //Chart Dimensions
-                int width = 600;
-                int height = 600;
-
-
-
-                //Create OutputStream of the graph
-                ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
-                try {
-                    ChartUtilities.writeChartAsPNG(pngOutputStream, chart, width, height);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                //Add Graph to PDF
-                ImageData data = ImageDataFactory.create(pngOutputStream.toByteArray());
-                Image img = new Image(data); 
-
-
-                //Add
-                ImageList.add(img);
+                //Generate the bar graph and add to list
+                ImageList.add(generateMultipleChoiceBarGraph(mcr));
 
             }
             //----------------------------------------------------------------------------------------------------------------
 
 
 
-                        //----------------------------------------------------------------------------------------------------------------
-            //Bar chart is created, if ResponseType was either Multiple_Choice or Drop_Down
+            //----------------------------------------------------------------------------------------------------------------
+            //Bar chart is created, if ResponseType is SingleChoiceResponse
             if(currentResponseType.equals(ResponseType.SINGLE_CHOICE)){
 
                 SingleChoiceResponse scr = (SingleChoiceResponse) rsp.get(i);
 
+                //Generate the bar graph and add to list
+                ImageList.add(generateSingleChoiceBarGraph(scr));
 
-                //The number of response possibilities determines the number of columns in the bar graph
-                Integer responsePossibilities = scr.getNumberOfOptions();
-
-                //ArrayList containing all column titles 
-                ArrayList<String> columnTitles = scr.getMutltipleChoiceOptions();
-
-                //DIFFERENT FROM columnTITLES!!!
-                //Create an ArrayList, where each element represents a column of the bar graph. The value is the total number of responses for that option
-                ArrayList<Integer> columnTotals = scr.getMutltipleChoiceAnswers();
-
-
-                //Initialise the DataSet
-                DefaultCategoryDataset dataSet = new DefaultCategoryDataset();
-
-                //Iterate through the columnDataList and add the data to the dataSet
-                for (int j = 0; j < responsePossibilities; j++) {
-                    dataSet.setValue(columnTotals.get(j), total, columnTitles.get(j));
-                }
-
-
-                //Chart Configuration
-                JFreeChart chart = ChartFactory.createBarChart(
-                        scr.getQuestion(), // Title of BarGraph = Question in Survey
-                        responseOptions, // x-axis heading
-                        total, // y-axis heading
-                        dataSet, // dataset
-                        PlotOrientation.VERTICAL, // orientation
-                        false, // Show legend
-                        true, // Use Tooltips
-                        false // Configure chart to generate URL's
-                );
-
-                //Chart Dimensions
-                int width = 600;
-                int height = 600;
-
-
-
-                //Create OutputStream of the graph
-                ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
-                try {
-                    ChartUtilities.writeChartAsPNG(pngOutputStream, chart, width, height);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                //Add Graph to PDF
-                ImageData data = ImageDataFactory.create(pngOutputStream.toByteArray());
-                Image img = new Image(data); 
-
-
-                //Add
-                ImageList.add(img);
             }
             //----------------------------------------------------------------------------------------------------------------
 
@@ -329,8 +219,6 @@ public final class PDFGenerator{
 
 
 
-
-
             //Create Box with Totals for all BinaryAnswers
             //----------------------------------------------------------------------------------------------------------------
             else if(currentResponseType.equals(ResponseType.BINARY_ANSWER)){
@@ -361,22 +249,20 @@ public final class PDFGenerator{
                 String yesPercent = String.format("%.2f", (bnr.getYesTotal()/tot)*100) + "%";
                 String noPercent = String.format("%.2f", (bnr.getNoTotal()/tot)*100) + "%";
                 
-            //add Text
-                //Total    
+                //Find total number of 
                 para.add(totalResponses);
-                para.add(new Text(String.valueOf(total) + "\n").setFont(bold)); 
+                para.add(new Text(String.valueOf(tot) + "\n").setFont(bold)); 
 
-                //Yes Percentage
+                //Calculate and set Yes Percentage
                 para.add(totalYes);
                 para.add(new Text(yesPercent + "\n").setFont(bold)); 
 
-                //Yes Percentage
+                //Calculate and set No Percentage
                 para.add(totalNo);
                 para.add(new Text(noPercent).setFont(bold)); 
 
-                //Add table to List of Tables;
+                
                 ParagraphList.add(para);
-
             }
             //----------------------------------------------------------------------------------------------------------------
 
@@ -441,7 +327,7 @@ public final class PDFGenerator{
 
 
         //Bar charts containing multiple choice and drop down responses
-        for(Image img: ImageList){
+        for(final Image img: ImageList){
             document.add(img);
             document.add(new AreaBreak(AreaBreakType.NEXT_AREA));
         }
@@ -480,11 +366,7 @@ public final class PDFGenerator{
             //Add whitespace
             document.add(new Paragraph("\n \n \n"));
         }
-        
-
-
-
-
+    
 
 
         //Close document
@@ -493,5 +375,147 @@ public final class PDFGenerator{
         //Return PDF as byte[]
         return stream.toByteArray();
 
+    }
+
+
+
+
+
+    
+    //--------------------------------------------------------------------------------------------------
+    public Image generateMultipleChoiceBarGraph(MultipleChoiceResponse mcr){
+        //The number of response possibilities determines the number of columns in the bar graph
+        Integer responsePossibilities = mcr.getNumberOfOptions();
+
+        //ArrayList containing all column titles 
+        ArrayList<String> columnTitles = mcr.getMutltipleChoiceOptions();
+
+        //DIFFERENT FROM columnTITLES!!!
+        //Create an ArrayList, where each element represents a column of the bar graph. The value is the total number of responses for that option
+        ArrayList<Integer> columnTotals = mcr.getMutltipleChoiceAnswers();
+
+
+        //Initialise the DataSet
+        DefaultCategoryDataset dataSet = new DefaultCategoryDataset();
+
+        //Iterate through the columnDataList and add the data to the dataSet
+        for (int j = 0; j < responsePossibilities; j++) {
+            dataSet.setValue(columnTotals.get(j), total, columnTitles.get(j));
+        }
+
+
+        //Chart Configuration
+        JFreeChart chart = ChartFactory.createBarChart(
+                mcr.getQuestion(), // Title of BarGraph = Question in Survey
+                responseOptions, // x-axis heading
+                total, // y-axis heading
+                dataSet, // dataset
+                PlotOrientation.VERTICAL, // orientation
+                false, // Show legend
+                true, // Use Tooltips
+                false // Configure chart to generate URL's
+        );
+
+        //Chart Dimensions
+        int width = 600;
+        int height = 600;
+
+
+
+        //Create OutputStream of the graph
+        ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
+        try {
+            ChartUtilities.writeChartAsPNG(pngOutputStream, chart, width, height);
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+
+        //Add Graph to PDF
+        ImageData data = ImageDataFactory.create(pngOutputStream.toByteArray());
+        
+        //return the Image
+        return new Image(data); 
+    }
+    //--------------------------------------------------------------------------------------------------
+
+
+
+
+    //--------------------------------------------------------------------------------------------------
+    public Image generateSingleChoiceBarGraph(SingleChoiceResponse scr){
+        //The number of response possibilities determines the number of columns in the bar graph
+        Integer responsePossibilities = scr.getNumberOfOptions();
+
+        //ArrayList containing all column titles 
+        ArrayList<String> columnTitles = scr.getSingleChoiceOptions();
+
+        //DIFFERENT FROM columnTITLES!!!
+        //Create an ArrayList, where each element represents a column of the bar graph. The value is the total number of responses for that option
+        ArrayList<Integer> columnTotals = scr.getSingleChoiceAnswers();
+
+
+        //Initialise the DataSet
+        DefaultCategoryDataset dataSet = new DefaultCategoryDataset();
+
+        //Iterate through the columnDataList and add the data to the dataSet
+        for (int j = 0; j < responsePossibilities; j++) {
+            dataSet.setValue(columnTotals.get(j), total, columnTitles.get(j));
+        }
+
+
+        //Chart Configuration
+        JFreeChart chart = ChartFactory.createBarChart(
+                scr.getQuestion(), // Title of BarGraph = Question in Survey
+                responseOptions, // x-axis heading
+                total, // y-axis heading
+                dataSet, // dataset
+                PlotOrientation.VERTICAL, // orientation
+                false, // Show legend
+                true, // Use Tooltips
+                false // Configure chart to generate URL's
+        );
+
+        //Chart Dimensions
+        int width = 600;
+        int height = 600;
+
+
+
+        //Create OutputStream of the graph
+        ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
+        try {
+            ChartUtilities.writeChartAsPNG(pngOutputStream, chart, width, height);
+        } catch (final IOException e) {
+            e.printStackTrace();
+        }
+
+        //Add Graph to PDF
+        ImageData data = ImageDataFactory.create(pngOutputStream.toByteArray());
+        
+        //return the Image
+        return new Image(data); 
+    }
+    //--------------------------------------------------------------------------------------------------
+
+
+
+    
+
+    public ResponseType parseResponseType(Object rsp){
+        if(rsp instanceof qova.responseTypes.BinaryResponse){
+            return ResponseType.BINARY_ANSWER;
+        }
+        else if(rsp instanceof qova.responseTypes.TextResponse){
+            return ResponseType.TEXT_RESPONSE;
+        }
+        else if(rsp instanceof qova.responseTypes.SingleChoiceResponse){
+            return ResponseType.SINGLE_CHOICE;
+        }
+        else if(rsp instanceof qova.responseTypes.MultipleChoiceResponse){
+            return ResponseType.MULTIPLE_CHOICE;
+        }
+        else{
+            return null;
+        }
     }
 }

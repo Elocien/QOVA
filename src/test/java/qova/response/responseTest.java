@@ -165,8 +165,8 @@ public class responseTest extends AbstractIntegrationTest {
         totals.add(8);
 
         assertEquals(question, scr.getQuestion());
-        assertEquals(scOptions, scr.getMutltipleChoiceOptions());
-        assertEquals(totals, scr.getMutltipleChoiceAnswers());
+        assertEquals(scOptions, scr.getSingleChoiceOptions());
+        assertEquals(totals, scr.getSingleChoiceAnswers());
         assertEquals(ResponseType.SINGLE_CHOICE, scr.getType());
     }
 

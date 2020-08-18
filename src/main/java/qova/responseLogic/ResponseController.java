@@ -96,9 +96,6 @@ public class ResponseController {
         }
         // if type is not one of the defined values
 
-        // for easy access
-        Course course = crs.get();
-
         if(!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR")) && !(type.equals("PRACTICAL"))){
             return "error?code=" + internalError;
         }
@@ -195,7 +192,6 @@ public class ResponseController {
         // generate filename
         String filename = "testPdf.pdf";
 
-        // Get the course;
         Optional<Course> crs = courseManagement.findById(id);
 
         // verify that course is present
@@ -230,7 +226,6 @@ public class ResponseController {
         //generate filename
         String filename = "testCsv.csv";
 
-        //Get the course;
         Optional<Course> crs = courseManagement.findById(id);
 
         //verify that course is present
@@ -292,9 +287,9 @@ public class ResponseController {
 
     //test method
     @GetMapping("/createR")
-    public String creatR() throws Exception {
+    public String createR() throws Exception {
         Optional<Course> crs = courseManagement.findById("c000000000000001");
-        responseManagement.TestCreateResponses(crs.get());
+        responseManagement.createTestResponses(crs.get());
         return "home";
     }
 

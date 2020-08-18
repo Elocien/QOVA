@@ -113,20 +113,16 @@ public class Course {
 
 
     public Boolean getLectureExists(){
-        if(lecture.equals(null)) return false;
-        else return true;
+        return (lecture != null);
     }
     public Boolean getTutorialExists(){
-        if(tutorial.equals(null)) return false;
-        else return true;
+        return (tutorial != null);
     }
     public Boolean getSeminarExists(){
-        if(seminar.equals(null)) return false;
-        else return true;
+        return (seminar != null);
     }
     public Boolean getPracticalExists(){
-        if(practical.equals(null)) return false;
-        else return true;
+        return (practical != null);
     }
 
     public void setLecture(CourseInstance lecture){

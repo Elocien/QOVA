@@ -45,11 +45,11 @@ public class SingleChoiceResponse{
         return this.question;
     }
 
-    public ArrayList<String> getMutltipleChoiceOptions(){
+    public ArrayList<String> getSingleChoiceOptions(){
         return this.singleChoiceOptions;
     }
 
-    public ArrayList<Integer> getMutltipleChoiceAnswers(){
+    public ArrayList<Integer> getSingleChoiceAnswers(){
         return this.singleChoiceAnswers;
     }
 

@@ -4,6 +4,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 
 
 @Entity
@@ -14,13 +15,13 @@ public class BinaryResponse{
     @Id @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
 
     //container for the question set
-    private String question;
+    @Lob String question;
 
     //Container for response
     private Integer yesTotal;
     private Integer noTotal;
 
-    private final ResponseType responseType = ResponseType.BINARY_ANSWER;
+    private ResponseType responseType;
 
     //Needed for JPA puposes
     @SuppressWarnings("unused")
@@ -31,6 +32,7 @@ public class BinaryResponse{
         this.question = question;
         this.yesTotal = 0;
         this.noTotal = 0;
+        this.responseType = ResponseType.BINARY_ANSWER;
     }
     
     
