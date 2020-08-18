@@ -47,8 +47,6 @@ import qova.responseTypes.TextResponse;
 
 public final class PDFGenerator{
 
-    private final ResponseManagement responseManagement;
-
     /**
      * Generates PDF Documents based on the given SurveyResponse object. 
      * 
@@ -146,7 +144,21 @@ public final class PDFGenerator{
         for(int i = 0; i < rsp.size(); i++){
 
             //Get the ResponseType of the next Object in the ArrayList 
-            ResponseType currentResponseType = responseManagement.parseResponseType(rsp.get(i));
+            ResponseType currentResponseType;
+            if(rsp.get(i) instanceof qova.responseTypes.BinaryResponse){
+                currentResponseType = ResponseType.BINARY_ANSWER;
+            }
+            else if(rsp.get(i) instanceof qova.responseTypes.TextResponse){
+                currentResponseType = ResponseType.TEXT_RESPONSE;
+            }
+            else if(rsp.get(i) instanceof qova.responseTypes.SingleChoiceResponse){
+                currentResponseType = ResponseType.SINGLE_CHOICE;
+            }
+            else if(rsp.get(i) instanceof qova.responseTypes.MultipleChoiceResponse){
+                currentResponseType = ResponseType.MULTIPLE_CHOICE;
+            }
+            else break;
+            
                         
             //------------------------------------------------------------------------
             //This is used to determine what graphic to add to the PDF 
@@ -160,7 +172,7 @@ public final class PDFGenerator{
             //Bar chart is created, if ResponseType is Multiple_Choice 
             if(currentResponseType.equals(ResponseType.MULTIPLE_CHOICE)){
 
-                MultipleChoiceResponse mcr = rsp.get(i);
+                MultipleChoiceResponse mcr = (MultipleChoiceResponse) rsp.get(i);
 
 
                 //The number of response possibilities determines the number of columns in the bar graph
@@ -226,7 +238,7 @@ public final class PDFGenerator{
             //Bar chart is created, if ResponseType was either Multiple_Choice or Drop_Down
             if(currentResponseType.equals(ResponseType.SINGLE_CHOICE)){
 
-                SingleChoiceResponse scr = rsp.get(i);
+                SingleChoiceResponse scr = (SingleChoiceResponse) rsp.get(i);
 
 
                 //The number of response possibilities determines the number of columns in the bar graph
@@ -292,7 +304,7 @@ public final class PDFGenerator{
 
             else if(currentResponseType.equals(ResponseType.TEXT_RESPONSE)){
 
-                TextResponse txr = rsp.get(i);
+                TextResponse txr = (TextResponse) rsp.get(i);
 
                 //Add Corresponding question to questionList
                 Paragraph questionpara = new Paragraph();
@@ -306,10 +318,9 @@ public final class PDFGenerator{
 
                 //Iterate through all responses at this position and add the textResponse to the table
                 for (String r: txr.getResponses()){
-                    table.addCell(r.getTextResponse());
+                    table.addCell(r);
                 }
 
-                //Add table to List of Tables;
                 TableList.add(table);
 
             }
@@ -324,7 +335,7 @@ public final class PDFGenerator{
             //----------------------------------------------------------------------------------------------------------------
             else if(currentResponseType.equals(ResponseType.BINARY_ANSWER)){
 
-                BinaryResponse bnr = rsp.get(i);
+                BinaryResponse bnr = (BinaryResponse) rsp.get(i);
 
                 //Create new Paragraph for Question
                 Paragraph questionpara = new Paragraph();

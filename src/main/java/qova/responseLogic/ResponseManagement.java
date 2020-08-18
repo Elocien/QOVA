@@ -47,18 +47,18 @@ public class ResponseManagement {
         return type;
     }
 
-    public ResponseType parseResponseType(Object obj){
-        if(rsp.getClass().getSimpleName() == "BinaryResponse"){
+    public ResponseType parseResponseType(Object rsp){
+        if(rsp instanceof qova.responseTypes.BinaryResponse){
             return ResponseType.BINARY_ANSWER;
         }
-        else if(rsp.getClass().getSimpleName() == "TextResponse"){
+        else if(rsp instanceof qova.responseTypes.TextResponse){
             return ResponseType.TEXT_RESPONSE;
         }
-        else if(rsp.getClass().getSimpleName() == "MultipleChoiceResponse"){
-            return ResponseType.MULTIPLE_CHOICE;
-        }
-        else if(rsp.getClass().getSimpleName() == "SingleChoiceResponse"){
+        else if(rsp instanceof qova.responseTypes.SingleChoiceResponse){
             return ResponseType.SINGLE_CHOICE;
+        }
+        else if(rsp instanceof qova.responseTypes.MultipleChoiceResponse){
+            return ResponseType.MULTIPLE_CHOICE;
         }
         else{
             return null;
@@ -95,14 +95,18 @@ public class ResponseManagement {
 
 
     public Boolean verifyJsonArray(JSONArray json){
+       
         //check for too large surveys (more than 100 quesitons)
         if(json.length() > 100){
             return false;
         }
 
+        //TODO: Check for other malicious strings
+
         //example string
         // [{"type":"YesNo","question":""},{"type":"MultipleChoice","question":"","answers":["1","2","3","4","5"]},{"type":"DropDown","question":"","answers":["Answer","Answer","Answer"]}]
-        return false;
+        
+        return true;
     }
 
 

@@ -58,6 +58,10 @@ public class SingleChoiceResponse{
         singleChoiceAnswers.set(pos, totalAtPosition);
     }
 
+    public Integer getNumberOfOptions(){
+        return this.singleChoiceOptions.size();
+    }
+
     public ResponseType getType(){
         return this.responseType;
     }
