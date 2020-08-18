@@ -2,13 +2,16 @@ package qova.responseTypes;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderColumn;
 
 import qova.course.Course;
 import qova.course.CourseType;
@@ -58,7 +61,7 @@ public class SurveyResponse {
 
 
     //Array of all subtype Objects (BinaryResponse, TextResponse, SingleChoiceResponse and MultipleChoiceResponse)
-    @Lob ArrayList<Object> responses;
+    @Lob List<AbstractResponse> responses = new ArrayList<>();
 
 
     //Needed for JPA puposes
@@ -66,7 +69,7 @@ public class SurveyResponse {
     public SurveyResponse (){}
 
 
-    public SurveyResponse(Course course, CourseType type, Integer instanceNumber, Integer groupNumber, ArrayList<Object> responses){
+    public SurveyResponse(Course course, CourseType type, Integer instanceNumber, Integer groupNumber, List<AbstractResponse> responses){
         this.dateTime = LocalDateTime.now();
         this.course = course;
         this.courseType = type;
@@ -100,7 +103,7 @@ public class SurveyResponse {
         return this.numberOfSubmissions;
     }
 
-    public ArrayList<Object> getUserResponses(){
+    public List<AbstractResponse> getUserResponses(){
         return this.responses;
     }
 

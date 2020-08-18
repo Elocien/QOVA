@@ -8,8 +8,7 @@ import javax.persistence.Lob;
 
 
 @Entity
-public class BinaryResponse{
-
+public class BinaryResponse extends AbstractResponse {
 
     //-----------------------------------------------------------------------
     @Id @GeneratedValue(strategy = GenerationType.AUTO) private Long id;

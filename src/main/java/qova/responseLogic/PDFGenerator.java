@@ -24,6 +24,7 @@ import com.itextpdf.layout.property.UnitValue;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.io.ByteArrayOutputStream;
 
 import org.jfree.chart.ChartFactory;
@@ -33,6 +34,7 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import qova.course.LocalizationOption;
+import qova.responseTypes.AbstractResponse;
 import qova.responseTypes.BinaryResponse;
 import qova.responseTypes.MultipleChoiceResponse;
 import qova.responseTypes.ResponseType;
@@ -40,12 +42,9 @@ import qova.responseTypes.SingleChoiceResponse;
 import qova.responseTypes.SurveyResponse;
 import qova.responseTypes.TextResponse;
 
+public class PDFGenerator {
 
- 
-
-public class PDFGenerator{
-
-    //Localization variables
+    // Localization variables
     private String total;
     private String responseOptions;
     private String totalResponses;
@@ -55,24 +54,21 @@ public class PDFGenerator{
     private String textResponsesTitle;
     private String binaryResponsesTitle;
 
+    // Variables
+    // List of all BarGraphs (Multiple Choice and Drop Down)
+    private List<Image> ImageList = new ArrayList<>();
 
-    //Variables
-    //List of all BarGraphs (Multiple Choice and Drop Down)
-    private ArrayList<Image> ImageList = new ArrayList<>();
+    // List of all Tables (TextResponse) and their corresponding titles
+    private List<Paragraph> TableQuestionList = new ArrayList<>();
+    private List<Table> TableList = new ArrayList<>();
 
-    //List of all Tables (TextResponse) and their corresponding titles
-    private ArrayList<Paragraph> TableQuestionList = new ArrayList<>();
-    private ArrayList<Table> TableList = new ArrayList<>();
-
-    //List of all Paragraphs (BinaryAnswer)
-    private ArrayList<Paragraph> ParagraphList = new ArrayList<>();
-    
-
+    // List of all Paragraphs (BinaryAnswer)
+    private List<Paragraph> ParagraphList = new ArrayList<>();
 
     /**
-     * Generates PDF Documents based on the given SurveyResponse object. 
+     * Generates PDF Documents based on the given SurveyResponse object.
      * 
-     * @param response {@linkplain SurveyResponse} 
+     * @param response {@linkplain SurveyResponse}
      * @param language Defines the language of the resulting PDF
      * @return byte[]
      * @throws IOException
@@ -80,7 +76,7 @@ public class PDFGenerator{
      */
     public byte[] createPdf(SurveyResponse response, LocalizationOption language) throws IOException, Exception {
 
-        if(language.equals(LocalizationOption.EN)){
+        if (language.equals(LocalizationOption.EN)) {
             total = "Total";
             responseOptions = "Response Options";
             totalResponses = "Total Responses: ";
@@ -89,8 +85,7 @@ public class PDFGenerator{
             multipleChoiceAndSingleChoiceResponsesTitle = "Multiple Choice and Single Choice Responses";
             textResponsesTitle = "Text Responses";
             binaryResponsesTitle = "Yes/No Responses";
-        }
-        else if(language.equals(LocalizationOption.DE)){
+        } else if (language.equals(LocalizationOption.DE)) {
             total = "Stimmen Anzahl";
             responseOptions = "Antwortmöglichkeiten";
             totalResponses = "Gesamtstimmenanzahl: ";
@@ -101,21 +96,19 @@ public class PDFGenerator{
             binaryResponsesTitle = "Ja/Nein Fragen";
         }
 
+        // SETUP
+        // ----------------------------------------------------------------------------------------------------------------------
 
-        //SETUP
-        //----------------------------------------------------------------------------------------------------------------------
-
-        //Initialise PDF Document and create OutputStream, PdfWriter 
+        // Initialise PDF Document and create OutputStream, PdfWriter
         var stream = new ByteArrayOutputStream();
         var writer = new PdfWriter(stream);
         var pdf = new PdfDocument(writer);
         var document = new Document(pdf);
 
-
-        //Set Fonts (This has to be done within an instance of the PDF)
+        // Set Fonts (This has to be done within an instance of the PDF)
         PdfFont font = PdfFontFactory.createFont(StandardFonts.TIMES_ROMAN);
         PdfFont bold = PdfFontFactory.createFont(StandardFonts.TIMES_BOLD);
-        
+
         Style titleFont = new Style();
         titleFont.setFont(bold).setFontSize(36);
         titleFont.setTextAlignment(TextAlignment.CENTER);
@@ -128,16 +121,16 @@ public class PDFGenerator{
         header.setFont(font).setFontSize(18);
         header.setTextAlignment(TextAlignment.CENTER);
 
-        
-        //----------------------------------------------------------------------------------------------------------------------
-        
+        // ----------------------------------------------------------------------------------------------------------------------
 
-        //ArrayList containing all user responses.
-        
-        //Recap:
-        //The SurveyResponse represents the questionnaire itself, but an instance of it (depending on Group and Instance number). 
-        //Each of the objects returned by the getUserResponses() method is of the type BinaryResponse, TextResponse, MultipleChoiceResponse or SingleChoiceResponse
-        ArrayList<Object> rsp = response.getUserResponses();
+        // ArrayList containing all user responses.
+
+        // Recap:
+        // The SurveyResponse represents the questionnaire itself, but an instance of it
+        // (depending on Group and Instance number).
+        // Each of the objects returned by the getUserResponses() method is of the type
+        // BinaryResponse, TextResponse, MultipleChoiceResponse or SingleChoiceResponse
+        List<AbstractResponse> rsp = response.getUserResponses();
 
         //Step 2:
         //Iterate through all user responses, with each object corresponding to a question on the questionnaire

@@ -17,6 +17,9 @@ public class AdminManagement {
 
     @Autowired
     public AdminManagement(DefaultSurveyRepository repo) {
+        
+        repo.save(new DefaultSurvey(1L, "[]"));
+        
         //Check if defaultSurvey exists.
         try{
             repo.findSpecialInstance();
@@ -43,6 +46,7 @@ public class AdminManagement {
         }
         catch(IllegalStateException e){
             DefaultSurvey defaultSurvey = new DefaultSurvey(1L, "[]");
+            repo.save(defaultSurvey);
             return "[]";
         }
     }

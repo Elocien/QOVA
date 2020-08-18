@@ -2,6 +2,7 @@ package qova.responseLogic;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -14,6 +15,7 @@ import qova.course.Course;
 import qova.course.CourseInstance;
 import qova.course.CourseType;
 import qova.course.LocalizationOption;
+import qova.responseTypes.AbstractResponse;
 import qova.responseTypes.BinaryResponse;
 import qova.responseTypes.BinaryResponseRepository;
 import qova.responseTypes.MultipleChoiceResponse;
@@ -128,7 +130,7 @@ public class ResponseManagement {
         CourseInstance courseInstance = course.getInstance(type);
 
         //ArrayList with response objects, initialised with the number of questions as size
-        ArrayList<Object> responses = new ArrayList<Object>(json.length());
+        List<AbstractResponse> responses = new ArrayList<>(json.length());
 
         //parse json to serialise response objects
 
@@ -231,7 +233,7 @@ public class ResponseManagement {
         var instanceNumber = 12;
         var groupNumber = 4;
 
-        ArrayList<Object> responses = new ArrayList<>();
+        ArrayList<AbstractResponse> responses = new ArrayList<>();
 
         BinaryResponse bnr = new BinaryResponse("Would you consider recommending the lecture to other students?");
         binaryResponseRepository.save(bnr);

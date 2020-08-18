@@ -5,6 +5,7 @@ import qova.course.Course;
 import qova.course.CourseFaculty;
 import qova.course.CourseInstance;
 import qova.course.CourseType;
+import qova.responseTypes.AbstractResponse;
 import qova.responseTypes.BinaryResponse;
 import qova.responseTypes.MultipleChoiceResponse;
 import qova.responseTypes.ResponseType;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +50,7 @@ public class responseTest extends AbstractIntegrationTest {
         var instanceNumber = 12;
         var groupNumber = 4;
 
-        ArrayList<Object> responses = new ArrayList<Object>();
+        List<AbstractResponse> responses = new ArrayList<>();
 
         BinaryResponse bnr = new BinaryResponse("Would you consider recommending the lecture to other students?");
         for(int i = 0; i < 50 ; i++){bnr.incrementYes();}

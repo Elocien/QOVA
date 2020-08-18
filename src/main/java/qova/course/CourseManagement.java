@@ -563,7 +563,7 @@ public class CourseManagement {
         courseInstancesRepo.save(seminar);
 
         String[] pTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var practical = new CourseInstance(CourseType.TUTORIAL, 8, 12, pTitles);
+        var practical = new CourseInstance(CourseType.PRACTICAL, 8, 12, pTitles);
 
         courseInstancesRepo.save(practical);
 
