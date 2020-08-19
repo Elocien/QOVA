@@ -15,38 +15,55 @@
     <div th:include="navbar"></div>
 
     <div class="container">
+        <div class="row justify-content-center">
 
-        <div class="row text-center">
-            <div class="col-lg-12 mt-4">
-
-                <h2 class="font-weight-bold" th:text="#{navbar.results}">SURVEY RESULTS</h2>
-                <h5 class="font-weight-light" th:text="#{course.description}">COURSE DESCRIPTION</h5>
-                <h5 class="font-weight-light" th:text="#{course.table_headline}">COURSE TABLE</h5>
-
-                <table class="table table-hover">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col" th:text="#{course.name}">NAME</th>
-                            <th scope="col" th:text="#{course.courseDate}">SEMESTER</th>
-                            <th scope="col" th:text="#{course.semesterOfStudents}">YEAR</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-center">
-                        <tr th:each="course : ${courseList}">
-                            <td th:text="${course.name}">NAME</td>
-                            <td th:text="${course.semesterString}">SEMESTER</td>
-                            <td scope="col">
-                                <!-- <button class="btn btn-primary" type="submit" th:href="${/PdfGen?id={id}&type=LECTURE&classNo=1(id=${course.id})}">Button</button> -->
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+            <!--Headline-->
+            <div class="col-12 text-center mt-4">
+                <h2 class="font-weight-bold">SURVEY RESULTS</h2>
+                <h5 class="font-weight-light">YOU CAN CHECK OUT THE RESULTS OF A SURVEY HERE!</h5>
             </div>
-        </div>
 
+            <div class="col-12">
+
+                <div class="container result-container mt-3">
+                    <h5 class="mt-2">SINGLE CHOICE:</h5>
+                    <div class="col pl-0 mt-2 mb-2">
+                        <p class="font-weight-light mb-0 mt-2 result-text">ANSWERE A: CATS > DOGS</p>
+                        <div class="d-flex flex-row">
+                            <div class="result-bar" style="width: 500px; background-color: black;"></div>
+                            <div class="ml-2">50%</div>
+                        </div>
+                        <p class="font-weight-light mb-0 mt-2 result-text">ANSWERE B: CATS < DOGS</p>
+                        <div class="d-flex flex-row">
+                            <div class="result-bar" style="width: 300px; background-color: grey;"></div>
+                            <div class="ml-2">30%</div>
+                        </div>
+                        <p class="font-weight-light mb-0 mt-2 result-text">ANSWERE C: BOTH ARE ONLY GOOD FOR SOUP...</p>
+                        <div class="d-flex flex-row">
+                            <div class="result-bar" style="width: 200px; background-color: darkgrey;"></div>
+                            <div class="ml-2">20%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="container result-container mt-3">
+                    <h5 class="mt-2">FREE TEXT:</h5>
+                    <p class="font-weight-light mt-2 result-text">What is your favourite Professor?</p>
+                    <p class="font-weight-light result-free-text">Professor Xaviar</p>
+                    <p class="font-weight-light result-free-text">Professor Eich</p>
+                    <p class="font-weight-light result-free-text">Professor Proton</p>
+                    <p class="font-weight-light result-free-text">The Professor</p>
+                </div>
+
+            </div>
+
+        </div>
     </div>
 
     <div th:include="footer"></div>
 
 </body>
+<script>
+
+</script>
 </html>
