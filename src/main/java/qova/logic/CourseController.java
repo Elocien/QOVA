@@ -384,7 +384,7 @@ public class CourseController {
                 responseManagement.createSurveyResponse(survey, course.get(), type);
 
                 //Sets the survey string for a given course (takes the default survey and conncatenates it with the create survey)
-                courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson(), adminManagement.getDefaultSurvey());
+                courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson());
             }
 
 

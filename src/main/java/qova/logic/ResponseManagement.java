@@ -124,7 +124,7 @@ public class ResponseManagement {
 
 
 
-    public void createSurveyResponse(final JSONArray json, final Course course, final String stringType){
+    public void createSurveyResponse(JSONArray json, Course course, String stringType){
         
         //Resolve type and find correct instance of course (lecture, tutorial, etc.)
         final CourseType type = parseCourseType(stringType);
@@ -134,7 +134,7 @@ public class ResponseManagement {
         final List<Object> responses = new ArrayList<>(json.length());
 
         //parse json to serialise response objects
-
+        
 
         
         //for each instance, 

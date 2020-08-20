@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import qova.enums.CourseType;
 import qova.forms.SurveyForm;
-import qova.logic.CourseManagement;
 import qova.objects.Course;
 
 
@@ -115,7 +114,7 @@ public class ResponseController {
 
     // Mapping for Survey HTML
     @GetMapping("survey")
-    public String SuveyView(Model model, @RequestParam String type, @RequestParam(required = false) String id) {
+    public String SurveyView(Model model, @RequestParam String type, @RequestParam(required = false) String id) {
         // redirect
         if (id == null) {
 			return "error?code=" + courseNotFound;
@@ -130,6 +129,10 @@ public class ResponseController {
             if (survey.equals("Something went wrong")) {
                 return "redirect:/";
             } else {
+
+                //TODO: Add defaultSurvey to survey (concatenate strings)
+                //
+
                 model.addAttribute("typeID", type);
                 model.addAttribute("id", id);
                 model.addAttribute("survey", survey);

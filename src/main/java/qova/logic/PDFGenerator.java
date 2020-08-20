@@ -322,7 +322,7 @@ public class PDFGenerator {
 
 
         //Bar charts containing multiple choice and drop down responses
-        for(final Image img: ImageList){
+        for(Image img: ImageList){
             document.add(img);
             document.add(new AreaBreak(AreaBreakType.NEXT_AREA));
         }
@@ -421,7 +421,7 @@ public class PDFGenerator {
         ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
         try {
             ChartUtilities.writeChartAsPNG(pngOutputStream, chart, width, height);
-        } catch (final IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -480,7 +480,7 @@ public class PDFGenerator {
         ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
         try {
             ChartUtilities.writeChartAsPNG(pngOutputStream, chart, width, height);
-        } catch (final IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
