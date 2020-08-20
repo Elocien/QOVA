@@ -34,13 +34,12 @@
     <div id="resource-container" style="display: none;">
         <!--Question Template-->
         <div class="container result-container with-bars mt-3">
-            <h5 class="question-type mt-2"></h5>
-            <p class="question-text font-weight-light mt-2"></p>
+            <h5 class="question-type mt-2 mb-4"></h5>
             <div class="col answere-column pl-0 mt-2 mb-2"></div>
         </div>
         <!--Answere Template-->
         <div class="answere-template">
-            <p class="result-text font-weight-light mb-0 mt-2"></p>
+            <p class="result-text mb-0 mt-2"></p>
             <div class="d-flex flex-row">
                 <div class="result-bar"></div>
                 <div class="result-percent ml-2"></div>
@@ -102,25 +101,14 @@
     }
     function create_question(type, text, answers) {
         var question = resources.getElementsByClassName("result-container")[0].cloneNode(true);
-        question.getElementsByClassName("question-text")[0].innerHTML = text;
         for (let i = 0; i < answers.length; ++i) {
             question.getElementsByClassName("answere-column")[0].appendChild(answers[i]);
         }
-        var headline = "";
         if (type == "TEXT_RESPONSE") {
             question.classList.remove("with-bars");
             headline = "Free Text Question:";
         }
-        else if (type == "MULTIPLE_CHOICE") {
-            headline = "Multiple Choice Question:";
-        }
-        else if (type == "SINGLE_CHOICE") {
-            headline = "Single Choice Question:";
-        }
-        else if (type == "BINARY_ANSWER") {
-            headline = "Binary Question:";
-        }
-        question.getElementsByClassName("question-type")[0].innerHTML = headline;
+        question.getElementsByClassName("question-type")[0].innerHTML = text;
         return question;
     }
     function create_answere(type, text, value) {
