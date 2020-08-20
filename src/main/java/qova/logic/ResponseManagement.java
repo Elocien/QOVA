@@ -38,7 +38,7 @@ public class ResponseManagement {
 
 
     @Autowired
-    public ResponseManagement(final SurveyResponseRepository surveyResponseRepository, final BinaryResponseRepository binaryResponseRepository, final TextResponseRepository textResponseRepository, final MultipleChoiceResponseRepository multipleChoiceResponseRepository) {
+    public ResponseManagement(SurveyResponseRepository surveyResponseRepository, BinaryResponseRepository binaryResponseRepository, TextResponseRepository textResponseRepository, MultipleChoiceResponseRepository multipleChoiceResponseRepository) {
         this.surveyResponseRepository = Objects.requireNonNull(surveyResponseRepository);
         this.binaryResponseRepository = Objects.requireNonNull(binaryResponseRepository);
         this.textResponseRepository = Objects.requireNonNull(textResponseRepository);
@@ -46,7 +46,7 @@ public class ResponseManagement {
     }
 
 
-    public CourseType parseCourseType(final String stringType){
+    public CourseType parseCourseType(String stringType){
         
         CourseType type;
 
@@ -59,7 +59,7 @@ public class ResponseManagement {
         return type;
     }
 
-    public ResponseType parseResponseType(final Object rsp){
+    public ResponseType parseResponseType(Object rsp){
         if(rsp instanceof qova.objects.BinaryResponse){
             return ResponseType.BINARY_ANSWER;
         }
@@ -79,14 +79,14 @@ public class ResponseManagement {
     
     
     //PDF Generation (ENGLISH)
-    public byte[] generatePDF_en(final Course course, final CourseType type, final Integer groupNumber, final Integer instanceNumber) throws IOException, Exception {
+    public byte[] generatePDF_en(Course course, CourseType type, Integer groupNumber, Integer instanceNumber) throws IOException, Exception {
 
         //retrieve the SurveyResponse object from repository
-        final Optional<SurveyResponse> rsp = surveyResponseRepository.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, type, groupNumber, instanceNumber);
+        Optional<SurveyResponse> rsp = surveyResponseRepository.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, type, groupNumber, instanceNumber);
         
         
         //Generate PDF 
-        final PDFGenerator pdfGen = new PDFGenerator();
+        PDFGenerator pdfGen = new PDFGenerator();
         return pdfGen.createPdf(rsp.get(), LocalizationOption.EN);
     }
 
@@ -94,19 +94,19 @@ public class ResponseManagement {
 
 
     //CSV Generation (ENGLISH)
-    public byte[] generateCSV_en(final Course course, final CourseType type, final Integer groupNumber, final Integer instanceNumber) throws IOException, Exception {
+    public byte[] generateCSV_en(Course course, CourseType type, Integer groupNumber, Integer instanceNumber) throws IOException, Exception {
 
         //retrieve the SurveyResponse object from repository
-        final Optional<SurveyResponse> rsp = surveyResponseRepository.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, type, groupNumber, instanceNumber);
+        Optional<SurveyResponse> rsp = surveyResponseRepository.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, type, groupNumber, instanceNumber);
         
         //Generate PDF
-        final CSVGenerator csvGen = new CSVGenerator();
+        CSVGenerator csvGen = new CSVGenerator();
         return csvGen.createCSV(rsp.get(), LocalizationOption.EN);
     }
 
 
 
-    public Boolean verifyJsonArray(final JSONArray json){
+    public Boolean verifyJsonArray(JSONArray json){
        
         //check for too large surveys (more than 100 quesitons)
         if(json.length() > 100){
@@ -127,11 +127,11 @@ public class ResponseManagement {
     public void createSurveyResponse(JSONArray json, Course course, String stringType){
         
         //Resolve type and find correct instance of course (lecture, tutorial, etc.)
-        final CourseType type = parseCourseType(stringType);
-        final CourseInstance courseInstance = course.getInstance(type);
+        CourseType type = parseCourseType(stringType);
+        CourseInstance courseInstance = course.getInstance(type);
 
         //ArrayList with response objects, initialised with the number of questions as size
-        final List<Object> responses = new ArrayList<>(json.length());
+        List<Object> responses = new ArrayList<>(json.length());
 
         //parse json to serialise response objects
         
@@ -163,7 +163,7 @@ public class ResponseManagement {
 	 * @return an {@linkplain Optional} of an {@linkplain SurveyResponse}
 	 *         with the given id
 	 */
-	public Optional<SurveyResponse> findById(final long id) {
+	public Optional<SurveyResponse> findById(long id) {
 		return surveyResponseRepository.findById(id);
 	}
 
@@ -176,7 +176,7 @@ public class ResponseManagement {
      * 
      * @return an Iterable containing all Responses that fit criteria
      */
-	public Optional<SurveyResponse> findByCourseAndCourseTypeAndClassNo(final Course course, final CourseType type, final Integer groupNumber, final Integer instanceNumber){
+	public Optional<SurveyResponse> findByCourseAndCourseTypeAndClassNo(Course course, CourseType type, Integer groupNumber, Integer instanceNumber){
 		return surveyResponseRepository.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, type, groupNumber, instanceNumber);
 	}
 
@@ -227,16 +227,16 @@ public class ResponseManagement {
 
 
 
-    //Test Method, remove in final build
-    public void createTestResponses(final Course course) throws Exception {
+    //Test Method, remove in build
+    public void createTestResponses(Course course) throws Exception {
         
-        final var type = CourseType.LECTURE;
-        final var instanceNumber = 12;
-        final var groupNumber = 4;
+        var type = CourseType.LECTURE;
+        var instanceNumber = 12;
+        var groupNumber = 4;
 
-        final List<Object> responses = new ArrayList<>();
+        List<Object> responses = new ArrayList<>();
 
-        final BinaryResponse bnr = new BinaryResponse("Would you consider recommending the lecture to other students?");
+        BinaryResponse bnr = new BinaryResponse("Would you consider recommending the lecture to other students?");
         binaryResponseRepository.save(bnr);
         for(int i = 0; i < 50 ; i++){bnr.incrementYes();}
         for(int i = 0; i < 25 ; i++){bnr.incrementNo();}
@@ -244,26 +244,26 @@ public class ResponseManagement {
 
         
         
-        final ArrayList<String> mcOptions = new ArrayList<>();
+        ArrayList<String> mcOptions = new ArrayList<>();
         mcOptions.add("It was informative");
         mcOptions.add("It was interesting");
         mcOptions.add("I learned something new");
         mcOptions.add("I enjoyed attending the lecture");
         mcOptions.add("I would recommend the lecture to others");
-        final MultipleChoiceResponse mcr = new MultipleChoiceResponse("What was good about the lecture (multiple options can be selected)", mcOptions);
+        MultipleChoiceResponse mcr = new MultipleChoiceResponse("What was good about the lecture (multiple options can be selected)", mcOptions);
         multipleChoiceResponseRepository.save(mcr);
 
-        final ArrayList<Integer> mcAnswers1 = new ArrayList<>();
+        ArrayList<Integer> mcAnswers1 = new ArrayList<>();
         mcAnswers1.add(0);
         mcAnswers1.add(1);
         mcAnswers1.add(3);
 
-        final ArrayList<Integer> mcAnswers2 = new ArrayList<>();
+        ArrayList<Integer> mcAnswers2 = new ArrayList<>();
         mcAnswers2.add(1);
         mcAnswers2.add(4);
 
 
-        final ArrayList<Integer> mcAnswers3 = new ArrayList<>();
+        ArrayList<Integer> mcAnswers3 = new ArrayList<>();
         mcAnswers3.add(2);
         mcAnswers3.add(4);
 
@@ -274,7 +274,7 @@ public class ResponseManagement {
         
 
 
-        final TextResponse txr = new TextResponse("What is your opinion of the lecture, is it helpful?");
+        TextResponse txr = new TextResponse("What is your opinion of the lecture, is it helpful?");
         textResponseRepository.save(txr);
         for(int i = 0; i < 20 ; i++){txr.addTextSubmission("this is a bit of a test");}
         for(int i = 0; i < 10 ; i++){txr.addTextSubmission("this is a larger test to test the test");}
@@ -294,15 +294,15 @@ public class ResponseManagement {
     public byte[] generatePDF_test() throws IOException, Exception {
 
         //Add responses to arrayList
-        final Iterable<SurveyResponse> rsp = surveyResponseRepository.findAll();
+        Iterable<SurveyResponse> rsp = surveyResponseRepository.findAll();
 
-        final List<SurveyResponse> sr = new ArrayList<>();
+        List<SurveyResponse> sr = new ArrayList<>();
 
-        for(final SurveyResponse r: rsp){
+        for(SurveyResponse r: rsp){
             sr.add(r);
         }
         //Generate PDF 
-        final PDFGenerator pdfGen = new PDFGenerator();
+        PDFGenerator pdfGen = new PDFGenerator();
         return pdfGen.createPdf(sr.get(0), LocalizationOption.EN);
     }
 }
