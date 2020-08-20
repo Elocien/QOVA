@@ -19,6 +19,8 @@ import java.util.List;
 
 import com.google.gwt.xhr.client.XMLHttpRequest.ResponseType;
 
+import com.google.gwt.xhr.client.XMLHttpRequest.ResponseType;
+
 import org.junit.jupiter.api.Test;
 
 public class responseTest extends AbstractIntegrationTest {
