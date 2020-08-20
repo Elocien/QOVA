@@ -47,11 +47,11 @@ public class MultipleChoiceResponse {
         return this.question;
     }
 
-    public ArrayList<String> getMutltipleChoiceOptions(){
+    public ArrayList<String> getMultipleChoiceOptions(){
         return this.multipleChoiceOptions;
     }
 
-    public ArrayList<Integer> getMutltipleChoiceAnswers(){
+    public ArrayList<Integer> getMultipleChoiceAnswers(){
         return this.multipleChoiceAnswers;
     }
 

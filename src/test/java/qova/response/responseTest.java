@@ -218,8 +218,8 @@ public class responseTest extends AbstractIntegrationTest {
         totals.add(25);
 
         assertEquals(question, mcr.getQuestion());
-        assertEquals(mcOptions, mcr.getMutltipleChoiceOptions());
-        assertEquals(totals, mcr.getMutltipleChoiceAnswers());
+        assertEquals(mcOptions, mcr.getMultipleChoiceOptions());
+        assertEquals(totals, mcr.getMultipleChoiceAnswers());
         assertEquals(5, mcr.getNumberOfOptions());
         assertEquals(qova.enums.ResponseType.MULTIPLE_CHOICE, mcr.getType());
     }

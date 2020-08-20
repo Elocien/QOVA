@@ -82,8 +82,8 @@
                 }
             }
             else if (type == "MULTIPLE_CHOICE") {
-                for (let j = 0; j < answer["mutltipleChoiceOptions"].length; ++j) {
-                    answers.push(create_answere(type, answer["mutltipleChoiceOptions"][j], answer["mutltipleChoiceAnswers"][j]*0.01));
+                for (let j = 0; j < answer["multipleChoiceOptions"].length; ++j) {
+                    answers.push(create_answere(type, answer["multipleChoiceOptions"][j], answer["multipleChoiceAnswers"][j]*0.01));
                 }
             }
             else if (type == "SINGLE_CHOICE") {

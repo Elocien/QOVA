@@ -383,11 +383,11 @@ public class PDFGenerator {
         Integer responsePossibilities = mcr.getNumberOfOptions();
 
         //ArrayList containing all column titles 
-        ArrayList<String> columnTitles = mcr.getMutltipleChoiceOptions();
+        ArrayList<String> columnTitles = mcr.getMultipleChoiceOptions();
 
         //DIFFERENT FROM columnTITLES!!!
         //Create an ArrayList, where each element represents a column of the bar graph. The value is the total number of responses for that option
-        ArrayList<Integer> columnTotals = mcr.getMutltipleChoiceAnswers();
+        ArrayList<Integer> columnTotals = mcr.getMultipleChoiceAnswers();
 
 
         //Initialise the DataSet
