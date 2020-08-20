@@ -23,39 +23,7 @@
                 <h5 class="font-weight-light">YOU CAN CHECK OUT THE RESULTS OF A SURVEY HERE!</h5>
             </div>
 
-            <div class="col-12" id="results">
-
-                <div class="container result-container with-bars mt-3">
-                    <h5 class="mt-2">SINGLE CHOICE:</h5>
-                    <div class="col pl-0 mt-2 mb-2">
-                        <p class="font-weight-light mb-0 mt-2 result-text">ANSWERE A: CATS > DOGS</p>
-                        <div class="d-flex flex-row">
-                            <div class="result-bar" style="width: 500px;"></div>
-                            <div class="ml-2">50%</div>
-                        </div>
-                        <p class="font-weight-light mb-0 mt-2 result-text">ANSWERE B: CATS < DOGS</p>
-                        <div class="d-flex flex-row">
-                            <div class="result-bar" style="width: 300px;"></div>
-                            <div class="ml-2">30%</div>
-                        </div>
-                        <p class="font-weight-light mb-0 mt-2 result-text">ANSWERE C: BOTH ARE ONLY GOOD FOR SOUP...</p>
-                        <div class="d-flex flex-row">
-                            <div class="result-bar" style="width: 200px;"></div>
-                            <div class="ml-2">20%</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="container result-container mt-3">
-                    <h5 class="mt-2">FREE TEXT:</h5>
-                    <p class="font-weight-light mt-2 result-text">What is your favourite Professor?</p>
-                    <p class="font-weight-light result-free-text">Professor Xaviar</p>
-                    <p class="font-weight-light result-free-text">Professor Eich</p>
-                    <p class="font-weight-light result-free-text">Professor Proton</p>
-                    <p class="font-weight-light result-free-text">The Professor</p>
-                </div>
-
-            </div>
+            <div class="col-12" id="results"></div>
 
         </div>
     </div>
@@ -82,14 +50,13 @@
 
 </body>
 
-<script>
+<script th:inline="javascript">
     $(document).ready(function() {
+        create_visuals();
         const bar_containers = document.getElementsByClassName("with-bars");
         bar_color(bar_containers);
     });
     const resources = document.getElementById("resource-container");
-    var scale = document.getElementsByClassName("result-container")[0].getBoundingClientRect().width;
-    const response_list = 
 
     function bar_color(question_list) {
         for (let i = 0; i < question_list.length; ++i) {
@@ -100,11 +67,38 @@
         }
     }
     function bar_fix(bar_element, bar_value) {
-        bar_element.style.width = Math.round(bar_value*scale*0.9)+"px";
+        bar_element.style.width = Math.round(bar_value*90)+"%";
     }
 
-    function create_visual(response_object) {
-        console.log(response_object);
+    function create_visuals() {
+        const response_list = /*[[${response}]]*/ "responses";
+        for (let i = 0; i < response_list.userResponses.length; ++i) {
+            var answers = [];
+            var answer = response_list.userResponses[i];
+            var type = answer["type"];
+            if (type == "TEXT_RESPONSE") {
+                for (let j = 0; j < answer.responses.length; ++j) {
+                    answers.push(create_answere(type, answer.responses[j], 0));
+                }
+            }
+            else if (type == "MULTIPLE_CHOICE") {
+                for (let j = 0; j < answer["mutltipleChoiceOptions"].length; ++j) {
+                    answers.push(create_answere(type, answer["mutltipleChoiceOptions"][j], answer["mutltipleChoiceAnswers"][j]*0.01));
+                }
+            }
+            else if (type == "SINGLE_CHOICE") {
+                for (let j = 0; j < answer["singleChoiceOptions"].length; ++j) {
+                    answers.push(create_answere(type, answer["singleChoiceOptions"][j], answer["singleChoiceAnswers"][j]*0.01));
+                }
+            }
+            else if (type == "BINARY_ANSWER") {
+                var total_answers = answer["yesTotal"]+answer["noTotal"];
+                answers.push(create_answere(type, "Yes", answer["yesTotal"]/total_answers));
+                answers.push(create_answere(type, "No", answer["noTotal"]/total_answers));
+            }
+            var question_template = create_question(type, answer["question"], answers);
+            document.getElementById("results").appendChild(question_template);
+        }
     }
     function create_question(type, text, answers) {
         var question = resources.getElementsByClassName("result-container")[0].cloneNode(true);
@@ -113,16 +107,17 @@
             question.getElementsByClassName("answere-column")[0].appendChild(answers[i]);
         }
         var headline = "";
-        if (type == "free") {
+        if (type == "TEXT_RESPONSE") {
+            question.classList.remove("with-bars");
             headline = "Free Text Question:";
         }
-        else if (type == "multi") {
+        else if (type == "MULTIPLE_CHOICE") {
             headline = "Multiple Choice Question:";
         }
-        else if (type == "single") {
+        else if (type == "SINGLE_CHOICE") {
             headline = "Single Choice Question:";
         }
-        else if (type == "binary") {
+        else if (type == "BINARY_ANSWER") {
             headline = "Binary Question:";
         }
         question.getElementsByClassName("question-type")[0].innerHTML = headline;
@@ -131,14 +126,15 @@
     function create_answere(type, text, value) {
         var answere = resources.getElementsByClassName("answere-template")[0].cloneNode(true);
         answere.getElementsByClassName("result-text")[0].innerHTML = text;
-        if (type == "free") {
-            answere.getElementsByClassName("result-text")[0].classList.remove("result-text");
+        if (type == "TEXT_RESPONSE") {
             answere.getElementsByClassName("result-text")[0].classList.add("result-free-text");
+            answere.getElementsByClassName("result-text")[0].classList.remove("result-text");
             delete_me = answere.getElementsByClassName("d-flex flex-row")[0];
             delete_me.parentNode.removeChild(delete_me);
         }
         else {
-            answere.getElementsByClassName("result-percent")[0].innerHTML = value*100+"%";
+            answere.getElementsByClassName("result-percent")[0].innerHTML = Math.round(value*10000)/100+"%";
+            bar_fix(answere.getElementsByClassName("result-bar")[0], value);
         }
         return answere;
     }
