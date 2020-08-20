@@ -233,28 +233,25 @@ public class PDFGenerator {
                 para.setBorder(new SolidBorder(1));
 
                 
-                //Count percentages of yes/no responses
-                double yes = 0;
-                double no = 0;
-
-                //More variables for totals and percentages
+                //Percentages
                 int tot = bnr.getNoTotal() + bnr.getYesTotal();
-                String yesPercent = "test";
-                String noPercent = "test2";
-                // String yesPercent = String.format("%.2f", (bnr.getYesTotal()/tot)*100) + "%";
-                // String noPercent = String.format("%.2f", (bnr.getNoTotal()/tot)*100) + "%";
+                double yesPercent = ((double)bnr.getYesTotal()/tot) * 100;
+                double noPercent = ((double)bnr.getNoTotal()/tot) * 100;
                 
+                String yesPercentString = String.format("My answer is %.2f", yesPercent); 
+                String noPercentString = String.format("My answer is %.2f", noPercent);
+
                 //Find total number of 
                 para.add(totalResponses);
                 para.add(new Text(String.valueOf(tot) + "\n").setFont(bold)); 
 
                 //Calculate and set Yes Percentage
                 para.add(totalYes);
-                para.add(new Text(yesPercent + "\n").setFont(bold)); 
+                para.add(new Text(String.valueOf(yesPercentString) + "\n").setFont(bold)); 
 
                 //Calculate and set No Percentage
                 para.add(totalNo);
-                para.add(new Text(noPercent).setFont(bold)); 
+                para.add(new Text(String.valueOf(noPercentString) + "\n").setFont(bold)); 
 
                 
                 ParagraphList.add(para);
