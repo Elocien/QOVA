@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import qova.course.SurveyForm;
+import qova.forms.SurveyForm;
 
 
 @Service
@@ -17,6 +17,9 @@ public class AdminManagement {
 
     @Autowired
     public AdminManagement(DefaultSurveyRepository repo) {
+        
+        repo.save(new DefaultSurvey(1L, "[]"));
+        
         //Check if defaultSurvey exists.
         try{
             repo.findSpecialInstance();
@@ -43,11 +46,13 @@ public class AdminManagement {
         }
         catch(IllegalStateException e){
             DefaultSurvey defaultSurvey = new DefaultSurvey(1L, "[]");
+            repo.save(defaultSurvey);
             return "[]";
         }
     }
 
 
+    //Get the DefaultSurvey Object from the repo
     private DefaultSurvey getDefaultSurveyObject(){
         try{
             return repo.findSpecialInstance();

@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +49,7 @@ public class responseTest extends AbstractIntegrationTest {
         var instanceNumber = 12;
         var groupNumber = 4;
 
-        ArrayList<Object> responses = new ArrayList<Object>();
+        List<Object> responses = new ArrayList<>();
 
         BinaryResponse bnr = new BinaryResponse("Would you consider recommending the lecture to other students?");
         for(int i = 0; i < 50 ; i++){bnr.incrementYes();}
@@ -165,8 +166,8 @@ public class responseTest extends AbstractIntegrationTest {
         totals.add(8);
 
         assertEquals(question, scr.getQuestion());
-        assertEquals(scOptions, scr.getMutltipleChoiceOptions());
-        assertEquals(totals, scr.getMutltipleChoiceAnswers());
+        assertEquals(scOptions, scr.getSingleChoiceOptions());
+        assertEquals(totals, scr.getSingleChoiceAnswers());
         assertEquals(ResponseType.SINGLE_CHOICE, scr.getType());
     }
 
