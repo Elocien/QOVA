@@ -3,6 +3,7 @@ package qova.course;
 import org.junit.jupiter.api.Test;
 
 import qova.AbstractIntegrationTest;
+import qova.logic.CourseManagement;
 
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;

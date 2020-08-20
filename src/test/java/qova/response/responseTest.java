@@ -1,21 +1,27 @@
 package qova.response;
 
 import qova.AbstractIntegrationTest;
-import qova.course.Course;
-import qova.course.CourseFaculty;
-import qova.course.CourseInstance;
-import qova.course.CourseType;
-import qova.responseTypes.BinaryResponse;
-import qova.responseTypes.MultipleChoiceResponse;
-import qova.responseTypes.ResponseType;
-import qova.responseTypes.SingleChoiceResponse;
-import qova.responseTypes.SurveyResponse;
-import qova.responseTypes.TextResponse;
+import qova.enums.CourseFaculty;
+import qova.enums.CourseType;
+import qova.objects.BinaryResponse;
+import qova.objects.Course;
+import qova.objects.CourseInstance;
+import qova.objects.MultipleChoiceResponse;
+import qova.objects.SingleChoiceResponse;
+import qova.objects.SurveyResponse;
+import qova.objects.TextResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+
+import com.google.gwt.xhr.client.XMLHttpRequest.ResponseType;
+
+import com.google.gwt.xhr.client.XMLHttpRequest.ResponseType;
+
+import com.google.gwt.xhr.client.XMLHttpRequest.ResponseType;
 
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +54,7 @@ public class responseTest extends AbstractIntegrationTest {
         var instanceNumber = 12;
         var groupNumber = 4;
 
-        ArrayList<Object> responses = new ArrayList<Object>();
+        List<Object> responses = new ArrayList<>();
 
         BinaryResponse bnr = new BinaryResponse("Would you consider recommending the lecture to other students?");
         for(int i = 0; i < 50 ; i++){bnr.incrementYes();}
@@ -120,9 +126,9 @@ public class responseTest extends AbstractIntegrationTest {
         br.incrementNo();
         
         assertEquals(question, br.getQuestion());
-        assertEquals(br.getYesTotal(), 1);
-        assertEquals(br.getNoTotal(), 2);
-        assertEquals(ResponseType.BINARY_ANSWER, br.getType());
+        assertEquals(1, br.getYesTotal());
+        assertEquals(2, br.getNoTotal());
+        assertEquals(qova.enums.ResponseType.BINARY_ANSWER, br.getType());
     }
 
     @Test
@@ -133,7 +139,7 @@ public class responseTest extends AbstractIntegrationTest {
         TextResponse tr = new TextResponse(question);
         
         assertEquals(question, tr.getQuestion());
-        assertEquals(ResponseType.TEXT_RESPONSE, tr.getType());
+        assertEquals(qova.enums.ResponseType.TEXT_RESPONSE, tr.getType());
     }
 
     @Test
@@ -165,10 +171,11 @@ public class responseTest extends AbstractIntegrationTest {
         totals.add(8);
 
         assertEquals(question, scr.getQuestion());
-        assertEquals(scOptions, scr.getMutltipleChoiceOptions());
-        assertEquals(totals, scr.getMutltipleChoiceAnswers());
-        assertEquals(ResponseType.SINGLE_CHOICE, scr.getType());
+        assertEquals(scOptions, scr.getSingleChoiceOptions());
+        assertEquals(totals, scr.getSingleChoiceAnswers());
+        assertEquals(qova.enums.ResponseType.SINGLE_CHOICE, scr.getType());
     }
+
 
     @Test
     public void MultipleChoiceConstructorTest() throws Exception {
@@ -214,7 +221,7 @@ public class responseTest extends AbstractIntegrationTest {
         assertEquals(mcOptions, mcr.getMutltipleChoiceOptions());
         assertEquals(totals, mcr.getMutltipleChoiceAnswers());
         assertEquals(5, mcr.getNumberOfOptions());
-        assertEquals(ResponseType.MULTIPLE_CHOICE, mcr.getType());
+        assertEquals(qova.enums.ResponseType.MULTIPLE_CHOICE, mcr.getType());
     }
 
 }

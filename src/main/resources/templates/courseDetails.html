@@ -107,7 +107,7 @@
                                                 <th class="col-5" scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
                                                 <td class="hide_me" id="faculty_original"><span th:id="'og: ' + ${course.faculty}" th:text="#{'course.faculty.' + ${course.faculty}}">FACULTY</span></td>
                                                 <td class="show_me" id="faculty_dropdown" style="display: none">
-                                                    <select id="faculty_select" class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}" th:field="*{faculty}">
+                                                    <select id="faculty_select" class="custom-select form-control" th:with="faculties = ${T(qova.enums.CourseFaculty).values()}" th:field="*{faculty}">
                                                         <option class="dropdown-item" th:id="${faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
                                                     </select>
                                                 </td>
