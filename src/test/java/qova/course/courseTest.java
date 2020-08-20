@@ -3,6 +3,10 @@ package qova.course;
 import org.junit.jupiter.api.Test;
 
 import qova.AbstractIntegrationTest;
+import qova.enums.CourseFaculty;
+import qova.enums.CourseType;
+import qova.objects.Course;
+import qova.objects.CourseInstance;
 
 import java.time.LocalDate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
