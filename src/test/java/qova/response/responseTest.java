@@ -21,6 +21,8 @@ import com.google.gwt.xhr.client.XMLHttpRequest.ResponseType;
 
 import com.google.gwt.xhr.client.XMLHttpRequest.ResponseType;
 
+import com.google.gwt.xhr.client.XMLHttpRequest.ResponseType;
+
 import org.junit.jupiter.api.Test;
 
 public class responseTest extends AbstractIntegrationTest {
@@ -171,8 +173,9 @@ public class responseTest extends AbstractIntegrationTest {
         assertEquals(question, scr.getQuestion());
         assertEquals(scOptions, scr.getSingleChoiceOptions());
         assertEquals(totals, scr.getSingleChoiceAnswers());
-        assertEquals( qova.enums.ResponseType.SINGLE_CHOICE, scr.getType());
+        assertEquals(qova.enums.ResponseType.SINGLE_CHOICE, scr.getType());
     }
+
 
     @Test
     public void MultipleChoiceConstructorTest() throws Exception {
