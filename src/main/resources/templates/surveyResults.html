@@ -23,24 +23,24 @@
                 <h5 class="font-weight-light">YOU CAN CHECK OUT THE RESULTS OF A SURVEY HERE!</h5>
             </div>
 
-            <div class="col-12">
+            <div class="col-12" id="results">
 
-                <div class="container result-container mt-3">
+                <div class="container result-container with-bars mt-3">
                     <h5 class="mt-2">SINGLE CHOICE:</h5>
                     <div class="col pl-0 mt-2 mb-2">
                         <p class="font-weight-light mb-0 mt-2 result-text">ANSWERE A: CATS > DOGS</p>
                         <div class="d-flex flex-row">
-                            <div class="result-bar" style="width: 500px; background-color: black;"></div>
+                            <div class="result-bar" style="width: 500px;"></div>
                             <div class="ml-2">50%</div>
                         </div>
                         <p class="font-weight-light mb-0 mt-2 result-text">ANSWERE B: CATS < DOGS</p>
                         <div class="d-flex flex-row">
-                            <div class="result-bar" style="width: 300px; background-color: grey;"></div>
+                            <div class="result-bar" style="width: 300px;"></div>
                             <div class="ml-2">30%</div>
                         </div>
                         <p class="font-weight-light mb-0 mt-2 result-text">ANSWERE C: BOTH ARE ONLY GOOD FOR SOUP...</p>
                         <div class="d-flex flex-row">
-                            <div class="result-bar" style="width: 200px; background-color: darkgrey;"></div>
+                            <div class="result-bar" style="width: 200px;"></div>
                             <div class="ml-2">20%</div>
                         </div>
                     </div>
@@ -62,8 +62,88 @@
 
     <div th:include="footer"></div>
 
+    <!--Resources-->
+    <div id="resource-container" style="display: none;">
+        <!--TH:TRANSITION-->
+        <div id="question-container">
+            <div class="question-template">
+                <div class="question-type">single</div>
+                <div class="question-text">THIS IS THE QUESTION TEXT</div>
+                <div class="answere">
+                    <div class="answere-text">A</div>
+                    <div class="answere-percent">0.2</div>
+                </div>
+                <div class="answere">
+                    <div class="answere-text">B</div>
+                    <div class="answere-percent">0.45</div>
+                </div>
+                <div class="answere">
+                    <div class="answere-text">C</div>
+                    <div class="answere-percent">0.35</div>
+                </div>
+            </div>
+        </div>
+        <!--Question Template-->
+        <div class="container result-container with-bars mt-3" id="visual-template">
+            <h5 class="question-type mt-2"></h5>
+            <p class="question-text font-weight-light mt-2"></p>
+            <div class="col answere-column pl-0 mt-2 mb-2"></div>
+        </div>
+        <!--Answere Template-->
+        <div class="answere-template">
+            <p class="result-text font-weight-light mb-0 mt-2"></p>
+            <div class="d-flex flex-row">
+                <div class="result-bar"></div>
+                <div class="result-percent ml-2"></div>
+            </div>
+        </div>
+    </div>
+
 </body>
+
 <script>
+    $(document).ready(function() {
+        var scale = document.getElementsByClassName("result-container")[0].getBoundingClientRect().width;
+        const bar_container = document.getElementsByClassName("with-bars");
+        create_questions();
+        bar_color(bar_container);
+    });
+
+    function bar_color(question_list) {
+        for (let i = 0; i < question_list.length; ++i) {
+            const bars = question_list[i].getElementsByClassName("result-bar");
+            for (let j = 0; j < bars.length; ++j) {
+                bars[j].classList.add("bar-"+(j*Math.round(10/bars.length)));
+            }
+        }
+    }
+
+    function create_questions() {
+        const resources = document.getElementById("resource-container");
+        const questions = document.getElementById("question-container").getElementsByClassName("question-template");
+        for (let i = 0; i < questions.length; ++i) {
+            var question = questions[i];
+            var new_question = document.getElementById("visual-template").cloneNode(true);
+            new_question.getElementsByClassName("question-text")[0].innerHTML = question.getElementsByClassName("question-text")[0].innerHTML;
+            var question_type = question.getElementsByClassName("question-type")[0].innerHTML;
+            if ("single" == question_type) {
+                new_question.getElementsByClassName("question-type")[0].innerHTML = "Single Choice:";
+            }
+            var answeres = question.getElementsByClassName("answere");
+            for (let i = 0; i < answeres.length; ++i) {
+                var answere = resources.getElementsByClassName("answere-template")[0].cloneNode(true);
+                var percent = answeres[i].getElementsByClassName("answere-percent")[0].innerHTML;
+                answere.getElementsByClassName("result-text")[0].innerHTML = answeres[i].getElementsByClassName("answere-text")[0].innerHTML;
+                answere.getElementsByClassName("result-percent")[0].innerHTML = percent*100+"%";
+                answere.getElementsByClassName("result-bar")[0].style.width = 1000*percent+"px";
+                new_question.getElementsByClassName("answere-column")[0].appendChild(answere);
+            }
+            document.getElementById("results").appendChild(new_question);
+        }
+        resources.parentNode.removeChild(resources);
+    }
+
 
 </script>
+
 </html>
