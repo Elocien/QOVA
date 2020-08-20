@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 
 @Entity
-public class SingleChoiceResponse extends AbstractResponse{
+public class SingleChoiceResponse {
 
 
     //-----------------------------------------------------------------------

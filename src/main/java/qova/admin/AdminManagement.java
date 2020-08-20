@@ -52,6 +52,7 @@ public class AdminManagement {
     }
 
 
+    //Get the DefaultSurvey Object from the repo
     private DefaultSurvey getDefaultSurveyObject(){
         try{
             return repo.findSpecialInstance();

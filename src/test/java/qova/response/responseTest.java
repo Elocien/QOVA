@@ -5,7 +5,6 @@ import qova.course.Course;
 import qova.course.CourseFaculty;
 import qova.course.CourseInstance;
 import qova.course.CourseType;
-import qova.responseTypes.AbstractResponse;
 import qova.responseTypes.BinaryResponse;
 import qova.responseTypes.MultipleChoiceResponse;
 import qova.responseTypes.ResponseType;
@@ -50,7 +49,7 @@ public class responseTest extends AbstractIntegrationTest {
         var instanceNumber = 12;
         var groupNumber = 4;
 
-        List<AbstractResponse> responses = new ArrayList<>();
+        List<Object> responses = new ArrayList<>();
 
         BinaryResponse bnr = new BinaryResponse("Would you consider recommending the lecture to other students?");
         for(int i = 0; i < 50 ; i++){bnr.incrementYes();}

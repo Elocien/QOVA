@@ -9,7 +9,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 
 @Entity
-public class TextResponse extends AbstractResponse {
+public class TextResponse {
 
 
     //-----------------------------------------------------------------------
@@ -30,7 +30,7 @@ public class TextResponse extends AbstractResponse {
 
     public TextResponse(String question){
         this.question = question;
-        this.responses = new ArrayList<String>();
+        this.responses = new ArrayList<>();
     }
     
     

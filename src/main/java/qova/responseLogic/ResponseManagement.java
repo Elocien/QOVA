@@ -15,7 +15,6 @@ import qova.course.Course;
 import qova.course.CourseInstance;
 import qova.course.CourseType;
 import qova.course.LocalizationOption;
-import qova.responseTypes.AbstractResponse;
 import qova.responseTypes.BinaryResponse;
 import qova.responseTypes.BinaryResponseRepository;
 import qova.responseTypes.MultipleChoiceResponse;
@@ -130,7 +129,7 @@ public class ResponseManagement {
         CourseInstance courseInstance = course.getInstance(type);
 
         //ArrayList with response objects, initialised with the number of questions as size
-        List<AbstractResponse> responses = new ArrayList<>(json.length());
+        List<Object> responses = new ArrayList<>(json.length());
 
         //parse json to serialise response objects
 
@@ -233,7 +232,7 @@ public class ResponseManagement {
         var instanceNumber = 12;
         var groupNumber = 4;
 
-        ArrayList<AbstractResponse> responses = new ArrayList<>();
+        List<Object> responses = new ArrayList<>();
 
         BinaryResponse bnr = new BinaryResponse("Would you consider recommending the lecture to other students?");
         binaryResponseRepository.save(bnr);
@@ -293,10 +292,15 @@ public class ResponseManagement {
     public byte[] generatePDF_test() throws IOException, Exception {
 
         //Add responses to arrayList
-        Optional<SurveyResponse> rsp = surveyResponseRepository.findById(1L);
-        
+        Iterable<SurveyResponse> rsp = surveyResponseRepository.findAll();
+
+        List<SurveyResponse> sr = new ArrayList<>();
+
+        for(SurveyResponse r: rsp){
+            sr.add(r);
+        }
         //Generate PDF 
         PDFGenerator pdfGen = new PDFGenerator();
-        return pdfGen.createPdf(rsp.get(), LocalizationOption.EN);
+        return pdfGen.createPdf(sr.get(0), LocalizationOption.EN);
     }
 }

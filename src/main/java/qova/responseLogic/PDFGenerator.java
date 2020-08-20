@@ -34,7 +34,6 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import qova.course.LocalizationOption;
-import qova.responseTypes.AbstractResponse;
 import qova.responseTypes.BinaryResponse;
 import qova.responseTypes.MultipleChoiceResponse;
 import qova.responseTypes.ResponseType;
@@ -130,17 +129,20 @@ public class PDFGenerator {
         // (depending on Group and Instance number).
         // Each of the objects returned by the getUserResponses() method is of the type
         // BinaryResponse, TextResponse, MultipleChoiceResponse or SingleChoiceResponse
-        List<AbstractResponse> rsp = response.getUserResponses();
+        List<Object> rsp = response.getUserResponses();
 
         //Step 2:
         //Iterate through all user responses, with each object corresponding to a question on the questionnaire
         for(int i = 0; i < rsp.size(); i++){
 
             //Get the ResponseType of the next Object in the ArrayList 
-            ResponseType currentResponseType = parseResponseType(rsp);
+            ResponseType currentResponseType = parseResponseType(rsp.get(i));
+
+            System.out.println(currentResponseType);
             
             //Break if type can't be parsed
             if(currentResponseType == null){
+                System.out.println("something is wrong");
                 break;
             }
             
@@ -170,7 +172,7 @@ public class PDFGenerator {
 
             //----------------------------------------------------------------------------------------------------------------
             //Bar chart is created, if ResponseType is SingleChoiceResponse
-            if(currentResponseType.equals(ResponseType.SINGLE_CHOICE)){
+            else if(currentResponseType.equals(ResponseType.SINGLE_CHOICE)){
 
                 SingleChoiceResponse scr = (SingleChoiceResponse) rsp.get(i);
 
@@ -239,8 +241,10 @@ public class PDFGenerator {
 
                 //More variables for totals and percentages
                 int tot = bnr.getNoTotal() + bnr.getYesTotal();
-                String yesPercent = String.format("%.2f", (bnr.getYesTotal()/tot)*100) + "%";
-                String noPercent = String.format("%.2f", (bnr.getNoTotal()/tot)*100) + "%";
+                String yesPercent = "test";
+                String noPercent = "test2";
+                // String yesPercent = String.format("%.2f", (bnr.getYesTotal()/tot)*100) + "%";
+                // String noPercent = String.format("%.2f", (bnr.getNoTotal()/tot)*100) + "%";
                 
                 //Find total number of 
                 para.add(totalResponses);

@@ -27,8 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import qova.admin.AdminManagement;
 import qova.responseLogic.ResponseManagement;
-import qova.responseTypes.BinaryResponse;
-import qova.responseTypes.SurveyResponse;
+
 
 //TODO: Temporary Imports (can be removed later)
 //@Lucian please don't delete me just yet T_T
@@ -194,7 +193,7 @@ public class CourseController {
 
     //Create Course
     @GetMapping("course/new2")
-	public String createCourse_SetInstanceTitles(Model model, InstanceTitleForm form, @RequestParam String id) {
+	public String createCourseSetInstanceTitles(Model model, InstanceTitleForm form, @RequestParam String id) {
 
         model.addAttribute("form", form);
 
@@ -236,12 +235,12 @@ public class CourseController {
     
     //Validation of Created course
 	@PostMapping("course/new2")
-	public String createCourse_SetInstanceTitlesValidation(Model model, @Valid @ModelAttribute("form") InstanceTitleForm form, @RequestParam String id,
+	public String createCourseSetInstanceTitlesValidation(Model model, @Valid @ModelAttribute("form") InstanceTitleForm form, @RequestParam String id,
 			BindingResult result) throws Exception {
 
 
 		if (result.hasErrors()) {
-			return createCourse_SetInstanceTitles(model, form, id);
+			return createCourseSetInstanceTitles(model, form, id);
         }
 
 
@@ -287,7 +286,15 @@ public class CourseController {
     //---------------------------------------------------------------------------
 
 
-    //Mapping for surveyeditor HTML (called from CourseDetails Page!)
+    
+    /** Mapping for surveyeditor HTML (called from CourseDetails Page!)
+     * 
+     * @param model
+     * @param type
+     * @param id
+     * @return
+     * @throws Exception
+     */
     @GetMapping("course/surveyeditor")
     public String questioneditor(Model model, @RequestParam String type, @RequestParam(required = false) String id)
             throws Exception {
@@ -319,16 +326,22 @@ public class CourseController {
 
 
      
-    /** 
-     * Mapping for submitting a created survey. The questioneditor sends JSON containing the survey to the server, and this is checked for length (Can't exceed 100 questions)
-     * and special characters. After this, a new SurveyResponse object is created along with its subclasses (BinaryResponse, TextResponse, etc.)
+    /**
+     * Mapping for submitting a created survey. The questioneditor sends JSON
+     * containing the survey to the server, and this is checked for length (Can't
+     * exceed 100 questions) and special characters. After this, a new
+     * SurveyResponse object is created along with its subclasses (BinaryResponse,
+     * TextResponse, etc.)
+     * 
      * @param form
      * @param type
      * @param id
      * @return
+     * @throws Exception
      */
     @PostMapping("course/surveyeditor")
-    public String questioneditorSubmit(SurveyForm form, @RequestParam String type, @RequestParam(required = false) String id) {
+    public String questioneditorSubmit(SurveyForm form, @RequestParam String type,
+            @RequestParam(required = false) String id) throws Exception {
         
 
         //Form empty -> Redirect to details again 
@@ -342,14 +355,14 @@ public class CourseController {
         if (course.isPresent()){
 
             // if type is none of the correct values, then redirect to homepage
-            if(responseManagement.parseCourseType(type).equals(null)){
+            if(responseManagement.parseCourseType(type) == null){
                 //TODO: redirect to error page with code 02
                 return "redirect:/";
             }
 
             else{
                 //check if JSON is valid
-                try {JSONArray survey = new JSONArray(form.getQuestionnairejson());} 
+                try {new JSONArray(form.getQuestionnairejson());} 
                 catch (Exception e) {
                     //TODO: redirect to error page with code 02
                     return "redirect:/";
@@ -359,7 +372,8 @@ public class CourseController {
                 JSONArray survey = new JSONArray(form.getQuestionnairejson());
 
                 //parse JSON to check for correctness (length, special characters)
-                if(responseManagement.verifyJsonArray(survey) == false){
+                Boolean validSurvey = responseManagement.verifyJsonArray(survey);
+                if(Boolean.FALSE.equals(validSurvey)){
                     //TODO: redirect to error page with code 02
                     return "redirect:/";
                 }
@@ -367,8 +381,8 @@ public class CourseController {
                 //Manager method for creating SurveyResponse and corresponding nested objects
                 responseManagement.createSurveyResponse(survey, course.get(), type);
 
-                //Sets the survey string for a given course
-                courseManagement.setSurveyforType(course.get(), type, form);
+                //Sets the survey string for a given course (takes the default survey and conncatenates it with the create survey)
+                courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson(), adminManagement.getDefaultSurvey());
             }
 
 

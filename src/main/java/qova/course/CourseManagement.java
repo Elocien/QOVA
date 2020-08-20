@@ -320,21 +320,24 @@ public class CourseManagement {
 
 
     //Sets the relevant Survey in the course objects, based on the given surveyType
-    public void setSurveyforType (Course course, String type, SurveyForm form){
-        //if CourseType is Lecture, then save Survey as lectureSurvey
+    public void setSurveyforType (Course course, String type, String createdSurvey, String defaultSurvey){
+
+        //TODO: Conncatenate DefaultSurvey to the given survey CORRECTLY
+        String survey = defaultSurvey + createdSurvey;
+
         if(type.equals("LECTURE")) {
-            course.getLecture().setSurvey(form.getQuestionnairejson());
+            course.getLecture().setSurvey(survey);
         }
         else if(type.equals("TUTORIAL")) {
-            course.getTutorial().setSurvey(form.getQuestionnairejson());
+            course.getTutorial().setSurvey(survey);
         }
         else if (type.equals("SEMINAR")){
-            course.getSeminar().setSurvey(form.getQuestionnairejson());
+            course.getSeminar().setSurvey(survey);
         }
         else if (type.equals("PRACTICAL")){
-            course.getPractical().setSurvey(form.getQuestionnairejson());
+            course.getPractical().setSurvey(survey);
         }
-}
+    }
 
 
 
@@ -533,6 +536,24 @@ public class CourseManagement {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
     //Test Methods
     //TODO: Remove Before Production
