@@ -82,7 +82,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="courseFaculty" th:text="#{new.courseFaculty}">COURSE FACULTY</label>
-                                <select id="faculty_select" class="custom-select form-control" th:field="*{faculty}" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
+                                <select id="faculty_select" class="custom-select form-control" th:field="*{faculty}" th:with="faculties = ${T(qova.enums.CourseFaculty).values()}">
                                     <option class="dropdown-item" th:id="${faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
                                 </select>
                             </div>
@@ -95,8 +95,8 @@
                             </div>
                             <div class="col-md-2">
                                 <label for="courseInstanceString" th:text="#{course.courseDate}">COURSE SEMESTER</label>
-                                <select class="custom-select form-control" th:field="*{semesterDates}">
-                                    <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+                                <select class="custom-select form-control" th:field="*{semesterString}">
+                                    <option class="dropdown-item" th:each="year : ${semesterString}" th:text="${year}" th:value="${year}">YEAR</option>
                                 </select>
                             </div>
                         </div>
