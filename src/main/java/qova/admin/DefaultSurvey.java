@@ -1,5 +1,7 @@
 package qova.admin;
 
+import java.util.UUID;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Lob;
@@ -9,7 +11,7 @@ public class DefaultSurvey {
 
     //Attributes
     @Id 
-    private Long id;
+    private UUID id;
     @Lob
     private String defaultSurveyJson;
 
@@ -21,14 +23,14 @@ public class DefaultSurvey {
 
 
     //Constructor
-    public DefaultSurvey(Long id, String surveyJson){
+    public DefaultSurvey(UUID id, String surveyJson){
         this.id = id;
         this.defaultSurveyJson = surveyJson;
     }
 
 
     //Getters and Setters
-    public Long getId(){
+    public UUID getId(){
         return this.id;
     }
 

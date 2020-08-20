@@ -1,6 +1,7 @@
 package qova.admin;
 
 import java.util.Objects;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,14 +19,13 @@ public class AdminManagement {
     @Autowired
     public AdminManagement(DefaultSurveyRepository repo) {
         
-        repo.save(new DefaultSurvey(1L, "[]"));
-        
         //Check if defaultSurvey exists.
         try{
             repo.findSpecialInstance();
         }
         catch(IllegalStateException e){
-            repo.save(new DefaultSurvey(1L, "[]"));
+            e.printStackTrace();
+            repo.save(new DefaultSurvey(UUID.fromString("123e4567-e89b-12d3-a456-556642440000"), "[]"));
         }
 
         this.repo = Objects.requireNonNull(repo);
@@ -45,7 +45,7 @@ public class AdminManagement {
             return repo.findSpecialInstance().getDefaultSurvey();
         }
         catch(IllegalStateException e){
-            DefaultSurvey defaultSurvey = new DefaultSurvey(1L, "[]");
+            DefaultSurvey defaultSurvey = new DefaultSurvey(UUID.fromString("123e4567-e89b-12d3-a456-556642440000"), "[]");
             repo.save(defaultSurvey);
             return "[]";
         }
@@ -58,7 +58,8 @@ public class AdminManagement {
             return repo.findSpecialInstance();
         }
         catch(IllegalStateException e){
-            DefaultSurvey defaultSurvey = new DefaultSurvey(1L, "[]");
+            DefaultSurvey defaultSurvey = new DefaultSurvey(UUID.fromString("123e4567-e89b-12d3-a456-556642440000"), "[]");
+            repo.save(defaultSurvey);
             return defaultSurvey;
         }
     }
