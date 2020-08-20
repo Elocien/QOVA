@@ -1,7 +1,9 @@
 package qova.logic;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import qova.enums.CourseType;
 import qova.forms.SurveyForm;
 import qova.objects.Course;
+import qova.objects.SurveyResponse;
 
 
 @Controller // This means that this class is a Controller
@@ -222,6 +225,7 @@ public class ResponseController {
         return new HttpEntity<byte[]>(pdf, header);
     }
 
+   
     // CSV Generation
     @GetMapping("/generateCSV")
     public HttpEntity<byte[]> generateCsv(@RequestParam String id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
@@ -256,7 +260,16 @@ public class ResponseController {
     }
 
 
+    @GetMapping("/surveyResults")
+    public String surveyResults(Model model) throws Exception {
 
+        Course course = courseManagement.TimTestCreateCourse();
+        SurveyResponse rsp = responseManagement.timCreateTestResponses(course);
+        
+        model.addAttribute("response", rsp);
+
+        return "surveyResults";
+    }
 
     
     

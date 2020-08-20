@@ -290,6 +290,66 @@ public class ResponseManagement {
     } 
 
 
+    //Test Method, remove in build
+    public SurveyResponse timCreateTestResponses(Course course) throws Exception {
+        
+        var type = CourseType.LECTURE;
+        var instanceNumber = 12;
+        var groupNumber = 4;
+
+        List<Object> responses = new ArrayList<>();
+
+        BinaryResponse bnr = new BinaryResponse("Would you consider recommending the lecture to other students?");
+        for(int i = 0; i < 50 ; i++){bnr.incrementYes();}
+        for(int i = 0; i < 25 ; i++){bnr.incrementNo();}
+
+
+        
+        
+        ArrayList<String> mcOptions = new ArrayList<>();
+        mcOptions.add("It was informative");
+        mcOptions.add("It was interesting");
+        mcOptions.add("I learned something new");
+        mcOptions.add("I enjoyed attending the lecture");
+        mcOptions.add("I would recommend the lecture to others");
+        MultipleChoiceResponse mcr = new MultipleChoiceResponse("What was good about the lecture (multiple options can be selected)", mcOptions);
+
+        ArrayList<Integer> mcAnswers1 = new ArrayList<>();
+        mcAnswers1.add(0);
+        mcAnswers1.add(1);
+        mcAnswers1.add(3);
+
+        ArrayList<Integer> mcAnswers2 = new ArrayList<>();
+        mcAnswers2.add(1);
+        mcAnswers2.add(4);
+
+
+        ArrayList<Integer> mcAnswers3 = new ArrayList<>();
+        mcAnswers3.add(2);
+        mcAnswers3.add(4);
+
+        for(int i = 0; i < 25 ; i++){mcr.incrementTotals(mcAnswers1);}
+        for(int i = 0; i < 15 ; i++){mcr.incrementTotals(mcAnswers2);}
+        for(int i = 0; i < 10 ; i++){mcr.incrementTotals(mcAnswers3);}
+
+        
+
+
+        TextResponse txr = new TextResponse("What is your opinion of the lecture, is it helpful?");
+        for(int i = 0; i < 20 ; i++){txr.addTextSubmission("this is a bit of a test");}
+        for(int i = 0; i < 10 ; i++){txr.addTextSubmission("this is a larger test to test the test");}
+        for(int i = 0; i < 17 ; i++){txr.addTextSubmission("short test");}
+        for(int i = 0; i < 3 ; i++){txr.addTextSubmission("this is a very very very very very very very very very very very very very very very very very very very very large test");}
+
+
+        responses.add(bnr);
+        responses.add(mcr);
+        responses.add(txr);
+        return new SurveyResponse(course, type, instanceNumber, groupNumber, responses);
+        
+    } 
+
+
 
     public byte[] generatePDF_test() throws IOException, Exception {
 
