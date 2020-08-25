@@ -79,7 +79,7 @@ public class CourseManagement {
 
         //Create CourseInstances if bool is true 
         //LECTURE
-        if(form.getLectureExists()){
+        if(Boolean.TRUE.equals(form.getLectureExists())){
 
             //In the current implementation, the groupAmount for LECTURE is always set to 1
             //(The attribute exists in case of future need for this to be editable. It would have to be bound to the form in the frontend, and called here with form.getGroupAmountLecture)
@@ -101,7 +101,7 @@ public class CourseManagement {
 
 
         //TUTORIAL
-        if(form.getTutorialExists()){
+        if(Boolean.TRUE.equals(form.getTutorialExists())){
 
             //Initialise the instanceTitles array with the amount of instances that are set to exist
             String[] instanceTitles = new String[form.getInstanceAmountLecture()];
@@ -119,7 +119,7 @@ public class CourseManagement {
 
 
         //SEMINAR
-        if(form.getSeminarExists()){
+        if(Boolean.TRUE.equals(form.getSeminarExists())){
 
             //Initialise the instanceTitles array with the amount of instances that are set to exist
             String[] instanceTitles = new String[form.getInstanceAmountLecture()];
@@ -137,7 +137,7 @@ public class CourseManagement {
 
 
         //PRACTICAL
-        if(form.getPracticalExists()){
+        if(Boolean.TRUE.equals(form.getPracticalExists())){
 
             //Initialise the instanceTitles array with the amount of instances that are set to exist
             String[] instanceTitles = new String[form.getInstanceAmountLecture()];
@@ -183,11 +183,11 @@ public class CourseManagement {
 
 
             //Lecture EXISTS, but is toggled OFF
-            if(course.getLectureExists() && !form.getLectureExists()){
+            if(Boolean.TRUE.equals(course.getLectureExists()) && Boolean.FALSE.equals(form.getLectureExists())){
                 course.setLecture(null);
             }
             //Lecture does NOT EXIST, but is toggled ON
-            if(!course.getLectureExists() && form.getLectureExists()){
+            if(Boolean.FALSE.equals(form.getLectureExists()) && Boolean.TRUE.equals(course.getLectureExists())){
                 //Set to one for lectures (in case of change, assign form.getLectureGroupAmount)
                 Integer groupAmount = 1;
 
@@ -206,11 +206,11 @@ public class CourseManagement {
 
 
             //Tutorial EXISTS, but is toggled OFF
-            if(course.getTutorialExists() && !form.getTutorialExists()){
+            if(Boolean.TRUE.equals(course.getTutorialExists()) && Boolean.FALSE.equals(form.getTutorialExists())){
                 course.setTutorial(null);
             }
             //Tutorial does NOT EXIST, but is toggled ON
-            if(!course.getTutorialExists() && form.getTutorialExists()){
+            if(Boolean.FALSE.equals(form.getTutorialExists()) && Boolean.TRUE.equals(course.getTutorialExists())){
 
                 //Initialise instanceTitles array
                 String[] instanceTitles = new String[form.getInstanceAmountTutorial()];
@@ -227,11 +227,11 @@ public class CourseManagement {
 
 
             //Seminar EXISTS, but is toggled OFF
-            if(course.getSeminarExists() && !form.getSeminarExists()){
+            if(Boolean.TRUE.equals(course.getSeminarExists()) && Boolean.FALSE.equals(form.getSeminarExists())){
                 course.setSeminar(null);
             }
             //Seminar does NOT EXIST, but is toggled ON
-            if(!course.getSeminarExists() && form.getSeminarExists()){
+            if(Boolean.FALSE.equals(form.getSeminarExists()) && Boolean.TRUE.equals(course.getSeminarExists())){
 
                 //Initialise instanceTitles array
                 String[] instanceTitles = new String[form.getInstanceAmountSeminar()];
@@ -248,11 +248,11 @@ public class CourseManagement {
 
 
             //Practical EXISTS, but is toggled OFF
-            if(course.getPracticalExists() && !form.getPracticalExists()){
+            if(Boolean.TRUE.equals(course.getPracticalExists()) && Boolean.FALSE.equals(form.getPracticalExists())){
                 course.setPractical(null);
             }
             //Practical does NOT EXIST, but is toggled ON
-            if(!course.getPracticalExists() && form.getPracticalExists()){
+            if(Boolean.FALSE.equals(form.getPracticalExists()) && Boolean.TRUE.equals(course.getPracticalExists())){
                 
                 //Initialise instanceTitles array
                 String[] instanceTitles = new String[form.getInstanceAmountPractical()];
@@ -283,19 +283,19 @@ public class CourseManagement {
         if(crs.isPresent()){
             Course course = crs.get();
 
-            if(course.getLectureExists()){
+            if(Boolean.TRUE.equals(course.getLectureExists())){
                 course.getLecture().setInstanceTitles(form.getLectureInstanceTitles());
             }
 
-            if(course.getTutorialExists()){
+            if(Boolean.TRUE.equals(course.getTutorialExists())){
                 course.getTutorial().setInstanceTitles(form.getTutorialInstanceTitles());
             }
 
-            if(course.getSeminarExists()){
+            if(Boolean.TRUE.equals(course.getSeminarExists())){
                 course.getSeminar().setInstanceTitles(form.getSeminarInstanceTitles());
             }
 
-            if(course.getPracticalExists()){
+            if(Boolean.TRUE.equals(course.getPracticalExists())){
                 course.getPractical().setInstanceTitles(form.getPracticalInstanceTitles());
             }
         }
@@ -369,8 +369,8 @@ public class CourseManagement {
 
         ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
         MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream);
-        byte[] pngData = pngOutputStream.toByteArray(); 
-        return pngData;
+        return pngOutputStream.toByteArray(); 
+        
     }
 
 
@@ -395,7 +395,7 @@ public class CourseManagement {
 
 
         //List sent to controller
-        ArrayList<String> semesters = new ArrayList<String>();
+        ArrayList<String> semesters = new ArrayList<>();
 
 
         //Summer semester start is April(4), winter semester starts in October(10)

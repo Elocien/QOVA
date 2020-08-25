@@ -11,7 +11,7 @@ public class DefaultSurvey {
 
     //Attributes
     @Id 
-    private UUID id;
+    private Long id;
     @Lob
     private String defaultSurveyJson;
 
@@ -23,14 +23,14 @@ public class DefaultSurvey {
 
 
     //Constructor
-    public DefaultSurvey(UUID id, String surveyJson){
+    public DefaultSurvey(Long id, String surveyJson){
         this.id = id;
         this.defaultSurveyJson = surveyJson;
     }
 
 
     //Getters and Setters
-    public UUID getId(){
+    public Long getId(){
         return this.id;
     }
 
