@@ -19,10 +19,12 @@ import qova.objects.BinaryResponse;
 import qova.objects.Course;
 import qova.objects.CourseInstance;
 import qova.objects.MultipleChoiceResponse;
+import qova.objects.SingleChoiceResponse;
 import qova.objects.SurveyResponse;
 import qova.objects.TextResponse;
 import qova.repositories.BinaryResponseRepository;
 import qova.repositories.MultipleChoiceResponseRepository;
+import qova.repositories.SingleChoiceResponseRepository;
 import qova.repositories.SurveyResponseRepository;
 import qova.repositories.TextResponseRepository;
 
@@ -36,14 +38,17 @@ public class ResponseManagement {
     private final BinaryResponseRepository binaryResponseRepository;
     private final TextResponseRepository textResponseRepository;
     private final MultipleChoiceResponseRepository multipleChoiceResponseRepository;
+    private final SingleChoiceResponseRepository singleChoiceResponseRepository;
 
 
     @Autowired
-    public ResponseManagement(SurveyResponseRepository surveyResponseRepository, BinaryResponseRepository binaryResponseRepository, TextResponseRepository textResponseRepository, MultipleChoiceResponseRepository multipleChoiceResponseRepository) {
+    public ResponseManagement(SurveyResponseRepository surveyResponseRepository, BinaryResponseRepository binaryResponseRepository, 
+                TextResponseRepository textResponseRepository, MultipleChoiceResponseRepository multipleChoiceResponseRepository, SingleChoiceResponseRepository singleChoiceResponseRepository) {
         this.surveyResponseRepository = Objects.requireNonNull(surveyResponseRepository);
         this.binaryResponseRepository = Objects.requireNonNull(binaryResponseRepository);
         this.textResponseRepository = Objects.requireNonNull(textResponseRepository);
         this.multipleChoiceResponseRepository = Objects.requireNonNull(multipleChoiceResponseRepository);
+        this.singleChoiceResponseRepository = Objects.requireNonNull(singleChoiceResponseRepository);
     }
 
 
@@ -124,7 +129,12 @@ public class ResponseManagement {
 
 
 
-
+    /** Used in the PostMapping of the SurveyEditor. When a survey is created, this method is used to serialise the {@linkplain SurveyResponse}s needed to persist students answers 
+     * 
+     * @param jsonArray json.org.JSONArray containing the JSON string representing the created survey
+     * @param course {@linkplain Course}  
+     * @param stringType {@linkplain CourseType} as a String, passed from the model
+     */
     public void createSurveyResponse(JSONArray jsonArray, Course course, String stringType){
         
         //Resolve type and find correct instance of course (lecture, tutorial, etc.)
@@ -135,17 +145,62 @@ public class ResponseManagement {
         List<Object> responses = new ArrayList<>(jsonArray.length());
 
         //parse json to serialise response objects
-        for (Object response : jsonArray){
-            System.out.println(response);
+        for (int i = 0; i < jsonArray.length(); i++){
+            JSONObject question = jsonArray.getJSONObject(i);
+
+            switch (question.getString("type")) {
+                case "YesNo":
+                    BinaryResponse bnr = new BinaryResponse(question.getString("question"));
+                    responses.add(bnr);
+                    binaryResponseRepository.save(bnr);
+                    break;
+
+                case "FreeText" :
+                    TextResponse txr = new TextResponse(question.getString("question"));
+                    responses.add(txr);
+                    textResponseRepository.save(txr);
+                    break;
+
+                case "MultipleChoice" :
+                    //Array of all possibilities
+                    JSONArray multipleChoiceAnswerOptions = question.getJSONArray("answers");
+                    
+                    //Array of all possibilieties, passed to the constructor of the MultipleChoiceResponse
+                    ArrayList<String> multipleChoiceOptions = new ArrayList<>(multipleChoiceAnswerOptions.length());
+
+                    for(int j = 0; j < multipleChoiceAnswerOptions.length(); j++){
+                        multipleChoiceOptions.add(multipleChoiceAnswerOptions.getString(j));
+                    }
+
+                    MultipleChoiceResponse mcr = new MultipleChoiceResponse(question.getString("question"), multipleChoiceOptions);
+                    responses.add(mcr);
+                    multipleChoiceResponseRepository.save(mcr);
+                    break;
+
+                case "SingleChoice" :
+                    //Array of all possibilities
+                    JSONArray singleChoiceAnswerOptions = question.getJSONArray("answers");
+                    
+                    //Array of all possibilieties, passed to the constructor of the MultipleChoiceResponse
+                    ArrayList<String> singleChoiceOptions = new ArrayList<>(singleChoiceAnswerOptions.length());
+
+                    for(int j = 0; j < singleChoiceAnswerOptions.length(); j++){
+                        singleChoiceOptions.add(singleChoiceAnswerOptions.getString(j));
+                    }
+
+                    SingleChoiceResponse scr = new SingleChoiceResponse(question.getString("question"), singleChoiceOptions);
+                    responses.add(scr);
+                    singleChoiceResponseRepository.save(scr);
+                    break;
+                default:
+                    
+            }
         }
 
         
-        //for each instance, 
+        //for each instance and group, create a SurveyResponse and persist it
         for(int group = 0; group < courseInstance.getGroupAmount(); group++){
             for(int instance = 0; instance < courseInstance.getInstanceAmount(); instance++){
-
-
-
                 surveyResponseRepository.save(new SurveyResponse(course, type, instance, group, responses));
             }
         }
