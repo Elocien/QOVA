@@ -7,6 +7,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -124,17 +125,19 @@ public class ResponseManagement {
 
 
 
-    public void createSurveyResponse(JSONArray json, Course course, String stringType){
+    public void createSurveyResponse(JSONArray jsonArray, Course course, String stringType){
         
         //Resolve type and find correct instance of course (lecture, tutorial, etc.)
         CourseType type = parseCourseType(stringType);
         CourseInstance courseInstance = course.getInstance(type);
 
         //ArrayList with response objects, initialised with the number of questions as size
-        List<Object> responses = new ArrayList<>(json.length());
+        List<Object> responses = new ArrayList<>(jsonArray.length());
 
         //parse json to serialise response objects
-        
+        for (Object response : jsonArray){
+            System.out.println(response);
+        }
 
         
         //for each instance, 
