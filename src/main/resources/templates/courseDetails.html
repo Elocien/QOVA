@@ -168,7 +168,7 @@
                                                 <td scope="row" th:text="#{'new.' + ${course_type}}">LECTURE</td>
                                                 <!--3rd Col-->
                                                 <td class="text-center" th:text="${__'course.' + ${course_type} + '.instanceAmount'__}">COUNT</td>
-                                                <td class="show_me text-center" style="display: none;"><a type="button" class="btn btn-link p-0 align-middle instance_btn show_me" style="display: none;" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editInstance}"><i class="far fa-edit"></i></a></td>
+                                                <td class="show_me text-center" style="display: none;"><a type="button" class="btn btn-link p-0 align-middle instance_btn show_me" style="display: none;" href="#" th:href="${'/course/new2?id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.editInstance}"><i class="far fa-edit"></i></a></td>
                                                 <!--4th Col-->
                                                 <td class="text-center hide_me" th:text="${__'course.' + ${course_type} + '.groupAmount'__}">COUNT</td>
                                                 <td class="show_me" style="display: none;">
