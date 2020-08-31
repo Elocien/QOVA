@@ -12,22 +12,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OrderColumn;
 
-import qova.objects.Course;
 import qova.enums.CourseType;
 import qova.enums.ResponseType;
 
 
-//Each question needs following fields: 
-//responseType
-//position (can be found via array position)
-//Question      textresponse        Binary response         Mutliple/single choice (1 question, multiple options)
-//Answer        answer              true/false              true/false (multiple times)
 
-//ArrayList, position = index
 
 @Entity
 public class SurveyResponse {
@@ -59,10 +51,6 @@ public class SurveyResponse {
     private Integer instanceNumber;
 
 
-    //comment
-    private Integer numberOfSubmissions;
-
-
     //Maps of all subtype Objects (BinaryResponse, TextResponse, SingleChoiceResponse and MultipleChoiceResponse)
    @ElementCollection @OrderColumn @CollectionTable private Map<Integer, BinaryResponse> binaryResponses;
 
@@ -83,11 +71,11 @@ public class SurveyResponse {
 
     /** Constructor
      * 
-     * @param course 
-     * @param type
-     * @param instanceNumber
-     * @param groupNumber
-     * @param responses
+     * @param course {@linkplain Course} The Course, to which the SurveyResponse is bound. 
+     * @param type {@linkplain CourseType} 
+     * @param instanceNumber Which instance of the course will this SurveyResponse represent, and accumulate results for
+     * @param groupNumber Which group (eg. tutorial group 3 | seminar group 5) of the course will this SurveyResponse represent, and accumulate results for
+     * @param responses A list containing 
      */
     public SurveyResponse(Course course, CourseType type, Integer instanceNumber, Integer groupNumber, List<Object> responses){
         this.dateTime = LocalDateTime.now();
@@ -95,7 +83,6 @@ public class SurveyResponse {
         this.courseType = type;
         this.instanceNumber = instanceNumber;
         this.groupNumber = groupNumber;
-        this.numberOfSubmissions = 0;
 
         this.positionOfResponseTypes = new ArrayList<>();
 
@@ -152,10 +139,6 @@ public class SurveyResponse {
 
     public Integer getInstanceNumber(){
         return this.instanceNumber;
-    }
-
-    public Integer getNumberOfSubmissions(){
-        return this.numberOfSubmissions;
     }
 
 
