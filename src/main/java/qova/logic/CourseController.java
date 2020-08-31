@@ -189,7 +189,7 @@ public class CourseController {
         String id = courseManagement.createCourseReturnId(form);
         
         //Redirect to SurveyEditor to start creating survey
-		return "redirect:../course/new2?id=" + id;
+        return "redirect:../course/new2?id=" + id;
     }
 
 
@@ -199,20 +199,35 @@ public class CourseController {
 
         model.addAttribute("form", form);
 
-        model.addAttribute("lectureInstanceTitles", courseManagement.findById(id).get().getLecture().getInstanceTitles());
-        model.addAttribute("tutorialInstanceTitles", courseManagement.findById(id).get().getTutorial().getInstanceTitles());
-        model.addAttribute("seminarInstanceTitles", courseManagement.findById(id).get().getSeminar().getInstanceTitles());
-        model.addAttribute("practicalInstanceTitles", courseManagement.findById(id).get().getPractical().getInstanceTitles());
+        if(Boolean.TRUE.equals(courseManagement.findById(id).get().getLectureExists())){
+            model.addAttribute("lectureExists", true);
+            model.addAttribute("lectureInstanceTitles", courseManagement.findById(id).get().getLecture().getInstanceTitles());
+            model.addAttribute("lectureInstances", courseManagement.findById(id).get().getLecture().getInstanceAmount());
+        }
+        else{model.addAttribute("lectureExists", false);}
 
-        model.addAttribute("lectureInstances", courseManagement.findById(id).get().getLecture().getInstanceAmount());
-        model.addAttribute("tutorialInstances", courseManagement.findById(id).get().getTutorial().getInstanceAmount());
-        model.addAttribute("seminarInstances", courseManagement.findById(id).get().getSeminar().getInstanceAmount());
-        model.addAttribute("practicalInstances", courseManagement.findById(id).get().getPractical().getInstanceAmount());
-        
-        model.addAttribute("lectureExists", true);
-        model.addAttribute("tutorialExists", true);
-        model.addAttribute("seminarExists", true);
-        model.addAttribute("practicalExists", true);
+        if(Boolean.TRUE.equals(courseManagement.findById(id).get().getTutorialExists())){
+            model.addAttribute("tutorialExists", true);
+            model.addAttribute("tutorialInstanceTitles", courseManagement.findById(id).get().getTutorial().getInstanceTitles());
+            model.addAttribute("tutorialInstances", courseManagement.findById(id).get().getTutorial().getInstanceAmount());
+        }
+        else{model.addAttribute("tutorialExists", false);}
+
+        if(Boolean.TRUE.equals(courseManagement.findById(id).get().getSeminarExists())){
+            model.addAttribute("seminarExists", true);
+            model.addAttribute("seminarInstanceTitles", courseManagement.findById(id).get().getSeminar().getInstanceTitles());
+            model.addAttribute("seminarInstances", courseManagement.findById(id).get().getSeminar().getInstanceAmount());
+        }
+        else{model.addAttribute("seminarExists", false);}
+
+        if(Boolean.TRUE.equals(courseManagement.findById(id).get().getPracticalExists())){
+            model.addAttribute("practicalExists", true);
+            model.addAttribute("practicalInstanceTitles", courseManagement.findById(id).get().getPractical().getInstanceTitles());
+            model.addAttribute("practicalInstances", courseManagement.findById(id).get().getPractical().getInstanceAmount());
+        }
+        else{model.addAttribute("practicalExists", false);}
+
+       
 
 		return "courseNew2";
     }
