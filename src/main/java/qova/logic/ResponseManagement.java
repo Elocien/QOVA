@@ -129,7 +129,8 @@ public class ResponseManagement {
 
 
 
-    /** Used in the PostMapping of the SurveyEditor. When a survey is created, this method is used to serialise the {@linkplain SurveyResponse}s needed to persist students answers 
+    /** 
+     * Used in the PostMapping of the SurveyEditor. When a survey is created, this method is used to serialise the {@linkplain SurveyResponse}s needed to persist students answers 
      * 
      * @param jsonArray json.org.JSONArray containing the JSON string representing the created survey
      * @param course {@linkplain Course}  
@@ -230,7 +231,8 @@ public class ResponseManagement {
      * 
      * @param course    {@linkplain Course} object
      * @param type      {@linkplain CourseType}
-     * @param classNo   The number of the corresponding tutorial or seminar (=1 in case CourseType is Lecture) 
+     * @param groupNumber The number of the corresponding tutorial or seminar (=1 in case CourseType is Lecture) 
+     * @param instanceNumber The number corresponding to the instance of the Course. 
      * 
      * @return an Iterable containing all Responses that fit criteria
      */

@@ -289,17 +289,16 @@ public class CourseController {
 
 
     
-    /** Mapping for surveyeditor HTML (called from CourseDetails Page!)
+    /** 
+     * Mapping for surveyeditor HTML (called from CourseDetails Page!)
      * 
-     * @param model
-     * @param type
-     * @param id
-     * @return
-     * @throws Exception
+     * @param model {@link org.springframework.ui.Model}
+     * @param type {@linkplain qova.enums.CourseType} in String form
+     * @param id Id of the Course
+     * @return questioneditor.html template
      */
     @GetMapping("course/surveyeditor")
-    public String questioneditor(Model model, @RequestParam String type, @RequestParam(required = false) String id)
-            throws Exception {
+    public String questioneditor(Model model, @RequestParam String type, @RequestParam(required = false) String id){
         
         //Give model the following attributes, which are used to submit the survey, via the post method
         model.addAttribute("typeID", type);
@@ -335,15 +334,14 @@ public class CourseController {
      * SurveyResponse object is created along with its subclasses (BinaryResponse,
      * TextResponse, etc.)
      * 
-     * @param form
-     * @param type
-     * @param id
-     * @return
-     * @throws Exception
+     * @param form {@linkplain SurveyForm} which contains the JSON passed by the surveyeditor
+     * @param type {@linkplain qova.enums.CourseType} in String format
+     * @param id Id of the {@linkplain Course}
+     * @return Either the errorPage, in case of error; otherwise return the courseDetails template
      */
     @PostMapping("course/surveyeditor")
     public String questioneditorSubmit(SurveyForm form, @RequestParam String type,
-            @RequestParam(required = false) String id) throws Exception {
+            @RequestParam(required = false) String id) {
         
 
         //Form empty -> Redirect to details again 
@@ -410,12 +408,12 @@ public class CourseController {
     /**
      * This method takes id and CourseType as parameters, and returns a qrcode with the given string that is assembled below
      * 
-     * @param response HttpResponse
-     * @param type
-     * @param id
-     * @return
-     * @throws IOException
-     * @throws WriterException
+     * @param response {@link javax.servlet.http.HttpServletResponse}
+     * @param type {@linkplain qova.enums.CourseType}
+     * @param id Id of the {@linkplain Course}
+     * @return The QRCode as a byte[], bundled into a {@link HttpEntity}
+     * @throws IOException Thrown by QRCode generator 
+     * @throws WriterException Thrown by QRCode generator 
      */
     @GetMapping("qrcode")
     public HttpEntity<byte[]> qrcode(HttpServletResponse response, @RequestParam String type, @RequestParam String id) throws IOException, WriterException  {

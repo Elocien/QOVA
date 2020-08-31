@@ -354,8 +354,8 @@ public class CourseManagement {
      * 
      * @param text Takes a string as input (in our case a url)
      * @return A byte[] with the image of the QRCode
-     * @throws WriterException
-     * @throws IOException
+     * @throws WriterException thrown by QRCode generator
+     * @throws IOException thrown by QRCode generator
      */
     public byte[] generateQRCodeImage(String text) throws WriterException, IOException {
 
@@ -381,7 +381,7 @@ public class CourseManagement {
     /**
      * Function used to populate a drop down menu in course creation UI. Fills a list with (x) future semesters and (y) previous semsters, as well as the current semester. {@linkplain Course}
      * only has a LocalDate attribute, so parseSemesterString method in controller converts this string back to a date, which is used for finding courses by date
-     * @return ArrayList<String> with strings of type: "SoSe xxxx" or "WiSe xxxx/yyyy"
+     * @return ArrayList with strings of type: "SoSe xxxx" or "WiSe xxxx/yyyy"
      */
     public ArrayList<String> findSemesters(){
         

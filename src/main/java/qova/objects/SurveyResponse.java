@@ -51,31 +51,37 @@ public class SurveyResponse {
     private Integer instanceNumber;
 
 
-    //Maps of all subtype Objects (BinaryResponse, TextResponse, SingleChoiceResponse and MultipleChoiceResponse)
-   @ElementCollection @OrderColumn @CollectionTable private Map<Integer, BinaryResponse> binaryResponses;
+    //Maps of all subtype Objects (BinaryResponse, TextResponse, SingleChoiceResponse and MultipleChoiceResponse). Split in order to persist in db
+    @ElementCollection @OrderColumn @CollectionTable 
+    private Map<Integer, BinaryResponse> binaryResponses;
 
-   @ElementCollection @OrderColumn @CollectionTable private Map<Integer, TextResponse> textResponses;
+    @ElementCollection @OrderColumn @CollectionTable 
+    private Map<Integer, TextResponse> textResponses;
 
-   @ElementCollection @OrderColumn @CollectionTable private Map<Integer, SingleChoiceResponse> singleChoiceResponses;
+    @ElementCollection @OrderColumn @CollectionTable 
+    private Map<Integer, SingleChoiceResponse> singleChoiceResponses;
 
-   @ElementCollection @OrderColumn @CollectionTable private Map<Integer, MultipleChoiceResponse> multipleChoiceResponses;
+    @ElementCollection @OrderColumn @CollectionTable 
+    private Map<Integer, MultipleChoiceResponse> multipleChoiceResponses;
 
 
-   //
-   @ElementCollection @OrderColumn @CollectionTable private List<ResponseType> positionOfResponseTypes;
+    //List which keeps track of the position of each ResponseType, for reassembly of the list from the database.
+    @ElementCollection @OrderColumn @CollectionTable 
+    private List<ResponseType> positionOfResponseTypes;
 
 
     //Needed for JPA puposes
     @SuppressWarnings("unused")
     public SurveyResponse (){}
 
-    /** Constructor
+    /** 
+     * Constructor
      * 
      * @param course {@linkplain Course} The Course, to which the SurveyResponse is bound. 
      * @param type {@linkplain CourseType} 
      * @param instanceNumber Which instance of the course will this SurveyResponse represent, and accumulate results for
      * @param groupNumber Which group (eg. tutorial group 3 | seminar group 5) of the course will this SurveyResponse represent, and accumulate results for
-     * @param responses A list containing 
+     * @param responses A list used to track which {@linkplain ResponseType} is in which position
      */
     public SurveyResponse(Course course, CourseType type, Integer instanceNumber, Integer groupNumber, List<Object> responses){
         this.dateTime = LocalDateTime.now();
@@ -142,7 +148,13 @@ public class SurveyResponse {
     }
 
 
-    //Used to assemble an ordered list of the responses. 
+    /** 
+     * Method which reassembles the list of Responses of type {@linkplain BinaryResponse}, {@linkplain TextResponse}, 
+     * {@linkplain MultipleChoiceResponse} or {@linkplain SingleChoiceResponse}. The position indicates where the response (representing a question)
+     * appears on a survey.
+     * 
+     * @return a list of {@link java.lang.Object} 
+     */
     public List<Object> getUserResponses(){
 
         List<Object> responses = new ArrayList<>();

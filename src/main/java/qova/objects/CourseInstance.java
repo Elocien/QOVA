@@ -45,15 +45,15 @@ public class CourseInstance {
     }
 
     /**
-     * Instance of a CourseType
+     * Instance representing either a Lecture, Tutorial, Seminar or Practical. Nested into {@linkplain Course}
      * 
      * @param courseType     Enumeration of the possible types
-     * @param survey         JSON String representing the survey shows to users,
      *                       rendered by JS in survey template
-     * @param groupAmount    Integer representing the number of groups for a
+     * @param groupAmount    Integer representing the number of the group of this
      *                       specific courseInstance
-     * @param instanceTitles
-     * @throws Exception
+     * @param instanceAmount Integer representing the number of the instance of this
+     *                       specific courseInstance
+     * @param instanceTitles The titles for each instance of a {@linkplain Course}, in the form of a String 
      */
     public CourseInstance(CourseType courseType, Integer groupAmount, Integer instanceAmount,
             String[] instanceTitles){

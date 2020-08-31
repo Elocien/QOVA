@@ -42,7 +42,7 @@ public class AdminManagement {
 
 
     //Get Default survey from Repo
-    public String getDefaultSurvey() throws Exception{
+    public String getDefaultSurvey() {
         try{
             return repo.findSpecialInstance().getDefaultSurvey();
         }

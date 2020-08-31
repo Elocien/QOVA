@@ -81,7 +81,7 @@ public class Course {
      * @param tutorial                  CourseInstance with courseType SEMINAR
      * @param seminar                   CourseInstance with courseType TUTORIAL
      * @param practical                 CourseInstance with courseType PRACTICAL
-     * @param semesterOfStundets        What is the semester of the students attending the subject
+     * @param semesterOfStudents        What is the semester of the students attending the subject
      * @param faculty                   Enum defining which faculty the subject belongs to 
      * @param semesterString            The string displaying the semester (an instance of a course. E.g. algorithms 1 is offered each year, and this is the instance of Summer semester 2020). This field is primarily used in the UI
      * @param courseDate                The time period (start date) of when the course takes placed. This field is primarily used for sorting purposes

@@ -65,15 +65,15 @@ public class PDFGenerator {
     // List of all Paragraphs (BinaryAnswer)
     private List<Paragraph> ParagraphList = new ArrayList<>();
 
-    /**
-     * Generates PDF Documents based on the given SurveyResponse object.
-     * 
-     * @param response {@linkplain SurveyResponse}
-     * @param language Defines the language of the resulting PDF
-     * @return byte[]
-     * @throws IOException
-     * @throws Exception
-     */
+   /**
+    * Generates PDF Documents based on the given SurveyResponse object.
+    *
+    * @param response {@linkplain SurveyResponse} 
+    * @param language {@linkplain LocalizationOption}    
+    * @return a byte[] of the PDF
+    * @throws IOException Thrown by itextpdf
+    * @throws Exception Thrown when none of the Responses Match the given types
+    */
     public byte[] createPdf(SurveyResponse response, LocalizationOption language) throws IOException, Exception {
 
         if (language.equals(LocalizationOption.EN)) {

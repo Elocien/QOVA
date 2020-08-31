@@ -15,12 +15,12 @@ import qova.objects.SurveyResponse;
 public class CSVGenerator {
     
     /**
-     * Generates CSV of student responses
+     * Generates a CSV of the Responses for a single SurveyResponse
      * 
-     * @param allResponses
-     * @param language
-     * @return
-     * @throws java.io.IOException
+     * @param response {@linkplain SurveyResponse} 
+     * @param language {@linkplain LocalizationOption}
+     * @return a byte[] of the CSV
+     * @throws java.io.IOException Thrown by CSVWriter
      */
     public byte[] createCSV(SurveyResponse response, LocalizationOption language) throws java.io.IOException {
         
@@ -125,19 +125,5 @@ public class CSVGenerator {
         //CSV as byte[] stream
         return stream.toByteArray();
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-   
     
 }
