@@ -89,6 +89,7 @@
 			//Yes Answer
 			// Deutsch English bei YesNo?
 			const fullOptionYes = document.createElement("DIV");
+			fullOptionYes.className = "Option 1";
 			const tickboxYes = document.createElement("INPUT");
 			tickboxYes.className ="tickbox";
 			tickboxYes.setAttribute("type","radio");
@@ -104,6 +105,7 @@
 			selectionOption.appendChild(fullOptionYes);
 
 			const fullOptionNo = document.createElement("DIV");
+			fullOptionNo.className = "Option 2";
 			const tickboxNo = document.createElement("INPUT");
 			tickboxNo.className ="tickbox";
 			tickboxNo.setAttribute("type","radio");
@@ -158,6 +160,7 @@
 				for (let i = 0; i< value.answers.length;i++){
 
 					const fullOption = document.createElement("DIV");
+					fullOption.className = "Option "+i;
 					const tickbox = document.createElement("INPUT");
 					tickbox.className ="tickbox";
 					tickbox.setAttribute("type","radio");
@@ -195,6 +198,7 @@
 			for (let i = 0; i< value.answers.length;i++){
 
 				const fullOption = document.createElement("DIV");
+				fullOption.className = "Option "+i;
 				const tickbox = document.createElement("INPUT");
 				tickbox.className ="tickbox";
 				tickbox.setAttribute("type","checkbox");
@@ -221,17 +225,37 @@
 	}
 
 	$('#submitsurvey').submit(function () {
-		debugger;
+
 		const surveyjson = [];
-		const  questions =document.getElementById("survey").getElementsByClassName("container bg-white border border-secondary rounded mt-4");
+
+
+		const  questions = document.getElementById("survey").getElementsByClassName("container bg-white border border-secondary rounded mt-4");
 		for (let i = 0; i<questions.length; i++ ){
+
+
+			const answer = [];
 			const type = questions[i].className;
-			console.log(questions[i].getElementsByClassName("Options"));
+			console.log(type);
 
+			// Für FreeText Quesiton
+			if (questions[i].className == "container bg-white border border-secondary rounded mt-4 FreeText"){
+				answer.push(questions[i].getElementsByClassName("Options")[0].getElementsByClassName("Textarea")[0].value);
+			}
 
+			//Für alle anderen Typen
+			else {
+				const options = questions[i].getElementsByClassName("Options")[0].getElementsByClassName("Option");
 
+				for (let j = 0; j < options.length; j++) {
+					if (options[j].getElementsByClassName("tickbox")[0].checked) {
+						answer.push(j);
+					}
+				}
+
+			}
+			surveyjson.push(answer);
 		}
-		document.getElementById("surveyjson").value = questions.length;
+		document.getElementById("surveyjson").value = JSON.stringify(surveyjson);
 		return true;
 	});
 
