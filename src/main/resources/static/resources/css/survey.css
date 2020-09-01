@@ -5,6 +5,23 @@ I read that somewhere ;) */
     overflow: hidden;
 }
 
+.input {
+    display: none;
+}
+
+.submit{
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+
+.center {
+    margin: 0;
+    position: absolute;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
 .Textarea.FreeText{
     width: 100%;
     margin: 0.5rem 0rem;

@@ -24,7 +24,15 @@
 		<div class="row">
 			<div class="col-md-3"></div>
 			<!-- Survey-->
-			<div class="col-md-6" id="survey"></div>
+			<div class="col-md-6">
+				<div id="survey"></div>
+				<div id="submit" class="submit">
+					<form th:action="@{/survey?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="submitsurvey">
+						<input type="text" name="surveyjson" id="surveyjson" class="input"></input>
+						<button class="btn btn-primary mt-2 center" type="submit" th:text="#{question.submit}">SUBMIT</button>
+					</form>
+				</div>
+			</div>
 			<div class="col-md-3"></div>
 		</div>
 	</div>
@@ -34,7 +42,7 @@
 <div class="pt-4" th:include="footer"></div>
 
 <script>
-	const survey = [(${survey})];
+	const survey = [{"type":"YesNo","question":"Scheint die Sonne"},{"type":"MultipleChoice","question":"Wie geht es dir?","answers":["Okay","Gut","Schlecht"]},{"type":"SingleChoice","question":"Ja Neine Vielleicht","answers":["Ja","Nein","Vielleicht"]},{"type":"FreeText","question":"STONKS"}];
 	console.log(survey);
 
 	//onload buildt the survey clientside
@@ -123,6 +131,8 @@
 			x.setAttribute("id", index);
 
 			const div = document.createElement("DIV");
+			div.className ="Options FreeText";
+
 			const text_area = document.createElement("TEXTAREA");
 			text_area.className = "Textarea FreeText";
 			text_area.setAttribute("id",index);
@@ -209,6 +219,21 @@
 
 
 	}
+
+	$('#submitsurvey').submit(function () {
+		debugger;
+		const surveyjson = [];
+		const  questions =document.getElementById("survey").getElementsByClassName("container bg-white border border-secondary rounded mt-4");
+		for (let i = 0; i<questions.length; i++ ){
+			const type = questions[i].className;
+			console.log(questions[i].getElementsByClassName("Options"));
+
+
+
+		}
+		document.getElementById("surveyjson").value = questions.length;
+		return true;
+	});
 
 
 
