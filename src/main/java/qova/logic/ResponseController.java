@@ -191,6 +191,20 @@ public class ResponseController {
 
     // ---------------------------------------------------------------------------
 
+
+    @GetMapping("/surveyresults")
+    public String surveyResultsTest(Model model) throws Exception {
+
+        //TODO finish this
+        
+        model.addAttribute("response", responseManagement.findById(9).get());
+
+        return "surveyResults";
+    }
+
+
+
+
     // PDF Generation
     @GetMapping("/generatePDF")
     public HttpEntity<byte[]> generatePdf(@RequestParam String id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
@@ -260,16 +274,8 @@ public class ResponseController {
     }
 
 
-    @GetMapping("/surveyResults")
-    public String surveyResults(Model model) throws Exception {
 
-        Course course = courseManagement.TimTestCreateCourse();
-        SurveyResponse rsp = responseManagement.timCreateTestResponses(course);
-        
-        model.addAttribute("response", rsp);
 
-        return "surveyResults";
-    }
 
     
     
@@ -329,6 +335,18 @@ public class ResponseController {
         return new HttpEntity<byte[]>(pdf, header);
     }    
 
+    @GetMapping("/surveyResults")
+    public String surveyResults(Model model) throws Exception {
+
+        Course course = courseManagement.TimTestCreateCourse();
+        SurveyResponse rsp = responseManagement.timCreateTestResponses(course);
+        
+        model.addAttribute("response", rsp);
+
+        return "surveyResults";
+    }
+
+    
 }
     
 

@@ -34,11 +34,11 @@ public class DefaultSurvey {
         return this.id;
     }
 
-    public void setDefaultSurvey(String surveyJson){
+    public void setDefaultSurveyJson(String surveyJson){
         this.defaultSurveyJson = surveyJson;
     }
 
-    public String getDefaultSurvey(){
+    public String getDefaultSurveyJson(){
         return this.defaultSurveyJson;
     }
 }

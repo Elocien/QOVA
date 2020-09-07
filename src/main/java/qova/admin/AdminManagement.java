@@ -1,6 +1,7 @@
 package qova.admin;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,20 +17,20 @@ public class AdminManagement {
     
     private final DefaultSurveyRepository repo;
 
+    /**
+     * The Constructor checks if the {@linkplain DefaultSurvey} is present and persisted; if it is not, a new one is created;
+     * 
+     * @param repo The {@linkplain DefaultSurveyRepository}. Contains the single instance of the defaultSurvey
+     */
     @Autowired
     public AdminManagement(DefaultSurveyRepository repo) {
-        
-        repo.save(new DefaultSurvey(1337L, "[]"));
-
-        //Check if defaultSurvey exists.
-        try{
-            repo.findSpecialInstance();
-        }
-        catch(IllegalStateException e){
-            e.printStackTrace();
+            
+        Optional<DefaultSurvey> defaultSurvey = repo.checkForDefaultSurvey();
+        if(defaultSurvey.isEmpty()){
             repo.save(new DefaultSurvey(1337L, "[]"));
         }
-
+        
+        
         this.repo = Objects.requireNonNull(repo);
     }
 
@@ -44,7 +45,7 @@ public class AdminManagement {
     //Get Default survey from Repo
     public String getDefaultSurvey() {
         try{
-            return repo.findSpecialInstance().getDefaultSurvey();
+            return repo.findSpecialInstance().getDefaultSurveyJson();
         }
         catch(IllegalStateException e){
             DefaultSurvey defaultSurvey = new DefaultSurvey(1337L, "[]");
@@ -73,7 +74,7 @@ public class AdminManagement {
 
     //Submission of new default survey
     public void updateDefaultSurvey(SurveyForm form) throws Exception {
-        getDefaultSurveyObject().setDefaultSurvey(form.getQuestionnairejson());
+        getDefaultSurveyObject().setDefaultSurveyJson(form.getQuestionnairejson());
     }
 
 
