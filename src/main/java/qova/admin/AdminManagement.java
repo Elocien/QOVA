@@ -20,7 +20,7 @@ public class AdminManagement {
     /**
      * The Constructor checks if the {@linkplain DefaultSurvey} is present and persisted; if it is not, a new one is created;
      * 
-     * @param repo The {@linkplain DefaultSurveyRepository}. Contains the single instance of the defaultSurvey
+     * @param repo The {@linkplain DefaultSurveyRepository}. Contains the single instance of the defaultSurvey.
      */
     @Autowired
     public AdminManagement(DefaultSurveyRepository repo) {
@@ -35,6 +35,12 @@ public class AdminManagement {
     }
 
 
+
+    public String concatenateDefaultSurveyToSurveyString(String surveyJson){
+        String defaultSurvey = getDefaultSurvey();
+
+        return (defaultSurvey.substring(0, defaultSurvey.length()-1) + "," + surveyJson.substring(1));
+    }
 
 
 
@@ -69,14 +75,10 @@ public class AdminManagement {
 
 
 
-
-
-
     //Submission of new default survey
     public void updateDefaultSurvey(SurveyForm form) throws Exception {
         getDefaultSurveyObject().setDefaultSurveyJson(form.getQuestionnairejson());
     }
-
 
 }
 
