@@ -2,7 +2,6 @@ package qova.admin;
 
 import java.util.Objects;
 import java.util.Optional;
-import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +16,8 @@ public class AdminManagement {
     
     private final DefaultSurveyRepository repo;
 
+    private String defaultSurveyString = "[{\"type\":\"YesNo\",\"question\":\"Scheint die Sonne\"},{\"type\":\"MultipleChoice\",\"question\":\"Wie geht es dir?\",\"answers\":[\"Okay\",\"Gut\",\"Schlecht\"]},{\"type\":\"SingleChoice\",\"question\":\"Ja Neine Vielleicht\",\"answers\":[\"Ja\",\"Nein\",\"Vielleicht\"]},{\"type\":\"FreeText\",\"question\":\"STONKS\"}]";
+
     /**
      * The Constructor checks if the {@linkplain DefaultSurvey} is present and persisted; if it is not, a new one is created;
      * 
@@ -24,10 +25,12 @@ public class AdminManagement {
      */
     @Autowired
     public AdminManagement(DefaultSurveyRepository repo) {
-            
+
+
+           
         Optional<DefaultSurvey> defaultSurvey = repo.checkForDefaultSurvey();
         if(defaultSurvey.isEmpty()){
-            repo.save(new DefaultSurvey(1337L, "[]"));
+            repo.save(new DefaultSurvey(1337L, defaultSurveyString));
         }
         
         
@@ -54,7 +57,7 @@ public class AdminManagement {
             return repo.findSpecialInstance().getDefaultSurveyJson();
         }
         catch(IllegalStateException e){
-            DefaultSurvey defaultSurvey = new DefaultSurvey(1337L, "[]");
+            DefaultSurvey defaultSurvey = new DefaultSurvey(1337L, defaultSurveyString);
             repo.save(defaultSurvey);
             return "[]";
         }
@@ -67,7 +70,7 @@ public class AdminManagement {
             return repo.findSpecialInstance();
         }
         catch(IllegalStateException e){
-            DefaultSurvey defaultSurvey = new DefaultSurvey(1337L, "[]");
+            DefaultSurvey defaultSurvey = new DefaultSurvey(1337L, defaultSurveyString);
             repo.save(defaultSurvey);
             return defaultSurvey;
         }
@@ -76,7 +79,7 @@ public class AdminManagement {
 
 
     //Submission of new default survey
-    public void updateDefaultSurvey(SurveyForm form) throws Exception {
+    public void updateDefaultSurvey(SurveyForm form) {
         getDefaultSurveyObject().setDefaultSurveyJson(form.getQuestionnairejson());
     }
 

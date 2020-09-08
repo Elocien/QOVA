@@ -36,7 +36,7 @@ public class AdminController {
     public String updateDefaultSurvey(Model model) throws Exception {
 
         //give previous default survey to model
-        model.addAttribute("defaultSurvey", adminManagement.getDefaultSurvey() );
+        model.addAttribute("survey", adminManagement.getDefaultSurvey() );
 
 
         return "adminQuestioneditor";
