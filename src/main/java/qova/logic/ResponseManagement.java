@@ -85,7 +85,7 @@ public class ResponseManagement {
     
     
     //PDF Generation (ENGLISH)
-    public byte[] generatePDF_en(Course course, CourseType type, Integer groupNumber, Integer instanceNumber) throws IOException, Exception {
+    public byte[] generatePDF_en(Course course, CourseType type, Integer groupNumber, Integer instanceNumber) throws Exception {
 
         //retrieve the SurveyResponse object from repository
         Optional<SurveyResponse> rsp = surveyResponseRepository.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, type, groupNumber, instanceNumber);
@@ -100,7 +100,7 @@ public class ResponseManagement {
 
 
     //CSV Generation (ENGLISH)
-    public byte[] generateCSV_en(Course course, CourseType type, Integer groupNumber, Integer instanceNumber) throws IOException, Exception {
+    public byte[] generateCSV_en(Course course, CourseType type, Integer groupNumber, Integer instanceNumber) throws Exception {
 
         //retrieve the SurveyResponse object from repository
         Optional<SurveyResponse> rsp = surveyResponseRepository.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, type, groupNumber, instanceNumber);
@@ -111,7 +111,12 @@ public class ResponseManagement {
     }
 
 
-
+    /**
+     * Verifies that the length of the submitted JSONArray does not exceed 100 elements, as the number of questions per survey is limited to 100;
+     * 
+     * @param json {@link org.json.JSONArray}
+     * @return A boolean flag, which is handled in the controller
+     */
     public Boolean verifyJsonArray(JSONArray json){
        
         //check for too large surveys (more than 100 quesitons)
@@ -194,7 +199,7 @@ public class ResponseManagement {
                     singleChoiceResponseRepository.save(scr);
                     break;
                 default:
-                    
+                    break;
             }
         }
 

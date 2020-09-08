@@ -136,10 +136,10 @@ public class CourseController {
 
 
             //send byte array (the QRCode image) to model 
-            model.addAttribute("LectureQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(LectureSurveyURl)));  
-            model.addAttribute("TutorialQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(TutorialSurveyURl)));
-            model.addAttribute("SeminarQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(SeminarSurveyURl)));
-            model.addAttribute("PracticalQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(PracticalSurveyURL)));  
+            model.addAttribute("lectureQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(LectureSurveyURl)));  
+            model.addAttribute("tutorialQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(TutorialSurveyURl)));
+            model.addAttribute("seminarQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(SeminarSurveyURl)));
+            model.addAttribute("practicalQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(PracticalSurveyURL)));  
             
             return "courseDetails";
         } else {
@@ -393,8 +393,9 @@ public class CourseController {
                     return "redirect:/";
                 }
 
-                //Manager method for creating SurveyResponse and corresponding nested objects
-                responseManagement.createSurveyResponse(survey, course.get(), type);
+                //Manager method for creating SurveyResponse and corresponding nested objects\
+                //TODO: Fix this!!!
+                // responseManagement.createSurveyResponse(survey, course.get(), type);
 
                 //Sets the survey string for a given course (takes the default survey and conncatenates it with the create survey)
                 courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson());

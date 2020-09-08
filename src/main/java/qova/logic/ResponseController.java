@@ -191,6 +191,31 @@ public class ResponseController {
 
     // ---------------------------------------------------------------------------
 
+    /**
+     * Used to retrieve the results for a given questionnaire
+     * 
+     * @param model {@link org.springframework.ui.Model}
+     * @param type {@linkplain qova.enums.CourseType}
+     * @param id The Id of the {@linkplain qova.objects.Course}
+     * @param group The groupNumber of the {@linkplain qova.objects.Course}
+     * @param instance The instanceNumber of the {@linkplain qova.objects.Course}
+     * @return The surveyResults template, which shows the compiled results of the requested questionnaire
+     */
+    @GetMapping("/surveyresults")
+    public String surveyResultsTest(Model model, @RequestParam String type, @RequestParam String id, @RequestParam String group, @RequestParam String instance) {
+        Optional<Course> crs = courseManagement.findById(id);
+        if(crs.isPresent()){
+            Optional<SurveyResponse> srv = responseManagement.findByCourseAndCourseTypeAndClassNo(crs.get(), responseManagement.parseCourseType(type), Integer.valueOf(group), Integer.valueOf(instance));
+            if(srv.isPresent()){
+                model.addAttribute("response", srv.get());
+            }
+        }
+        return "surveyResults";
+    }
+
+
+
+
     // PDF Generation
     @GetMapping("/generatePDF")
     public HttpEntity<byte[]> generatePdf(@RequestParam String id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
@@ -260,16 +285,8 @@ public class ResponseController {
     }
 
 
-    @GetMapping("/surveyResults")
-    public String surveyResults(Model model) throws Exception {
 
-        Course course = courseManagement.TimTestCreateCourse();
-        SurveyResponse rsp = responseManagement.timCreateTestResponses(course);
-        
-        model.addAttribute("response", rsp);
 
-        return "surveyResults";
-    }
 
     
     
@@ -329,6 +346,18 @@ public class ResponseController {
         return new HttpEntity<byte[]>(pdf, header);
     }    
 
+    @GetMapping("/surveyResults")
+    public String surveyResults(Model model) throws Exception {
+
+        Course course = courseManagement.TimTestCreateCourse();
+        SurveyResponse rsp = responseManagement.timCreateTestResponses(course);
+        
+        model.addAttribute("response", rsp);
+
+        return "surveyResults";
+    }
+
+    
 }
     
 
