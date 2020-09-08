@@ -34,8 +34,16 @@
     <div id="resource-container" style="display: none;">
         <!--Question Template-->
         <div class="container result-container with-bars mt-3">
-            <h5 class="question-type mt-2 mb-4"></h5>
-            <div class="col answere-column pl-0 mt-2 mb-2"></div>
+            <div class="row justify-content-between">
+                <div class="col-auto">
+                    <h5 class="question-type mt-2 mb-2"></h5>
+                </div>
+                <div class="col-1">
+                    <a class="collapse-btn" data-toggle="collapse" href="#" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fas fa-plus right collapse-icon"></i></a>
+                </div>
+            </div>
+            <h5 class="question-type mt-2 mb-2"></h5>
+            <div class="col answere-column p-0 mt-4 mb-2"></h5>
         </div>
         <!--Answere Template-->
         <div class="answere-template">
@@ -56,6 +64,7 @@
         bar_color(bar_containers);
     });
     const resources = document.getElementById("resource-container");
+    var free_text_count = 0;
 
     function bar_color(question_list) {
         for (let i = 0; i < question_list.length; ++i) {
@@ -101,30 +110,39 @@
     }
     function create_question(type, text, answers) {
         var question = resources.getElementsByClassName("result-container")[0].cloneNode(true);
+        delete_element(question.getElementsByClassName("answere-template")[0]);
         for (let i = 0; i < answers.length; ++i) {
             question.getElementsByClassName("answere-column")[0].appendChild(answers[i]);
         }
         if (type == "TEXT_RESPONSE") {
             question.classList.remove("with-bars");
-            headline = "Free Text Question:";
+            question.getElementsByClassName("answere-column")[0].classList.add("collapse");
+            question.getElementsByClassName("answere-column")[0].id = "free-text-collapse-"+free_text_count;
+            question.getElementsByClassName("collapse-btn")[0].href = "#free-text-collapse-"+free_text_count;
+            free_text_count += 1;
+            delete_element(question.getElementsByClassName("question-type")[1]);
+        }
+        else {
+            delete_element(question.getElementsByClassName("row justify-content-between")[0]);
         }
         question.getElementsByClassName("question-type")[0].innerHTML = text;
         return question;
     }
     function create_answere(type, text, value) {
-        var answere = resources.getElementsByClassName("answere-template")[0].cloneNode(true);
-        answere.getElementsByClassName("result-text")[0].innerHTML = text;
         if (type == "TEXT_RESPONSE") {
-            answere.getElementsByClassName("result-text")[0].classList.add("result-free-text");
-            answere.getElementsByClassName("result-text")[0].classList.remove("result-text");
-            delete_me = answere.getElementsByClassName("d-flex flex-row")[0];
-            delete_me.parentNode.removeChild(delete_me);
+            var answere = resources.getElementsByClassName("result-text")[0].cloneNode(true);
+            answere.innerHTML = text; answere.classList.add("result-free-text"); answere.classList.remove("result-text");
         }
         else {
+            var answere = resources.getElementsByClassName("answere-template")[0].cloneNode(true);
+            answere.getElementsByClassName("result-text")[0].innerHTML = text;
             answere.getElementsByClassName("result-percent")[0].innerHTML = Math.round(value*10000)/100+"%";
             bar_fix(answere.getElementsByClassName("result-bar")[0], value);
         }
         return answere;
+    }
+    function delete_element(element) {
+        element.parentNode.removeChild(element);
     }
 
 </script>
