@@ -100,7 +100,7 @@ public class ResponseManagement {
 
 
     //CSV Generation (ENGLISH)
-    public byte[] generateCSV_en(Course course, CourseType type, Integer groupNumber, Integer instanceNumber) throws , Exception {
+    public byte[] generateCSV_en(Course course, CourseType type, Integer groupNumber, Integer instanceNumber) throws Exception {
 
         //retrieve the SurveyResponse object from repository
         Optional<SurveyResponse> rsp = surveyResponseRepository.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, type, groupNumber, instanceNumber);
