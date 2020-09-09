@@ -22,11 +22,7 @@ import qova.objects.MultipleChoiceResponse;
 import qova.objects.SingleChoiceResponse;
 import qova.objects.SurveyResponse;
 import qova.objects.TextResponse;
-import qova.repositories.BinaryResponseRepository;
-import qova.repositories.MultipleChoiceResponseRepository;
-import qova.repositories.SingleChoiceResponseRepository;
 import qova.repositories.SurveyResponseRepository;
-import qova.repositories.TextResponseRepository;
 
 
 
@@ -35,20 +31,11 @@ import qova.repositories.TextResponseRepository;
 public class ResponseManagement {
 
     private final SurveyResponseRepository surveyResponseRepository;
-    private final BinaryResponseRepository binaryResponseRepository;
-    private final TextResponseRepository textResponseRepository;
-    private final MultipleChoiceResponseRepository multipleChoiceResponseRepository;
-    private final SingleChoiceResponseRepository singleChoiceResponseRepository;
 
 
     @Autowired
-    public ResponseManagement(SurveyResponseRepository surveyResponseRepository, BinaryResponseRepository binaryResponseRepository, 
-                TextResponseRepository textResponseRepository, MultipleChoiceResponseRepository multipleChoiceResponseRepository, SingleChoiceResponseRepository singleChoiceResponseRepository) {
+    public ResponseManagement(SurveyResponseRepository surveyResponseRepository) {
         this.surveyResponseRepository = Objects.requireNonNull(surveyResponseRepository);
-        this.binaryResponseRepository = Objects.requireNonNull(binaryResponseRepository);
-        this.textResponseRepository = Objects.requireNonNull(textResponseRepository);
-        this.multipleChoiceResponseRepository = Objects.requireNonNull(multipleChoiceResponseRepository);
-        this.singleChoiceResponseRepository = Objects.requireNonNull(singleChoiceResponseRepository);
     }
 
 
@@ -158,13 +145,11 @@ public class ResponseManagement {
                 case "YesNo":
                     BinaryResponse bnr = new BinaryResponse(question.getString("question"));
                     responses.add(bnr);
-                    binaryResponseRepository.save(bnr);
                     break;
 
                 case "FreeText" :
                     TextResponse txr = new TextResponse(question.getString("question"));
                     responses.add(txr);
-                    textResponseRepository.save(txr);
                     break;
 
                 case "MultipleChoice" :
@@ -180,7 +165,6 @@ public class ResponseManagement {
 
                     MultipleChoiceResponse mcr = new MultipleChoiceResponse(question.getString("question"), multipleChoiceOptions);
                     responses.add(mcr);
-                    multipleChoiceResponseRepository.save(mcr);
                     break;
 
                 case "SingleChoice" :
@@ -196,7 +180,6 @@ public class ResponseManagement {
 
                     SingleChoiceResponse scr = new SingleChoiceResponse(question.getString("question"), singleChoiceOptions);
                     responses.add(scr);
-                    singleChoiceResponseRepository.save(scr);
                     break;
                 default:
                     break;
@@ -293,7 +276,7 @@ public class ResponseManagement {
 
 
     //Test Method, remove in build
-    public void createTestResponses(Course course) throws Exception {
+    public void createTestResponses(Course course) {
         
         var type = CourseType.LECTURE;
         var instanceNumber = 12;
@@ -302,7 +285,6 @@ public class ResponseManagement {
         List<Object> responses = new ArrayList<>();
 
         BinaryResponse bnr = new BinaryResponse("Would you consider recommending the lecture to other students?");
-        binaryResponseRepository.save(bnr);
         for(int i = 0; i < 50 ; i++){bnr.incrementYes();}
         for(int i = 0; i < 25 ; i++){bnr.incrementNo();}
 
@@ -316,7 +298,6 @@ public class ResponseManagement {
         mcOptions.add("I enjoyed attending the lecture");
         mcOptions.add("I would recommend the lecture to others");
         MultipleChoiceResponse mcr = new MultipleChoiceResponse("What was good about the lecture (multiple options can be selected)", mcOptions);
-        multipleChoiceResponseRepository.save(mcr);
 
         ArrayList<Integer> mcAnswers1 = new ArrayList<>();
         mcAnswers1.add(0);
@@ -340,7 +321,6 @@ public class ResponseManagement {
 
 
         TextResponse txr = new TextResponse("What is your opinion of the lecture, is it helpful?");
-        textResponseRepository.save(txr);
         for(int i = 0; i < 20 ; i++){txr.addTextSubmission("this is a bit of a test");}
         for(int i = 0; i < 10 ; i++){txr.addTextSubmission("this is a larger test to test the test");}
         for(int i = 0; i < 17 ; i++){txr.addTextSubmission("short test");}
@@ -356,7 +336,7 @@ public class ResponseManagement {
 
 
     //Test Method, remove in build
-    public SurveyResponse timCreateTestResponses(Course course) throws Exception {
+    public SurveyResponse timCreateTestResponses(Course course) {
         
         var type = CourseType.LECTURE;
         var instanceNumber = 12;

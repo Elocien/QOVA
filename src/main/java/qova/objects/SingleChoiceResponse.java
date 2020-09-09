@@ -2,20 +2,19 @@ package qova.objects;
 
 import java.util.ArrayList;
 
-import javax.persistence.Entity;
+import javax.persistence.Embeddable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Lob;
 
 import qova.enums.ResponseType;
 
-@Entity
+@Embeddable
 public class SingleChoiceResponse {
 
 
     //-----------------------------------------------------------------------
-    @Id @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
 
     //container for the question set
     private String question;
@@ -26,7 +25,7 @@ public class SingleChoiceResponse {
     //Array of the user response
     @Lob private ArrayList<Integer> singleChoiceAnswers;
 
-    private final ResponseType responseType = ResponseType.SINGLE_CHOICE;
+    private static final ResponseType responseType = ResponseType.SINGLE_CHOICE;
 
     //Needed for JPA puposes
     @SuppressWarnings("unused")
@@ -65,7 +64,7 @@ public class SingleChoiceResponse {
     }
 
     public ResponseType getType(){
-        return this.responseType;
+        return responseType;
     }
 }
 

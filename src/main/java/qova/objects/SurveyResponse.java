@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.persistence.CollectionTable;
+import javax.persistence.AttributeOverride;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -52,21 +54,30 @@ public class SurveyResponse {
 
 
     //Maps of all subtype Objects (BinaryResponse, TextResponse, SingleChoiceResponse and MultipleChoiceResponse). Split in order to persist in db
-    @ElementCollection @OrderColumn @CollectionTable 
+    @Embedded @ElementCollection @OrderColumn 
+    @AttributeOverride( name = "question", column = @Column(name = "binaryResponseQuestion"))
+    @AttributeOverride( name = "responseType", column = @Column(name = "binaryResponseType"))
     private Map<Integer, BinaryResponse> binaryResponses;
 
-    @ElementCollection @OrderColumn @CollectionTable 
+    
+    @Embedded @ElementCollection @OrderColumn
+    @AttributeOverride( name = "question", column = @Column(name = "textResponseQuestion"))
+    @AttributeOverride( name = "responseType", column = @Column(name = "textResponseType"))
     private Map<Integer, TextResponse> textResponses;
 
-    @ElementCollection @OrderColumn @CollectionTable 
+    @Embedded @ElementCollection @OrderColumn
+    @AttributeOverride( name = "question", column = @Column(name = "singleChoiceResponseQuestion"))
+    @AttributeOverride( name = "responseType", column = @Column(name = "singleChoiceResponseType"))
     private Map<Integer, SingleChoiceResponse> singleChoiceResponses;
 
-    @ElementCollection @OrderColumn @CollectionTable 
+    @Embedded @ElementCollection @OrderColumn
+    @AttributeOverride( name = "question", column = @Column(name = "multipleChoiceResponseQuestion"))
+    @AttributeOverride( name = "responseType", column = @Column(name = "multipleChoiceResponseType"))
     private Map<Integer, MultipleChoiceResponse> multipleChoiceResponses;
 
 
     //List which keeps track of the position of each ResponseType, for reassembly of the list from the database.
-    @ElementCollection @OrderColumn @CollectionTable 
+    @ElementCollection @OrderColumn 
     private List<ResponseType> positionOfResponseTypes;
 
 

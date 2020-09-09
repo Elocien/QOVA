@@ -1,19 +1,16 @@
 package qova.objects;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.Embeddable;
+
 import javax.persistence.Lob;
 
 import qova.enums.ResponseType;
 
 
-@Entity
+@Embeddable
 public class BinaryResponse {
 
     //-----------------------------------------------------------------------
-    @Id @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
 
     //container for the question set
     @Lob String question;

@@ -2,20 +2,19 @@ package qova.objects;
 
 import java.util.ArrayList;
 
-import javax.persistence.Entity;
+import javax.persistence.Embeddable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.persistence.Lob;
 
 import qova.enums.ResponseType;
 
-@Entity
+@Embeddable
 public class MultipleChoiceResponse {
 
 
     //-----------------------------------------------------------------------
-    @Id @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
 
     //container for the question set
     private String question;
@@ -26,7 +25,7 @@ public class MultipleChoiceResponse {
     //Array of the user response
     @Lob private ArrayList<Integer> multipleChoiceAnswers;
 
-    private final ResponseType responseType = ResponseType.MULTIPLE_CHOICE;
+    private static final ResponseType responseType = ResponseType.MULTIPLE_CHOICE;
 
     //Needed for JPA puposes
     @SuppressWarnings("unused")
@@ -36,8 +35,8 @@ public class MultipleChoiceResponse {
     public MultipleChoiceResponse(String question, ArrayList<String> multipleChoiceOptions){
         this.question = question;
         this.multipleChoiceOptions = multipleChoiceOptions;
-        this.multipleChoiceAnswers = new ArrayList<Integer>(this.multipleChoiceOptions.size());
-        for(String s : multipleChoiceOptions){
+        this.multipleChoiceAnswers = new ArrayList<>(this.multipleChoiceOptions.size());
+        for(String s: multipleChoiceOptions){
             multipleChoiceAnswers.add(0);
         }
     }
