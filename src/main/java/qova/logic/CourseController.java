@@ -519,7 +519,9 @@ public class CourseController {
             model.addAttribute("id", id);
             model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
             model.addAttribute("defaultSurvey", adminManagement.getDefaultSurvey());
-            return "questionpreview";
+            model.addAttribute("coursename", course.get().getName());
+
+            return "surveypreview";
         }
         else{
             //TODO: need more feedback here for the user. Change this!
