@@ -42,7 +42,7 @@
 <div class="pt-4" th:include="footer"></div>
 
 <script>
-	const survey = [{"type":"YesNo","question":"Scheint die Sonne"},{"type":"MultipleChoice","question":"Wie geht es dir?","answers":["Okay","Gut","Schlecht"]},{"type":"SingleChoice","question":"Ja Neine Vielleicht","answers":["Ja","Nein","Vielleicht"]},{"type":"FreeText","question":"STONKS"}];
+	const survey = [(${survey})];
 	console.log(survey);
 
 	//onload buildt the survey clientside

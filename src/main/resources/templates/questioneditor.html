@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/questioneditor.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/survey.css}" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
@@ -44,11 +45,15 @@
                             <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
                             <button class="btn btn-primary mt-2" type="submit" th:text="#{question.submit}">SUBMIT</button>
                         </form>
-                        <div class="Json" id="json" th:text="${survey}"></div>
                     </div>
                 </div>
                 <!--Questions-->
-                <div class="col-md-6" id="questionnaire"></div>
+                <div class="col-md-6" >
+                    <h3 class="font-weight-bold text-center"><span th:text="#{editor.defaultsurvey}"></span></h3>
+                    <div id="defaultquestionnaire"></div>
+                    <h3 class="font-weight-bold text-center"><span th:text="#{editor.survey}"></span></h3>
+                    <div id="questionnaire"></div>
+                </div>
                 <div class="col-md-3"></div>
             </div>
 
@@ -81,6 +86,7 @@
         }
         
         const questionnaire = [];
+        const defaultquestionnaire = [];
 
         function addYesNoQuestion() {
             saveInputs();
@@ -138,6 +144,10 @@
             questionnaire.forEach(renderquestionnaireelement);
             document.getElementById("questionnairejson").value = JSON.stringify(questionnaire);
             refreshTextareas();
+        }
+
+        function renderdefaultsurvey(){
+            defaultquestionnaire.forEach(renderdefaultquestionnaireelement);
         }
 
         //Bootsrapped
@@ -314,6 +324,166 @@
             }
 
             document.getElementById("questionnaire").appendChild(x);
+
+        }
+
+        function renderdefaultquestionnaireelement(value, index, array) {
+            const x = document.createElement("DIV");
+
+            //DIV for Number and Question
+            const row1 = document.createElement("DIV");
+            row1.className = "row";
+
+            //Number on the top left
+            const index_number = document.createElement("h3");
+            index_number.className = "text-light text-center index-number"
+            index_number.innerHTML = index + 1;
+            const left = document.createElement("DIV");
+            left.className = "col-md-12 pl-0";
+
+            left.appendChild(index_number);
+
+
+            //Part for the question
+            const question = document.createElement("h4");
+            question.className = "Question";
+            question.innerText = value.question;
+
+            left.appendChild(question);
+            row1.appendChild(left);
+            x.appendChild(row1);
+
+            if (value.type == "YesNo") {
+                x.className = "container bg-white border border-secondary rounded mt-4 YesNo";
+                x.setAttribute("id", index);
+
+                const selectionOption = document.createElement("DIV");
+                selectionOption.className = "Options YesNo";
+
+
+                //Yes Answer
+                // Deutsch English bei YesNo?
+                const fullOptionYes = document.createElement("DIV");
+                fullOptionYes.className = "Option 1";
+                const tickboxYes = document.createElement("INPUT");
+                tickboxYes.className = "tickbox";
+                tickboxYes.setAttribute("type", "radio");
+                tickboxYes.setAttribute("value", "Yes");
+                tickboxYes.setAttribute("id", "Yes");
+                tickboxYes.setAttribute("name", index);
+                const descriptionYes = document.createElement("LABEL");
+                descriptionYes.innerText = "Yes";
+                descriptionYes.setAttribute("for", "Yes");
+
+                fullOptionYes.appendChild(tickboxYes);
+                fullOptionYes.appendChild(descriptionYes);
+                selectionOption.appendChild(fullOptionYes);
+
+                const fullOptionNo = document.createElement("DIV");
+                fullOptionNo.className = "Option 2";
+                const tickboxNo = document.createElement("INPUT");
+                tickboxNo.className = "tickbox";
+                tickboxNo.setAttribute("type", "radio");
+                tickboxNo.setAttribute("value", "No");
+                tickboxNo.setAttribute("id", "No");
+                tickboxNo.setAttribute("name", index);
+                const descriptionNo = document.createElement("LABEL");
+                descriptionNo.innerText = "No";
+                descriptionNo.setAttribute("for", "No");
+
+                fullOptionNo.appendChild(tickboxNo);
+                fullOptionNo.appendChild(descriptionNo);
+                selectionOption.appendChild(fullOptionNo);
+
+
+                x.appendChild(selectionOption);
+
+
+            } else if (value.type === "FreeText") {
+
+                x.className = "container bg-white border border-secondary rounded mt-4 FreeText";
+                x.setAttribute("id", index);
+
+                const div = document.createElement("DIV");
+                div.className = "Options FreeText";
+
+                const text_area = document.createElement("TEXTAREA");
+                text_area.className = "Textarea FreeText";
+                text_area.setAttribute("id", index);
+                text_area.placeholder = "Antwort";
+
+                div.appendChild(text_area);
+                x.appendChild(div);
+
+
+            } else if (value.type === "SingleChoice") {
+
+                x.className = "container bg-white border border-secondary rounded mt-4 SingleChoice";
+                x.setAttribute("id", index);
+
+                const selectionOption = document.createElement("DIV");
+                selectionOption.className = "Options SingleChoice";
+
+
+                for (let i = 0; i < value.answers.length; i++) {
+
+                    const fullOption = document.createElement("DIV");
+                    fullOption.className = "Option " + i;
+                    const tickbox = document.createElement("INPUT");
+                    tickbox.className = "tickbox";
+                    tickbox.setAttribute("type", "radio");
+                    tickbox.setAttribute("value", value.answers[i]);
+                    tickbox.setAttribute("id", value.answers[i]);
+                    tickbox.setAttribute("name", index);
+                    const description = document.createElement("LABEL");
+                    description.innerText = value.answers[i];
+                    description.setAttribute("for", value.answers[i]);
+
+
+                    fullOption.appendChild(tickbox);
+                    fullOption.appendChild(description);
+                    selectionOption.appendChild(fullOption);
+
+                }
+
+                x.appendChild(selectionOption);
+
+
+            } else if (value.type === "MultipleChoice") {
+
+                //Create a html section for a MultipleChoice-Question
+                x.className = "container bg-white border border-secondary rounded mt-4 MultipleChoice";
+                x.setAttribute("id", index);
+
+                const selectionOption = document.createElement("DIV");
+                selectionOption.className = "Options MultipleChoice";
+
+
+                for (let i = 0; i < value.answers.length; i++) {
+
+                    const fullOption = document.createElement("DIV");
+                    fullOption.className = "Option " + i;
+                    const tickbox = document.createElement("INPUT");
+                    tickbox.className = "tickbox";
+                    tickbox.setAttribute("type", "checkbox");
+                    tickbox.setAttribute("value", value.answers[i]);
+                    tickbox.setAttribute("id", value.answers[i]);
+                    tickbox.setAttribute("name", index);
+                    const description = document.createElement("LABEL");
+                    description.innerText = value.answers[i];
+                    description.setAttribute("for", value.answers[i]);
+
+
+                    fullOption.appendChild(tickbox);
+                    fullOption.appendChild(description);
+                    selectionOption.appendChild(fullOption);
+
+                }
+
+                x.appendChild(selectionOption);
+            }
+
+            document.getElementById("defaultquestionnaire").appendChild(x);
 
         }
 
@@ -656,8 +826,17 @@
 
         }
 
+        function loaddefaultsurvey(){
+            const defaultsurvey = [{"type":"YesNo","question":"Scheint die Sonne"},{"type":"MultipleChoice","question":"Wie geht es dir?","answers":["Okay","Gut","Schlecht"]},{"type":"SingleChoice","question":"Ja Neine Vielleicht","answers":["Ja","Nein","Vielleicht"]},{"type":"FreeText","question":"STONKS"}];
+            for ( let i=0; i < defaultsurvey.length; i++){
+                defaultquestionnaire.push(defaultsurvey[i]);
+
+            }
+            renderdefaultsurvey();
+        }
+
         function loadsurveystring (){
-            const survey = JSON.parse(document.getElementById("json").innerHTML);
+            const survey = [(${survey})];
             for ( let i=0; i < survey.length; i++){
                 questionnaire.push(survey[i]);
 
@@ -665,6 +844,7 @@
             renderall();
 
         }
+
 
         //Onclick Show the Dropdown Content
         function hideshowdropdowntitle(q_index) {
@@ -688,6 +868,7 @@
         }
 
         window.onload = function(){
+            loaddefaultsurvey();
             loadsurveystring();
             renderall();
         }
