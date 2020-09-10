@@ -26,12 +26,11 @@
         <div class="row justify-content-md-center">
             <div class="col-lg-12">
 
-                <form id="form" method="post" th:action="@{/course/edit?id={id}(id=${course.id})}" th:object="${form}">
+                <form id="form" method="post" th:action="@{/course/edit?id=__${course.id}__}" th:object="${form}">
                     <div class="mb-4 mt-4">
                         <h2 class="font-weight-bold text-center mb-4 mt-4 hide_me" th:text="${course.name}">COURSE NAME</h2>
-                        <form id="form" method="post" th:action="@{/course/edit?id={id}(id=${course.id})}" th:object="${form}">
-                            <input id="name-input" type="text" class="input-group headline-edit show_me" style="display: none;" th:placeholder="${course.name}" th:value="${course.name}" th:field="*{name}"></input>
-                        </form>
+                        <h2 class="font-weight-bold text-center mb-4 mt-4 show_me" th:text="${course.id}">COURSE NAME</h2>
+                        <input id="name-input" type="text" class="input-group headline-edit show_me" style="display: none;" th:placeholder="${course.name}" th:value="${course.name}" th:field="*{name}"></input>
                     </div>
 
                     <div class="container bg-light border border-dark rounded p-0">
@@ -60,7 +59,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--Delete Course-->
+                            <!-- Delete Course -->
                             <button type="submit" class="btn red-link btn-link" data-toggle="modal" data-target="#deleteModal">
                                 <i class="fas fa-trash-alt" data-toggle="tooltip" data-placement="top" title="DELETE COURSE" th:title="#{detail.deleteCourse}"></i>
                             </button>
@@ -72,8 +71,7 @@
                                         </div>
                                         <div class="modal-footer text-center">
                                             <div class="w-100"></div>
-                                            <form th:action="@{/course/delete}" method="post">
-                                                <input type="hidden" name="id" th:value="${course.id}"/>
+                                            <form th:action="@{/course/delete?id=__${course.id}__}" method="post">
                                                 <button type="submit" class="btn btn-primary">Yes</button>
                                             </form>
                                             <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
@@ -82,7 +80,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> 
 
                         <div class="row justify-content-md-center p-4" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
 
@@ -128,7 +126,7 @@
                                                 <th class="col-5" scope="row" th:text="#{course.semesterOfStudents}">SEMESTER</th>
                                                 <td class="hide_me"><span th:text="${course.semesterOfStudents}">IDK - XXXX</span></td>
                                                 <td class="show_me" style="display: none;">
-                                                    <input class="form-control" type="text" th:placeholder="${course.semesterOfStudents}" th:field="*{semesterOfStudents}">
+                                                    <input class="form-control" type="text" th:placeholder="${course.semesterOfStudents}" th:value="${course.semesterOfStudents}" th:field="*{semesterOfStudents}">
                                                 </td>
                                                 <td></td>
                                             </tr>
