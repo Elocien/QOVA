@@ -417,7 +417,67 @@ public class CourseController {
 
     //---------------------------------------------------------------------------
 
+    //Die Ganze Methode ist Same wie questioneditorSubmit nur der Return ist auf die Preview Html
+    @PostMapping("course/previewsurvey")
+    public String questioneditorpreview(Model model,SurveyForm form, @RequestParam String type,
+                                       @RequestParam(required = false) String id) {
 
+
+        //Form empty -> Redirect to details again
+        if (form.getQuestionnairejson().length()==0) {
+            return "redirect:../course/details" + "?id=" + id;          //TODO: Redirects back course at the moment, think about where this should go
+        }
+
+
+        //fetch course
+        Optional<Course> course = courseManagement.findById(id);
+        if (course.isPresent()){
+
+            // if type is none of the correct values, then redirect to homepage
+            if(responseManagement.parseCourseType(type) == null){
+                //TODO: redirect to error page with code 02
+                return "redirect:/";
+            }
+
+            else{
+                //check if JSON is valid
+                try {new JSONArray(form.getQuestionnairejson());}
+                catch (Exception e) {
+                    //TODO: redirect to error page with code 02
+                    return "redirect:/";
+                }
+
+                //Create a JSON Array out of the response from the questioneditor
+                JSONArray survey = new JSONArray(form.getQuestionnairejson());
+
+                //parse JSON to check for correctness (length, special characters)
+                Boolean validSurvey = responseManagement.verifyJsonArray(survey);
+                if(Boolean.FALSE.equals(validSurvey)){
+                    //TODO: redirect to error page with code 02
+                    return "redirect:/";
+                }
+
+                //Manager method for creating SurveyResponse and corresponding nested objects\
+                //TODO: Fix this!!!
+                // responseManagement.createSurveyResponse(survey, course.get(), type);
+
+                //Sets the survey string for a given course (takes the default survey and conncatenates it with the create survey)
+                courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson());
+            }
+
+
+            //Part der anders ist als questioneditorSubmit
+            model.addAttribute("typeID", type);
+            model.addAttribute("id", id);
+            model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
+            model.addAttribute("defaultSurvey", adminManagement.getDefaultSurvey());
+            return "questionpreview";
+        }
+        else{
+            //TODO: need more feedback here for the user. Change this!
+            return "error?code=" + courseNotFound;
+        }
+    }
 
     
     /**
