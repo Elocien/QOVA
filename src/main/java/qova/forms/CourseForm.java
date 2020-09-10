@@ -9,7 +9,7 @@ import qova.enums.CourseFaculty;
 public class CourseForm {
 
     //name
-    @NotEmpty private String name;
+    private String name;
 
     //Existance of each CourseInstance (CourseType)
     @NotNull private Boolean lectureExists;

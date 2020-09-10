@@ -158,16 +158,6 @@ public class CourseManagement {
 
 
 
-
-
-    
-    //delete course
-    public void deleteCourse(String id) {
-        coursesRepo.deleteById(id);
-    }
-
-
-
     //update course details
 
     public void updateCourseDetails(String id, CourseForm form) {
@@ -349,6 +339,43 @@ public class CourseManagement {
 
 
 
+
+
+
+    public Course duplicateCourse(String id, String semesterString){
+    
+        Optional<Course> crs = findById(id);
+        if(crs.isPresent()){
+
+            Course oldCourse = crs.get();
+            
+            Course newCourse = new Course(oldCourse.getName(), duplicateCourseInstance(oldCourse.getLecture()), duplicateCourseInstance(oldCourse.getTutorial()), 
+                duplicateCourseInstance(oldCourse.getSeminar()), duplicateCourseInstance(oldCourse.getPractical()), oldCourse.getSemesterOfStudents(), 
+                oldCourse.getFaculty(), semesterString, parseSemesterString(semesterString));
+            
+            coursesRepo.save(newCourse);
+
+            return newCourse;
+        }
+
+        return null;
+    }
+
+
+    public CourseInstance duplicateCourseInstance(CourseInstance oldInstance){
+        return new CourseInstance(oldInstance.getCourseType(), oldInstance.getGroupAmount(), oldInstance.getInstanceAmount(), oldInstance.getInstanceTitles());
+    }
+
+
+
+
+
+
+
+
+
+
+
     /**
      * QR-Code Generator
      * 
@@ -517,7 +544,32 @@ public class CourseManagement {
 	 */
 	public Iterable<Course> findAll() {
 		return coursesRepo.findAll();
-	}
+    }
+    
+    //delete course
+    public void deleteCourse(String id) {
+        coursesRepo.deleteById(id);
+    }
+
+    //delete course
+    public void deleteCourseInstancesForCourse(String id) {
+        Optional<Course> crs = findById(id);
+        if(crs.isPresent()){
+            Course course = crs.get();
+            if(Boolean.TRUE.equals(course.getLectureExists())){
+                courseInstancesRepo.delete(course.getLecture());
+            }
+            if(Boolean.TRUE.equals(course.getTutorialExists())){
+                courseInstancesRepo.delete(course.getTutorial());
+            }
+            if(Boolean.TRUE.equals(course.getSeminarExists())){
+                courseInstancesRepo.delete(course.getSeminar());
+            }
+            if(Boolean.TRUE.equals(course.getPracticalExists())){
+                courseInstancesRepo.delete(course.getPractical());
+            }
+        }
+    }
 
 
 

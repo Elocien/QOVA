@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import qova.admin.AdminManagement;
 import qova.forms.CourseForm;
+import qova.forms.DuplicateCourseForm;
 import qova.forms.InstanceTitleForm;
 import qova.forms.SurveyForm;
 import qova.objects.Course;
@@ -143,20 +144,23 @@ public class CourseController {
             
             return "courseDetails";
         } else {
-			return "error?code=" + courseNotFound;
+            return "error?code=" + courseNotFound;
 		}
     }
 
+
+
+
+    
     //Edit Course Validation (when course is updated, check wether the fields are all appropriately set e.g. NotNull)
     @PostMapping("course/edit")
-	public String editCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
-			BindingResult result, @RequestParam String id) throws Exception {
+	public String editCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form, BindingResult result, @RequestParam String id) throws Exception {
 
 		if (result.hasErrors()) {
 			return courseDetails(model, form, id);
 		}
 
-		courseManagement.updateCourseDetails(id, form);
+        courseManagement.updateCourseDetails(id, form);
 		return "redirect:../course/details?id=" + id;
 	}
 
@@ -288,17 +292,24 @@ public class CourseController {
 
 
 
-    //Delete Course 
+    //Delete Course and its CourseInstances
     @PostMapping("course/delete")
 	public String deleteCourse(@RequestParam String id) {
-		courseManagement.deleteCourse(id);
+        courseManagement.deleteCourseInstancesForCourse(id);
+        courseManagement.deleteCourse(id);
 		return "redirect:../courses";
     }
     
 
 
-    
-    
+    @GetMapping("course/duplicate")
+    public String duplicateCourseWithNewSemester(DuplicateCourseForm duplicateForm, @RequestParam String id){
+
+        Course newCourse = courseManagement.duplicateCourse(id, duplicateForm.getSemesterString());
+
+        return "redirect:../course/details?id=" + newCourse.getId();
+    }
+
 
 
 
@@ -413,7 +424,44 @@ public class CourseController {
             return "error?code=" + courseNotFound;
         }
     }
+
+
+
+
+
+    /**
+     * Used to finalise the Survey and create the relevant objects 
+     * 
+     * @param form {@linkplain qova.forms.SurveyForm}
+     * @param type String form of {@linkplain qova.enums.CourseType}
+     * @param id The id of the {@linkplain qova.objects.Course}
+     */
+    @GetMapping("course/submitfinalisedsurvey")
+    public void questioneditorFinaliseSurvey(SurveyForm form, @RequestParam String type,
+            @RequestParam(required = false) String id) {
+        
+
+        //Form empty -> Redirect to details again 
+        if (form.getQuestionnairejson().length()==0) {
+            ;
+        }
+        else{
+            Optional<Course> course = courseManagement.findById(id);
+            if (course.isPresent()){
+                //Create a JSON Array out of the response from the questioneditor
+                JSONArray survey = new JSONArray(form.getQuestionnairejson());
+
+                //Create the relevant objects
+                responseManagement.createSurveyResponse(survey, course.get(), type);
+
+                // Sets the survey string for a given course
+                courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson());
+            }
+        }
+    }
     
+
+
 
     //---------------------------------------------------------------------------
 
