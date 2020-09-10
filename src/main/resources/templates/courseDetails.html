@@ -28,7 +28,7 @@
 
                 <div class="mb-4 mt-4">
                     <h2 class="font-weight-bold text-center mb-4 mt-4 hide_me" th:text="${course.name}">COURSE NAME</h2>
-                    <input id="name-input" type="text" class="input-group headline-edit show_me" style="display: none;" th:placeholder="${course.name}" value="none" th:attr="value = ${course.name}"></input>
+                    <input id="name-input" type="text" class="input-group headline-edit show_me" style="display: none;" th:placeholder="${course.name}" th:value="${course.name}"></input>
                 </div>
 
                 <div class="container bg-light border border-dark rounded p-0">
@@ -45,7 +45,7 @@
                                     <div class="modal-body">
                                         <p th:text="#{detail.copyModalText}">PLEASE COPY ME!</p>
                                         <select class="custom-select form-control">
-                                            <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:attr="value = ${year}">YEAR</option>
+                                            <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
                                         </select>
                                     </div>
                                     <div class="modal-footer text-center">
@@ -94,7 +94,7 @@
                                 </div>
 
                                 <!--Hidden Headline-->
-                                <input id="name-input-hidden" type="hidden" value="none" th:attr="value = ${course.name}" th:field="*{name}"></input>
+                                <input id="name-input-hidden" type="hidden" th:value="${course.name}" th:field="*{name}"></input>
 
                                 <!--1st Table-->
                                 <div class="row form-group">
@@ -106,7 +106,7 @@
                                                 <td class="hide_me" id="faculty_original"><span th:id="'og: ' + ${course.faculty}" th:text="#{'course.faculty.' + ${course.faculty}}">FACULTY</span></td>
                                                 <td class="show_me" id="faculty_dropdown" style="display: none">
                                                     <select id="faculty_select" class="custom-select form-control" th:with="faculties = ${T(qova.enums.CourseFaculty).values()}" th:field="*{faculty}">
-                                                        <option class="dropdown-item" th:id="${faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" value="none" th:attr="value = ${faculty}">FACULTY</option>
+                                                        <option class="dropdown-item" th:id="${faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" value="none" th:value="${faculty}">FACULTY</option>
                                                     </select>
                                                 </td>
                                                 <td></td>
@@ -117,7 +117,7 @@
                                                 <td class="hide_me" th:text="${course.semesterString}">XXXX</td>
                                                 <td class="show_me" style="display: none">
                                                     <select class="custom-select form-control" th:field="*{semesterString}">
-                                                        <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" value="0" th:attr="value = ${year}">YEAR</option>
+                                                        <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" value="0" th:value="${year}">YEAR</option>
                                                     </select>
                                                 </td>
                                                 <td></td>
@@ -127,7 +127,7 @@
                                                 <th class="col-5" scope="row" th:text="#{course.semesterOfStudents}">SEMESTER</th>
                                                 <td class="hide_me"><span th:text="${course.semesterOfStudents}">IDK - XXXX</span></td>
                                                 <td class="show_me" style="display: none;">
-                                                    <input class="form-control" type="number" th:placeholder="${course.semesterOfStudents}" value="0" th:attr="value = ${course.semesterOfStudents}" th:field="*{semesterOfStudents}">
+                                                    <input class="form-control" type="number" th:placeholder="${course.semesterOfStudents}" value="0" th:value="${course.semesterOfStudents}" th:field="*{semesterOfStudents}">
                                                 </td>
                                                 <td></td>
                                             </tr>
@@ -166,7 +166,7 @@
                                                 <td scope="row" th:text="#{'new.' + ${course_type}}">LECTURE</td>
                                                 <!--3rd Col-->
                                                 <td class="text-center" th:text="${__'course.' + ${course_type} + '.instanceAmount'__}">COUNT</td>
-                                                <input type="hidden" value="0" th:attr="value = "${__'course.' + ${course_type} + '.instanceAmount'__}" th:field="*{__'instanceAmount' + ${#strings.capitalize(course_type)}__}"></input>
+                                                <input type="hidden" value="0" th:value="${__'course.' + ${course_type} + '.instanceAmount'__}" th:field="*{__'instanceAmount' + ${#strings.capitalize(course_type)}__}"></input>
                                                 <td class="show_me text-center" style="display: none;"><a type="button" class="btn btn-link p-0 align-middle instance_btn show_me" style="display: none;" href="#" th:href="${'/course/new2?id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.editInstance}"><i class="far fa-edit"></i></a></td>
                                                 <!--4th Col-->
                                                 <td class="text-center hide_me" th:text="${__'course.' + ${course_type} + '.groupAmount'__}">COUNT</td>
