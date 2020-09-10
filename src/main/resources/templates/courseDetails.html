@@ -94,7 +94,7 @@
                                 </div>
 
                                 <!--Hidden Headline-->
-                                <input id="name-input-hidden" type="hidden" th:value="${course.name}" th:field="*{name}"></input>
+                                <input id="name-input-hidden" type="hidden" th:value="${course.name}" th:name="name"></input>
 
                                 <!--1st Table-->
                                 <div class="row form-group">
@@ -171,7 +171,7 @@
                                                 <!--4th Col-->
                                                 <td class="text-center hide_me" th:text="${__'course.' + ${course_type} + '.groupAmount'__}">COUNT</td>
                                                 <td class="show_me" style="display: none;">
-                                                    <input class="form-control" type="text" th:placeholder="${__'course.' + ${course_type} + '.groupAmount'__}" th:name="|groupAmount${#strings.capitalize(course_type)}|" th:id="|groupAmount${#strings.capitalize(course_type)}|">
+                                                    <input class="form-control" type="text" th:value="${__'course.' + ${course_type} + '.groupAmount'__}" th:name="|groupAmount${#strings.capitalize(course_type)}|" th:id="|groupAmount${#strings.capitalize(course_type)}|">
                                                 </td>
                                                 <!--5th Col-->
                                                 <div th:switch="${__'course.' + ${course_type} + '.survey'__}">
