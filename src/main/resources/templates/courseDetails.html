@@ -264,7 +264,7 @@
     $('#myModal').on('shown.bs.modal', function () {
         $('#myInput').trigger('focus')
     })
-    $('#name-input').keypress(function() {
+    $('#name-input').keyup(function() {
         $('#name-input-hidden').val($(this).val());
     });
 

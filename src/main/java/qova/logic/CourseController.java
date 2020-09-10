@@ -31,7 +31,6 @@ import qova.forms.DuplicateCourseForm;
 import qova.forms.InstanceTitleForm;
 import qova.forms.SurveyForm;
 import qova.objects.Course;
-import qova.repositories.CourseRepository;
 
 //TODO: Temporary Imports (can be removed later)
 //@Lucian please don't delete me just yet T_T
@@ -425,7 +424,44 @@ public class CourseController {
             return "error?code=" + courseNotFound;
         }
     }
+
+
+
+
+
+    /**
+     * Used to finalise the Survey and create the relevant objects 
+     * 
+     * @param form {@linkplain qova.forms.SurveyForm}
+     * @param type String form of {@linkplain qova.enums.CourseType}
+     * @param id The id of the {@linkplain qova.objects.Course}
+     */
+    @GetMapping("course/submitfinalisedsurvey")
+    public void questioneditorFinaliseSurvey(SurveyForm form, @RequestParam String type,
+            @RequestParam(required = false) String id) {
+        
+
+        //Form empty -> Redirect to details again 
+        if (form.getQuestionnairejson().length()==0) {
+            ;
+        }
+        else{
+            Optional<Course> course = courseManagement.findById(id);
+            if (course.isPresent()){
+                //Create a JSON Array out of the response from the questioneditor
+                JSONArray survey = new JSONArray(form.getQuestionnairejson());
+
+                //Create the relevant objects
+                responseManagement.createSurveyResponse(survey, course.get(), type);
+
+                // Sets the survey string for a given course
+                courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson());
+            }
+        }
+    }
     
+
+
 
     //---------------------------------------------------------------------------
 
