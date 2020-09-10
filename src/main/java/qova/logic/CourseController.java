@@ -293,10 +293,11 @@ public class CourseController {
 
 
 
-    //Delete Course 
+    //Delete Course and its CourseInstances
     @PostMapping("course/delete")
 	public String deleteCourse(@RequestParam String id) {
-		courseManagement.deleteCourse(id);
+        courseManagement.deleteCourseInstancesForCourse(id);
+        courseManagement.deleteCourse(id);
 		return "redirect:../courses";
     }
     
