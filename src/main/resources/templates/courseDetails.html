@@ -80,7 +80,7 @@
                         </div>
                     </div> 
 
-                    <div class="row justify-content-md-center p-4" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
+                    <div class="row justify-content-md-center p-4"  ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
                         <!--Course Details-->
                         <div class="col-6">
                             <form id="form" method="post" th:action="@{/course/edit?id=__${course.id}__}" th:object="${form}">
@@ -94,7 +94,7 @@
                                 </div>
 
                                 <!--Hidden Headline-->
-                                <input id="name-input-hidden" type="hidden" th:value="${course.name}" th:field="*{name}"></input>
+                                <input id="name-input-hidden" type="hidden" th:value="${course.name}" th:name="name"></input>
 
                                 <!--1st Table-->
                                 <div class="row form-group">
@@ -166,12 +166,14 @@
                                                 <td scope="row" th:text="#{'new.' + ${course_type}}">LECTURE</td>
                                                 <!--3rd Col-->
                                                 <td class="text-center" th:text="${__'course.' + ${course_type} + '.instanceAmount'__}">COUNT</td>
-                                                <input type="hidden" value="0" th:value="${__'course.' + ${course_type} + '.instanceAmount'__}" th:name="|instanceAmount${#strings.capitalize(course_type)}|" th:id="|instanceAmount${#strings.capitalize(course_type)}|"></input>
+                                                <div style="display: none;" th:with="relevent_name = |instanceAmount${#strings.capitalize(course_type)}|">
+                                                    <input type="hidden" value="0" th:value="${__'course.' + ${course_type} + '.instanceAmount'__}" th:name="${relevent_name}" th:id="${relevent_name}"></input>
+                                                </div>
                                                 <td class="show_me text-center" style="display: none;"><a type="button" class="btn btn-link p-0 align-middle instance_btn show_me" style="display: none;" href="#" th:href="${'/course/new2?id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.editInstance}"><i class="far fa-edit"></i></a></td>
                                                 <!--4th Col-->
                                                 <td class="text-center hide_me" th:text="${__'course.' + ${course_type} + '.groupAmount'__}">COUNT</td>
-                                                <td class="show_me" style="display: none;">
-                                                    <input class="form-control" type="text" th:placeholder="${__'course.' + ${course_type} + '.groupAmount'__}" th:name="|groupAmount${#strings.capitalize(course_type)}|" th:id="|groupAmount${#strings.capitalize(course_type)}|">
+                                                <td class="show_me" style="display: none;" th:with="relevant_value = ${__'course.' + ${course_type} + '.groupAmount'__}, relevent_name = |groupAmount${#strings.capitalize(course_type)}|">
+                                                    <input class="form-control" type="number" th:placeholder="${relevant_value}" th:value="${relevant_value}" th:name="${relevent_name}" th:id="${relevent_name}">
                                                 </td>
                                                 <!--5th Col-->
                                                 <div th:switch="${__'course.' + ${course_type} + '.survey'__}">
