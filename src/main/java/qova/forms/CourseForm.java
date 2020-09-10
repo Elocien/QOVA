@@ -30,7 +30,7 @@ public class CourseForm {
     private Integer instanceAmountPractical;
 
     //'Intended' Semester of Students partaking in the given Subject
-    private Integer semesterOfStudents;
+    @NotNull private Integer semesterOfStudents;
 
     @NotNull private CourseFaculty faculty;
 
