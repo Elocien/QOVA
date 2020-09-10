@@ -147,6 +147,20 @@ public class CourseController {
 		}
     }
 
+    //Edit Course Validation (when course is updated, check wether the fields are all appropriately set e.g. NotNull)
+    @PostMapping("course/edit")
+	public String editCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
+			BindingResult result, @RequestParam String id) throws Exception {
+
+		if (result.hasErrors()) {
+			return courseDetails(model, form, id);
+		}
+
+		courseManagement.updateCourseDetails(id, form);
+		return "redirect:../course/details?id=" + id;
+	}
+
+
     /*@GetMapping("/course/details")
     public String courseDetails(Model model, CourseForm form, String id) {
 
@@ -284,18 +298,7 @@ public class CourseController {
 
 
     
-    //Edit Course Validation (when course is updated, check wether the fields are all appropriately set e.g. NotNull)
-    @PostMapping("course/edit")
-	public String editCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
-			BindingResult result, @RequestParam String id) throws Exception {
-
-		if (result.hasErrors()) {
-			return courseDetails(model, form, id);
-		}
-
-		courseManagement.updateCourseDetails(id, form);
-		return "redirect:../course/details?id=" + id;
-	}
+    
 
 
 
@@ -415,10 +418,6 @@ public class CourseController {
     //---------------------------------------------------------------------------
 
 
-
-
-    //to test
-    //http://localhost:8080/qrcode?type=LECTURE&id=c000000000000001
 
     
     /**

@@ -26,69 +26,68 @@
         <div class="row justify-content-md-center">
             <div class="col-lg-12">
 
-                <div class="mb-4 mt-4">
-                    <h2 class="font-weight-bold text-center mb-4 mt-4 hide_me" th:text="${course.name}">COURSE NAME</h2>
-                    <input id="name-input" type="text" class="input-group headline-edit show_me" style="display: none;" th:placeholder="${course.name}" th:value="${course.name}"></input>
-                </div>
-
-                <div class="container bg-light border border-dark rounded p-0">
-
-                    <!--Option Buttons-->
-                    <div class="btn-delete">
-                        <!--Copy Course-->
-                        <button type="submit" class="btn btn-link" data-toggle="modal" data-target="#copyModal">
-                            <i class="far fa-clone" data-toggle="tooltip" data-placement="top" title="COPY COURSE" th:title="#{detail.copyCourse}"></i>
-                        </button>
-                        <div class="modal fade" id="copyModal" tabindex="-1" role="dialog" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content text-center">
-                                    <div class="modal-body">
-                                        <p th:text="#{detail.copyModalText}">PLEASE COPY ME!</p>
-                                        <select class="custom-select form-control">
-                                            <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
-                                        </select>
-                                    </div>
-                                    <div class="modal-footer text-center">
-                                        <div class="w-100"></div>
-                                        <button type="submit" class="btn btn-primary">Finish</button>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
-                                        <div class="w-100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!--Delete Course-->
-                        <button type="submit" class="btn red-link btn-link" data-toggle="modal" data-target="#deleteModal">
-                            <i class="fas fa-trash-alt" data-toggle="tooltip" data-placement="top" title="DELETE COURSE" th:title="#{detail.deleteCourse}"></i>
-                        </button>
-                        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document">
-                                <div class="modal-content text-center">
-                                    <div class="modal-body">
-                                        <p class="m-0" th:text="#{detail.deleteModalText}">PLEASE DELETE ME!</p>
-                                    </div>
-                                    <div class="modal-footer text-center">
-                                        <div class="w-100"></div>
-                                        <form th:action="@{/course/delete}" method="post">
-                                            <input type="hidden" name="id" th:value="${course.id}"/>
-                                            <button type="submit" class="btn btn-primary">Yes</button>
-                                        </form>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
-                                        <div class="w-100"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                <form id="form" method="post" th:action="@{/course/edit?id={id}(id=${course.id})}" th:object="${form}">
+                    <div class="mb-4 mt-4">
+                        <h2 class="font-weight-bold text-center mb-4 mt-4 hide_me" th:text="${course.name}">COURSE NAME</h2>
+                        <form id="form" method="post" th:action="@{/course/edit?id={id}(id=${course.id})}" th:object="${form}">
+                            <input id="name-input" type="text" class="input-group headline-edit show_me" style="display: none;" th:placeholder="${course.name}" th:value="${course.name}" th:field="*{name}"></input>
+                        </form>
                     </div>
 
-                    <div class="row justify-content-md-center p-4" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
+                    <div class="container bg-light border border-dark rounded p-0">
 
-                        <!--Course Details-->
-                        <div class="col-6">
-                            <form id="form" method="post" th:action="@{/course/edit?id={id}(id=${course.id})}" th:object="${form}">
+                        <!--Option Buttons-->
+                        <div class="btn-delete">
+                            <!--Copy Course-->
+                            <button type="submit" class="btn btn-link" data-toggle="modal" data-target="#copyModal">
+                                <i class="far fa-clone" data-toggle="tooltip" data-placement="top" title="COPY COURSE" th:title="#{detail.copyCourse}"></i>
+                            </button>
+                            <div class="modal fade" id="copyModal" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content text-center">
+                                        <div class="modal-body">
+                                            <p th:text="#{detail.copyModalText}">PLEASE COPY ME!</p>
+                                            <select class="custom-select form-control">
+                                                <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+                                            </select>
+                                        </div>
+                                        <div class="modal-footer text-center">
+                                            <div class="w-100"></div>
+                                            <button type="submit" class="btn btn-primary">Finish</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                                            <div class="w-100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Delete Course-->
+                            <button type="submit" class="btn red-link btn-link" data-toggle="modal" data-target="#deleteModal">
+                                <i class="fas fa-trash-alt" data-toggle="tooltip" data-placement="top" title="DELETE COURSE" th:title="#{detail.deleteCourse}"></i>
+                            </button>
+                            <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content text-center">
+                                        <div class="modal-body">
+                                            <p class="m-0" th:text="#{detail.deleteModalText}">PLEASE DELETE ME!</p>
+                                        </div>
+                                        <div class="modal-footer text-center">
+                                            <div class="w-100"></div>
+                                            <form th:action="@{/course/delete}" method="post">
+                                                <input type="hidden" name="id" th:value="${course.id}"/>
+                                                <button type="submit" class="btn btn-primary">Yes</button>
+                                            </form>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                                            <div class="w-100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-                                <!--Name added into main form-->
-                                <input id="hidden-name-input" type="text" style="display: none;" th:value="${course.name}" th:field="*{name}"></input>
+                        <div class="row justify-content-md-center p-4" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
+
+                            <!--Course Details-->
+                            <div class="col-6">
 
                                 <!--Headline & Buttons-->
                                 <div class="row">
@@ -192,64 +191,64 @@
                                     </table>
                                 </div>
 
-                            </form>
-                        </div>
+                            </div>
 
-                        <div class="col-1"></div>
+                            <div class="col-1"></div>
 
-                        <!--QR Codes-->
-                        <div class="col-auto">
-                            <h5 class="font-weight-light text-center" th:text="#{detail.QR}">QR CODES</h5>
-                            <div class="row justify-content-md-center">
-                                <div class="container carousel-border border border-secondary p-1">
-                                    <div id="carouselExampleIndicators" class="carousel slide" interval="false">
+                            <!--QR Codes-->
+                            <div class="col-auto">
+                                <h5 class="font-weight-light text-center" th:text="#{detail.QR}">QR CODES</h5>
+                                <div class="row justify-content-md-center">
+                                    <div class="container carousel-border border border-secondary p-1">
+                                        <div id="carouselExampleIndicators" class="carousel slide" interval="false">
 
-                                        <ol class="carousel-indicators">
-                                            <li th:each="course_type: ${type_list}" th:if="!${(__'course.' + ${course_type} + '.survey'__).equals('[]')}" data-target="#carouselExampleIndicators" data-slide-to="0"></li>
-                                        </ol>
+                                            <ol class="carousel-indicators">
+                                                <li th:each="course_type: ${type_list}" th:if="!${(__'course.' + ${course_type} + '.survey'__).equals('[]')}" data-target="#carouselExampleIndicators" data-slide-to="0"></li>
+                                            </ol>
 
-                                        <div class="carousel-inner">
+                                            <div class="carousel-inner">
 
-                                            <div th:each="course_type: ${type_list}" th:if="!${(__'course.' + ${course_type} + '.survey'__).equals('[]')}" class="carousel-item">
-                                                <img class="d-block w-100 mb-5" th:src="'data:image/jpeg;base64,' + ${__${course_type} + 'QRCode'__}" alt=">.<">
-                                                <div class="carousel-caption text-dark d-block mb-1">
-                                                    <h5 th:text="${course_type}">TEXT</h5>
+                                                <div th:each="course_type: ${type_list}" th:if="!${(__'course.' + ${course_type} + '.survey'__).equals('[]')}" class="carousel-item">
+                                                    <img class="d-block w-100 mb-5" th:src="'data:image/jpeg;base64,' + ${__${course_type} + 'QRCode'__}" alt=">.<">
+                                                    <div class="carousel-caption text-dark d-block mb-1">
+                                                        <h5 th:text="${course_type}">TEXT</h5>
+                                                    </div>
                                                 </div>
+
+                                                <div th:if="${course.lecture.survey.equals('[]') and course.tutorial.survey.equals('[]') and course.seminar.survey.equals('[]') and course.practical.survey.equals('[]')}" class="carousel-item">
+                                                    <img class="d-block w-100 mb-5 bg-dark" src="..." alt="" style="width: 300px; height: 300px;">
+                                                    <div class="carousel-caption text-dark d-block mb-0">
+                                                        <h5>No Surveys yet</h5>
+                                                    </div>
+                                                </div>
+
                                             </div>
 
-                                            <div th:if="${course.lecture.survey.equals('[]') and course.tutorial.survey.equals('[]') and course.seminar.survey.equals('[]') and course.practical.survey.equals('[]')}" class="carousel-item">
-                                                <img class="d-block w-100 mb-5 bg-dark" src="..." alt="" style="width: 300px; height: 300px;">
-                                                <div class="carousel-caption text-dark d-block mb-0">
-                                                    <h5>No Surveys yet</h5>
-                                                </div>
-                                            </div>
-
+                                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden></span>
+                                                <span class="sr-only">Previous</span>
+                                            </a>
+                                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden></span>
+                                                <span class="sr-only">Next</span>
+                                            </a>
+                                            
                                         </div>
-
-                                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                                            <span class="carousel-control-prev-icon" aria-hidden></span>
-                                            <span class="sr-only">Previous</span>
-                                        </a>
-                                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                                            <span class="carousel-control-next-icon" aria-hidden></span>
-                                            <span class="sr-only">Next</span>
-                                        </a>
-                                        
                                     </div>
                                 </div>
-                            </div>
-                            <!--Download Button-->
-                            <div th:if="!${course.lecture.survey.equals('[]') and course.tutorial.survey.equals('[]') and course.seminar.survey.equals('[]') and course.practical.survey.equals('[]')}" class="container text-center mt-3">
-                                <p class="m-0 font-weight-light" th:text="#{detail.download}"></p>
-                                <div class="btn-group" role="group" aria-label="First group">
-                                    <a th:each="course_type: ${type_list}" th:if="!${(__'course.' + ${course_type} + '.survey'__).equals('[]')}" class="btn btn-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:href="${'/qrcode?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" target="_blank" href="#">TEXT</a>
+                                <!--Download Button-->
+                                <div th:if="!${course.lecture.survey.equals('[]') and course.tutorial.survey.equals('[]') and course.seminar.survey.equals('[]') and course.practical.survey.equals('[]')}" class="container text-center mt-3">
+                                    <p class="m-0 font-weight-light" th:text="#{detail.download}"></p>
+                                    <div class="btn-group" role="group" aria-label="First group">
+                                        <a th:each="course_type: ${type_list}" th:if="!${(__'course.' + ${course_type} + '.survey'__).equals('[]')}" class="btn btn-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:href="${'/qrcode?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" target="_blank" href="#">TEXT</a>
+                                    </div>
                                 </div>
+
                             </div>
 
                         </div>
-
                     </div>
-                </div>
+                </form>
 
             </div>
         </div>
