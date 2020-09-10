@@ -349,6 +349,43 @@ public class CourseManagement {
 
 
 
+
+
+
+    public Course duplicateCourse(String id, String semesterString){
+    
+        Optional<Course> crs = findById(id);
+        if(crs.isPresent()){
+
+            Course oldCourse = crs.get();
+            
+            Course newCourse = new Course(oldCourse.getName(), duplicateCourseInstance(oldCourse.getLecture()), duplicateCourseInstance(oldCourse.getTutorial()), 
+                duplicateCourseInstance(oldCourse.getSeminar()), duplicateCourseInstance(oldCourse.getPractical()), oldCourse.getSemesterOfStudents(), 
+                oldCourse.getFaculty(), semesterString, parseSemesterString(semesterString));
+            
+            coursesRepo.save(newCourse);
+
+            return newCourse;
+        }
+
+        return null;
+    }
+
+
+    public CourseInstance duplicateCourseInstance(CourseInstance oldInstance){
+        return new CourseInstance(oldInstance.getCourseType(), oldInstance.getGroupAmount(), oldInstance.getInstanceAmount(), oldInstance.getInstanceTitles());
+    }
+
+
+
+
+
+
+
+
+
+
+
     /**
      * QR-Code Generator
      * 

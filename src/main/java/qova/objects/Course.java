@@ -84,7 +84,7 @@ public class Course {
      * @param semesterOfStudents        What is the semester of the students attending the subject
      * @param faculty                   Enum defining which faculty the subject belongs to 
      * @param semesterString            The string displaying the semester (an instance of a course. E.g. algorithms 1 is offered each year, and this is the instance of Summer semester 2020). This field is primarily used in the UI
-     * @param courseDate                The time period (start date) of when the course takes placed. This field is primarily used for sorting purposes
+     * @param courseDate                The time period (start date) of when the course takes place. This field is primarily used for sorting purposes
      */
     public Course(String name, CourseInstance lecture, CourseInstance tutorial, CourseInstance seminar, CourseInstance practical, Integer semesterOfStudents, CourseFaculty faculty, String semesterString, LocalDate courseDate){
         this.name = name;

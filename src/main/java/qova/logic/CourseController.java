@@ -31,6 +31,7 @@ import qova.forms.DuplicateCourseForm;
 import qova.forms.InstanceTitleForm;
 import qova.forms.SurveyForm;
 import qova.objects.Course;
+import qova.repositories.CourseRepository;
 
 //TODO: Temporary Imports (can be removed later)
 //@Lucian please don't delete me just yet T_T
@@ -301,16 +302,13 @@ public class CourseController {
     
 
 
-    // @GetMapping("course/duplicate")
-    // public String duplicateCourseWithNewSemester(DuplicateCourseForm duplicateForm, @RequestParam String id){
+    @GetMapping("course/duplicate")
+    public String duplicateCourseWithNewSemester(DuplicateCourseForm duplicateForm, @RequestParam String id){
 
-    //     Optional<Course> crs = courseManagement.findById(id);
-    //     if(crs.isPresent()){
-    //         Course course = new Course
-    //     }
+        Course newCourse = courseManagement.duplicateCourse(id, duplicateForm.getSemesterString());
 
-    //     return "redirect:../course/details?id=" + id;
-    // }
+        return "redirect:../course/details?id=" + newCourse.getId();
+    }
 
 
 
