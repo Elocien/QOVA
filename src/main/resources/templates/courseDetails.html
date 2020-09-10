@@ -83,7 +83,7 @@
                     <div class="row justify-content-md-center p-4" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
                         <!--Course Details-->
                         <div class="col-6">
-                            <form id="form" method="post" th:action="@{/course/edit?id=__${course.id}__}" th:object="${form}">
+                            <form id="form" method="post" th:object="${CourseForm}" th:action="@{/course/edit?id=__${course.id}__}" th:object="${form}">
 
                                 <!--Headline & Buttons-->
                                 <div class="row">
@@ -246,7 +246,7 @@
 
                         </div>
                     </div>
-                    
+
                 </div>
 
             </div>
