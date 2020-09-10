@@ -153,6 +153,7 @@ public class CourseController {
 			BindingResult result, @RequestParam String id) throws Exception {
 
 		if (result.hasErrors()) {
+            System.out.println(result.getAllErrors());
 			return courseDetails(model, form, id);
 		}
 
@@ -297,8 +298,11 @@ public class CourseController {
     
 
 
-    
-    
+    // @GetMapping("course/duplicate")
+    // public String duplicateCourseWithNewSemester(){
+
+    // }
+
 
 
 
