@@ -36,8 +36,11 @@ public class CourseInstance {
     //Titles of each instance of the given courseType (e.g. there are 12 lectures, each with a unique title)
     private @ElementCollection @OrderColumn String[] instanceTitles;
 
-    //Flag used to 
+    //Flag used to indicate wether the instance is active (E.g. The instance is of type practical, but isnt set as being evaluated by the course owner; therefore it is set as active = false)
     private Boolean active;
+
+    //Flag used to indicate that the survey has been finalised for this courseInstance, and is not able to be edited. (When the finalise button is pressed in the surveyEditor, the correct )
+    private Boolean finalised; 
 
 
     //Needed for JPA purposes
@@ -67,6 +70,7 @@ public class CourseInstance {
         this.instanceAmount = instanceAmount;
         this.instanceTitles = instanceTitles;
         this.active = active;
+        this.finalised = false;
     }
 
     /**
@@ -81,6 +85,7 @@ public class CourseInstance {
         this.instanceAmount = null;
         this.instanceTitles = null;
         this.active = false;
+        this.finalised = false;
     }
 
 
@@ -116,7 +121,7 @@ public class CourseInstance {
         return this.instanceAmount;
     }
 
-    public void getInstanceAmount (int amount){
+    public void setInstanceAmount (int amount){
         this.instanceAmount = amount;
     }
 
@@ -132,9 +137,23 @@ public class CourseInstance {
         return this.active;
     }
 
-    public void setActive(Boolean bool){
-        this.active = bool;
+    public void setActive(){
+        this.active = true;
     }
 
+    public void setInactive(){
+        this.active = false;
+        this.groupAmount = null;
+        this.instanceAmount = null;
+        this.instanceTitles = null;
+    }
+
+    public Boolean isFinalised(){
+        return this.finalised;
+    }
+
+    public void setFinalised(){
+        this.finalised = true;
+    }
 
 }
