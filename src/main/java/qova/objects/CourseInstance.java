@@ -16,7 +16,6 @@ public class CourseInstance {
     //Id
     private @Id @GeneratedValue(strategy = GenerationType.AUTO) Long id;
 
-
     //Either LECTURE, TUTORIAL, SEMINAR OR PRACTICAL
     private CourseType courseType;
 
@@ -37,6 +36,8 @@ public class CourseInstance {
     //Titles of each instance of the given courseType (e.g. there are 12 lectures, each with a unique title)
     private @ElementCollection @OrderColumn String[] instanceTitles;
 
+    //Flag used to 
+    private Boolean active;
 
 
     //Needed for JPA purposes
@@ -54,16 +55,37 @@ public class CourseInstance {
      * @param instanceAmount Integer representing the number of the instance of this
      *                       specific courseInstance
      * @param instanceTitles The titles for each instance of a {@linkplain Course}, in the form of a String 
+     * 
+     * @param active         Flag used to determine wether results can be submitted for this courseInstance
      */
     public CourseInstance(CourseType courseType, Integer groupAmount, Integer instanceAmount,
-            String[] instanceTitles){
+            String[] instanceTitles, Boolean active){
        
         this.courseType = courseType;
         this.survey = "[]";
         this.groupAmount = groupAmount;
         this.instanceAmount = instanceAmount;
         this.instanceTitles = instanceTitles;
+        this.active = active;
     }
+
+    /**
+     * Constructor for inactive CourseInstances
+     * 
+     * @param courseType 
+     */
+    public CourseInstance(CourseType courseType){
+        this.courseType = courseType;
+        this.survey = "[]";
+        this.groupAmount = null;
+        this.instanceAmount = null;
+        this.instanceTitles = null;
+        this.active = false;
+    }
+
+
+
+
 
     public CourseType getCourseType(){
         return this.courseType;
@@ -104,6 +126,14 @@ public class CourseInstance {
 
     public void setInstanceTitles(String[] list){
         this.instanceTitles = list;
+    }
+
+    public Boolean isActive(){
+        return this.active;
+    }
+
+    public void setActive(Boolean bool){
+        this.active = bool;
     }
 
 

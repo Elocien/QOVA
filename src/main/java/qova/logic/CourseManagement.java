@@ -89,7 +89,7 @@ public class CourseManagement {
             String[] instanceTitles = new String[form.getInstanceAmountLecture()];
 
             //Create the courseInstance
-            CourseInstance lecture = new CourseInstance(CourseType.LECTURE, groupAmount, form.getInstanceAmountLecture(), instanceTitles);
+            CourseInstance lecture = new CourseInstance(CourseType.LECTURE, groupAmount, form.getInstanceAmountLecture(), instanceTitles, true);
 
             //save to database 
             courseInstancesRepo.save(lecture);
@@ -107,7 +107,7 @@ public class CourseManagement {
             String[] instanceTitles = new String[form.getInstanceAmountLecture()];
 
             //Create the courseInstance
-            CourseInstance tutorial = new CourseInstance(CourseType.TUTORIAL, form.getGroupAmountPractical(), form.getInstanceAmountLecture(), instanceTitles);
+            CourseInstance tutorial = new CourseInstance(CourseType.TUTORIAL, form.getGroupAmountPractical(), form.getInstanceAmountLecture(), instanceTitles, true);
 
             //save to database 
             courseInstancesRepo.save(tutorial);
@@ -125,7 +125,7 @@ public class CourseManagement {
             String[] instanceTitles = new String[form.getInstanceAmountLecture()];
 
             //Create the courseInstance
-            CourseInstance seminar = new CourseInstance(CourseType.SEMINAR, form.getGroupAmountPractical(), form.getInstanceAmountLecture(), instanceTitles);
+            CourseInstance seminar = new CourseInstance(CourseType.SEMINAR, form.getGroupAmountPractical(), form.getInstanceAmountLecture(), instanceTitles, true);
 
             //save to database 
             courseInstancesRepo.save(seminar);
@@ -143,7 +143,7 @@ public class CourseManagement {
             String[] instanceTitles = new String[form.getInstanceAmountLecture()];
 
             //Create the courseInstance
-            CourseInstance practical = new CourseInstance(CourseType.PRACTICAL, form.getGroupAmountPractical(), form.getInstanceAmountLecture(), instanceTitles);
+            CourseInstance practical = new CourseInstance(CourseType.PRACTICAL, form.getGroupAmountPractical(), form.getInstanceAmountLecture(), instanceTitles, true);
 
             //save to database 
             courseInstancesRepo.save(practical);
@@ -185,7 +185,7 @@ public class CourseManagement {
                 String[] instanceTitles = new String[form.getInstanceAmountLecture()];
 
                 //Create CourseInstance
-                CourseInstance lecture = new CourseInstance(CourseType.LECTURE, groupAmount, form.getInstanceAmountLecture(), instanceTitles);
+                CourseInstance lecture = new CourseInstance(CourseType.LECTURE, groupAmount, form.getInstanceAmountLecture(), instanceTitles, true);
 
                 //Add CourseInstance to Course
                 course.setLecture(lecture);
@@ -206,7 +206,7 @@ public class CourseManagement {
                 String[] instanceTitles = new String[form.getInstanceAmountTutorial()];
 
                 //Create CourseInstance
-                CourseInstance tutorial = new CourseInstance(CourseType.TUTORIAL, form.getGroupAmountTutorial(), form.getInstanceAmountTutorial(), instanceTitles);
+                CourseInstance tutorial = new CourseInstance(CourseType.TUTORIAL, form.getGroupAmountTutorial(), form.getInstanceAmountTutorial(), instanceTitles, true);
 
                 //Add CourseInstance to Course
                 course.setTutorial(tutorial);
@@ -227,7 +227,7 @@ public class CourseManagement {
                 String[] instanceTitles = new String[form.getInstanceAmountSeminar()];
 
                 //Create CourseInstance
-                CourseInstance seminar = new CourseInstance(CourseType.SEMINAR, form.getGroupAmountSeminar(), form.getInstanceAmountSeminar(), instanceTitles);
+                CourseInstance seminar = new CourseInstance(CourseType.SEMINAR, form.getGroupAmountSeminar(), form.getInstanceAmountSeminar(), instanceTitles, true);
 
                 //Add CourseInstance to Course
                 course.setSeminar(seminar);
@@ -248,7 +248,7 @@ public class CourseManagement {
                 String[] instanceTitles = new String[form.getInstanceAmountPractical()];
 
                 //Create CourseInstance
-                CourseInstance practical = new CourseInstance(CourseType.PRACTICAL, form.getGroupAmountPractical(), form.getInstanceAmountPractical(), instanceTitles);
+                CourseInstance practical = new CourseInstance(CourseType.PRACTICAL, form.getGroupAmountPractical(), form.getInstanceAmountPractical(), instanceTitles, true);
 
                 //Add CourseInstance to Course
                 course.setPractical(practical);
@@ -363,7 +363,7 @@ public class CourseManagement {
 
 
     public CourseInstance duplicateCourseInstance(CourseInstance oldInstance){
-        return new CourseInstance(oldInstance.getCourseType(), oldInstance.getGroupAmount(), oldInstance.getInstanceAmount(), oldInstance.getInstanceTitles());
+        return new CourseInstance(oldInstance.getCourseType(), oldInstance.getGroupAmount(), oldInstance.getInstanceAmount(), oldInstance.getInstanceTitles(), oldInstance.isActive());
     }
 
 
@@ -627,22 +627,22 @@ public class CourseManagement {
         var name = "Rechnernetze";
 
         String[] lectureTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles);
+        var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles, true);
 
         courseInstancesRepo.save(lecture);
 
         String[] tutorialTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles);
+        var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles, true);
 
         courseInstancesRepo.save(tutorial);
 
         String[] seminarTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var seminar = new CourseInstance(CourseType.SEMINAR, 8, 12, seminarTitles);
+        var seminar = new CourseInstance(CourseType.SEMINAR, 8, 12, seminarTitles, true);
 
         courseInstancesRepo.save(seminar);
 
         String[] pTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var practical = new CourseInstance(CourseType.PRACTICAL, 8, 12, pTitles);
+        var practical = new CourseInstance(CourseType.PRACTICAL, 8, 12, pTitles, true);
 
         courseInstancesRepo.save(practical);
 
@@ -657,13 +657,13 @@ public class CourseManagement {
     public Course TimTestCreateCourse() {
 
         String[] lectureTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var lecture = new CourseInstance(CourseType.LECTURE, 1, 11, lectureTitles);
+        var lecture = new CourseInstance(CourseType.LECTURE, 1, 11, lectureTitles, true);
         String[] tutorialTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var tutorial = new CourseInstance(CourseType.TUTORIAL, 2, 12, tutorialTitles);
+        var tutorial = new CourseInstance(CourseType.TUTORIAL, 2, 12, tutorialTitles, true);
         String[] seminarTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var seminar = new CourseInstance(CourseType.SEMINAR, 3, 13, seminarTitles);
+        var seminar = new CourseInstance(CourseType.SEMINAR, 3, 13, seminarTitles, true);
         String[] pTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var practical = new CourseInstance(CourseType.TUTORIAL, 4, 14, pTitles);
+        var practical = new CourseInstance(CourseType.TUTORIAL, 4, 14, pTitles, true);
 
         var name = "Rechnernetze";
         var semesterOfStudents = 4;

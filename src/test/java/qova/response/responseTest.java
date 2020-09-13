@@ -17,11 +17,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.google.gwt.xhr.client.XMLHttpRequest.ResponseType;
-
-import com.google.gwt.xhr.client.XMLHttpRequest.ResponseType;
-
-import com.google.gwt.xhr.client.XMLHttpRequest.ResponseType;
 
 import org.junit.jupiter.api.Test;
 
@@ -32,10 +27,10 @@ public class responseTest extends AbstractIntegrationTest {
         var name = "Rechnernetze";
 
         String[] lectureTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles);
+        var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles, true);
 
         String[] tutorialTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles);
+        var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles, true);
 
         CourseInstance seminar = null;
 
