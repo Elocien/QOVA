@@ -45,7 +45,7 @@ public class TextResponse {
     }
 
     public ResponseType getType(){
-        return this.responseType;
+        return responseType;
     }
     
 }

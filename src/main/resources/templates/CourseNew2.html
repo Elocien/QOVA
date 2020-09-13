@@ -42,9 +42,9 @@
                         <h5 class="font-weight-light input-header" th:text="#{${course_type}} +' '+ #{new.instances}">COURSE TYPE</h5>
                         <!--Vanilla Inputs-->
                         <div class="input-wrapper m-2">
-                            <div class="input-group mt-2 mb-2 clean-input" th:each="n : ${#numbers.sequence(1, __${course_type} + 'Instances'__)}" th:with="instance = ${__'instaceTitles'+${course_type}__[__${n}__]}">
+                            <div class="input-group mt-2 mb-2 clean-input" th:each="n : ${#numbers.sequence(1, __${course_type} + 'Instances'__)}" >  <!-- th:with="instance = ${__'instaceTitles'+${course_type}__[__${n}__]}" -->
                                 <span class="index" th:text="${n}">N</span><span class="mr-2">.</span>
-                                <input class="form-control" type="text" th:text="${instance}" th:field="${instance}">
+                                <input class="form-control" type="text">
                             </div>
                         </div>
                     </div>

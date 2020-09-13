@@ -247,8 +247,10 @@ public class CourseController {
 
        
 
-		return "courseNew2";
+		return "CourseNew2";
     }
+
+   
 
     /*@GetMapping("course/new2")
 	public String createCourse_SetInstanceTitles(Model model, InstanceTitleForm form) {
@@ -556,6 +558,24 @@ public class CourseController {
     @GetMapping("/jsTest")
     public String JsTest(){
         return "survey";
+    }
+
+    @GetMapping("coursenew2")
+	public String createCourse_SetInstanceTitles(Model model, InstanceTitleForm form) {
+
+        model.addAttribute("lectureInstances", 2);
+        model.addAttribute("lectureExists", true);
+
+        model.addAttribute("tutorialInstances", 3);
+        model.addAttribute("tutorialExists", true);
+
+        model.addAttribute("seminarInstances", 2);
+        model.addAttribute("seminarExists", false);
+
+        model.addAttribute("practicalInstances", 5);
+        model.addAttribute("practicalExists", true);
+
+		return "courseNew2";
     }
 
 
