@@ -24,7 +24,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -50,17 +50,17 @@ public class CourseManagement {
     public String createCourseReturnId(CourseForm form) {
         Objects.requireNonNull(form);
 
-        //Name of Course
+        //Form attributes
         var name = form.getName();
-
-        //create CourseInstances
-        Map<CourseType, CourseInstance> courseInstances = createCourseInstance(form);
-
-
         var semesterOfStudents = form.getSemesterOfStudents();
         var faculty = form.getFaculty();
         var courseDate = parseSemesterString(form.getSemesterString());
         var semesterString = form.getSemesterString();
+
+
+        //create CourseInstances
+        Map<CourseType, CourseInstance> courseInstances = createCourseInstance(form);
+
 
         Course crs  = new Course(name, courseInstances.get(CourseType.LECTURE), courseInstances.get(CourseType.TUTORIAL), courseInstances.get(CourseType.SEMINAR), courseInstances.get(CourseType.PRACTICAL), semesterOfStudents, faculty, semesterString, courseDate);
         coursesRepo.save(crs);
@@ -75,29 +75,32 @@ public class CourseManagement {
     private Map<CourseType, CourseInstance> createCourseInstance(CourseForm form) {
 
         //Map containing CourseInstances, with CourseType as key
-        Map<CourseType, CourseInstance> courseInstances = new HashMap<CourseType, CourseInstance>();
+        EnumMap<CourseType, CourseInstance> courseInstances = new EnumMap<>(CourseType.class);
 
         //Create CourseInstances if bool is true 
         //LECTURE
         if(Boolean.TRUE.equals(form.getLectureExists())){
 
             //In the current implementation, the groupAmount for LECTURE is always set to 1
-            //(The attribute exists in case of future need for this to be editable. It would have to be bound to the form in the frontend, and called here with form.getGroupAmountLecture)
+            //(The attribute exists in case of a future need for this to be editable. It would have to be bound to the form in the frontend, and called here with form.getGroupAmountLecture)
             var groupAmount = 1; 
 
             //Initialise the instanceTitles array with the amount of instances that are set to exist
             String[] instanceTitles = new String[form.getInstanceAmountLecture()];
 
             //Create the courseInstance
-            CourseInstance lecture = new CourseInstance(CourseType.LECTURE, groupAmount, form.getInstanceAmountLecture(), instanceTitles);
+            CourseInstance lecture = new CourseInstance(CourseType.LECTURE, groupAmount, form.getInstanceAmountLecture(), instanceTitles, true);
 
             //save to database 
             courseInstancesRepo.save(lecture);
 
             //Add CourseInstance to map
-            courseInstances.put(CourseType.LECTURE, lecture);
+            courseInstances.put(lecture.getCourseType(), lecture);
         }
-        else{courseInstances.put(CourseType.LECTURE, null);}
+        else{
+            CourseInstance lecture = new CourseInstance(CourseType.LECTURE);
+            courseInstances.put(lecture.getCourseType(), lecture);
+        }
 
 
         //TUTORIAL
@@ -107,15 +110,18 @@ public class CourseManagement {
             String[] instanceTitles = new String[form.getInstanceAmountLecture()];
 
             //Create the courseInstance
-            CourseInstance tutorial = new CourseInstance(CourseType.TUTORIAL, form.getGroupAmountPractical(), form.getInstanceAmountLecture(), instanceTitles);
+            CourseInstance tutorial = new CourseInstance(CourseType.TUTORIAL, form.getGroupAmountPractical(), form.getInstanceAmountLecture(), instanceTitles, true);
 
             //save to database 
             courseInstancesRepo.save(tutorial);
 
             //Add CourseInstance to map
-            courseInstances.put(CourseType.TUTORIAL, tutorial);
+            courseInstances.put(tutorial.getCourseType(), tutorial);
         }
-        else{courseInstances.put(CourseType.TUTORIAL, null);}
+        else{
+            CourseInstance tutorial = new CourseInstance(CourseType.TUTORIAL);
+            courseInstances.put(tutorial.getCourseType(), tutorial);
+        }
 
 
         //SEMINAR
@@ -125,15 +131,18 @@ public class CourseManagement {
             String[] instanceTitles = new String[form.getInstanceAmountLecture()];
 
             //Create the courseInstance
-            CourseInstance seminar = new CourseInstance(CourseType.SEMINAR, form.getGroupAmountPractical(), form.getInstanceAmountLecture(), instanceTitles);
+            CourseInstance seminar = new CourseInstance(CourseType.SEMINAR, form.getGroupAmountPractical(), form.getInstanceAmountLecture(), instanceTitles, true);
 
             //save to database 
             courseInstancesRepo.save(seminar);
 
             //Add CourseInstance to map
-            courseInstances.put(CourseType.SEMINAR, seminar);
+            courseInstances.put(seminar.getCourseType(), seminar);
         }
-        else{courseInstances.put(CourseType.SEMINAR, null);}
+        else{
+            CourseInstance seminar = new CourseInstance(CourseType.SEMINAR);
+            courseInstances.put(seminar.getCourseType(), seminar);
+        }
 
 
         //PRACTICAL
@@ -143,23 +152,32 @@ public class CourseManagement {
             String[] instanceTitles = new String[form.getInstanceAmountLecture()];
 
             //Create the courseInstance
-            CourseInstance practical = new CourseInstance(CourseType.PRACTICAL, form.getGroupAmountPractical(), form.getInstanceAmountLecture(), instanceTitles);
+            CourseInstance practical = new CourseInstance(CourseType.PRACTICAL, form.getGroupAmountPractical(), form.getInstanceAmountLecture(), instanceTitles, true);
 
             //save to database 
             courseInstancesRepo.save(practical);
 
             //Add CourseInstance to map
-            courseInstances.put(CourseType.PRACTICAL, practical);
+            courseInstances.put(practical.getCourseType(), practical);
         }
-        else{courseInstances.put(CourseType.PRACTICAL, null);} 
+        else{
+            CourseInstance practical = new CourseInstance(CourseType.PRACTICAL);
+            courseInstances.put(practical.getCourseType(), practical);
+        }
 
+        //Return the Map of CourseInstances
         return courseInstances;
     }
 
 
 
-    //update course details
 
+
+
+
+
+
+    //update course details
     public void updateCourseDetails(String id, CourseForm form) {
 
         Optional<Course> crs = coursesRepo.findById(id);
@@ -168,97 +186,120 @@ public class CourseManagement {
             //The existing course object being edited
             Course course = crs.get();
 
-            //name
+            //These attributes are always editable!
             course.setName(form.getName());
-
-
-            //Lecture EXISTS, but is toggled OFF
-            if(Boolean.TRUE.equals(course.getLectureExists()) && Boolean.FALSE.equals(form.getLectureExists())){
-                course.setLecture(null);
-            }
-            //Lecture does NOT EXIST, but is toggled ON
-            if(Boolean.FALSE.equals(form.getLectureExists()) && Boolean.TRUE.equals(course.getLectureExists())){
-                //Set to one for lectures (in case of change, assign form.getLectureGroupAmount)
-                Integer groupAmount = 1;
-
-                //Initialise instanceTitles array
-                String[] instanceTitles = new String[form.getInstanceAmountLecture()];
-
-                //Create CourseInstance
-                CourseInstance lecture = new CourseInstance(CourseType.LECTURE, groupAmount, form.getInstanceAmountLecture(), instanceTitles);
-
-                //Add CourseInstance to Course
-                course.setLecture(lecture);
-
-                //Save new CourseInstance to database
-                courseInstancesRepo.save(lecture);
-            }
-
-
-            //Tutorial EXISTS, but is toggled OFF
-            if(Boolean.TRUE.equals(course.getTutorialExists()) && Boolean.FALSE.equals(form.getTutorialExists())){
-                course.setTutorial(null);
-            }
-            //Tutorial does NOT EXIST, but is toggled ON
-            if(Boolean.FALSE.equals(form.getTutorialExists()) && Boolean.TRUE.equals(course.getTutorialExists())){
-
-                //Initialise instanceTitles array
-                String[] instanceTitles = new String[form.getInstanceAmountTutorial()];
-
-                //Create CourseInstance
-                CourseInstance tutorial = new CourseInstance(CourseType.TUTORIAL, form.getGroupAmountTutorial(), form.getInstanceAmountTutorial(), instanceTitles);
-
-                //Add CourseInstance to Course
-                course.setTutorial(tutorial);
-
-                //Save new CourseInstance to database
-                courseInstancesRepo.save(tutorial);
-            }
-
-
-            //Seminar EXISTS, but is toggled OFF
-            if(Boolean.TRUE.equals(course.getSeminarExists()) && Boolean.FALSE.equals(form.getSeminarExists())){
-                course.setSeminar(null);
-            }
-            //Seminar does NOT EXIST, but is toggled ON
-            if(Boolean.FALSE.equals(form.getSeminarExists()) && Boolean.TRUE.equals(course.getSeminarExists())){
-
-                //Initialise instanceTitles array
-                String[] instanceTitles = new String[form.getInstanceAmountSeminar()];
-
-                //Create CourseInstance
-                CourseInstance seminar = new CourseInstance(CourseType.SEMINAR, form.getGroupAmountSeminar(), form.getInstanceAmountSeminar(), instanceTitles);
-
-                //Add CourseInstance to Course
-                course.setSeminar(seminar);
-
-                //Save new CourseInstance to database
-                courseInstancesRepo.save(seminar);
-            }
-
-
-            //Practical EXISTS, but is toggled OFF
-            if(Boolean.TRUE.equals(course.getPracticalExists()) && Boolean.FALSE.equals(form.getPracticalExists())){
-                course.setPractical(null);
-            }
-            //Practical does NOT EXIST, but is toggled ON
-            if(Boolean.FALSE.equals(form.getPracticalExists()) && Boolean.TRUE.equals(course.getPracticalExists())){
-                
-                //Initialise instanceTitles array
-                String[] instanceTitles = new String[form.getInstanceAmountPractical()];
-
-                //Create CourseInstance
-                CourseInstance practical = new CourseInstance(CourseType.PRACTICAL, form.getGroupAmountPractical(), form.getInstanceAmountPractical(), instanceTitles);
-
-                //Add CourseInstance to Course
-                course.setPractical(practical);
-
-                //Save new CourseInstance to database
-                courseInstancesRepo.save(practical);
-            }
-
             course.setSemesterOfStudents(form.getSemesterOfStudents());
             course.setFaculty(form.getFaculty());
+
+
+            //These attributes are NOT editable, when the instance has been finalised!!!
+
+
+            //Only execute if lecture is not finalised
+            if(Boolean.FALSE.equals(course.getLecture().isFinalised())){
+
+                //Lecture EXISTS, but is toggled OFF
+                if(Boolean.TRUE.equals(course.getLectureExists()) && Boolean.FALSE.equals(form.getLectureExists())){
+
+                    course.getLecture().setInactive();
+                }
+                //Lecture does NOT EXIST, but is toggled ON
+                if(Boolean.FALSE.equals(course.getLectureExists()) && Boolean.TRUE.equals(form.getLectureExists())){
+
+                    //Initialise instanceTitles array
+                    String[] instanceTitles = new String[form.getInstanceAmountLecture()];
+
+                    //Update CourseInstance
+                    CourseInstance lecture = course.getLecture();
+
+                    //Set to one for lectures (in case of change, assign form.getLectureGroupAmount)
+                    lecture.setGroupAmount(1);
+
+                    //
+                    lecture.setInstanceAmount(form.getInstanceAmountLecture());
+                    lecture.setInstanceTitles(instanceTitles);
+                    lecture.setActive();
+                }
+            }
+
+            //Only execute if tutorial is not finalised
+            if(Boolean.FALSE.equals(course.getTutorial().isFinalised())){
+
+                //tutorial EXISTS, but is toggled OFF
+                if(Boolean.TRUE.equals(course.getTutorialExists()) && Boolean.FALSE.equals(form.getTutorialExists())){
+
+                    course.getTutorial().setInactive();
+                }
+                //tutorial does NOT EXIST, but is toggled ON
+                if(Boolean.FALSE.equals(course.getTutorialExists()) && Boolean.TRUE.equals(form.getTutorialExists())){
+
+                    //Initialise instanceTitles array
+                    String[] instanceTitles = new String[form.getInstanceAmountTutorial()];
+
+                    //Update CourseInstance
+                    CourseInstance tutorial = course.getTutorial();
+
+                    //
+                    tutorial.setGroupAmount(form.getGroupAmountTutorial());
+                    tutorial.setInstanceAmount(form.getInstanceAmountTutorial());
+                    tutorial.setInstanceTitles(instanceTitles);
+                    tutorial.setActive();
+                }
+            }
+
+
+            //Only execute if seminar is not finalised
+            if(Boolean.FALSE.equals(course.getSeminar().isFinalised())){
+
+                //seminar EXISTS, but is toggled OFF
+                if(Boolean.TRUE.equals(course.getSeminarExists()) && Boolean.FALSE.equals(form.getSeminarExists())){
+
+                    course.getSeminar().setInactive();
+                }
+                //seminar does NOT EXIST, but is toggled ON
+                if(Boolean.FALSE.equals(course.getSeminarExists()) && Boolean.TRUE.equals(form.getSeminarExists())){
+
+                    //Initialise instanceTitles array
+                    String[] instanceTitles = new String[form.getInstanceAmountSeminar()];
+
+                    //Update CourseInstance
+                    CourseInstance seminar = course.getSeminar();
+
+                    //
+                    seminar.setGroupAmount(form.getGroupAmountSeminar());
+                    seminar.setInstanceAmount(form.getInstanceAmountSeminar());
+                    seminar.setInstanceTitles(instanceTitles);
+                    seminar.setActive();
+                }
+            }
+
+
+
+            //Only execute if practical is not finalised
+            if(Boolean.FALSE.equals(course.getPractical().isFinalised())){
+
+                //practical EXISTS, but is toggled OFF
+                if(Boolean.TRUE.equals(course.getPracticalExists()) && Boolean.FALSE.equals(form.getPracticalExists())){
+
+                    course.getPractical().setInactive();
+                }
+                //practical does NOT EXIST, but is toggled ON
+                if(Boolean.FALSE.equals(course.getPracticalExists()) && Boolean.TRUE.equals(form.getPracticalExists())){
+
+                    //Initialise instanceTitles array
+                    String[] instanceTitles = new String[form.getInstanceAmountPractical()];
+
+                    //Update CourseInstance
+                    CourseInstance practical = course.getPractical();
+
+                    //
+                    practical.setGroupAmount(form.getGroupAmountPractical());
+                    practical.setInstanceAmount(form.getInstanceAmountPractical());
+                    practical.setInstanceTitles(instanceTitles);
+                    practical.setActive();
+                }
+            }
+
 
             //We are intentionally not allowing the option to edit the CourseDate of SemesterString
         }
@@ -363,7 +404,7 @@ public class CourseManagement {
 
 
     public CourseInstance duplicateCourseInstance(CourseInstance oldInstance){
-        return new CourseInstance(oldInstance.getCourseType(), oldInstance.getGroupAmount(), oldInstance.getInstanceAmount(), oldInstance.getInstanceTitles());
+        return new CourseInstance(oldInstance.getCourseType(), oldInstance.getGroupAmount(), oldInstance.getInstanceAmount(), oldInstance.getInstanceTitles(), oldInstance.isActive());
     }
 
 
@@ -556,18 +597,10 @@ public class CourseManagement {
         Optional<Course> crs = findById(id);
         if(crs.isPresent()){
             Course course = crs.get();
-            if(Boolean.TRUE.equals(course.getLectureExists())){
-                courseInstancesRepo.delete(course.getLecture());
-            }
-            if(Boolean.TRUE.equals(course.getTutorialExists())){
-                courseInstancesRepo.delete(course.getTutorial());
-            }
-            if(Boolean.TRUE.equals(course.getSeminarExists())){
-                courseInstancesRepo.delete(course.getSeminar());
-            }
-            if(Boolean.TRUE.equals(course.getPracticalExists())){
-                courseInstancesRepo.delete(course.getPractical());
-            }
+            courseInstancesRepo.delete(course.getLecture());
+            courseInstancesRepo.delete(course.getTutorial());
+            courseInstancesRepo.delete(course.getSeminar());
+            courseInstancesRepo.delete(course.getPractical());
         }
     }
 
@@ -627,22 +660,22 @@ public class CourseManagement {
         var name = "Rechnernetze";
 
         String[] lectureTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles);
+        var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles, true);
 
         courseInstancesRepo.save(lecture);
 
         String[] tutorialTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles);
+        var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles, true);
 
         courseInstancesRepo.save(tutorial);
 
         String[] seminarTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var seminar = new CourseInstance(CourseType.SEMINAR, 8, 12, seminarTitles);
+        var seminar = new CourseInstance(CourseType.SEMINAR, 8, 12, seminarTitles, true);
 
         courseInstancesRepo.save(seminar);
 
         String[] pTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var practical = new CourseInstance(CourseType.PRACTICAL, 8, 12, pTitles);
+        var practical = new CourseInstance(CourseType.PRACTICAL, 8, 12, pTitles, true);
 
         courseInstancesRepo.save(practical);
 
@@ -657,13 +690,13 @@ public class CourseManagement {
     public Course TimTestCreateCourse() {
 
         String[] lectureTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var lecture = new CourseInstance(CourseType.LECTURE, 1, 11, lectureTitles);
+        var lecture = new CourseInstance(CourseType.LECTURE, 1, 11, lectureTitles, true);
         String[] tutorialTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var tutorial = new CourseInstance(CourseType.TUTORIAL, 2, 12, tutorialTitles);
+        var tutorial = new CourseInstance(CourseType.TUTORIAL, 2, 12, tutorialTitles, true);
         String[] seminarTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var seminar = new CourseInstance(CourseType.SEMINAR, 3, 13, seminarTitles);
+        var seminar = new CourseInstance(CourseType.SEMINAR, 3, 13, seminarTitles, true);
         String[] pTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
-        var practical = new CourseInstance(CourseType.TUTORIAL, 4, 14, pTitles);
+        var practical = new CourseInstance(CourseType.TUTORIAL, 4, 14, pTitles, true);
 
         var name = "Rechnernetze";
         var semesterOfStudents = 4;

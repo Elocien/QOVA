@@ -65,7 +65,7 @@ public class MultipleChoiceResponse {
     }
 
     public ResponseType getType(){
-        return this.responseType;
+        return responseType;
     }
 
 }
