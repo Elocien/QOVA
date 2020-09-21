@@ -1,9 +1,6 @@
 package qova.logic;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -12,16 +9,14 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+import qova.admin.AdminManagement;
 import qova.enums.CourseType;
 import qova.forms.SurveyForm;
 import qova.objects.Course;
@@ -38,9 +33,13 @@ public class ResponseController {
     private final CourseManagement courseManagement;
 
     @Autowired
-    ResponseController(ResponseManagement responseManagement, CourseManagement courseManagement) {
+    private final AdminManagement adminManagement;
+
+    @Autowired
+    ResponseController(ResponseManagement responseManagement, CourseManagement courseManagement, AdminManagement adminManagement) {
         this.responseManagement = Objects.requireNonNull(responseManagement);
         this.courseManagement = Objects.requireNonNull(courseManagement);
+        this.adminManagement = Objects.requireNonNull(adminManagement);
     }
 
     //Error codes
@@ -133,8 +132,8 @@ public class ResponseController {
                 return "redirect:/";
             } else {
 
-                //TODO: Add defaultSurvey to survey (concatenate strings)
-                //
+                //Concatenate the default survey to the course survey
+                survey = adminManagement.concatenateDefaultSurveyToSurveyString(survey);
 
                 model.addAttribute("typeID", type);
                 model.addAttribute("id", id);
@@ -150,31 +149,11 @@ public class ResponseController {
             return "error?code=" + courseNotFound;
         }
     }
-    // ----------------------------------------------------------------------------
-
-    // Mapping to recieve SURVEY (Formatted as JSON) from server
-    @GetMapping("survey/get")
-    @ResponseBody
-    public String sendSurvey(@RequestParam String type, @RequestParam(required = false) String id) {
-
-        // redirect
-        if (id == null) {
-            return null;
-        }
-
-        else {
-            // Retrieve survey
-            String JsonString = courseManagement.getSurveyforType(id, type);
-
-            // return the JSON
-            return JsonString;
-        }
-    }
 
     // PostMapping to submit survey and serialize results
     // ---------------------------------------------------------------------------
     @PostMapping("/survey")
-    public ResponseEntity recieveResponseJSON(SurveyForm form, @RequestParam String type, @RequestParam String id) {
+    public String recieveResponseJSON(SurveyForm form, @RequestParam String type, @RequestParam String id) {
 
         // get JSON Response as string
         String JsonResponse = form.getQuestionnairejson();
@@ -186,7 +165,7 @@ public class ResponseController {
         // responseRepository.save(response)
 
         // if all goes well
-        return ResponseEntity.ok(HttpStatus.OK);
+        return "postSubmissionLanding";
     }
 
     // ---------------------------------------------------------------------------
