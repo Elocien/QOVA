@@ -6,8 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import qova.forms.SurveyForm;
+import qova.logic.ResponseManagement;
 
 
 
@@ -16,8 +18,11 @@ public class AdminController {
     
     private final AdminManagement adminManagement;
 
-    AdminController(AdminManagement adminManagement){
+    private final ResponseManagement responseManagement;
+
+    AdminController(AdminManagement adminManagement, ResponseManagement responseManagement){
         this.adminManagement = Objects.requireNonNull(adminManagement);
+        this.responseManagement = Objects.requireNonNull(responseManagement);
     }
 
 
@@ -33,10 +38,10 @@ public class AdminController {
 
 
     @GetMapping("/admin/updateDefaultSurvey")
-    public String updateDefaultSurvey(Model model) throws Exception {
+    public String updateDefaultSurvey(Model model, @RequestParam String type){
 
         //give previous default survey to model
-        model.addAttribute("survey", adminManagement.getDefaultSurvey() );
+        model.addAttribute("survey", adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
 
 
         return "adminQuestioneditor";
@@ -46,9 +51,9 @@ public class AdminController {
 
     //Mapping to submit a questionaire 
     @PostMapping("/admin/updateDefaultSurvey")
-    public String defaultSurveySubmit(SurveyForm form) throws Exception {
+    public String defaultSurveySubmit(SurveyForm form, @RequestParam String type){
 
-        adminManagement.updateDefaultSurvey(form);
+        adminManagement.updateDefaultSurvey(form, responseManagement.parseCourseType(type));
 
         return "adminPanel";
     }
