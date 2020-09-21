@@ -490,23 +490,6 @@ public class CourseController {
             }
 
             else{
-                //check if JSON is valid
-                try {new JSONArray(form.getQuestionnairejson());}
-                catch (Exception e) {
-                    //TODO: redirect to error page with code 02
-                    return "redirect:/";
-                }
-
-                //Create a JSON Array out of the response from the questioneditor
-                JSONArray survey = new JSONArray(form.getQuestionnairejson());
-
-                //parse JSON to check for correctness (length, special characters)
-                Boolean validSurvey = responseManagement.verifyJsonArray(survey);
-                if(Boolean.FALSE.equals(validSurvey)){
-                    //TODO: redirect to error page with code 02
-                    return "redirect:/";
-                }
-
                 //Sets the survey string for a given course (takes the default survey and conncatenates it with the create survey)
                 courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson());
             }
