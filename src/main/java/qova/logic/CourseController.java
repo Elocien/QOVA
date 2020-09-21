@@ -339,7 +339,7 @@ public class CourseController {
         model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
 
         //Default survey JSON, which is sent to the server
-        model.addAttribute("defaultSurvey", adminManagement.getDefaultSurvey());
+        model.addAttribute("defaultSurvey", adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
 
 
         //give course name to model, to show as title
@@ -507,10 +507,6 @@ public class CourseController {
                     return "redirect:/";
                 }
 
-                //Manager method for creating SurveyResponse and corresponding nested objects\
-                //TODO: Fix this!!!
-                // responseManagement.createSurveyResponse(survey, course.get(), type);
-
                 //Sets the survey string for a given course (takes the default survey and conncatenates it with the create survey)
                 courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson());
             }
@@ -520,7 +516,7 @@ public class CourseController {
             model.addAttribute("typeID", type);
             model.addAttribute("id", id);
             model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
-            model.addAttribute("defaultSurvey", adminManagement.getDefaultSurvey());
+            model.addAttribute("defaultSurvey", adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
             model.addAttribute("coursename", course.get().getName());
 
             return "surveypreview";
