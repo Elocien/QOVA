@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import qova.enums.CourseType;
 import qova.forms.SurveyForm;
 
 
@@ -25,22 +26,13 @@ public class AdminManagement {
      */
     @Autowired
     public AdminManagement(DefaultSurveyRepository repo) {
-
-
-           
-        Optional<DefaultSurvey> defaultSurvey = repo.checkForDefaultSurvey();
-        if(defaultSurvey.isEmpty()){
-            repo.save(new DefaultSurvey(1337L, defaultSurveyString));
-        }
-        
-        
         this.repo = Objects.requireNonNull(repo);
     }
 
 
 
-    public String concatenateDefaultSurveyToSurveyString(String surveyJson){
-        String defaultSurvey = getDefaultSurvey();
+    public String concatenateDefaultSurveyToSurveyString(String surveyJson, CourseType type){
+        String defaultSurvey = getDefaultSurvey(type);
 
         return (defaultSurvey.substring(0, defaultSurvey.length()-1) + "," + surveyJson.substring(1));
     }
@@ -52,35 +44,21 @@ public class AdminManagement {
 
 
     //Get Default survey from Repo
-    public String getDefaultSurvey() {
-        try{
-            return repo.findSpecialInstance().getDefaultSurveyJson();
-        }
-        catch(IllegalStateException e){
-            DefaultSurvey defaultSurvey = new DefaultSurvey(1337L, defaultSurveyString);
-            repo.save(defaultSurvey);
-            return "[]";
-        }
+    public String getDefaultSurvey(CourseType type) {
+        return repo.findDefaultSurveyForType(type).getDefaultSurveyJson();
     }
 
 
     //Get the DefaultSurvey Object from the repo
-    private DefaultSurvey getDefaultSurveyObject(){
-        try{
-            return repo.findSpecialInstance();
-        }
-        catch(IllegalStateException e){
-            DefaultSurvey defaultSurvey = new DefaultSurvey(1337L, defaultSurveyString);
-            repo.save(defaultSurvey);
-            return defaultSurvey;
-        }
+    private DefaultSurvey getDefaultSurveyObject(CourseType type){
+        return repo.findDefaultSurveyForType(type);
     }
 
 
 
     //Submission of new default survey
-    public void updateDefaultSurvey(SurveyForm form) {
-        getDefaultSurveyObject().setDefaultSurveyJson(form.getQuestionnairejson());
+    public void updateDefaultSurvey(SurveyForm form, CourseType type) {
+        getDefaultSurveyObject(type).setDefaultSurveyJson(form.getQuestionnairejson());
     }
 
 }
