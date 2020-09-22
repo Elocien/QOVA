@@ -35,7 +35,9 @@ public class SingleChoiceResponse {
     public SingleChoiceResponse(String question, ArrayList<String> singleChoiceOptions){
         this.question = question;
         this.singleChoiceOptions = singleChoiceOptions;
-        this.singleChoiceAnswers = new ArrayList<Integer>(this.singleChoiceOptions.size());
+        this.singleChoiceAnswers = new ArrayList<>(this.singleChoiceOptions.size());
+        
+        //Populate the array
         for(String s : singleChoiceOptions){
             singleChoiceAnswers.add(0);
         }
