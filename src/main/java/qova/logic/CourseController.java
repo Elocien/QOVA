@@ -440,8 +440,12 @@ public class CourseController {
         
         Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()){
-            //Create a JSON Array out of the response from the questioneditor
-            JSONArray survey = new JSONArray(courseManagement.getSurveyforType(id, type));
+            //Create a JSON Array out of the response from the questioneditor and the default survey
+            //                                                                                           --Custom Survey--                                 --CourseType--           
+            String completeSurvey = adminManagement.concatenateDefaultSurveyToSurveyString(  courseManagement.getSurveyforType(id, type)  , responseManagement.parseCourseType(type));
+
+            //Create JSON Array
+            JSONArray survey = new JSONArray(completeSurvey);
 
             //Create the relevant objects
             responseManagement.createSurveyResponse(survey, course.get(), type);
