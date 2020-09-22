@@ -21,8 +21,8 @@
 
         <!--Headline-->
         <div class="col-12 text-center mt-4">
-            <h2 class="font-weight-bold" th:text="#{new2.headline}">COURSE INSTANCES</h2>
-            <h5 class="font-weight-light" th:text="#{new2.description}">NAME THE INSTANCES OF YOUR COURSE HERE.</h5>
+            <h2 class="font-weight-bold" th:text="#{student.browser}">COURSE BROWSER</h2>
+            <h5 class="font-weight-light" th:text="#{student.description}">DESCRIPTION</h5>
         </div>
 
         <div class="col-12 bg-light text-left mt-4 p-0" th:with="faculties = ${T(qova.enums.CourseFaculty).values()}">
@@ -30,7 +30,7 @@
                 <div style="position: relative; height: 3rem;"><a class="clButton" onclick="return expand(this)"><span class="clHeader" th:text="#{'course.faculty.' + ${faculty}}"></span></a></div>
                 <div class="clCollapse" style="display: none;">
                     <div class="clInner" th:each="course : ${courseList}" th:if="${course.faculty == faculty}">
-                        <p class="clSurvey" th:text="${course.name}"></p>
+                        <a class="clSurvey" th:text="${course.name}" href="#"></a><!--TODO: th:href to surveySelect.html-->
                     </div>
                 </div>
             </div>
