@@ -38,11 +38,23 @@ public class BinaryResponse {
         return this.question;
     }
 
+    public String getYesTotalString() {
+        return String.valueOf(this.yesTotal);
+    }
+
+    public String getNoTotalString() {
+        return String.valueOf(this.noTotal);
+    }
+
     public Integer getYesTotal() {
         return this.yesTotal;
     }
 
     public Integer getNoTotal() {
+        return this.noTotal;
+    }
+
+    public Integer getTotal() {
         return this.noTotal;
     }
 
