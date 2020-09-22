@@ -186,4 +186,8 @@ public class SurveyResponse {
         }
         return responses;
     }
+
+    public List<ResponseType> getTypeOfResponses(){
+        return this.positionOfResponseTypes;
+    }
 }
