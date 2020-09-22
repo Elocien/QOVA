@@ -133,7 +133,7 @@ public class ResponseController {
             } else {
 
                 //Concatenate the default survey to the course survey
-                survey = adminManagement.concatenateDefaultSurveyToSurveyString(survey);
+                survey = adminManagement.concatenateDefaultSurveyToSurveyString(survey, responseManagement.parseCourseType(type));
 
                 model.addAttribute("typeID", type);
                 model.addAttribute("id", id);
