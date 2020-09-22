@@ -184,7 +184,7 @@ public class ResponseController {
     public String surveyResultsTest(Model model, @RequestParam String type, @RequestParam String id, @RequestParam String group, @RequestParam String instance) {
         Optional<Course> crs = courseManagement.findById(id);
         if(crs.isPresent()){
-            Optional<SurveyResponse> srv = responseManagement.findByCourseAndCourseTypeAndClassNo(crs.get(), responseManagement.parseCourseType(type), Integer.valueOf(group), Integer.valueOf(instance));
+            Optional<SurveyResponse> srv = responseManagement.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(crs.get(), responseManagement.parseCourseType(type), Integer.valueOf(group), Integer.valueOf(instance));
             if(srv.isPresent()){
                 model.addAttribute("response", srv.get());
             }
@@ -252,8 +252,9 @@ public class ResponseController {
         }
 
         //Generate PDF
-        byte[] pdf = responseManagement.generateCSV_en(crs.get(), courseType, Integer.parseInt(groupNumber), Integer.parseInt(instanceNumber));
+        byte[] pdf = responseManagement.generateCSV_en(crs.get(), courseType, groupNumber, instanceNumber);
 
+       
         //Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_PDF);
