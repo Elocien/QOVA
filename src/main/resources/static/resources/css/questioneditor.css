@@ -3,6 +3,12 @@ body {
     --fancy_grey: darkslategrey;
 }
 
+.buttongroup{
+    float: right;
+    margin: 0px;
+    margin-top: 0px;
+}
+
 .btn-head {
     background-color: var(--tu_blue);
     color: white;

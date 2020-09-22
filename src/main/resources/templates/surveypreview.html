@@ -26,18 +26,12 @@
 			<!-- Survey-->
 			<div class="col-md-6">
 				<div id="survey"></div>
-				<div class>
-					<div class="submit">
-
-					<!--Der Button soll nur auf course/detail?id=.... verweisen. Im Moment wird das id nicht übersetzt-->
-						<form th:action="@{/course/details?id={id}(id=${id})}">
-							<button class="btn btn-primary mt-2 center" type="submit" th:text="#{question.submit}">SUBMIT</button>
-						</form>
+				<div class="submit">
+					<div>
+						<a th:href="@{/course/details?id={id}(id=${id})}" class="btn btn-primary mt-2 center" th:text="#{question.submit}"> </a>
 					</div>
-					<div class="submit">
-						<form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}">
-							<button class="btn btn-primary mt-2 center" type="submit" th:text="#{question.surveyeditor}">SUBMIT</button>
-						</form>
+					<div>
+						<a th:href="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" class="btn btn-primary mt-2 center" th:text="#{question.surveyeditor}"></a>
 					</div>
 				</div>
 			</div>

@@ -158,11 +158,7 @@ public class ResponseController {
         // get JSON Response as string
         String JsonResponse = form.getQuestionnairejson();
 
-        // Deserialize the String to a JavaObject Response (package qova.responses)
-        // response = Deserialize(JsonResponse);
 
-        // Save object
-        // responseRepository.save(response)
 
         // if all goes well
         return "postSubmissionLanding";

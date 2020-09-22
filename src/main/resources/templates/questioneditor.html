@@ -39,16 +39,17 @@
                             <button type="button" class="btn btn-list btn-text-right" onclick="addYesNoQuestion()"><span th:text="#{question.yes-no-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-list btn-text-right" onclick="addMultipleChoiceQuestion()"><span th:text="#{question.multiple-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-list btn-text-right" onclick="addSingleChoiceQuestion()"><span th:text="#{question.single-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
-                            <button type="button" class="btn btn-list-last btn-text-right" onclick="addFreeTextQuestion()"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                            <button type="button" class="btn btn-list btn-text-right" onclick="addFreeTextQuestion()"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                            <button type="button" class="btn btn-head btn-text-right" th:text="#{question.edit}">NEW QUESTION</button>
+                            <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="submitsurvey" style="width: 100%">
+                                <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
+                                <button class="btn btn-list btn-text-right" type="submit"><span th:text="#{question.submit}"></span><i class="fas fa-save ml-2"></i></button>
+                            </form>
+                            <form th:action="@{/course/previewsurvey?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="previewsurvey" style="width:100%">
+                                <input type="text" name="questionnairejson" id="questionnairejson2" class="input"></input>
+                                <button class="btn btn-list-last btn-text-right" type="submit" ><span th:text="#{question.preview}"></span><i class="fas fa-file ml-2"></i></button>
+                            </form>
                         </div>
-                        <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="submitsurvey">
-                            <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
-                            <button class="btn btn-primary mt-2" type="submit" th:text="#{question.submit}">SUBMIT</button>
-                        </form>
-                        <form th:action="@{/course/previewsurvey?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="previewsurvey">
-                            <input type="text" name="questionnairejson" id="questionnairejson2" class="input"></input>
-                            <button class="btn btn-primary mt-2" type="submit" th:text="#{question.preview}">SUBMIT</button>
-                        </form>
                     </div>
                 </div>
                 <!--Questions-->
