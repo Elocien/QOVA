@@ -233,7 +233,7 @@ public class ResponseController {
     // CSV Generation
     @GetMapping("/generateCSV")
     public HttpEntity<byte[]> generateCsv(@RequestParam String id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
-            throws NumberFormatException, IOException, Exception {
+            throws Exception {
     
         //generate filename
         String filename = "testCsv.csv";
