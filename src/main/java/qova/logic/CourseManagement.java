@@ -380,9 +380,6 @@ public class CourseManagement {
 
 
 
-
-
-
     public Course duplicateCourse(String id, String semesterString){
     
         Optional<Course> crs = findById(id);

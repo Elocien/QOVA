@@ -86,9 +86,9 @@ public class ResponseController {
 
     // TODO: rename path variables
     // Validation of entry of surveySelect page, and redirect to the actual survey
-    @PostMapping("surveySelect")
+    @PostMapping("surveyselect")
     public String selectSurveySubmission(Model model, @RequestParam String id, @RequestParam String type,
-            @RequestParam String instanceTitle, @RequestParam Integer groupAmount) {
+            @RequestParam String instance, @RequestParam Integer group) {
 
         Optional<Course> crs = courseManagement.findById(id);
 
@@ -106,8 +106,8 @@ public class ResponseController {
         //TODO validate that parameters only contain valid charachters. E.g. a-zA-Z0-9
 
         else {
-            return "survey?type=" + type + "&id=" + id + "instanceTitle=" + instanceTitle + "groupNumber="
-                    + groupAmount;
+            return "survey?type=" + type + "&id=" + id + "instanceTitle=" + instance + "groupNumber="
+                    + group;
         }
     }
 
