@@ -199,6 +199,9 @@ public class CSVGenerator {
         //Write Header
         String[] headerArray = header.toArray(new String[0]);
         writer.writeNext(headerArray); 
+
+        String[] underheaderArray = underHeader.toArray(new String[0]);
+        writer.writeNext(underheaderArray); 
        
         for(List<String> data : listOfCSVRowData){
             //Write Data
