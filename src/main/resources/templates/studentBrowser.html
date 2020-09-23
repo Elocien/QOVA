@@ -1,0 +1,66 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}"/>
+    
+    <title th:text="#{home.title}">TITLE</title>
+</head>
+
+<body>
+<div th:include="navbar"></div>
+
+<div class="container">
+    <div class="row justify-content-center">
+
+        <!--Headline-->
+        <div class="col-12 text-center mt-4">
+            <h2 class="font-weight-bold" th:text="#{student.browser}">COURSE BROWSER</h2>
+            <h5 class="font-weight-light" th:text="#{student.description}">DESCRIPTION</h5>
+        </div>
+
+        <div class="col-12 bg-light text-left mt-4 p-0" th:with="faculties = ${T(qova.enums.CourseFaculty).values()}">
+            <div class="clWrapper" th:each="faculty : ${#lists.sort(faculties)}">
+                <div style="position: relative; height: 3rem;"><a class="clButton" onclick="return expand(this)"><span class="clHeader" th:text="#{'course.faculty.' + ${faculty}}"></span></a></div>
+                <div class="clCollapse" style="display: none;">
+                    <div class="clInner" th:each="course : ${courseList}" th:if="${course.faculty == faculty}">
+                        <a class="clSurvey" th:text="${course.name}" href="#"></a><!--TODO: th:href to surveySelect.html-->
+                    </div>
+                </div>
+            </div>
+        </div>
+       
+
+    </div>
+</div>
+
+<div th:include="footer" class="mt-4"></div>
+</body>
+<script>
+function expand(input) {
+    var target = input.parentElement.parentElement.getElementsByClassName("clCollapse")[0];
+    var trash = document.getElementsByClassName("clButton_after");
+    for (let i = 0; i < trash.length; ++i) {
+        trash[i].parentElement.parentElement.getElementsByClassName("clCollapse")[0].style.display = "none";;
+        trash[i].parentElement.parentElement.style.height = "3rem";
+        trash[i].className="clButton";
+    }
+    if (target.style.display == "none") {
+        target.style.display = "";
+        input.parentElement.parentElement.style.height = 3+2*target.getElementsByClassName("clInner").length+"rem"
+        input.className = "clButton_after"
+    }
+    else {
+        target.style.display = "none";
+        input.parentElement.parentElement.style.height = "3rem"
+        input.className = "clButton"
+    }
+}
+</script>
+</html>

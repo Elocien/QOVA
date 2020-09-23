@@ -575,7 +575,15 @@ public class CourseController {
     
 
 
+    @GetMapping("studentBrowser")
+    public String studentBrowser (Model model) {
 
+        //model.addAttribute("courseList", courseManagement.findAll());
+        List<Course> courseList = Arrays.asList(courseManagement.TimTestCreateCourse(), courseManagement.TimTestCreateCourse());
+        model.addAttribute("courseList", courseList);
+
+        return "studentBrowser";
+    }
 
 
     @GetMapping("/easterEgg/tim")

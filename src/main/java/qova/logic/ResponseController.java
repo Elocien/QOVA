@@ -50,7 +50,7 @@ public class ResponseController {
     //Mapping to which one is redirected to by the QRCode. This is where students enter which group and which topic they are handing their response in for
     //---------------------------------------------------------------------------
 
-    @GetMapping("suveySelect")
+    @GetMapping("surveySelect")
     public String selectSurvey(Model model, @RequestParam String id, @RequestParam String type) {
 
         // course name, course type, instance names, groupAmount
