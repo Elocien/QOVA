@@ -48,7 +48,7 @@ public class CourseManagement {
 
 
     //Create Course and get Id from new course
-    public String createCourseReturnId(CourseForm form) {
+    public UUID createCourseReturnId(CourseForm form) {
         Objects.requireNonNull(form);
 
         //Form attributes
@@ -66,7 +66,7 @@ public class CourseManagement {
         Course crs  = new Course(name, courseInstances.get(CourseType.LECTURE), courseInstances.get(CourseType.TUTORIAL), courseInstances.get(CourseType.SEMINAR), courseInstances.get(CourseType.PRACTICAL), semesterOfStudents, faculty, semesterString, courseDate);
         coursesRepo.save(crs);
         
-        return crs.getId().toString();
+        return crs.getId();
     }
 
 
@@ -310,8 +310,8 @@ public class CourseManagement {
 
 
     //Set Instance titles for each CourseInstance
-    public void createCourseSetInstanceTitles(InstanceTitleForm form, String id){
-        Optional<Course> crs = coursesRepo.findById(UUID.fromString(id));
+    public void createCourseSetInstanceTitles(InstanceTitleForm form, UUID id){
+        Optional<Course> crs = coursesRepo.findById(id);
         if(crs.isPresent()){
             Course course = crs.get();
 
@@ -338,8 +338,8 @@ public class CourseManagement {
 
 
     //Gets the relevant Survey in the course objects, based on the given surveyType
-    public String getSurveyforType (String id, String type){
-        Optional<Course> crs = coursesRepo.findById(UUID.fromString(id));
+    public String getSurveyforType (UUID id, String type){
+        Optional<Course> crs = coursesRepo.findById(id);
         if (crs.isPresent()){
             Course course = crs.get();
             if (type.equals("LECTURE")){
@@ -381,9 +381,9 @@ public class CourseManagement {
 
 
 
-    public Course duplicateCourse(String id, String semesterString){
+    public Course duplicateCourse(UUID id, String semesterString){
     
-        Optional<Course> crs = findById(UUID.fromString(id));
+        Optional<Course> crs = findById(id);
         if(crs.isPresent()){
 
             Course oldCourse = crs.get();
