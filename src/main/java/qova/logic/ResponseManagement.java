@@ -345,7 +345,7 @@ public class ResponseManagement {
     //Test Method, remove in build
     public void createTestResponses(Course course) {
         
-        var type = CourseType.LECTURE;
+        var type = CourseType.TUTORIAL;
         var instanceNumber = 12;
         var groupNumber = 4;
 
@@ -397,8 +397,12 @@ public class ResponseManagement {
         responses.add(bnr);
         responses.add(mcr);
         responses.add(txr);
-        surveyResponseRepository.save(new SurveyResponse(course, type, instanceNumber, groupNumber, responses));
-        
+
+        for(int i = 0; i < groupNumber; i++){
+            for(int j = 0; j < instanceNumber; j++){
+                surveyResponseRepository.save(new SurveyResponse(course, type, j, i, responses));
+            }
+        }
     } 
 
 
