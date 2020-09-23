@@ -37,7 +37,7 @@
         </div>
 
         <div class="col-12 offset-lg-4 col-lg-4 text-center mt-4">
-            <a type="submit" class="btn btn-primary btn-tu" th:text="#{submit}" th:href="@{/survey?id={id}&type={type}&instance={instance}&group={group}(id=${id}, type=${courseType}, instance=${instanceTitles}, group=${group})">SUBMIT</a>
+            <a type="submit" class="btn btn-primary btn-tu" th:text="#{submit}" th:href="@{/survey(id=${id}, type=${courseType}, instance=${instanceTitles}, group=${groupAmount})}">SUBMIT</a>
         </div>
 
     </div>
