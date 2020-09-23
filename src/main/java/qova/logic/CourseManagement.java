@@ -28,6 +28,7 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @Transactional
@@ -65,7 +66,7 @@ public class CourseManagement {
         Course crs  = new Course(name, courseInstances.get(CourseType.LECTURE), courseInstances.get(CourseType.TUTORIAL), courseInstances.get(CourseType.SEMINAR), courseInstances.get(CourseType.PRACTICAL), semesterOfStudents, faculty, semesterString, courseDate);
         coursesRepo.save(crs);
         
-        return crs.getId();
+        return crs.getId().toString();
     }
 
 
@@ -178,7 +179,7 @@ public class CourseManagement {
 
 
     //update course details
-    public void updateCourseDetails(String id, CourseForm form) {
+    public void updateCourseDetails(UUID id, CourseForm form) {
 
         Optional<Course> crs = coursesRepo.findById(id);
         if (crs.isPresent()){
@@ -310,7 +311,7 @@ public class CourseManagement {
 
     //Set Instance titles for each CourseInstance
     public void createCourseSetInstanceTitles(InstanceTitleForm form, String id){
-        Optional<Course> crs = coursesRepo.findById(id);
+        Optional<Course> crs = coursesRepo.findById(UUID.fromString(id));
         if(crs.isPresent()){
             Course course = crs.get();
 
@@ -338,7 +339,7 @@ public class CourseManagement {
 
     //Gets the relevant Survey in the course objects, based on the given surveyType
     public String getSurveyforType (String id, String type){
-        Optional<Course> crs = coursesRepo.findById(id);
+        Optional<Course> crs = coursesRepo.findById(UUID.fromString(id));
         if (crs.isPresent()){
             Course course = crs.get();
             if (type.equals("LECTURE")){
@@ -382,7 +383,7 @@ public class CourseManagement {
 
     public Course duplicateCourse(String id, String semesterString){
     
-        Optional<Course> crs = findById(id);
+        Optional<Course> crs = findById(UUID.fromString(id));
         if(crs.isPresent()){
 
             Course oldCourse = crs.get();
@@ -571,7 +572,7 @@ public class CourseManagement {
 	 * @return an {@linkplain Optional} of a {@linkplain Course}
 	 *         with the given id
 	 */
-	public Optional<Course> findById(String id) {
+	public Optional<Course> findById(UUID id) {
 		return coursesRepo.findById(id);
 	}
 
@@ -585,12 +586,12 @@ public class CourseManagement {
     }
     
     //delete course
-    public void deleteCourse(String id) {
+    public void deleteCourse(UUID id) {
         coursesRepo.deleteById(id);
     }
 
     //delete course
-    public void deleteCourseInstancesForCourse(String id) {
+    public void deleteCourseInstancesForCourse(UUID id) {
         Optional<Course> crs = findById(id);
         if(crs.isPresent()){
             Course course = crs.get();
