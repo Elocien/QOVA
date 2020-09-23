@@ -15,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKeyColumn;
 import javax.persistence.OrderColumn;
 
 import qova.enums.CourseType;
@@ -57,22 +58,26 @@ public class SurveyResponse {
     @Embedded @ElementCollection @OrderColumn 
     @AttributeOverride( name = "question", column = @Column(name = "binaryResponseQuestion"))
     @AttributeOverride( name = "responseType", column = @Column(name = "binaryResponseType"))
+    @MapKeyColumn
     private Map<Integer, BinaryResponse> binaryResponses;
 
     
     @Embedded @ElementCollection @OrderColumn
     @AttributeOverride( name = "question", column = @Column(name = "textResponseQuestion"))
     @AttributeOverride( name = "responseType", column = @Column(name = "textResponseType"))
+    @MapKeyColumn
     private Map<Integer, TextResponse> textResponses;
 
     @Embedded @ElementCollection @OrderColumn
     @AttributeOverride( name = "question", column = @Column(name = "singleChoiceResponseQuestion"))
     @AttributeOverride( name = "responseType", column = @Column(name = "singleChoiceResponseType"))
+    @MapKeyColumn
     private Map<Integer, SingleChoiceResponse> singleChoiceResponses;
 
     @Embedded @ElementCollection @OrderColumn
     @AttributeOverride( name = "question", column = @Column(name = "multipleChoiceResponseQuestion"))
     @AttributeOverride( name = "responseType", column = @Column(name = "multipleChoiceResponseType"))
+    @MapKeyColumn
     private Map<Integer, MultipleChoiceResponse> multipleChoiceResponses;
 
 
@@ -83,7 +88,7 @@ public class SurveyResponse {
 
     //Needed for JPA puposes
     @SuppressWarnings("unused")
-    public SurveyResponse (){}
+    protected SurveyResponse (){}
 
     /** 
      * Constructor
@@ -185,5 +190,9 @@ public class SurveyResponse {
             }
         }
         return responses;
+    }
+
+    public List<ResponseType> getTypeOfResponses(){
+        return this.positionOfResponseTypes;
     }
 }

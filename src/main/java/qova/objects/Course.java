@@ -1,7 +1,9 @@
 package qova.objects;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -36,15 +38,10 @@ import qova.IdGenerator;
 public class Course {
  
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "custom_gen")
-    @GenericGenerator(
-        name = "custom_gen", 
-        strategy = "qova.IdGenerator", 
-        parameters = {
-            @Parameter(name = IdGenerator.INCREMENT_PARAM, value = "113"),
-            @Parameter(name = IdGenerator.VALUE_PREFIX_PARAMETER, value = "c"),
-            @Parameter(name = IdGenerator.NUMBER_FORMAT_PARAMETER, value = "%015d") })
-    private String id;
+	@GeneratedValue(generator = "UUID")
+	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+	@Column(name = "id", updatable = false, nullable = false)
+	private UUID id;
 
     //Name of the course
     private String name;
@@ -102,7 +99,7 @@ public class Course {
 
 
 
-    public String getId(){
+    public UUID getId(){
         return this.id;
     }
 
