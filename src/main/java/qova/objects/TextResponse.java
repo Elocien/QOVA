@@ -21,7 +21,7 @@ public class TextResponse {
 
     //Needed for JPA puposes
     @SuppressWarnings("unused")
-	private TextResponse(){
+	protected TextResponse(){
     }
 
     public TextResponse(String question){

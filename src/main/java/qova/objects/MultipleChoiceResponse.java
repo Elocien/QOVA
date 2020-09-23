@@ -29,7 +29,7 @@ public class MultipleChoiceResponse {
 
     //Needed for JPA puposes
     @SuppressWarnings("unused")
-	private MultipleChoiceResponse(){
+	protected MultipleChoiceResponse(){
     }
 
     public MultipleChoiceResponse(String question, ArrayList<String> multipleChoiceOptions){

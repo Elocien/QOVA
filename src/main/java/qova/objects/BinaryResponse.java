@@ -16,21 +16,18 @@ public class BinaryResponse {
     @Lob String question;
 
     //Container for response
-    private Integer yesTotal;
-    private Integer noTotal;
+    private Integer yesTotal = 0;
+    private Integer noTotal = 0;
 
-    private ResponseType responseType;
+    private ResponseType responseType = ResponseType.BINARY_ANSWER;
 
     //Needed for JPA puposes
     @SuppressWarnings("unused")
-	private BinaryResponse(){
+	protected BinaryResponse(){
     }
 
     public BinaryResponse(String question){
         this.question = question;
-        this.yesTotal = 0;
-        this.noTotal = 0;
-        this.responseType = ResponseType.BINARY_ANSWER;
     }
     
     

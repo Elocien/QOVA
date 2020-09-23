@@ -29,7 +29,7 @@ public class SingleChoiceResponse {
 
     //Needed for JPA puposes
     @SuppressWarnings("unused")
-	private SingleChoiceResponse(){
+	protected SingleChoiceResponse(){
     }
 
     public SingleChoiceResponse(String question, ArrayList<String> singleChoiceOptions){
