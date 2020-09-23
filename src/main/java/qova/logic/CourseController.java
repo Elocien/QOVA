@@ -302,7 +302,7 @@ public class CourseController {
     
 
 
-    @GetMapping("course/duplicate")
+    @PostMapping("course/duplicate")
     public String duplicateCourseWithNewSemester(DuplicateCourseForm duplicateForm, @RequestParam UUID id){
 
         Course newCourse = courseManagement.duplicateCourse(id, duplicateForm.getSemesterString());
