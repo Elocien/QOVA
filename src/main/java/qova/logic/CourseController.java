@@ -488,6 +488,35 @@ public class CourseController {
             //Part der anders ist als questioneditorSubmit
             model.addAttribute("typeID", type);
             model.addAttribute("id", id);
+
+            return "redirect:../course/previewsurvey?id="+id+"&type="+type;
+        }
+        else{
+            //TODO: need more feedback here for the user. Change this!
+            return "error?code=" + courseNotFound;
+        }
+    }
+
+
+    //SUrveyPreview als getrequest
+    @GetMapping("course/previewsurvey")
+    public String questioneditorpreviewget(Model model, @RequestParam String type,
+                                        @RequestParam(required = false) String id) {
+
+
+        //fetch course
+        Optional<Course> course = courseManagement.findById(id);
+        if (course.isPresent()){
+
+            // if type is none of the correct values, then redirect to homepage
+            if(responseManagement.parseCourseType(type) == null){
+                //TODO: redirect to error page with code 02
+                return "redirect:/";
+            }
+
+
+            model.addAttribute("typeID", type);
+            model.addAttribute("id", id);
             model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
             model.addAttribute("defaultSurvey", adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
             model.addAttribute("coursename", course.get().getName());
@@ -499,7 +528,6 @@ public class CourseController {
             return "error?code=" + courseNotFound;
         }
     }
-
     
     /**
      * This method takes id and CourseType as parameters, and returns a qrcode with the given string that is assembled below
@@ -537,7 +565,15 @@ public class CourseController {
     
 
 
+    @GetMapping("studentBrowser")
+    public String studentBrowser (Model model) {
 
+        //model.addAttribute("courseList", courseManagement.findAll());
+        List<Course> courseList = Arrays.asList(courseManagement.TimTestCreateCourse(), courseManagement.TimTestCreateCourse());
+        model.addAttribute("courseList", courseList);
+
+        return "studentBrowser";
+    }
 
 
     @GetMapping("/easterEgg/tim")

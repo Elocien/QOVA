@@ -251,8 +251,12 @@
 				}
 
 			}
+			if (answer === []){
+				return false;
+			}
 			surveyjson.push(answer);
 		}
+		//Check ob für Jede Frage Antowrt abgegeben
 		document.getElementById("surveyjson").value = JSON.stringify(surveyjson);
 		return true;
 	});

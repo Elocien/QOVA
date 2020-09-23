@@ -10,6 +10,7 @@ I read that somewhere ;) */
 }
 
 .submit {
+    display: inline-block;
     padding-top: 20px;
     padding-bottom: 40px;
 }
