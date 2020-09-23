@@ -151,7 +151,7 @@ public class CourseController {
     
     //Edit Course Validation (when course is updated, check wether the fields are all appropriately set e.g. NotNull)
     @PostMapping("course/edit")
-	public String editCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form, BindingResult result, @RequestParam String id) throws Exception {
+	public String editCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form, BindingResult result, @RequestParam UUID id) throws Exception {
 
 		if (result.hasErrors()) {
 			return courseDetails(model, form, id);

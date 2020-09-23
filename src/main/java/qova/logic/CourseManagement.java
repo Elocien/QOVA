@@ -179,9 +179,9 @@ public class CourseManagement {
 
 
     //update course details
-    public void updateCourseDetails(String id, CourseForm form) {
+    public void updateCourseDetails(UUID id, CourseForm form) {
 
-        Optional<Course> crs = coursesRepo.findById(UUID.fromString(id));
+        Optional<Course> crs = coursesRepo.findById(id);
         if (crs.isPresent()){
 
             //The existing course object being edited
