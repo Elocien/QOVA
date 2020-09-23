@@ -52,10 +52,10 @@ public class ResponseController {
     //---------------------------------------------------------------------------
 
     @GetMapping("surveySelect")
-    public String selectSurvey(Model model, @RequestParam String id, @RequestParam String type) {
+    public String selectSurvey(Model model, @RequestParam UUID id, @RequestParam String type) {
 
         // course name, course type, instance names, groupAmount
-        Optional<Course> crs = courseManagement.findById(UUID.fromString(id));
+        Optional<Course> crs = courseManagement.findById(id);
         if (crs.isPresent()) {
             model.addAttribute("courseName", crs.get().getName());
             model.addAttribute("courseType", type);
@@ -88,10 +88,10 @@ public class ResponseController {
     // TODO: rename path variables
     // Validation of entry of surveySelect page, and redirect to the actual survey
     @PostMapping("surveyselect")
-    public String selectSurveySubmission(Model model, @RequestParam String id, @RequestParam String type,
+    public String selectSurveySubmission(Model model, @RequestParam UUID id, @RequestParam String type,
             @RequestParam String instance, @RequestParam Integer group) {
 
-        Optional<Course> crs = courseManagement.findById(UUID.fromString(id));
+        Optional<Course> crs = courseManagement.findById(id);
 
         //if anything is null or not an allowed value, redirect back
         if(!crs.isPresent()){
@@ -117,14 +117,14 @@ public class ResponseController {
 
     // Mapping for Survey HTML
     @GetMapping("survey")
-    public String SurveyView(Model model, @RequestParam String type, @RequestParam(required = false) String id) {
+    public String SurveyView(Model model, @RequestParam String type, @RequestParam(required = false) UUID id) {
         // redirect
         if (id == null) {
 			return "error?code=" + courseNotFound;
         }
 
         // fetch course and go to details if present
-        Optional<Course> course = courseManagement.findById(UUID.fromString(id));
+        Optional<Course> course = courseManagement.findById(id);
 
         // Validate that course exists, and that the survey is not empty
         if (course.isPresent()) {
@@ -154,7 +154,7 @@ public class ResponseController {
     // PostMapping to submit survey and serialize results
     // ---------------------------------------------------------------------------
     @PostMapping("/survey")
-    public String recieveResponseJSON(SurveyForm form, @RequestParam String type, @RequestParam String id) {
+    public String recieveResponseJSON(SurveyForm form, @RequestParam String type, @RequestParam UUID id) {
 
         // get JSON Response as string
         String JsonResponse = form.getQuestionnairejson();
@@ -178,8 +178,8 @@ public class ResponseController {
      * @return The surveyResults template, which shows the compiled results of the requested questionnaire
      */
     @GetMapping("/surveyresults")
-    public String surveyResultsTest(Model model, @RequestParam String type, @RequestParam String id, @RequestParam String group, @RequestParam String instance) {
-        Optional<Course> crs = courseManagement.findById(UUID.fromString(id));
+    public String surveyResultsTest(Model model, @RequestParam String type, @RequestParam UUID id, @RequestParam String group, @RequestParam String instance) {
+        Optional<Course> crs = courseManagement.findById(id);
         if(crs.isPresent()){
             Optional<SurveyResponse> srv = responseManagement.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(crs.get(), responseManagement.parseCourseType(type), Integer.valueOf(group), Integer.valueOf(instance));
             if(srv.isPresent()){
@@ -194,13 +194,13 @@ public class ResponseController {
 
     // PDF Generation
     @GetMapping("/generatePDF")
-    public HttpEntity<byte[]> generatePdf(@RequestParam String id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
+    public HttpEntity<byte[]> generatePdf(@RequestParam UUID id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
             throws NumberFormatException, IOException, Exception {
 
         // generate filename
         String filename = "testPdf.pdf";
 
-        Optional<Course> crs = courseManagement.findById(UUID.fromString(id));
+        Optional<Course> crs = courseManagement.findById(id);
 
         // verify that course is present
         if (!crs.isPresent()) {
@@ -229,13 +229,13 @@ public class ResponseController {
    
     // CSV Generation
     @GetMapping("/generateCSV")
-    public HttpEntity<byte[]> generateCsv(@RequestParam String id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
+    public HttpEntity<byte[]> generateCsv(@RequestParam UUID id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
             throws Exception {
     
         //generate filename
         String filename = "testCsv.csv";
 
-        Optional<Course> crs = courseManagement.findById(UUID.fromString(id));
+        Optional<Course> crs = courseManagement.findById(id);
 
         //verify that course is present
         if(!crs.isPresent()){
