@@ -59,6 +59,7 @@ public class ResponseController {
         if (crs.isPresent()) {
             model.addAttribute("courseName", crs.get().getName());
             model.addAttribute("courseType", type);
+            model.addAttribute("id", crs.get().getId());
 
             if (type.equals("LECTURE")) {
                 model.addAttribute("instanceTitles", crs.get().getLecture().getInstanceTitles());

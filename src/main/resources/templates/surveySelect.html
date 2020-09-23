@@ -25,22 +25,20 @@
             <h5 class="font-weight-light" th:text="#{student.select.description}">DESCRIPTION</h5>
         </div>
 
-        <form th:action="@{/surveySelect}">
-            <div class="col-12 offset-lg-4 col-lg-4 text-left mt-4">
-                <h5 th:text="#{student.select.instance}">INSTANCE</h5>
-                <select id="faculty_select" class="custom-select form-control" th:field="*{instanceTitles}">
-                    <option class="dropdown-item" th:each="title : ${instanceTitles}" th:text="${title}" th:value="${title}">INSTANCE</option>
-                </select>
-                <h5 class="mt-3" th:text="#{student.select.group}">GROUP</h5>
-                <select id="faculty_select" class="custom-select form-control" th:field="*{groupAmount}">
-                    <option class="dropdown-item" th:each="n : ${groupAmount}" th:text="|#{group} ${n}|" th:value="${n}">GROUP</option>
-                </select>
-            </div>
-    
-            <div class="col-12 offset-lg-4 col-lg-4 text-center mt-4">
-                <button type="submit" class="btn btn-primary btn-tu" th:text="#{submit}">SUBMIT</button>
-            </div>
-        </form>
+        <div class="col-12 offset-lg-4 col-lg-4 text-left mt-4">
+            <h5 th:text="#{student.select.instance}">INSTANCE</h5>
+            <select class="custom-select form-control" th:field="*{instanceTitles}">
+                <option class="dropdown-item" th:each="title : ${instanceTitles}" th:text="${title}" th:value="${title}">INSTANCE</option>
+            </select>
+            <h5 class="mt-3" th:text="#{student.select.group}">GROUP</h5>
+            <select class="custom-select form-control" th:field="*{groupAmount}">
+                <option class="dropdown-item" th:each="n : ${groupAmount}" th:text="|#{group} ${n}|" th:value="${n}">GROUP</option>
+            </select>
+        </div>
+
+        <div class="col-12 offset-lg-4 col-lg-4 text-center mt-4">
+            <a type="submit" class="btn btn-primary btn-tu" th:text="#{submit}" th:href="@{/survey?id={id}&type={type}&instance={instance}&group={group}(id=${id}, type=${courseType}, instance=${instanceTitles}, group=${group})">SUBMIT</a>
+        </div>
 
     </div>
 </div>
