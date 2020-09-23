@@ -30,7 +30,7 @@
                 <div style="position: relative; height: 3rem;"><a class="clButton" onclick="return expand(this)"><span class="clHeader" th:text="#{'course.faculty.' + ${faculty}}"></span></a></div>
                 <div class="clCollapse" style="display: none;">
                     <div class="clInner" th:each="course : ${courseList}" th:if="${course.faculty == faculty}">
-                        <a class="clSurvey" th:text="${course.name}" href="#"></a><!--TODO: th:href to surveySelect.html-->
+                        <a class="clSurvey font-weight-light" th:text="${course.name}" href="#"></a><!--TODO: th:href to surveySelect.html-->
                     </div>
                 </div>
             </div>
