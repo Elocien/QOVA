@@ -141,6 +141,7 @@ public class CourseController {
             
             return "courseDetails";
         } else {
+            System.out.println("rip rip rip rip rip");
             return "error?code=" + courseNotFound;
 		}
     }
@@ -163,7 +164,7 @@ public class CourseController {
 
 
     /*@GetMapping("/course/details")
-    public String courseDetails(Model model, CourseForm form, String id) {
+    public String courseDetails(Model model, CourseForm form, UUID id) {
 
         id = "5";
         model.addAttribute("course", courseManagement.TimTestCreateCourse());
@@ -201,7 +202,7 @@ public class CourseController {
 
 
         //Management Method returns String of new Course
-        String id = courseManagement.createCourseReturnId(form);
+        UUID id = courseManagement.createCourseReturnId(form);
         
         //Redirect to SurveyEditor to start creating survey
         return "redirect:../course/new2?id=" + id;
@@ -210,35 +211,35 @@ public class CourseController {
 
     //Create Course
     @GetMapping("course/new2")
-	public String createCourseSetInstanceTitles(Model model, InstanceTitleForm form, @RequestParam String id) {
+	public String createCourseSetInstanceTitles(Model model, InstanceTitleForm form, @RequestParam UUID id) {
 
         model.addAttribute("form", form);
 
-        if(Boolean.TRUE.equals(courseManagement.findById(UUID.fromString(id)).get().getLectureExists())){
+        if(Boolean.TRUE.equals(courseManagement.findById(id).get().getLectureExists())){
             model.addAttribute("lectureExists", true);
-            model.addAttribute("lectureInstanceTitles", courseManagement.findById(UUID.fromString(id)).get().getLecture().getInstanceTitles());
-            model.addAttribute("lectureInstances", courseManagement.findById(UUID.fromString(id)).get().getLecture().getInstanceAmount());
+            model.addAttribute("lectureInstanceTitles", courseManagement.findById(id).get().getLecture().getInstanceTitles());
+            model.addAttribute("lectureInstances", courseManagement.findById(id).get().getLecture().getInstanceAmount());
         }
         else{model.addAttribute("lectureExists", false);}
 
-        if(Boolean.TRUE.equals(courseManagement.findById(UUID.fromString(id)).get().getTutorialExists())){
+        if(Boolean.TRUE.equals(courseManagement.findById(id).get().getTutorialExists())){
             model.addAttribute("tutorialExists", true);
-            model.addAttribute("tutorialInstanceTitles", courseManagement.findById(UUID.fromString(id)).get().getTutorial().getInstanceTitles());
-            model.addAttribute("tutorialInstances", courseManagement.findById(UUID.fromString(id)).get().getTutorial().getInstanceAmount());
+            model.addAttribute("tutorialInstanceTitles", courseManagement.findById(id).get().getTutorial().getInstanceTitles());
+            model.addAttribute("tutorialInstances", courseManagement.findById(id).get().getTutorial().getInstanceAmount());
         }
         else{model.addAttribute("tutorialExists", false);}
 
-        if(Boolean.TRUE.equals(courseManagement.findById(UUID.fromString(id)).get().getSeminarExists())){
+        if(Boolean.TRUE.equals(courseManagement.findById(id).get().getSeminarExists())){
             model.addAttribute("seminarExists", true);
-            model.addAttribute("seminarInstanceTitles", courseManagement.findById(UUID.fromString(id)).get().getSeminar().getInstanceTitles());
-            model.addAttribute("seminarInstances", courseManagement.findById(UUID.fromString(id)).get().getSeminar().getInstanceAmount());
+            model.addAttribute("seminarInstanceTitles", courseManagement.findById(id).get().getSeminar().getInstanceTitles());
+            model.addAttribute("seminarInstances", courseManagement.findById(id).get().getSeminar().getInstanceAmount());
         }
         else{model.addAttribute("seminarExists", false);}
 
-        if(Boolean.TRUE.equals(courseManagement.findById(UUID.fromString(id)).get().getPracticalExists())){
+        if(Boolean.TRUE.equals(courseManagement.findById(id).get().getPracticalExists())){
             model.addAttribute("practicalExists", true);
-            model.addAttribute("practicalInstanceTitles", courseManagement.findById(UUID.fromString(id)).get().getPractical().getInstanceTitles());
-            model.addAttribute("practicalInstances", courseManagement.findById(UUID.fromString(id)).get().getPractical().getInstanceAmount());
+            model.addAttribute("practicalInstanceTitles", courseManagement.findById(id).get().getPractical().getInstanceTitles());
+            model.addAttribute("practicalInstances", courseManagement.findById(id).get().getPractical().getInstanceAmount());
         }
         else{model.addAttribute("practicalExists", false);}
 
@@ -269,7 +270,7 @@ public class CourseController {
     
     //Validation of Created course
 	@PostMapping("course/new2")
-	public String createCourseSetInstanceTitlesValidation(Model model, @Valid @ModelAttribute("form") InstanceTitleForm form, @RequestParam String id,
+	public String createCourseSetInstanceTitlesValidation(Model model, @Valid @ModelAttribute("form") InstanceTitleForm form, @RequestParam UUID id,
 			BindingResult result) throws Exception {
 
 
@@ -293,16 +294,16 @@ public class CourseController {
 
     //Delete Course and its CourseInstances
     @PostMapping("course/delete")
-	public String deleteCourse(@RequestParam String id) {
-        courseManagement.deleteCourseInstancesForCourse(UUID.fromString(id));
-        courseManagement.deleteCourse(UUID.fromString(id));
+	public String deleteCourse(@RequestParam UUID id) {
+        courseManagement.deleteCourseInstancesForCourse(id);
+        courseManagement.deleteCourse(id);
 		return "redirect:../courses";
     }
     
 
 
     @GetMapping("course/duplicate")
-    public String duplicateCourseWithNewSemester(DuplicateCourseForm duplicateForm, @RequestParam String id){
+    public String duplicateCourseWithNewSemester(DuplicateCourseForm duplicateForm, @RequestParam UUID id){
 
         Course newCourse = courseManagement.duplicateCourse(id, duplicateForm.getSemesterString());
 
@@ -326,7 +327,7 @@ public class CourseController {
      * @return questioneditor.html template
      */
     @GetMapping("course/surveyeditor")
-    public String questioneditor(Model model, @RequestParam String type, @RequestParam(required = false) String id){
+    public String questioneditor(Model model, @RequestParam String type, @RequestParam(required = false) UUID id){
         
         //Give model the following attributes, which are used to submit the survey, via the post method
         model.addAttribute("typeID", type);
@@ -340,7 +341,7 @@ public class CourseController {
 
 
         //give course name to model, to show as title
-        Optional<Course> course = courseManagement.findById(UUID.fromString(id));
+        Optional<Course> course = courseManagement.findById(id);
         model.addAttribute("coursename", course.get().getName());
         
         /*
@@ -369,7 +370,7 @@ public class CourseController {
      */
     @PostMapping("course/surveyeditor")
     public String questioneditorSubmit(SurveyForm form, @RequestParam String type,
-            @RequestParam(required = false) String id) {
+            @RequestParam(required = false) UUID id) {
         
 
         //Form empty -> Redirect to details again 
@@ -379,7 +380,7 @@ public class CourseController {
         
 
         //fetch course 
-        Optional<Course> course = courseManagement.findById(UUID.fromString(id));
+        Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()){
 
             // if type is none of the correct values, then redirect to homepage
@@ -433,9 +434,9 @@ public class CourseController {
      */
     @GetMapping("course/submitfinalisedsurvey")
     public void questioneditorFinaliseSurvey(@RequestParam String type,
-            @RequestParam(required = false) String id) {
+            @RequestParam(required = false) UUID id) {
         
-        Optional<Course> course = courseManagement.findById(UUID.fromString(id));
+        Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()){
             //Create a JSON Array out of the response from the questioneditor and the default survey
             //                                                                                           --Custom Survey--                                 --CourseType--           
@@ -457,7 +458,7 @@ public class CourseController {
     //Die Ganze Methode ist Same wie questioneditorSubmit nur der Return ist auf die Preview Html
     @PostMapping("course/previewsurvey")
     public String questioneditorpreview(Model model,SurveyForm form, @RequestParam String type,
-                                       @RequestParam(required = false) String id) {
+                                       @RequestParam(required = false) UUID id) {
 
 
         //Form empty -> Redirect to details again
@@ -467,7 +468,7 @@ public class CourseController {
 
 
         //fetch course
-        Optional<Course> course = courseManagement.findById(UUID.fromString(id));
+        Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()){
 
             // if type is none of the correct values, then redirect to homepage
@@ -498,11 +499,11 @@ public class CourseController {
     //SUrveyPreview als getrequest
     @GetMapping("course/previewsurvey")
     public String questioneditorpreviewget(Model model, @RequestParam String type,
-                                        @RequestParam(required = false) String id) {
+                                        @RequestParam(required = false) UUID id) {
 
 
         //fetch course
-        Optional<Course> course = courseManagement.findById(UUID.fromString(id));
+        Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()){
 
             // if type is none of the correct values, then redirect to homepage
@@ -537,13 +538,13 @@ public class CourseController {
      * @throws WriterException Thrown by QRCode generator 
      */
     @GetMapping("qrcode")
-    public HttpEntity<byte[]> qrcode(HttpServletResponse response, @RequestParam String type, @RequestParam String id) throws IOException, WriterException  {
+    public HttpEntity<byte[]> qrcode(HttpServletResponse response, @RequestParam String type, @RequestParam UUID id) throws IOException, WriterException  {
 
         //QRCode URL (Redirects to a courses survey when scanned). Generated using pathvariables
         String url = "localhost:8080/survey?type=" + type + "&id=" + id;  
         
         //find course
-        Optional<Course> crs = courseManagement.findById(UUID.fromString(id));
+        Optional<Course> crs = courseManagement.findById(id);
 
         //generate filename
         String filename = crs.get().getName() + "_" + type + "_" + "QRCode";
