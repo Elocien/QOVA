@@ -3,6 +3,7 @@ package qova.logic;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -54,7 +55,7 @@ public class ResponseController {
     public String selectSurvey(Model model, @RequestParam String id, @RequestParam String type) {
 
         // course name, course type, instance names, groupAmount
-        Optional<Course> crs = courseManagement.findById(id);
+        Optional<Course> crs = courseManagement.findById(UUID.fromString(id));
         if (crs.isPresent()) {
             model.addAttribute("courseName", crs.get().getName());
             model.addAttribute("courseType", type);
@@ -90,7 +91,7 @@ public class ResponseController {
     public String selectSurveySubmission(Model model, @RequestParam String id, @RequestParam String type,
             @RequestParam String instance, @RequestParam Integer group) {
 
-        Optional<Course> crs = courseManagement.findById(id);
+        Optional<Course> crs = courseManagement.findById(UUID.fromString(id));
 
         //if anything is null or not an allowed value, redirect back
         if(!crs.isPresent()){
@@ -123,7 +124,7 @@ public class ResponseController {
         }
 
         // fetch course and go to details if present
-        Optional<Course> course = courseManagement.findById(id);
+        Optional<Course> course = courseManagement.findById(UUID.fromString(id));
 
         // Validate that course exists, and that the survey is not empty
         if (course.isPresent()) {
@@ -178,7 +179,7 @@ public class ResponseController {
      */
     @GetMapping("/surveyresults")
     public String surveyResultsTest(Model model, @RequestParam String type, @RequestParam String id, @RequestParam String group, @RequestParam String instance) {
-        Optional<Course> crs = courseManagement.findById(id);
+        Optional<Course> crs = courseManagement.findById(UUID.fromString(id));
         if(crs.isPresent()){
             Optional<SurveyResponse> srv = responseManagement.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(crs.get(), responseManagement.parseCourseType(type), Integer.valueOf(group), Integer.valueOf(instance));
             if(srv.isPresent()){
@@ -199,7 +200,7 @@ public class ResponseController {
         // generate filename
         String filename = "testPdf.pdf";
 
-        Optional<Course> crs = courseManagement.findById(id);
+        Optional<Course> crs = courseManagement.findById(UUID.fromString(id));
 
         // verify that course is present
         if (!crs.isPresent()) {
@@ -234,7 +235,7 @@ public class ResponseController {
         //generate filename
         String filename = "testCsv.csv";
 
-        Optional<Course> crs = courseManagement.findById(id);
+        Optional<Course> crs = courseManagement.findById(UUID.fromString(id));
 
         //verify that course is present
         if(!crs.isPresent()){
@@ -295,13 +296,13 @@ public class ResponseController {
 
 
 
-    //test method
-    @GetMapping("/createR")
-    public String createR() throws Exception {
-        Optional<Course> crs = courseManagement.findById("c000000000000001");
-        responseManagement.createTestResponses(crs.get());
-        return "home";
-    }
+    // //test method
+    // @GetMapping("/createR")
+    // public String createR() throws Exception {
+    //     Optional<Course> crs = courseManagement.findById("c000000000000001");
+    //     responseManagement.createTestResponses(crs.get());
+    //     return "home";
+    // }
 
     //PDF Generation
     @GetMapping("/pdftest")
@@ -322,24 +323,24 @@ public class ResponseController {
         return new HttpEntity<byte[]>(pdf, header);
     }    
 
-    //CSV Generation
-    @GetMapping("csv")
-    public HttpEntity<byte[]> csvtest(HttpServletResponse response) throws Exception {
+    // //CSV Generation
+    // @GetMapping("csv")
+    // public HttpEntity<byte[]> csvtest(HttpServletResponse response) throws Exception {
         
-        Course crs = courseManagement.findById("c000000000000001").get();
+    //     Course crs = courseManagement.findById("c000000000000001").get();
 
-        //Generate PDF
-        byte[] pdf = responseManagement.generateCSV_en(crs, CourseType.TUTORIAL, "1", "all");
+    //     //Generate PDF
+    //     byte[] pdf = responseManagement.generateCSV_en(crs, CourseType.TUTORIAL, "1", "all");
 
        
-        //Set HTTP headers and return HttpEntity
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_PDF);
-        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "csvTest.csv");
-        header.setContentLength(pdf.length);
+    //     //Set HTTP headers and return HttpEntity
+    //     HttpHeaders header = new HttpHeaders();
+    //     header.setContentType(MediaType.APPLICATION_PDF);
+    //     header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "csvTest.csv");
+    //     header.setContentLength(pdf.length);
 
-        return new HttpEntity<byte[]>(pdf, header);
-    }
+    //     return new HttpEntity<byte[]>(pdf, header);
+    // }
 
     @GetMapping("/surveyResults")
     public String surveyResults(Model model) throws Exception {

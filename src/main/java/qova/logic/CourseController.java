@@ -5,6 +5,7 @@ import java.util.Base64;
 import java.util.Objects;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -112,16 +113,12 @@ public class CourseController {
 
     //Shows the details for a specific course
     @GetMapping("course/details")
-    public String courseDetails(Model model, CourseForm form, @RequestParam(required = false) String id) throws Exception {
+    public String courseDetails(Model model, CourseForm form, @RequestParam(required = false) UUID id) throws Exception {
         
         //for editing purposes:
         model.addAttribute("semesterDates", courseManagement.findSemesters());
         model.addAttribute("form", form);
 
-        //redirect 
-        if (id == null) {
-			return "error?code=" + courseNotFound;
-        }
         
         //fetch course and go to details if present
         Optional<Course> course = courseManagement.findById(id);
@@ -217,31 +214,31 @@ public class CourseController {
 
         model.addAttribute("form", form);
 
-        if(Boolean.TRUE.equals(courseManagement.findById(id).get().getLectureExists())){
+        if(Boolean.TRUE.equals(courseManagement.findById(UUID.fromString(id)).get().getLectureExists())){
             model.addAttribute("lectureExists", true);
-            model.addAttribute("lectureInstanceTitles", courseManagement.findById(id).get().getLecture().getInstanceTitles());
-            model.addAttribute("lectureInstances", courseManagement.findById(id).get().getLecture().getInstanceAmount());
+            model.addAttribute("lectureInstanceTitles", courseManagement.findById(UUID.fromString(id)).get().getLecture().getInstanceTitles());
+            model.addAttribute("lectureInstances", courseManagement.findById(UUID.fromString(id)).get().getLecture().getInstanceAmount());
         }
         else{model.addAttribute("lectureExists", false);}
 
-        if(Boolean.TRUE.equals(courseManagement.findById(id).get().getTutorialExists())){
+        if(Boolean.TRUE.equals(courseManagement.findById(UUID.fromString(id)).get().getTutorialExists())){
             model.addAttribute("tutorialExists", true);
-            model.addAttribute("tutorialInstanceTitles", courseManagement.findById(id).get().getTutorial().getInstanceTitles());
-            model.addAttribute("tutorialInstances", courseManagement.findById(id).get().getTutorial().getInstanceAmount());
+            model.addAttribute("tutorialInstanceTitles", courseManagement.findById(UUID.fromString(id)).get().getTutorial().getInstanceTitles());
+            model.addAttribute("tutorialInstances", courseManagement.findById(UUID.fromString(id)).get().getTutorial().getInstanceAmount());
         }
         else{model.addAttribute("tutorialExists", false);}
 
-        if(Boolean.TRUE.equals(courseManagement.findById(id).get().getSeminarExists())){
+        if(Boolean.TRUE.equals(courseManagement.findById(UUID.fromString(id)).get().getSeminarExists())){
             model.addAttribute("seminarExists", true);
-            model.addAttribute("seminarInstanceTitles", courseManagement.findById(id).get().getSeminar().getInstanceTitles());
-            model.addAttribute("seminarInstances", courseManagement.findById(id).get().getSeminar().getInstanceAmount());
+            model.addAttribute("seminarInstanceTitles", courseManagement.findById(UUID.fromString(id)).get().getSeminar().getInstanceTitles());
+            model.addAttribute("seminarInstances", courseManagement.findById(UUID.fromString(id)).get().getSeminar().getInstanceAmount());
         }
         else{model.addAttribute("seminarExists", false);}
 
-        if(Boolean.TRUE.equals(courseManagement.findById(id).get().getPracticalExists())){
+        if(Boolean.TRUE.equals(courseManagement.findById(UUID.fromString(id)).get().getPracticalExists())){
             model.addAttribute("practicalExists", true);
-            model.addAttribute("practicalInstanceTitles", courseManagement.findById(id).get().getPractical().getInstanceTitles());
-            model.addAttribute("practicalInstances", courseManagement.findById(id).get().getPractical().getInstanceAmount());
+            model.addAttribute("practicalInstanceTitles", courseManagement.findById(UUID.fromString(id)).get().getPractical().getInstanceTitles());
+            model.addAttribute("practicalInstances", courseManagement.findById(UUID.fromString(id)).get().getPractical().getInstanceAmount());
         }
         else{model.addAttribute("practicalExists", false);}
 
@@ -297,8 +294,8 @@ public class CourseController {
     //Delete Course and its CourseInstances
     @PostMapping("course/delete")
 	public String deleteCourse(@RequestParam String id) {
-        courseManagement.deleteCourseInstancesForCourse(id);
-        courseManagement.deleteCourse(id);
+        courseManagement.deleteCourseInstancesForCourse(UUID.fromString(id));
+        courseManagement.deleteCourse(UUID.fromString(id));
 		return "redirect:../courses";
     }
     
@@ -343,7 +340,7 @@ public class CourseController {
 
 
         //give course name to model, to show as title
-        Optional<Course> course = courseManagement.findById(id);
+        Optional<Course> course = courseManagement.findById(UUID.fromString(id));
         model.addAttribute("coursename", course.get().getName());
         
         /*
@@ -382,7 +379,7 @@ public class CourseController {
         
 
         //fetch course 
-        Optional<Course> course = courseManagement.findById(id);
+        Optional<Course> course = courseManagement.findById(UUID.fromString(id));
         if (course.isPresent()){
 
             // if type is none of the correct values, then redirect to homepage
@@ -438,7 +435,7 @@ public class CourseController {
     public void questioneditorFinaliseSurvey(@RequestParam String type,
             @RequestParam(required = false) String id) {
         
-        Optional<Course> course = courseManagement.findById(id);
+        Optional<Course> course = courseManagement.findById(UUID.fromString(id));
         if (course.isPresent()){
             //Create a JSON Array out of the response from the questioneditor and the default survey
             //                                                                                           --Custom Survey--                                 --CourseType--           
@@ -470,7 +467,7 @@ public class CourseController {
 
 
         //fetch course
-        Optional<Course> course = courseManagement.findById(id);
+        Optional<Course> course = courseManagement.findById(UUID.fromString(id));
         if (course.isPresent()){
 
             // if type is none of the correct values, then redirect to homepage
@@ -505,7 +502,7 @@ public class CourseController {
 
 
         //fetch course
-        Optional<Course> course = courseManagement.findById(id);
+        Optional<Course> course = courseManagement.findById(UUID.fromString(id));
         if (course.isPresent()){
 
             // if type is none of the correct values, then redirect to homepage
@@ -546,7 +543,7 @@ public class CourseController {
         String url = "localhost:8080/survey?type=" + type + "&id=" + id;  
         
         //find course
-        Optional<Course> crs = courseManagement.findById(id);
+        Optional<Course> crs = courseManagement.findById(UUID.fromString(id));
 
         //generate filename
         String filename = crs.get().getName() + "_" + type + "_" + "QRCode";
