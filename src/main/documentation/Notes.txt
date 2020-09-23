@@ -7,49 +7,35 @@ Regex to check email:
 Database shit
 --------------------------------------------
 
-
-DB Password: 
-QOVA2020
-
+To generate database shema as xml
+./mvnw liquibase:generateChangeLog
 
 
-To start mysqld at boot time you have to copy
-support-files/mysql.server to the right place for your system
+To generate the diff between the old diff (in our case production) and the new shema, we need to edit the liquibase.properties file:
 
 
-Two all-privilege accounts were created.
-One is root@localhost, it has no password, but you need to
-be system 'root' user to connect. Use, for example, sudo mysql
-The second is mysql@localhost, it has no password either, but
-you need to be the system 'mysql' user to connect.
-After connecting you can set the password, if you would need to be
-able to connect as any of these users with a password and without sudo
-
-See the MariaDB Knowledgebase at http://mariadb.com/kb or the
-MySQL manual for more instructions.
-
-You can start the MariaDB daemon with:
-cd '/usr' ; /usr/bin/mysqld_safe --datadir='./data'
-
-You can test the MariaDB daemon with mysql-test-run.pl
-cd '/usr/mysql-test' ; perl mysql-test-run.pl
+changeLogFile=classpath:liquibase-changeLog.xml
+url= -- new shema (i think) --
+username=springuser
+password=QOVA2020
+driver=com.mysql.cj.jdbc.Driver
+referenceUrl= -- production(old) shema (i think) --
+diffChangeLogFile=src/main/resources/liquiBaseliquibase-diff-changeLog.xml
 
 
-IMPORTANT:      sudo systemctl start mariadb
-
---------------------------------------------------------------------------
 
 
-medienzentrum@​tu-dresden.de
-
-internes Medizin projekt röder
-
-wegen server
 
 
---------------------------------------------------------------------------
+
+The things im unsure on:
+
+referenceUrl=
+hibernate:spring:qova?dialect=org.hibernate.dialect.MySQL5Dialect&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrateg
+
+and 
 
 
-1. Write JSON Serializer, Deserializer
-2. Write Controller method for initial view (Get)
-3. Write Controller method with JSON responsebody
+url=
+jdbc:mysql://localhost:3306/db_example?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+
