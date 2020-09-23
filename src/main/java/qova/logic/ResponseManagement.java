@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import qova.admin.DefaultSurvey;
 import qova.enums.CourseType;
 import qova.enums.LocalizationOption;
 import qova.enums.ResponseType;
@@ -71,6 +72,10 @@ public class ResponseManagement {
     }
     
     
+
+
+
+
     //PDF Generation (ENGLISH)
     public byte[] generatePDF_en(Course course, CourseType type, Integer groupNumber, Integer instanceNumber) throws Exception {
 
@@ -86,16 +91,40 @@ public class ResponseManagement {
 
 
 
-    //CSV Generation (ENGLISH)
-    public byte[] generateCSV_en(Course course, CourseType type, Integer groupNumber, Integer instanceNumber) throws Exception {
 
-        //retrieve the SurveyResponse object from repository
-        Optional<SurveyResponse> rsp = surveyResponseRepository.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, type, groupNumber, instanceNumber);
+
+    //CSV Generation (ENGLISH)
+    public byte[] generateCSV_en(Course course, CourseType type, String groupNumber, String instanceNumber) throws Exception {
         
+        //Initalise List of SurveyResponses to be passed to the CSV generator
+        List<SurveyResponse> listOfSurveyResponses = new ArrayList<>();
+    
+
+        if(groupNumber.equals("all") && instanceNumber.equals("all") ){
+            
+            findByCourseAndCourseType(course, type).forEach(listOfSurveyResponses::add);
+
+        }
+        else if(groupNumber.equals("all")){
+            findByCourseAndCourseTypeAndInstanceNumber(course, type, Integer.parseInt(instanceNumber)).forEach(listOfSurveyResponses::add);
+        }
+        else if(instanceNumber.equals("all") ){
+            findByCourseAndCourseTypeAndGroupNumber(course, type, Integer.parseInt(groupNumber)).forEach(listOfSurveyResponses::add);
+        }
+        else{
+            Optional<SurveyResponse> s = findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, type, Integer.parseInt(groupNumber), Integer.parseInt(instanceNumber));
+            if(s.isPresent()){
+                listOfSurveyResponses.add(s.get());
+            }
+        } 
+
         //Generate PDF
         CSVGenerator csvGen = new CSVGenerator();
-        return csvGen.createCSV(rsp.get(), LocalizationOption.EN);
+        return csvGen.createCSV(listOfSurveyResponses, LocalizationOption.EN);
     }
+
+
+
 
 
     /**
@@ -188,8 +217,8 @@ public class ResponseManagement {
 
         
         //for each instance and group, create a SurveyResponse and persist it
-        for(int group = 0; group < courseInstance.getGroupAmount(); group++){
-            for(int instance = 0; instance < courseInstance.getInstanceAmount(); instance++){
+        for(int group = 1; group <= courseInstance.getGroupAmount(); group++){
+            for(int instance = 1; instance <= courseInstance.getInstanceAmount(); instance++){
                 surveyResponseRepository.save(new SurveyResponse(course, type, instance, group, responses));
             }
         }
@@ -224,8 +253,46 @@ public class ResponseManagement {
      * 
      * @return an Iterable containing all Responses that fit criteria
      */
-	public Optional<SurveyResponse> findByCourseAndCourseTypeAndClassNo(Course course, CourseType type, Integer groupNumber, Integer instanceNumber){
+	public Optional<SurveyResponse> findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(Course course, CourseType type, Integer groupNumber, Integer instanceNumber){
 		return surveyResponseRepository.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, type, groupNumber, instanceNumber);
+	}
+
+
+    /**
+     * 
+     * @param course    {@linkplain Course} object
+     * @param type      {@linkplain CourseType}
+     * @param groupNumber The number of the corresponding tutorial or seminar (=1 in case CourseType is Lecture) 
+     * 
+     * @return an Iterable containing all Responses that fit criteria
+     */
+	public Iterable<SurveyResponse> findByCourseAndCourseTypeAndGroupNumber(Course course, CourseType type, Integer groupNumber){
+		return surveyResponseRepository.findByCourseAndCourseTypeAndGroupNumber(course, type, groupNumber);
+	}
+
+
+    /**
+     * 
+     * @param course    {@linkplain Course} object
+     * @param type      {@linkplain CourseType}
+     * @param instanceNumber The number corresponding to the instance of the Course. 
+     * 
+     * @return an Iterable containing all Responses that fit criteria
+     */
+	public Iterable<SurveyResponse> findByCourseAndCourseTypeAndInstanceNumber(Course course, CourseType type, Integer instanceNumber){
+		return surveyResponseRepository.findByCourseAndCourseTypeAndInstanceNumber(course, type, instanceNumber);
+	}
+
+
+    /**
+     * 
+     * @param course    {@linkplain Course} object
+     * @param type      {@linkplain CourseType}
+     * 
+     * @return an Iterable containing all Responses that fit criteria
+     */
+	public Iterable<SurveyResponse> findByCourseAndCourseType(Course course, CourseType type){
+		return surveyResponseRepository.findByCourseAndCourseType(course, type);
 	}
 
 
@@ -278,7 +345,7 @@ public class ResponseManagement {
     //Test Method, remove in build
     public void createTestResponses(Course course) {
         
-        var type = CourseType.LECTURE;
+        var type = CourseType.TUTORIAL;
         var instanceNumber = 12;
         var groupNumber = 4;
 
@@ -330,8 +397,12 @@ public class ResponseManagement {
         responses.add(bnr);
         responses.add(mcr);
         responses.add(txr);
-        surveyResponseRepository.save(new SurveyResponse(course, type, instanceNumber, groupNumber, responses));
-        
+
+        for(int i = 0; i < groupNumber; i++){
+            for(int j = 0; j < instanceNumber; j++){
+                surveyResponseRepository.save(new SurveyResponse(course, type, j, i, responses));
+            }
+        }
     } 
 
 

@@ -180,7 +180,7 @@ public class ResponseController {
     public String surveyResultsTest(Model model, @RequestParam String type, @RequestParam String id, @RequestParam String group, @RequestParam String instance) {
         Optional<Course> crs = courseManagement.findById(id);
         if(crs.isPresent()){
-            Optional<SurveyResponse> srv = responseManagement.findByCourseAndCourseTypeAndClassNo(crs.get(), responseManagement.parseCourseType(type), Integer.valueOf(group), Integer.valueOf(instance));
+            Optional<SurveyResponse> srv = responseManagement.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(crs.get(), responseManagement.parseCourseType(type), Integer.valueOf(group), Integer.valueOf(instance));
             if(srv.isPresent()){
                 model.addAttribute("response", srv.get());
             }
@@ -229,7 +229,7 @@ public class ResponseController {
     // CSV Generation
     @GetMapping("/generateCSV")
     public HttpEntity<byte[]> generateCsv(@RequestParam String id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
-            throws NumberFormatException, IOException, Exception {
+            throws Exception {
     
         //generate filename
         String filename = "testCsv.csv";
@@ -248,8 +248,9 @@ public class ResponseController {
         }
 
         //Generate PDF
-        byte[] pdf = responseManagement.generateCSV_en(crs.get(), courseType, Integer.parseInt(groupNumber), Integer.parseInt(instanceNumber));
+        byte[] pdf = responseManagement.generateCSV_en(crs.get(), courseType, groupNumber, instanceNumber);
 
+       
         //Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_PDF);
@@ -320,6 +321,25 @@ public class ResponseController {
 
         return new HttpEntity<byte[]>(pdf, header);
     }    
+
+    //CSV Generation
+    @GetMapping("csv")
+    public HttpEntity<byte[]> csvtest(HttpServletResponse response) throws Exception {
+        
+        Course crs = courseManagement.findById("c000000000000001").get();
+
+        //Generate PDF
+        byte[] pdf = responseManagement.generateCSV_en(crs, CourseType.TUTORIAL, "1", "all");
+
+       
+        //Set HTTP headers and return HttpEntity
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_PDF);
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "csvTest.csv");
+        header.setContentLength(pdf.length);
+
+        return new HttpEntity<byte[]>(pdf, header);
+    }
 
     @GetMapping("/surveyResults")
     public String surveyResults(Model model) throws Exception {

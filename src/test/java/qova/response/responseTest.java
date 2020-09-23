@@ -121,8 +121,9 @@ public class responseTest extends AbstractIntegrationTest {
         br.incrementNo();
         
         assertEquals(question, br.getQuestion());
-        assertEquals(1, br.getYesTotal());
-        assertEquals(2, br.getNoTotal());
+        assertEquals("1", br.getYesTotalString());
+        assertEquals("2", br.getNoTotalString());
+        assertEquals(3, br.getTotal());
         assertEquals(qova.enums.ResponseType.BINARY_ANSWER, br.getType());
     }
 

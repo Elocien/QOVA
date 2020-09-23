@@ -234,8 +234,8 @@ public class PDFGenerator {
 
                 
                 //Percentages
-                int tot = bnr.getNoTotal() + bnr.getYesTotal();
-                double yesPercent = ((double)bnr.getYesTotal()/tot) * 100;
+                int tot = bnr.getTotal();
+                double yesPercent = ((double) bnr.getYesTotal() /tot) * 100;
                 double noPercent = ((double)bnr.getNoTotal()/tot) * 100;
                 
                 String yesPercentString = String.format("My answer is %.2f", yesPercent); 

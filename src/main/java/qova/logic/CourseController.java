@@ -409,10 +409,6 @@ public class CourseController {
                     return "redirect:/";
                 }
 
-                //Manager method for creating SurveyResponse and corresponding nested objects\
-                //TODO: Fix this!!!
-                // responseManagement.createSurveyResponse(survey, course.get(), type);
-
                 //Sets the survey string for a given course (takes the default survey and conncatenates it with the create survey)
                 courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson());
             }
@@ -439,27 +435,21 @@ public class CourseController {
      * @param id The id of the {@linkplain qova.objects.Course}
      */
     @GetMapping("course/submitfinalisedsurvey")
-    public void questioneditorFinaliseSurvey(SurveyForm form, @RequestParam String type,
+    public void questioneditorFinaliseSurvey(@RequestParam String type,
             @RequestParam(required = false) String id) {
         
+        Optional<Course> course = courseManagement.findById(id);
+        if (course.isPresent()){
+            //Create a JSON Array out of the response from the questioneditor and the default survey
+            //                                                                                           --Custom Survey--                                 --CourseType--           
+            String completeSurvey = adminManagement.concatenateDefaultSurveyToSurveyString(  courseManagement.getSurveyforType(id, type)  , responseManagement.parseCourseType(type));
 
-        //Form empty -> Redirect to details again 
-        if (form.getQuestionnairejson().length()==0) {
-            ;
-        }
-        else{
-            Optional<Course> course = courseManagement.findById(id);
-            if (course.isPresent()){
-                //Create a JSON Array out of the response from the questioneditor
-                JSONArray survey = new JSONArray(form.getQuestionnairejson());
+            //Create JSON Array
+            JSONArray survey = new JSONArray(completeSurvey);
 
-                //Create the relevant objects
-                responseManagement.createSurveyResponse(survey, course.get(), type);
-
-                // Sets the survey string for a given course
-                courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson());
-            }
-        }
+            //Create the relevant objects
+            responseManagement.createSurveyResponse(survey, course.get(), type);
+        }  
     }
     
 
