@@ -26,13 +26,9 @@
 			<!-- Survey-->
 			<div class="col-md-6">
 				<div id="survey"></div>
-				<div class="submit">
-					<div>
-						<a th:href="@{/course/details?id={id}(id=${id})}" class="btn btn-primary mt-2 center" th:text="#{question.submit}"> </a>
-					</div>
-					<div>
-						<a th:href="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" class="btn btn-primary mt-2 center" th:text="#{question.surveyeditor}"></a>
-					</div>
+				<div class="btn-group" style="width: 100%">
+					<a th:href="@{/course/details?id={id}(id=${id})}" class="btn btn-primary mt-2 btn-tu" th:text="#{question.submit}" style="margin-left: auto"> </a>
+					<a th:href="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" class="btn btn-primary mt-2 btn-tu" th:text="#{question.surveyeditor}" style="margin-right:auto"></a>
 				</div>
 			</div>
 			<div class="col-md-3"></div>
@@ -54,6 +50,7 @@
 	//onload buildt the survey clientside
 	window.onload = function () {
 		defaultsurvey.forEach(renderquestion);
+		console.log(defaultsurvey);
 
 	}
 
