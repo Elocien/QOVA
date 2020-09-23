@@ -118,7 +118,8 @@ public class ResponseController {
 
     // Mapping for Survey HTML
     @GetMapping("survey")
-    public String SurveyView(Model model, @RequestParam String type, @RequestParam(required = false) UUID id) {
+    public String SurveyView(Model model,  @RequestParam(required = false) UUID id, @RequestParam(required = false) String type, 
+            @RequestParam(required = false) String group, @RequestParam(required = false) String isntance) {
         // redirect
         if (id == null) {
 			return "error?code=" + courseNotFound;
