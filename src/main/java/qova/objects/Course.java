@@ -60,6 +60,9 @@ public class Course {
     //The string which is displayed in UI
     private String semesterString;
 
+    //Used to indicate that the course is finalised and cannot be edited anymore
+    private Boolean finalised;
+
 
     //Needed for JPA purposes
     @SuppressWarnings("unused")
@@ -90,6 +93,7 @@ public class Course {
         this.faculty=faculty;
         this.semesterString = semesterString;
         this.courseDate = courseDate;
+        this.finalised = false;
     }
 
 
@@ -194,6 +198,14 @@ public class Course {
         else if(type.equals(CourseType.SEMINAR)){return seminar;}
         else if(type.equals(CourseType.PRACTICAL)){return practical;}
         else return null;
+    }
+
+    public Boolean getFinalised(){
+        return this.finalised;
+    }
+
+    public void setFinalised(){
+        this.finalised = true;
     }
 
 }
