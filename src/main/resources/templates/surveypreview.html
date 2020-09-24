@@ -39,7 +39,8 @@
 
 <div class="pt-4" th:include="footer"></div>
 
-<script>
+<script th:inline="javascript">
+
 	const survey = [(${survey})];
 	const defaultsurvey = [(${defaultSurvey})];
 	for ( let i=0; i < survey.length; i++){
@@ -220,6 +221,16 @@
 			}
 
 			x.appendChild(selectionOption);
+
+			const footer = document.createElement("DIV");
+			const hint = document.createElement("h6");
+			hint.innerHTML = [[#{question.hint}]];
+
+			footer.appendChild(hint);
+			x.appendChild(footer);
+
+
+
 		}
 
 		document.getElementById("survey").appendChild(x);

@@ -29,7 +29,7 @@
 				<div id="submit" class="submit">
 					<form th:action="@{/survey?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="submitsurvey">
 						<input type="text" name="surveyjson" id="surveyjson" class="input"></input>
-						<button class="btn btn-primary mt-2 center" type="submit" th:text="#{question.submit}">SUBMIT</button>
+						<button class="btn btn-primary mt-2 center btn-tu" type="submit" th:text="#{question.submit}">SUBMIT</button>
 					</form>
 				</div>
 			</div>
@@ -41,7 +41,7 @@
 
 <div class="pt-4" th:include="footer"></div>
 
-<script>
+<script th:inline="javascript">
 	const survey = [(${survey})];
 
 	//onload buildt the survey clientside
@@ -223,8 +223,8 @@
 
 	}
 
-	$('#submitsurvey').submit(function () {
-
+	$('#submitsurvey').submit(function (e) {
+		debugger;
 		const surveyjson = [];
 
 
@@ -251,7 +251,8 @@
 				}
 
 			}
-			if (answer === []){
+			if (answer.length == 0){
+				e.preventDefault();
 				return false;
 			}
 			surveyjson.push(answer);
