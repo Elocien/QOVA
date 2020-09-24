@@ -12,6 +12,11 @@ body {
 .custom-save{
     padding: 0px 2px;
 }
+.container-fixed{
+    position: fixed !important;
+    top: 11.1rem;
+    right: 80%;
+}
 
 .btn-head {
     background-color: var(--tu_blue);

@@ -28,7 +28,7 @@
         <div class="col-12 offset-lg-4 col-lg-4 text-left mt-4">
             <h5 th:text="#{student.select.instance}">INSTANCE</h5>
             <select id="instance" class="custom-select form-control">
-                <option class="dropdown-item" th:each="title : ${instanceTitles}" th:text="${title}" th:value="${title}">INSTANCE</option>
+                <option class="dropdown-item" th:each="title, stats : ${instanceTitles}" th:text="${title}" th:value="${stats.index}">INSTANCE</option>
             </select>
             <div th:if="!${courseType == 'LECTURE'}">
                 <h5 class="mt-3" th:text="#{student.select.group}">GROUP</h5>
@@ -45,7 +45,7 @@
     </div>
 </div>
 
-<div th:include="footer" class="mt-4"></div>
+<div class="pt-4" th:include="footer"></div>
 </body>
 <script th:inline="javascript">
 function build_url() {
