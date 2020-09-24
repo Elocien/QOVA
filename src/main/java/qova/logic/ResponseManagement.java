@@ -133,12 +133,21 @@ public class ResponseManagement {
      * @param json {@link org.json.JSONArray}
      * @return A boolean flag, which is handled in the controller
      */
-    public Boolean verifyJsonArray(JSONArray json){
+    public Boolean verifyJsonArray(JSONArray jsonArray){
        
         //check for too large surveys (more than 100 quesitons)
-        if(json.length() > 100){
+        if(jsonArray.length() > 100){
             return false;
         }
+
+        
+        for (int i = 0; i < jsonArray.length(); i++){
+            JSONObject question = jsonArray.getJSONObject(i);
+            if(question.getString("question").length() > 1024){
+                return false;
+            }
+        }
+
 
         //TODO: Check for other malicious strings
 
