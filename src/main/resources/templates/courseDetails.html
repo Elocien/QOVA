@@ -44,13 +44,13 @@
                                 <div class="modal-content text-center">
                                     <div class="modal-body">
                                         <p th:text="#{detail.copyModalText}">PLEASE COPY ME!</p>
-                                        <select class="custom-select form-control">
+                                        <select id="newYear" class="custom-select form-control">
                                             <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
                                         </select>
                                     </div>
                                     <div class="modal-footer text-center">
                                         <div class="w-100"></div>
-                                        <button type="submit" class="btn btn-primary">Finish</button>
+                                        <a class="btn btn-primary" th:onclick="build_url()" method="post">Finish</a>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
                                         <div class="w-100"></div>
                                     </div>
@@ -181,8 +181,9 @@
                                                         </td>
                                                     </div>
                                                     <div th:case="*">
-                                                        <td th:switch="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}" class="text-center">
-                                                            <a th:case="TRUE" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
+                                                        <td th:if="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}" class="text-center">
+                                                            <a type="button" class="btn btn-link p-0 align-middle hide_me mr-2" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="left" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
+                                                            <a type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/previewsurvey?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.previewSurvey}"><i class="fa fa-eye"></i></a>
                                                         </td>
                                                     </div>
                                                 </div>
@@ -255,7 +256,7 @@
     </div>
     <div th:include="footer"></div>
 </body>
-<script>
+<script th:inline="javascript">
     $( document ).ready(function() {
         $('[data-toggle="tooltip"]').tooltip(({trigger : 'hover'}));
         document.getElementsByClassName("carousel-item")[0].className = "carousel-item active";
@@ -361,6 +362,15 @@
 
         //replaces everything else
         switcheroo();
+    }
+
+    function build_url() {
+        var url = /*[[@{/course/duplicate(id=${course.id})}]]*/"";
+        window.location = url+"&year="+getValue(document.getElementById("newYear")).replace(" ", "+");
+    }
+    function getValue(e){
+        var result = e.options[e.selectedIndex].value;
+        return result
     }
 </script>
 </html>
