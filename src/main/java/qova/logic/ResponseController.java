@@ -161,6 +161,9 @@ public class ResponseController {
         // get JSON Response as string
         String JsonResponse = form.getQuestionnairejson();
 
+        //Manager Method
+        //Increment numberOfSubmissions in SurveyResponse
+        //Add stundent ID to SurveyResponse List
 
 
         // if all goes well
