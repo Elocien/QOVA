@@ -1,29 +1,40 @@
 package qova.objects;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
-import javax.persistence.Lob;
-
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import qova.enums.ResponseType;
 
-@Embeddable
+@Entity
 public class SingleChoiceResponse {
 
 
     //-----------------------------------------------------------------------
-    @GeneratedValue(strategy = GenerationType.AUTO) private Long id;
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     //container for the question set
+    @Column(length = 1024) 
     private String question;
 
+    @ManyToOne
+    private SurveyResponse surveyResponse;
+
+    private Integer surveyPosition;
+
+
     //Array of the different options presented to the user
-    @Lob private ArrayList<String> singleChoiceOptions;
+    @ElementCollection private List<String> singleChoiceOptions;
 
     //Array of the user response
-    @Lob private ArrayList<Integer> singleChoiceAnswers;
+    @ElementCollection private List<Integer> singleChoiceAnswers;
 
     private static final ResponseType responseType = ResponseType.SINGLE_CHOICE;
 
@@ -32,10 +43,12 @@ public class SingleChoiceResponse {
 	protected SingleChoiceResponse(){
     }
 
-    public SingleChoiceResponse(String question, ArrayList<String> singleChoiceOptions){
+    public SingleChoiceResponse(SurveyResponse response, String question, Integer surveyPosition,List<String> singleChoiceOptions){
+        this.surveyResponse = response;
         this.question = question;
         this.singleChoiceOptions = singleChoiceOptions;
         this.singleChoiceAnswers = new ArrayList<>(this.singleChoiceOptions.size());
+        this.surveyPosition = surveyPosition;
         
         //Populate the array
         for(String s : singleChoiceOptions){
@@ -48,11 +61,11 @@ public class SingleChoiceResponse {
         return this.question;
     }
 
-    public ArrayList<String> getSingleChoiceOptions(){
+    public List<String> getSingleChoiceOptions(){
         return this.singleChoiceOptions;
     }
 
-    public ArrayList<Integer> getSingleChoiceAnswers(){
+    public List<Integer> getSingleChoiceAnswers(){
         return this.singleChoiceAnswers;
     }
 
@@ -67,6 +80,10 @@ public class SingleChoiceResponse {
 
     public ResponseType getType(){
         return responseType;
+    }
+
+    public Integer getSurveyPosition(){
+        return this.surveyPosition;
     }
 }
 
