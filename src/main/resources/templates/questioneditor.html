@@ -43,11 +43,11 @@
                             <button type="button" class="btn btn-head btn-text-right" th:text="#{question.edit}">NEW QUESTION</button>
                             <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="submitsurvey" style="width: 100%">
                                 <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
-                                <button class="btn btn-list btn-text-right" type="submit"><span th:text="#{question.submit}"></span><i class="fas fa-save ml-2"></i></button>
+                                <button class="btn btn-list btn-text-right" type="submit"><span th:text="#{question.submit}"></span><i class="fas fa-save custom-save ml-2"></i></button>
                             </form>
                             <form th:action="@{/course/previewsurvey?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="previewsurvey" style="width:100%">
                                 <input type="text" name="questionnairejson" id="questionnairejson2" class="input"></input>
-                                <button class="btn btn-list-last btn-text-right" type="submit" ><span th:text="#{question.preview}"></span><i class="fas fa-file ml-2"></i></button>
+                                <button class="btn btn-list-last btn-text-right" type="submit" ><span th:text="#{question.preview}"></span><i class="fa fa-eye ml-2"></i></i></button>
                             </form>
                         </div>
                     </div>
