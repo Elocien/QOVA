@@ -69,6 +69,10 @@ public class TextResponse {
     public Integer getSurveyPosition(){
         return this.surveyPosition;
     }
+
+    public SurveyResponse getSurveyResponse(){
+        return this.surveyResponse;
+    }
     
 }
 

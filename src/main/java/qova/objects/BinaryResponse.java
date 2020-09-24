@@ -97,4 +97,8 @@ public class BinaryResponse {
         return this.surveyPosition;
     }
 
+    public SurveyResponse getSurveyResponse(){
+        return this.surveyResponse;
+    }
+
 }

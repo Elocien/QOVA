@@ -85,6 +85,10 @@ public class SingleChoiceResponse {
     public Integer getSurveyPosition(){
         return this.surveyPosition;
     }
+
+    public SurveyResponse getSurveyResponse(){
+        return this.surveyResponse;
+    }
 }
 
 

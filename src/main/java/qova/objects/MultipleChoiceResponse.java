@@ -85,5 +85,9 @@ public class MultipleChoiceResponse {
         return this.surveyPosition;
     }
 
+    public SurveyResponse getSurveyResponse(){
+        return this.surveyResponse;
+    }
+
 }
 
