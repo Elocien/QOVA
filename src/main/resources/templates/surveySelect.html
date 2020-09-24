@@ -27,17 +27,19 @@
 
         <div class="col-12 offset-lg-4 col-lg-4 text-left mt-4">
             <h5 th:text="#{student.select.instance}">INSTANCE</h5>
-            <select class="custom-select form-control" th:field="*{instanceTitles}">
+            <select id="instance" class="custom-select form-control">
                 <option class="dropdown-item" th:each="title : ${instanceTitles}" th:text="${title}" th:value="${title}">INSTANCE</option>
             </select>
-            <h5 class="mt-3" th:text="#{student.select.group}">GROUP</h5>
-            <select class="custom-select form-control" th:field="*{groupAmount}">
-                <option class="dropdown-item" th:each="n : ${groupAmount}" th:text="|#{group} ${n}|" th:value="${n}">GROUP</option>
-            </select>
+            <div th:if="!${courseType == 'LECTURE'}">
+                <h5 class="mt-3" th:text="#{student.select.group}">GROUP</h5>
+                <select id="group" class="custom-select form-control" th:field="*{groupAmount}">
+                    <option class="dropdown-item" th:each="n : ${groupAmount}" th:text="|#{group} ${n}|" th:value="${n}">GROUP</option>
+                </select>
+            </div>
         </div>
 
         <div class="col-12 offset-lg-4 col-lg-4 text-center mt-4">
-            <a type="submit" class="btn btn-primary btn-tu" th:text="#{submit}" th:href="@{/survey(id=${id}, type=${courseType}, instance=${instanceTitles}, group=${groupAmount})}">SUBMIT</a>
+            <a class="btn btn-primary btn-tu" th:text="#{submit}" th:onclick="build_url()">SUBMIT</a>
         </div>
 
     </div>
@@ -45,4 +47,21 @@
 
 <div th:include="footer" class="mt-4"></div>
 </body>
+<script th:inline="javascript">
+function build_url() {
+    var url = /*[[@{/survey(id=${id}, type=${courseType})}]]*/"";
+    url = url+"&instance="+getValue(document.getElementById("instance"));
+    if([[${courseType == "LECTURE"}]]) {
+        url = url+"&group=1";
+    }
+    else {
+        url = url+"&group="+getValue(document.getElementById("group"));
+    }
+    window.location = url;
+}
+function getValue(e){
+    var result = e.options[e.selectedIndex].value;
+    return result
+}
+</script>
 </html>
