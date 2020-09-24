@@ -60,6 +60,7 @@ public class SurveyResponse {
     protected SurveyResponse (){}
 
     
+    //Constructor
     public SurveyResponse(Course course, CourseType type, Integer instanceNumber, Integer groupNumber){
         this.dateTime = LocalDateTime.now();
         this.course = course;
