@@ -20,4 +20,6 @@ public interface SurveyResponseRepository extends CrudRepository <SurveyResponse
     public Iterable<SurveyResponse> findByCourseAndCourseTypeAndGroupNumber(Course course, CourseType type, Integer groupNumber);
 
     public Iterable<SurveyResponse> findByCourseAndCourseType(Course course, CourseType type);
+
+    public Iterable<SurveyResponse> findByCourse(Course course);
 }

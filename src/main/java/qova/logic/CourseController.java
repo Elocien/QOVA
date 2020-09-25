@@ -254,7 +254,6 @@ public class CourseController {
     //Delete Course and its CourseInstances
     @GetMapping("course/delete")
 	public String deleteCourse(@RequestParam UUID id) {
-        courseManagement.deleteCourseInstancesForCourse(id);
         courseManagement.deleteCourse(id);
 		return "redirect:../courses";
     }
