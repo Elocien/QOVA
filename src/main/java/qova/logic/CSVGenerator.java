@@ -5,6 +5,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import com.opencsv.CSVWriter;
 
@@ -27,17 +28,14 @@ public class CSVGenerator {
      * @return a byte[] of the CSV
      * @throws java.io.IOException Thrown by CSVWriter
      */
-    public byte[] createCSV(List<SurveyResponse> listOfSurveyResponses, LocalizationOption language) throws java.io.IOException {
+    public byte[] createCSV(Course course, List<List<Object>> listOfSurveyResponses, LocalizationOption language) throws java.io.IOException {
         
 
         //Standard values, which are identical for every one of the SurveyResponses passed to the CSV Gen
         //It is assumed that all SurveyResponses passed to the CSV Gen are of the same Course and CourseType
-        SurveyResponse response = listOfSurveyResponses.get(0);
-        Course course = listOfSurveyResponses.get(0).getCourse();
         String courseName = course.getName();
         String courseSemesterString = course.getSemesterString();
         String semesterOfStudents = String.valueOf(course.getSemesterOfStudents());
-        String courseType = String.valueOf(response.getCourseType());
 
 
         //CSV Header
@@ -48,19 +46,19 @@ public class CSVGenerator {
 
         // CSV Header Initialisation (The options for all question types must be added after)
         if(language.equals(LocalizationOption.EN)){
-            header.addAll(Arrays.asList("Name", "","Semster of Students", "Course Type", "Group", "Instance", "Survey Questions->"));
+            header.addAll(Arrays.asList("Name", "Semester Period","Semster of Students", "Group", "Instance"));
             
         }
         else if(language.equals(LocalizationOption.DE)){
-            header.addAll(Arrays.asList("Lehrveranstaltungsname", "Findet Statt", "Fachsemester", "Lehrveranstaltungstyp", "Gruppe", "Instanz", "Fragebogen Fragen ->"));
+            header.addAll(Arrays.asList("Lehrveranstaltungsname", "Findet Statt", "Fachsemester", "Gruppe", "Instanz"));
         }
 
         //Fill the underhead with blanks for the above header attributes
-        underHeader.addAll(Arrays.asList("", "", "", "", "", "", ""));
+        underHeader.addAll(Arrays.asList("", "", "", "", ""));
 
         
         //Append Header with the rest of the survey questions
-        for(Object o : response.getUserResponses()){
+        for(Object o : listOfSurveyResponses.get(0)){
             
             //Adds the question to the header, and a blank field to the underheader
             if(o instanceof qova.objects.BinaryResponse){
@@ -80,8 +78,8 @@ public class CSVGenerator {
             if(o instanceof qova.objects.SingleChoiceResponse){
                 SingleChoiceResponse scr = (SingleChoiceResponse) o;
                 header.add(scr.getQuestion());
-                underHeader.add("");
-                for(int i = 0; i < scr.getNumberOfOptions(); i++){
+                underHeader.add(scr.getSingleChoiceOptions().get(0));
+                for(int i = 1; i < scr.getNumberOfOptions(); i++){
                     header.add("-");
                     underHeader.add(scr.getSingleChoiceOptions().get(i));
                 }
@@ -91,8 +89,8 @@ public class CSVGenerator {
             if(o instanceof qova.objects.MultipleChoiceResponse){
                 MultipleChoiceResponse mcr = (MultipleChoiceResponse) o;
                 header.add(mcr.getQuestion());
-                underHeader.add("");
-                for(int i = 0; i < mcr.getNumberOfOptions(); i++){
+                underHeader.add(mcr.getMultipleChoiceOptions().get(0));
+                for(int i = 1; i < mcr.getNumberOfOptions(); i++){
                     header.add("-");
                     underHeader.add(mcr.getMultipleChoiceOptions().get(i));
                 }
@@ -104,19 +102,36 @@ public class CSVGenerator {
 
         List<List<String>> listOfCSVRowData = new ArrayList<>();
 
-        for(SurveyResponse s : listOfSurveyResponses){
+        for(int i = 0; i < listOfSurveyResponses.size(); i++){
             // CSV Standar Values
-            List<String> row = new ArrayList<>( Arrays.asList(courseName, courseSemesterString, semesterOfStudents, courseType, String.valueOf(s.getGroupNumber()), String.valueOf(s.getInstanceNumber()), ""));
+            List<String> row = new ArrayList<>( Arrays.asList(courseName, courseSemesterString, semesterOfStudents));
+
+            //Take the very first response out of the list, check what it is, use its reference to the relevant SurveyResponse, then take its group and instance numbers
+            if(listOfSurveyResponses.get(i).get(0) instanceof qova.objects.BinaryResponse){
+                String groupNumber = String.valueOf(((BinaryResponse)listOfSurveyResponses.get(i).get(0)).getSurveyResponse().getGroupNumber());
+                String instanceNumber = String.valueOf(((BinaryResponse)listOfSurveyResponses.get(i).get(0)).getSurveyResponse().getInstanceNumber());
+                row.addAll(Arrays.asList(groupNumber, instanceNumber));
+            }
+            if(listOfSurveyResponses.get(i).get(0) instanceof qova.objects.SingleChoiceResponse){
+                String groupNumber = String.valueOf(((SingleChoiceResponse)listOfSurveyResponses.get(i).get(0)).getSurveyResponse().getGroupNumber());
+                String instanceNumber = String.valueOf(((SingleChoiceResponse)listOfSurveyResponses.get(i).get(0)).getSurveyResponse().getInstanceNumber());
+                row.addAll(Arrays.asList(groupNumber, instanceNumber));
+            }
+            if(listOfSurveyResponses.get(i).get(0) instanceof qova.objects.MultipleChoiceResponse){
+                String groupNumber = String.valueOf(((MultipleChoiceResponse)listOfSurveyResponses.get(i).get(0)).getSurveyResponse().getGroupNumber());
+                String instanceNumber = String.valueOf(((MultipleChoiceResponse)listOfSurveyResponses.get(i).get(0)).getSurveyResponse().getInstanceNumber());
+                row.addAll(Arrays.asList(groupNumber, instanceNumber));
+            }
+            
 
             //Append Header with the rest of the survey questions
-            for(Object o : s.getUserResponses()){
+            for(Object o : listOfSurveyResponses.get(i)){
                 
                 //Adds the yes and no totals to the row
                 if(o instanceof qova.objects.BinaryResponse){
                     row.add((((BinaryResponse) o).getYesTotalString()));
                     row.add((((BinaryResponse) o).getNoTotalString()));
                 }
-
                 
                 // if(o instanceof qova.objects.TextResponse){
                     //Text Responses are not shown in the csv

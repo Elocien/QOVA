@@ -161,6 +161,9 @@ public class ResponseController {
         // get JSON Response as string
         String JsonResponse = form.getQuestionnairejson();
 
+        //Manager Method
+        //Increment numberOfSubmissions in SurveyResponse
+        //Add stundent ID to SurveyResponse List
 
 
         // if all goes well
@@ -251,16 +254,19 @@ public class ResponseController {
         }
 
         //Generate PDF
-        byte[] pdf = responseManagement.generateCSV_en(crs.get(), courseType, groupNumber, instanceNumber);
+        byte[] csv = responseManagement.generateCSV_en(crs.get(), courseType, groupNumber, instanceNumber);
 
+        if(csv == new byte[0]){
+            return null;
+        }
        
         //Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_PDF);
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
-        header.setContentLength(pdf.length);
+        header.setContentLength(csv.length);
 
-        return new HttpEntity<byte[]>(pdf, header);
+        return new HttpEntity<byte[]>(csv, header);
     }
 
 
@@ -298,13 +304,12 @@ public class ResponseController {
 
 
 
-    // //test method
-    // @GetMapping("/createR")
-    // public String createR() throws Exception {
-    //     Optional<Course> crs = courseManagement.findById("c000000000000001");
-    //     responseManagement.createTestResponses(crs.get());
-    //     return "home";
-    // }
+    //test method
+    @GetMapping("/createR")
+    public String createR() {
+        responseManagement.createTestResponses(courseManagement.findAll().iterator().next());
+        return "home";
+    }
 
     //PDF Generation
     @GetMapping("/pdftest")
@@ -325,35 +330,35 @@ public class ResponseController {
         return new HttpEntity<byte[]>(pdf, header);
     }    
 
-    // //CSV Generation
-    // @GetMapping("csv")
-    // public HttpEntity<byte[]> csvtest(HttpServletResponse response) throws Exception {
+    //CSV Generation
+    @GetMapping("csv")
+    public HttpEntity<byte[]> csvtest(HttpServletResponse response) throws Exception {
         
-    //     Course crs = courseManagement.findById("c000000000000001").get();
+        Course crs = courseManagement.findAll().iterator().next();
 
-    //     //Generate PDF
-    //     byte[] pdf = responseManagement.generateCSV_en(crs, CourseType.TUTORIAL, "1", "all");
+        //Generate PDF
+        byte[] pdf = responseManagement.generateCSV_en(crs, CourseType.TUTORIAL, "1", "all");
 
-       
-    //     //Set HTTP headers and return HttpEntity
-    //     HttpHeaders header = new HttpHeaders();
-    //     header.setContentType(MediaType.APPLICATION_PDF);
-    //     header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "csvTest.csv");
-    //     header.setContentLength(pdf.length);
 
-    //     return new HttpEntity<byte[]>(pdf, header);
-    // }
+        //Set HTTP headers and return HttpEntity
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.APPLICATION_PDF);
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "csvTest.csv");
+        header.setContentLength(pdf.length);
 
-    @GetMapping("/surveyResults")
-    public String surveyResults(Model model) throws Exception {
-
-        Course course = courseManagement.TimTestCreateCourse();
-        SurveyResponse rsp = responseManagement.timCreateTestResponses(course);
-        
-        model.addAttribute("response", rsp);
-
-        return "surveyResults";
+        return new HttpEntity<byte[]>(pdf, header);
     }
+
+    // @GetMapping("/surveyResults")
+    // public String surveyResults(Model model) throws Exception {
+
+    //     Course course = courseManagement.TimTestCreateCourse();
+    //     SurveyResponse rsp = responseManagement.timCreateTestResponses(course);
+        
+    //     model.addAttribute("response", rsp);
+
+    //     return "surveyResults";
+    // }
 
     
 }

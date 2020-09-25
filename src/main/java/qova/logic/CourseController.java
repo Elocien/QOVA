@@ -271,7 +271,7 @@ public class CourseController {
     //Validation of Created course
 	@PostMapping("course/new2")
 	public String createCourseSetInstanceTitlesValidation(Model model, @Valid @ModelAttribute("form") InstanceTitleForm form, @RequestParam UUID id,
-			BindingResult result) throws Exception {
+			BindingResult result) {
 
 
 		if (result.hasErrors()) {
@@ -365,13 +365,14 @@ public class CourseController {
      * SurveyResponse object is created along with its subclasses (BinaryResponse,
      * TextResponse, etc.)
      * 
+     * @param model The {@linkplain org.springframework.ui.Model}
      * @param form {@linkplain SurveyForm} which contains the JSON passed by the surveyeditor
      * @param type {@linkplain qova.enums.CourseType} in String format
      * @param id Id of the {@linkplain Course}
      * @return Either the errorPage, in case of error; otherwise return the courseDetails template
      */
     @PostMapping("course/surveyeditor")
-    public String questioneditorSubmit(SurveyForm form, @RequestParam String type,
+    public String questioneditorSubmit(Model model, @Valid @ModelAttribute("form") SurveyForm form, @RequestParam String type,
             @RequestParam(required = false) UUID id) {
         
 
@@ -406,7 +407,7 @@ public class CourseController {
                 Boolean validSurvey = responseManagement.verifyJsonArray(survey);
                 if(Boolean.FALSE.equals(validSurvey)){
                     //TODO: redirect to error page with code 02
-                    return "redirect:/";
+                    return questioneditor(model, type, id);
                 }
 
                 //Sets the survey string for a given course (takes the default survey and conncatenates it with the create survey)

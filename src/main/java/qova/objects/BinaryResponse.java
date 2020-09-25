@@ -1,19 +1,33 @@
 package qova.objects;
 
-import javax.persistence.Embeddable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 
-import javax.persistence.Lob;
 
 import qova.enums.ResponseType;
 
 
-@Embeddable
+@Entity
 public class BinaryResponse {
 
     //-----------------------------------------------------------------------
 
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     //container for the question set
-    @Lob String question;
+    @Column(length = 1024) 
+    private String question;
+
+    @ManyToOne
+    private SurveyResponse surveyResponse;
+
+    //Position in the survey
+    private Integer surveyPosition;
 
     //Container for response
     private Integer yesTotal = 0;
@@ -26,10 +40,22 @@ public class BinaryResponse {
 	protected BinaryResponse(){
     }
 
-    public BinaryResponse(String question){
+    /**
+     * Constructor
+     * 
+     * @param question The question set by the user in the quesitoneditor
+     */
+    public BinaryResponse(SurveyResponse response, String question, Integer surveyPosition){
         this.question = question;
+        this.surveyResponse = response;
+        this.surveyPosition = surveyPosition;
     }
-    
+
+
+
+    public Long getId(){
+        return this.id;
+    }
     
     public String getQuestion() {
         return this.question;
@@ -52,7 +78,7 @@ public class BinaryResponse {
     }
 
     public Integer getTotal() {
-        return this.noTotal;
+        return this.noTotal + this.yesTotal;
     }
 
     public ResponseType getType(){
@@ -65,6 +91,14 @@ public class BinaryResponse {
 
     public void incrementNo(){
         this.noTotal = noTotal + 1;
+    }
+
+    public Integer getSurveyPosition(){
+        return this.surveyPosition;
+    }
+
+    public SurveyResponse getSurveyResponse(){
+        return this.surveyResponse;
     }
 
 }
