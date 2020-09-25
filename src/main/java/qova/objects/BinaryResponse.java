@@ -78,7 +78,7 @@ public class BinaryResponse {
     }
 
     public Integer getTotal() {
-        return this.noTotal;
+        return this.noTotal + this.yesTotal;
     }
 
     public ResponseType getType(){
