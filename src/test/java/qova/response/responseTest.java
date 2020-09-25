@@ -57,7 +57,7 @@ public class responseTest extends AbstractIntegrationTest {
         for(int i = 0; i < 35 ; i++){bnr.incrementYes();}
         for(int i = 0; i < 15 ; i++){bnr.incrementNo();}
 
-        ArrayList<String> mcOptions = new ArrayList<String>();
+        List<String> mcOptions = new ArrayList<>();
         mcOptions.add("1");
         mcOptions.add("2");
         mcOptions.add("3");
@@ -65,17 +65,17 @@ public class responseTest extends AbstractIntegrationTest {
         mcOptions.add("5");
         MultipleChoiceResponse mcr = new MultipleChoiceResponse(response, "From 1 to 5, what would you rate the lecture?", 1, mcOptions);
 
-        ArrayList<Integer> mcAnswers1 = new ArrayList<Integer>();
+        List<Integer> mcAnswers1 = new ArrayList<>();
         mcAnswers1.add(0);
         mcAnswers1.add(1);
         mcAnswers1.add(3);
 
-        ArrayList<Integer> mcAnswers2 = new ArrayList<Integer>();
+        List<Integer> mcAnswers2 = new ArrayList<>();
         mcAnswers2.add(1);
         mcAnswers2.add(4);
 
 
-        ArrayList<Integer> mcAnswers3 = new ArrayList<Integer>();
+        List<Integer> mcAnswers3 = new ArrayList<>();
         mcAnswers3.add(2);
         mcAnswers3.add(4);
 
@@ -93,7 +93,6 @@ public class responseTest extends AbstractIntegrationTest {
         List<String> listOfStudentIds = new ArrayList<>();
         for(int i = 0; i < 50; i++){
             String id = UUID.randomUUID().toString();
-            System.out.println(id);
             response.addStundentIdToSubmissionListAndIncrementCounter(id);
             listOfStudentIds.add(id);
         }

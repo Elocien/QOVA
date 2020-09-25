@@ -1,10 +1,12 @@
 package qova.logic;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -12,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javassist.bytecode.ByteArray;
 import qova.admin.DefaultSurvey;
+import qova.enums.CourseFaculty;
 import qova.enums.CourseType;
 import qova.enums.LocalizationOption;
 import qova.enums.ResponseType;
@@ -132,6 +136,7 @@ public class ResponseManagement {
         }
         else if(groupNumber.equals("all")){
             findByCourseAndCourseTypeAndInstanceNumber(course, type, Integer.parseInt(instanceNumber)).forEach(listOfSurveyResponses::add);
+            System.out.println(listOfSurveyResponses);
         }
         else if(instanceNumber.equals("all") ){
             findByCourseAndCourseTypeAndGroupNumber(course, type, Integer.parseInt(groupNumber)).forEach(listOfSurveyResponses::add);
@@ -149,6 +154,10 @@ public class ResponseManagement {
 
         for(SurveyResponse r : listOfSurveyResponses){
             listOfResponseObjects.add(findResponsesBySurveyResponse(r));
+        }
+
+        if(listOfResponseObjects.isEmpty()){
+            return new byte[0];
         }
 
         //Generate PDF
@@ -280,7 +289,7 @@ public class ResponseManagement {
 	 * @return an {@linkplain Optional} of an {@linkplain SurveyResponse}
 	 *         with the given id
 	 */
-	public Optional<SurveyResponse> findById(long id) {
+	public Optional<SurveyResponse> findSurveyResponseById(long id) {
 		return surveyResponseRepository.findById(id);
 	}
 
@@ -412,129 +421,70 @@ public class ResponseManagement {
 
 
 
-    // //Test Method, remove in build
-    // public void createTestResponses(Course course) {
-        
-    //     var type = CourseType.TUTORIAL;
-    //     var instanceNumber = 12;
-    //     var groupNumber = 4;
+    //Test Method, remove in build
+    public void createTestResponses(Course course) {
 
-    //     List<Object> responses = new ArrayList<>();
+        var type = CourseType.TUTORIAL;
+        var instance = 1;
+        var group = 1;
 
-    //     BinaryResponse bnr = new BinaryResponse("Would you consider recommending the lecture to other students?");
-    //     for(int i = 0; i < 50 ; i++){bnr.incrementYes();}
-    //     for(int i = 0; i < 25 ; i++){bnr.incrementNo();}
+        SurveyResponse response = new SurveyResponse(course, type, instance, group);
+        surveyResponseRepository.save(response);
 
-
-        
-        
-    //     ArrayList<String> mcOptions = new ArrayList<>();
-    //     mcOptions.add("It was informative");
-    //     mcOptions.add("It was interesting");
-    //     mcOptions.add("I learned something new");
-    //     mcOptions.add("I enjoyed attending the lecture");
-    //     mcOptions.add("I would recommend the lecture to others");
-    //     MultipleChoiceResponse mcr = new MultipleChoiceResponse("What was good about the lecture (multiple options can be selected)", mcOptions);
-
-    //     ArrayList<Integer> mcAnswers1 = new ArrayList<>();
-    //     mcAnswers1.add(0);
-    //     mcAnswers1.add(1);
-    //     mcAnswers1.add(3);
-
-    //     ArrayList<Integer> mcAnswers2 = new ArrayList<>();
-    //     mcAnswers2.add(1);
-    //     mcAnswers2.add(4);
+        BinaryResponse bnr = new BinaryResponse(response, "Would you consider recommending the lecture to other students?", 0);
+        binaryResponseRepository.save(bnr);
+        for(int i = 0; i < 35 ; i++){bnr.incrementYes();}
+        for(int i = 0; i < 15 ; i++){bnr.incrementNo();}
 
 
-    //     ArrayList<Integer> mcAnswers3 = new ArrayList<>();
-    //     mcAnswers3.add(2);
-    //     mcAnswers3.add(4);
 
-    //     for(int i = 0; i < 25 ; i++){mcr.incrementTotals(mcAnswers1);}
-    //     for(int i = 0; i < 15 ; i++){mcr.incrementTotals(mcAnswers2);}
-    //     for(int i = 0; i < 10 ; i++){mcr.incrementTotals(mcAnswers3);}
-
-        
+        ArrayList<String> mcOptions = new ArrayList<>();
+        mcOptions.add("1");
+        mcOptions.add("2");
+        mcOptions.add("3");
+        mcOptions.add("4");
+        mcOptions.add("5");
 
 
-    //     TextResponse txr = new TextResponse("What is your opinion of the lecture, is it helpful?");
-    //     for(int i = 0; i < 20 ; i++){txr.addTextSubmission("this is a bit of a test");}
-    //     for(int i = 0; i < 10 ; i++){txr.addTextSubmission("this is a larger test to test the test");}
-    //     for(int i = 0; i < 17 ; i++){txr.addTextSubmission("short test");}
-    //     for(int i = 0; i < 3 ; i++){txr.addTextSubmission("this is a very very very very very very very very very very very very very very very very very very very very large test");}
+        MultipleChoiceResponse mcr = new MultipleChoiceResponse(response, "From 1 to 5, what would you rate the lecture?", 1, mcOptions);
+        multipleChoiceResponseRepository.save(mcr);
+
+        ArrayList<Integer> mcAnswers1 = new ArrayList<>();
+        mcAnswers1.add(0);
+        mcAnswers1.add(1);
+        mcAnswers1.add(3);
+
+        ArrayList<Integer> mcAnswers2 = new ArrayList<>();
+        mcAnswers2.add(1);
+        mcAnswers2.add(4);
 
 
-    //     responses.add(bnr);
-    //     responses.add(mcr);
-    //     responses.add(txr);
+        ArrayList<Integer> mcAnswers3 = new ArrayList<>();
+        mcAnswers3.add(2);
+        mcAnswers3.add(4);
 
-    //     for(int i = 0; i < groupNumber; i++){
-    //         for(int j = 0; j < instanceNumber; j++){
-    //             surveyResponseRepository.save(new SurveyResponse(course, type, j, i, responses));
-    //         }
-    //     }
-    // } 
+        for(int i = 0; i < 25 ; i++){mcr.incrementTotals(mcAnswers1);}
+        for(int i = 0; i < 15 ; i++){mcr.incrementTotals(mcAnswers2);}
+        for(int i = 0; i < 10 ; i++){mcr.incrementTotals(mcAnswers3);}
 
-
-    // //Test Method, remove in build
-    // public SurveyResponse timCreateTestResponses(Course course) {
-        
-    //     var type = CourseType.LECTURE;
-    //     var instanceNumber = 12;
-    //     var groupNumber = 4;
-
-    //     List<Object> responses = new ArrayList<>();
-
-    //     BinaryResponse bnr = new BinaryResponse("Would you consider recommending the lecture to other students?");
-    //     for(int i = 0; i < 50 ; i++){bnr.incrementYes();}
-    //     for(int i = 0; i < 25 ; i++){bnr.incrementNo();}
+        TextResponse txr = new TextResponse(response, "What is your opinion of the lecture, is it helpful?", 2);
+        textResponseRepository.save(txr);
+        for(int i = 0; i < 20 ; i++){txr.addTextSubmission("this is a bit of a test");}
+        for(int i = 0; i < 10 ; i++){txr.addTextSubmission("this is a larger test to test the test");}
+        for(int i = 0; i < 17 ; i++){txr.addTextSubmission("short test");}
+        for(int i = 0; i < 3 ; i++){txr.addTextSubmission("this is a very very very very very very very very very very very very very very very very very very very very large test");}
 
 
-        
-        
-    //     ArrayList<String> mcOptions = new ArrayList<>();
-    //     mcOptions.add("It was informative");
-    //     mcOptions.add("It was interesting");
-    //     mcOptions.add("I learned something new");
-    //     mcOptions.add("I enjoyed attending the lecture");
-    //     mcOptions.add("I would recommend the lecture to others");
-    //     MultipleChoiceResponse mcr = new MultipleChoiceResponse("What was good about the lecture (multiple options can be selected)", mcOptions);
-
-    //     ArrayList<Integer> mcAnswers1 = new ArrayList<>();
-    //     mcAnswers1.add(0);
-    //     mcAnswers1.add(1);
-    //     mcAnswers1.add(3);
-
-    //     ArrayList<Integer> mcAnswers2 = new ArrayList<>();
-    //     mcAnswers2.add(1);
-    //     mcAnswers2.add(4);
+        List<String> listOfStudentIds = new ArrayList<>();
+        for(int i = 0; i < 50; i++){
+            String id = UUID.randomUUID().toString();
+            response.addStundentIdToSubmissionListAndIncrementCounter(id);
+            listOfStudentIds.add(id);
+        }
+    } 
 
 
-    //     ArrayList<Integer> mcAnswers3 = new ArrayList<>();
-    //     mcAnswers3.add(2);
-    //     mcAnswers3.add(4);
-
-    //     for(int i = 0; i < 25 ; i++){mcr.incrementTotals(mcAnswers1);}
-    //     for(int i = 0; i < 15 ; i++){mcr.incrementTotals(mcAnswers2);}
-    //     for(int i = 0; i < 10 ; i++){mcr.incrementTotals(mcAnswers3);}
-
-        
-
-
-    //     TextResponse txr = new TextResponse("What is your opinion of the lecture, is it helpful?");
-    //     for(int i = 0; i < 20 ; i++){txr.addTextSubmission("this is a bit of a test");}
-    //     for(int i = 0; i < 10 ; i++){txr.addTextSubmission("this is a larger test to test the test");}
-    //     for(int i = 0; i < 17 ; i++){txr.addTextSubmission("short test");}
-    //     for(int i = 0; i < 3 ; i++){txr.addTextSubmission("this is a very very very very very very very very very very very very very very very very very very very very large test");}
-
-
-    //     responses.add(bnr);
-    //     responses.add(mcr);
-    //     responses.add(txr);
-    //     return new SurveyResponse(course, type, instanceNumber, groupNumber, responses);
-        
-    // } 
-
+    
 
 
     public byte[] generatePDF_test() throws IOException, Exception {
