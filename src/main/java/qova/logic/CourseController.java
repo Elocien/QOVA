@@ -384,7 +384,7 @@ public class CourseController {
      * @param id The id of the {@linkplain qova.objects.Course}
      */
     @GetMapping("course/submitfinalisedsurvey")
-    public void questioneditorFinaliseSurvey(@RequestParam String type,
+    public String questioneditorFinaliseSurvey(@RequestParam String type,
             @RequestParam(required = false) UUID id) {
         
         Optional<Course> course = courseManagement.findById(id);
@@ -393,12 +393,19 @@ public class CourseController {
             //                                                                                           --Custom Survey--                                 --CourseType--           
             String completeSurvey = adminManagement.concatenateDefaultSurveyToSurveyString(  courseManagement.getSurveyforType(id, type)  , responseManagement.parseCourseType(type));
 
+            try {
+                new JSONArray(completeSurvey);
+            } catch (Exception e) {
+                return "redirect:../course/details" + "?id=" + id;
+            }
+
             //Create JSON Array
             JSONArray survey = new JSONArray(completeSurvey);
 
             //Create the relevant objects
             responseManagement.createSurveyResponse(survey, course.get(), type);
         }  
+        return "redirect:../course/details" + "?id=" + id;
     }
     
 

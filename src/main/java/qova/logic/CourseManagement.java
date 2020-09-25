@@ -215,110 +215,96 @@ public class CourseManagement {
             //These attributes are NOT editable, when the instance has been finalised!!!
 
 
-            //Only execute if lecture is not finalised
-            if(Boolean.FALSE.equals(course.getLecture().isFinalised())){
+        
+            //Lecture EXISTS, but is toggled OFF
+            if(Boolean.TRUE.equals(course.getLectureExists()) && Boolean.FALSE.equals(form.getLectureExists())){
 
-                //Lecture EXISTS, but is toggled OFF
-                if(Boolean.TRUE.equals(course.getLectureExists()) && Boolean.FALSE.equals(form.getLectureExists())){
-
-                    course.getLecture().setInactive();
-                }
-                //Lecture does NOT EXIST, but is toggled ON
-                if(Boolean.FALSE.equals(course.getLectureExists()) && Boolean.TRUE.equals(form.getLectureExists())){
-
-                    //Initialise instanceTitles array
-                    String[] instanceTitles = new String[form.getInstanceAmountLecture()];
-
-                    //Update CourseInstance
-                    CourseInstance lecture = course.getLecture();
-
-                    //Set to one for lectures (in case of change, assign form.getLectureGroupAmount)
-                    lecture.setGroupAmount(1);
-
-                    //
-                    lecture.setInstanceAmount(form.getInstanceAmountLecture());
-                    lecture.setInstanceTitles(instanceTitles);
-                    lecture.setActive();
-                }
+                course.getLecture().setInactive();
             }
+            //Lecture does NOT EXIST, but is toggled ON
+            if(Boolean.FALSE.equals(course.getLectureExists()) && Boolean.TRUE.equals(form.getLectureExists())){
 
-            //Only execute if tutorial is not finalised
-            if(Boolean.FALSE.equals(course.getTutorial().isFinalised())){
+                //Initialise instanceTitles array
+                String[] instanceTitles = new String[form.getInstanceAmountLecture()];
 
-                //tutorial EXISTS, but is toggled OFF
-                if(Boolean.TRUE.equals(course.getTutorialExists()) && Boolean.FALSE.equals(form.getTutorialExists())){
+                //Update CourseInstance
+                CourseInstance lecture = course.getLecture();
 
-                    course.getTutorial().setInactive();
-                }
-                //tutorial does NOT EXIST, but is toggled ON
-                if(Boolean.FALSE.equals(course.getTutorialExists()) && Boolean.TRUE.equals(form.getTutorialExists())){
+                //Set to one for lectures (in case of change, assign form.getLectureGroupAmount)
+                lecture.setGroupAmount(1);
 
-                    //Initialise instanceTitles array
-                    String[] instanceTitles = new String[form.getInstanceAmountTutorial()];
-
-                    //Update CourseInstance
-                    CourseInstance tutorial = course.getTutorial();
-
-                    //
-                    tutorial.setGroupAmount(form.getGroupAmountTutorial());
-                    tutorial.setInstanceAmount(form.getInstanceAmountTutorial());
-                    tutorial.setInstanceTitles(instanceTitles);
-                    tutorial.setActive();
-                }
+                //
+                lecture.setInstanceAmount(form.getInstanceAmountLecture());
+                lecture.setInstanceTitles(instanceTitles);
+                lecture.setActive();
             }
+            
 
+            //tutorial EXISTS, but is toggled OFF
+            if(Boolean.TRUE.equals(course.getTutorialExists()) && Boolean.FALSE.equals(form.getTutorialExists())){
 
-            //Only execute if seminar is not finalised
-            if(Boolean.FALSE.equals(course.getSeminar().isFinalised())){
-
-                //seminar EXISTS, but is toggled OFF
-                if(Boolean.TRUE.equals(course.getSeminarExists()) && Boolean.FALSE.equals(form.getSeminarExists())){
-
-                    course.getSeminar().setInactive();
-                }
-                //seminar does NOT EXIST, but is toggled ON
-                if(Boolean.FALSE.equals(course.getSeminarExists()) && Boolean.TRUE.equals(form.getSeminarExists())){
-
-                    //Initialise instanceTitles array
-                    String[] instanceTitles = new String[form.getInstanceAmountSeminar()];
-
-                    //Update CourseInstance
-                    CourseInstance seminar = course.getSeminar();
-
-                    //
-                    seminar.setGroupAmount(form.getGroupAmountSeminar());
-                    seminar.setInstanceAmount(form.getInstanceAmountSeminar());
-                    seminar.setInstanceTitles(instanceTitles);
-                    seminar.setActive();
-                }
+                course.getTutorial().setInactive();
             }
+            //tutorial does NOT EXIST, but is toggled ON
+            if(Boolean.FALSE.equals(course.getTutorialExists()) && Boolean.TRUE.equals(form.getTutorialExists())){
 
+                //Initialise instanceTitles array
+                String[] instanceTitles = new String[form.getInstanceAmountTutorial()];
 
+                //Update CourseInstance
+                CourseInstance tutorial = course.getTutorial();
 
-            //Only execute if practical is not finalised
-            if(Boolean.FALSE.equals(course.getPractical().isFinalised())){
-
-                //practical EXISTS, but is toggled OFF
-                if(Boolean.TRUE.equals(course.getPracticalExists()) && Boolean.FALSE.equals(form.getPracticalExists())){
-
-                    course.getPractical().setInactive();
-                }
-                //practical does NOT EXIST, but is toggled ON
-                if(Boolean.FALSE.equals(course.getPracticalExists()) && Boolean.TRUE.equals(form.getPracticalExists())){
-
-                    //Initialise instanceTitles array
-                    String[] instanceTitles = new String[form.getInstanceAmountPractical()];
-
-                    //Update CourseInstance
-                    CourseInstance practical = course.getPractical();
-
-                    //
-                    practical.setGroupAmount(form.getGroupAmountPractical());
-                    practical.setInstanceAmount(form.getInstanceAmountPractical());
-                    practical.setInstanceTitles(instanceTitles);
-                    practical.setActive();
-                }
+                //
+                tutorial.setGroupAmount(form.getGroupAmountTutorial());
+                tutorial.setInstanceAmount(form.getInstanceAmountTutorial());
+                tutorial.setInstanceTitles(instanceTitles);
+                tutorial.setActive();
             }
+            
+
+            //seminar EXISTS, but is toggled OFF
+            if(Boolean.TRUE.equals(course.getSeminarExists()) && Boolean.FALSE.equals(form.getSeminarExists())){
+
+                course.getSeminar().setInactive();
+            }
+            //seminar does NOT EXIST, but is toggled ON
+            if(Boolean.FALSE.equals(course.getSeminarExists()) && Boolean.TRUE.equals(form.getSeminarExists())){
+
+                //Initialise instanceTitles array
+                String[] instanceTitles = new String[form.getInstanceAmountSeminar()];
+
+                //Update CourseInstance
+                CourseInstance seminar = course.getSeminar();
+
+                //
+                seminar.setGroupAmount(form.getGroupAmountSeminar());
+                seminar.setInstanceAmount(form.getInstanceAmountSeminar());
+                seminar.setInstanceTitles(instanceTitles);
+                seminar.setActive();
+            }
+            
+
+            //practical EXISTS, but is toggled OFF
+            if(Boolean.TRUE.equals(course.getPracticalExists()) && Boolean.FALSE.equals(form.getPracticalExists())){
+
+                course.getPractical().setInactive();
+            }
+            //practical does NOT EXIST, but is toggled ON
+            if(Boolean.FALSE.equals(course.getPracticalExists()) && Boolean.TRUE.equals(form.getPracticalExists())){
+
+                //Initialise instanceTitles array
+                String[] instanceTitles = new String[form.getInstanceAmountPractical()];
+
+                //Update CourseInstance
+                CourseInstance practical = course.getPractical();
+
+                //
+                practical.setGroupAmount(form.getGroupAmountPractical());
+                practical.setInstanceAmount(form.getInstanceAmountPractical());
+                practical.setInstanceTitles(instanceTitles);
+                practical.setActive();
+            }
+            
 
 
             //We are intentionally not allowing the option to edit the CourseDate of SemesterString
