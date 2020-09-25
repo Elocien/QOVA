@@ -21,12 +21,12 @@
 
         <!--Headline-->
         <div class="col-12 text-center mt-4">
-            <h2 class="font-weight-bold" th:text="|#{student.select.header} ${courseName}|">SURVEY BROWSER</h2>
+            <h2 class="font-weight-bold" th:text="|#{student.select.header} ${course.getName()}|">SURVEY BROWSER</h2>
             <h5 class="font-weight-light" th:text="#{admin.select.description}">DESCRIPTION</h5>
         </div>
         
         <div th:with="type_list = ${ {'LECTURE', 'TUTORIAL', 'SEMINAR' ,'PRACTICAL'} }">
-            <a type="button" class="btn btn-tu m-2" th:each="type: ${type_list}" th:href="@{/surveySelect?type=__${type}__&id=__${id}__}" th:text="#{admin.select__${type}__}">CHANGE DEFAULT SURVEY</a>
+            <a type="button" class="btn btn-tu m-2" th:each="type: ${type_list}" th:if="${__'course.' + ${#strings.toLowerCase(type)} + '.survey'__ != '[]'}" th:href="@{/surveySelect?type=__${type}__&id=__${course.getId()}__}" th:text="#{admin.select__${type}__}">CHANGE DEFAULT SURVEY</a>
         </div>
 
     </div>

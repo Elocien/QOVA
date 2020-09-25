@@ -119,8 +119,7 @@ public class ResponseController {
     public String surveSelectAdmin(Model model, @RequestParam UUID id) {
         Optional<Course> crs = courseManagement.findById(id);
         if (crs.isPresent()) {
-            model.addAttribute("courseName", crs.get().getName());
-            model.addAttribute("id", crs.get().getId());
+            model.addAttribute("course", crs.get());
             return "surveySelectAdmin";
         }
 
