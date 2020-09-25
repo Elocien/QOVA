@@ -113,11 +113,12 @@ public class CourseController {
 
     //Shows the details for a specific course
     @GetMapping("course/details")
-    public String courseDetails(Model model, CourseForm form, @RequestParam(required = false) UUID id) throws Exception {
+    public String courseDetails(Model model, DuplicateCourseForm duplicateForm, CourseForm form, @RequestParam(required = false) UUID id) throws Exception {
         
         //for editing purposes:
         model.addAttribute("semesterDates", courseManagement.findSemesters());
         model.addAttribute("form", form);
+        model.addAttribute("duplicateForm", duplicateForm);
 
         
         //fetch course and go to details if present
@@ -155,7 +156,7 @@ public class CourseController {
 	public String editCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form, BindingResult result, @RequestParam UUID id) throws Exception {
 
 		if (result.hasErrors()) {
-			return courseDetails(model, form, id);
+			//return courseDetails(model, form, id);
 		}
 
         courseManagement.updateCourseDetails(id, form);
@@ -293,17 +294,16 @@ public class CourseController {
 
 
     //Delete Course and its CourseInstances
-    @PostMapping("course/delete")
+    @GetMapping("course/delete")
 	public String deleteCourse(@RequestParam UUID id) {
         courseManagement.deleteCourseInstancesForCourse(id);
         courseManagement.deleteCourse(id);
 		return "redirect:../courses";
     }
-    
 
 
-    @PostMapping("course/duplicate")
-    public String duplicateCourseWithNewSemester(@ModelAttribute("form") DuplicateCourseForm form, @RequestParam UUID id){
+    @GetMapping("course/duplicate")
+    public String duplicateCourseWithNewSemester(@ModelAttribute("duplicateForm") DuplicateCourseForm form, @RequestParam UUID id){
 
         Course newCourse = courseManagement.duplicateCourse(id, form.getSemesterString());
 
