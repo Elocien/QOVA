@@ -1,4 +1,7 @@
 /*general*/
+html {
+  min-height: 100vh;
+}
 body {
   --tu_blue: rgb(0, 37, 87);
   --tu_blue_light: rgb(0, 74, 174);
@@ -7,9 +10,11 @@ body {
   background: url(../images/seamless-bg.jpg);
   background-size: 300px 300px;
   min-height: 100vh;
+  height: 100%;
   position: relative;
   margin: 0;
   padding-bottom: 56px;
+  overflow-x: hidden;
 }
 
 /*Removes arrows from number input fields*/
@@ -51,8 +56,7 @@ footer {
   position: absolute;
   bottom: 0;
   width: 100%;
-}
-.page-footer {
+  height: 4rem !important;
   background-color: var(--tu_blue);
 }
 
@@ -164,6 +168,9 @@ footer {
   font-weight: 700;
   color: var(--fancy_grey);
   text-align: center;
+}
+.options-wrapper {
+  position: relative;
 }
 .carousel-caption {
   bottom: -4rem;
