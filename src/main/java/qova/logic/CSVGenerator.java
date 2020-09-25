@@ -46,15 +46,15 @@ public class CSVGenerator {
 
         // CSV Header Initialisation (The options for all question types must be added after)
         if(language.equals(LocalizationOption.EN)){
-            header.addAll(Arrays.asList("Name", "Semester Period","Semster of Students", "Group", "Instance", "Survey Questions->"));
+            header.addAll(Arrays.asList("Name", "Semester Period","Semster of Students", "Group", "Instance"));
             
         }
         else if(language.equals(LocalizationOption.DE)){
-            header.addAll(Arrays.asList("Lehrveranstaltungsname", "Findet Statt", "Fachsemester", "Gruppe", "Instanz", "Fragebogen Fragen ->"));
+            header.addAll(Arrays.asList("Lehrveranstaltungsname", "Findet Statt", "Fachsemester", "Gruppe", "Instanz"));
         }
 
         //Fill the underhead with blanks for the above header attributes
-        underHeader.addAll(Arrays.asList("", "", "", "", "", ""));
+        underHeader.addAll(Arrays.asList("", "", "", "", ""));
 
         
         //Append Header with the rest of the survey questions
@@ -78,8 +78,8 @@ public class CSVGenerator {
             if(o instanceof qova.objects.SingleChoiceResponse){
                 SingleChoiceResponse scr = (SingleChoiceResponse) o;
                 header.add(scr.getQuestion());
-                underHeader.add("");
-                for(int i = 0; i < scr.getNumberOfOptions(); i++){
+                underHeader.add(scr.getSingleChoiceOptions().get(0));
+                for(int i = 1; i < scr.getNumberOfOptions(); i++){
                     header.add("-");
                     underHeader.add(scr.getSingleChoiceOptions().get(i));
                 }
@@ -89,8 +89,8 @@ public class CSVGenerator {
             if(o instanceof qova.objects.MultipleChoiceResponse){
                 MultipleChoiceResponse mcr = (MultipleChoiceResponse) o;
                 header.add(mcr.getQuestion());
-                underHeader.add("");
-                for(int i = 0; i < mcr.getNumberOfOptions(); i++){
+                underHeader.add(mcr.getMultipleChoiceOptions().get(0));
+                for(int i = 1; i < mcr.getNumberOfOptions(); i++){
                     header.add("-");
                     underHeader.add(mcr.getMultipleChoiceOptions().get(i));
                 }
@@ -110,17 +110,17 @@ public class CSVGenerator {
             if(listOfSurveyResponses.get(i).get(0) instanceof qova.objects.BinaryResponse){
                 String groupNumber = String.valueOf(((BinaryResponse)listOfSurveyResponses.get(i).get(0)).getSurveyResponse().getGroupNumber());
                 String instanceNumber = String.valueOf(((BinaryResponse)listOfSurveyResponses.get(i).get(0)).getSurveyResponse().getInstanceNumber());
-                row.addAll(Arrays.asList(groupNumber, instanceNumber, ""));
+                row.addAll(Arrays.asList(groupNumber, instanceNumber));
             }
             if(listOfSurveyResponses.get(i).get(0) instanceof qova.objects.SingleChoiceResponse){
                 String groupNumber = String.valueOf(((SingleChoiceResponse)listOfSurveyResponses.get(i).get(0)).getSurveyResponse().getGroupNumber());
                 String instanceNumber = String.valueOf(((SingleChoiceResponse)listOfSurveyResponses.get(i).get(0)).getSurveyResponse().getInstanceNumber());
-                row.addAll(Arrays.asList(groupNumber, instanceNumber, ""));
+                row.addAll(Arrays.asList(groupNumber, instanceNumber));
             }
             if(listOfSurveyResponses.get(i).get(0) instanceof qova.objects.MultipleChoiceResponse){
                 String groupNumber = String.valueOf(((MultipleChoiceResponse)listOfSurveyResponses.get(i).get(0)).getSurveyResponse().getGroupNumber());
                 String instanceNumber = String.valueOf(((MultipleChoiceResponse)listOfSurveyResponses.get(i).get(0)).getSurveyResponse().getInstanceNumber());
-                row.addAll(Arrays.asList(groupNumber, instanceNumber, ""));
+                row.addAll(Arrays.asList(groupNumber, instanceNumber));
             }
             
 
