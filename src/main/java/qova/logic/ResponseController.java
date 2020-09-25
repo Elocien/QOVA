@@ -12,6 +12,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import qova.admin.AdminManagement;
 import qova.enums.CourseType;
 import qova.forms.SurveyForm;
-import qova.forms.SurveySelectAdminForm;
+import qova.forms.SurveySelectForm;
 import qova.objects.Course;
 import qova.objects.SurveyResponse;
 
@@ -53,7 +54,7 @@ public class ResponseController {
     //---------------------------------------------------------------------------
 
     @GetMapping("surveySelect")
-    public String selectSurvey(Model model, @RequestParam UUID id, @RequestParam String type) {
+    public String selectSurvey(Model model, SurveySelectForm form, @RequestParam UUID id, @RequestParam String type) {
 
         // course name, course type, instance names, groupAmount
         Optional<Course> crs = courseManagement.findById(id);
@@ -61,6 +62,7 @@ public class ResponseController {
             model.addAttribute("courseName", crs.get().getName());
             model.addAttribute("courseType", type);
             model.addAttribute("id", crs.get().getId());
+            model.addAttribute("form", form);
 
             if (type.equals("LECTURE")) {
                 model.addAttribute("instanceTitles", crs.get().getLecture().getInstanceTitles());
@@ -89,9 +91,8 @@ public class ResponseController {
 
     // TODO: rename path variables
     // Validation of entry of surveySelect page, and redirect to the actual survey
-    @PostMapping("surveyselect")
-    public String selectSurveySubmission(Model model, @RequestParam UUID id, @RequestParam String type,
-            @RequestParam String instance, @RequestParam Integer group) {
+    @PostMapping("surveySelect")
+    public String selectSurveySubmission(Model model, @ModelAttribute("form") SurveySelectForm form, @RequestParam UUID id, @RequestParam String type) {
 
         Optional<Course> crs = courseManagement.findById(id);
 
@@ -100,7 +101,6 @@ public class ResponseController {
             return "error?code=" + courseNotFound;
         }
         // if type is not one of the defined values
-
         if(!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR")) && !(type.equals("PRACTICAL"))){
             return "error?code=" + internalError;
         }
@@ -109,8 +109,7 @@ public class ResponseController {
         //TODO validate that parameters only contain valid charachters. E.g. a-zA-Z0-9
 
         else {
-            return "survey?type=" + type + "&id=" + id + "instanceTitle=" + instance + "groupNumber="
-                    + group;
+            return "survey?type="+type+"&id="+id+"instanceTitle="+form.getInstance()+"groupNumber="+form.getGroup();
         }
     }
 
