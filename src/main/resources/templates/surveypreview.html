@@ -18,9 +18,10 @@
 <div th:include="navbar"></div>
 
 <!--Für welchen Typ die Umfrage ist würde ich vielleicht kicken, weil ich das ja weiß, wenn ich drinnen sitzte-->
-<div class="row">
+<div class="row justify-content-center">
 	<div class="col-lg-12 mt-4">
 		<h2 class="font-weight-bold text-center title"><span th:text="${coursename} +' : '"></span><span th:text="#{'editor.' + ${typeID}}"></span></h2>
+		<h5 class="font-weight-light text-center" th:text="#{editor.description}">PREVIEW YOUR SURVEY. GREY QUESTIONS ARE DEFAULT QUESTIONS.</h5>
 		<div class="row">
 			<div class="col-md-3"></div>
 			<!-- Survey-->
@@ -125,7 +126,10 @@
 			selectionOption.appendChild(fullOptionNo);
 
 
-
+			if(index<5){
+				x.classList.remove("bg-white")
+				x.classList.add("bg-light-grey")
+			}
 			x.appendChild(selectionOption);
 
 
@@ -144,7 +148,11 @@
 			text_area.setAttribute("id",index);
 			text_area.placeholder = "Antwort";
 
-			div.appendChild(text_area);
+			div.appendChild(text_area);				
+			if(index<5){
+				x.classList.remove("bg-white")
+				x.classList.add("bg-light-grey")
+			}
 			x.appendChild(div);
 
 
@@ -182,6 +190,10 @@
 
 				}
 
+				if(index<5){
+					x.classList.remove("bg-white")
+					x.classList.add("bg-light-grey")
+				}
 				x.appendChild(selectionOption);
 
 
@@ -220,6 +232,10 @@
 
 			}
 
+			if(index<5){
+				x.classList.remove("bg-white")
+				x.classList.add("bg-light-grey")
+			}
 			x.appendChild(selectionOption);
 
 			const footer = document.createElement("DIV");
