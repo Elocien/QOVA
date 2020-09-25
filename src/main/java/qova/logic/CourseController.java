@@ -303,9 +303,11 @@ public class CourseController {
 
 
     @PostMapping("course/duplicate")
-    public String duplicateCourseWithNewSemester(DuplicateCourseForm duplicateForm, @RequestParam UUID id){
+    public String duplicateCourseWithNewSemester(@RequestParam UUID id, @RequestParam String year){
 
-        Course newCourse = courseManagement.duplicateCourse(id, duplicateForm.getSemesterString());
+	    year = year.replace("+", " ");
+	    System.out.print(year);
+        Course newCourse = courseManagement.duplicateCourse(id, year);
 
         return "redirect:../course/details?id=" + newCourse.getId();
     }

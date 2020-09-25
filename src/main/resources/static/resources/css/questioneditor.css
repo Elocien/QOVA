@@ -9,6 +9,15 @@ body {
     margin-top: 0px;
 }
 
+.custom-save{
+    padding: 0px 2px;
+}
+.container-fixed{
+    position: fixed !important;
+    top: 11.1rem;
+    right: 80%;
+}
+
 .btn-head {
     background-color: var(--tu_blue);
     color: white;
@@ -28,6 +37,7 @@ body {
     background-color: rgba(255, 255, 255, 0.8);
     border-top: 1px solid var(--fancy_grey);
     border-bottom: 1px solid var(--fancy_grey);
+    border-radius: 0px;
     transition: 0.5s;
 }
 .btn-list-last {
@@ -37,6 +47,8 @@ body {
 .btn-list-last:hover {
     background-color: rgba(255, 255, 255, 0.8);
     border-top: 1px solid var(--fancy_grey);
+    border-top-left-radius: 0px;
+    border-top-right-radius: 0px;
     transition: 0.5s;
 }
 

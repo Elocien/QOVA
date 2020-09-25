@@ -30,27 +30,23 @@
             <h5 class="font-weight-light text-center"><span th:text="${coursename} + ': '"></span><span th:text="#{'editor.' + ${typeID}}"></span></h5>
 
             <div class="row">       
-                <div class="col-md-1"></div>     
+                <div class="col-md-3"></div>
                 <!--Menu-->
-                <div class="col-md-2 text-right">
-                    <div class="container">
-                        <div class="btn-group-vertical mt-4 border border-dark rounded" role="group" aria-label="First group">
-                            <button type="button" class="btn btn-head btn-text-right" th:text="#{question.new}">NEW QUESTION</button>
-                            <button type="button" class="btn btn-list btn-text-right" onclick="addYesNoQuestion()"><span th:text="#{question.yes-no-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
-                            <button type="button" class="btn btn-list btn-text-right" onclick="addMultipleChoiceQuestion()"><span th:text="#{question.multiple-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
-                            <button type="button" class="btn btn-list btn-text-right" onclick="addSingleChoiceQuestion()"><span th:text="#{question.single-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
-                            <button type="button" class="btn btn-list btn-text-right" onclick="addFreeTextQuestion()"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
-                            <button type="button" class="btn btn-head btn-text-right" th:text="#{question.edit}">NEW QUESTION</button>
-                            <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="submitsurvey" style="width: 100%">
-                                <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
-                                <button class="btn btn-list btn-text-right" type="submit"><span th:text="#{question.submit}"></span><i class="fas fa-save ml-2"></i></button>
-                            </form>
-                            <form th:action="@{/course/previewsurvey?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="previewsurvey" style="width:100%">
-                                <input type="text" name="questionnairejson" id="questionnairejson2" class="input"></input>
-                                <button class="btn btn-list-last btn-text-right" type="submit" ><span th:text="#{question.preview}"></span><i class="fas fa-file ml-2"></i></button>
-                            </form>
-                        </div>
-                    </div>
+                <div class="btn-group-vertical container-fixed mt-4 border border-dark rounded" role="group" aria-label="First group">
+                    <button type="button" class="btn btn-head btn-text-right" th:text="#{question.new}">NEW QUESTION</button>
+                    <button type="button" class="btn btn-list btn-text-right" onclick="addYesNoQuestion()"><span th:text="#{question.yes-no-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                    <button type="button" class="btn btn-list btn-text-right" onclick="addMultipleChoiceQuestion()"><span th:text="#{question.multiple-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                    <button type="button" class="btn btn-list btn-text-right" onclick="addSingleChoiceQuestion()"><span th:text="#{question.single-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                    <button type="button" class="btn btn-list btn-text-right" onclick="addFreeTextQuestion()"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                    <button type="button" class="btn btn-head btn-text-right" th:text="#{question.edit}">NEW QUESTION</button>
+                    <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="submitsurvey" style="width: 100%">
+                        <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
+                        <button class="btn btn-list btn-text-right" type="submit"><span th:text="#{question.submit}"></span><i class="fas fa-save custom-save ml-2"></i></button>
+                    </form>
+                    <form th:action="@{/course/previewsurvey?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="previewsurvey" style="width:100%">
+                        <input type="text" name="questionnairejson" id="questionnairejson2" class="input"></input>
+                        <button class="btn btn-list-last btn-text-right" type="submit" ><span th:text="#{question.preview}"></span><i class="fa fa-eye ml-2"></i></i></button>
+                    </form>
                 </div>
                 <!--Questions-->
                 <div class="col-md-6" >
@@ -64,7 +60,7 @@
     
     <div class="pt-4" th:include="footer"></div>
 
-    <script>
+    <script th:inline="javascript">
         
         //auto resize for the textareas
         const line_height = convertRemToPixels(2);
@@ -360,6 +356,11 @@
 
             const btn_icon = document.createElement("i");
             btn_icon.className = "fa fa-trash";
+
+            btn_d.setAttribute("data-toggle","tooltip");
+            btn_d.setAttribute("data-placement","top");
+            btn_d.title = [[#{question.delete}]];
+
             btn_d.appendChild(btn_icon);
 
             return btn_d;
@@ -374,6 +375,11 @@
 
             const btn_icon = document.createElement("i");
             btn_icon.className = "fa fa-clone";
+
+            btn_copy.setAttribute("data-toggle","tooltip");
+            btn_copy.setAttribute("data-placement","top");
+            btn_copy.title = [[#{question.copy}]];
+
             btn_copy.appendChild(btn_icon);
 
             return btn_copy;
@@ -388,6 +394,11 @@
 
             const btn_icon = document.createElement("i");
             btn_icon.className = "fa fa-arrow-up";
+
+            btn_up.setAttribute("data-toggle","tooltip");
+            btn_up.setAttribute("data-placement","top");
+            btn_up.title = [[#{question.up}]];
+
             btn_up.appendChild(btn_icon);
 
             return btn_up;
@@ -401,6 +412,11 @@
 
             const btn_icon = document.createElement("i");
             btn_icon.className = "fa fa-arrow-down";
+
+            btn_down.setAttribute("data-toggle","tooltip");
+            btn_down.setAttribute("data-placement","top");
+            btn_down.title = [[#{question.down}]];
+
             btn_down.appendChild(btn_icon);
 
             return btn_down;
@@ -410,8 +426,9 @@
         function createButtonnewAnswer(index){
             const btn_newAnswer = document.createElement("Button");
             btn_newAnswer.className="btn btn-primary mb-2";
-            btn_newAnswer.innerHTML="Add new Answer";
+            btn_newAnswer.innerHTML=[[#{question.add-new-answer}]];
             btn_newAnswer.setAttribute("onclick","addnewAnswer("+index+")");
+
 
             return btn_newAnswer;
         }
@@ -577,7 +594,18 @@
             btn_dropdown.setAttribute("data-toggle","dropdown");
             btn_dropdown.setAttribute("aria-haspopup","true");
             btn_dropdown.setAttribute("aria-expanded","false");
-            btn_dropdown.innerHTML = q_type;
+            if (q_type == "MultipleChoice"){
+                btn_dropdown.innerHTML = [[#{question.multiple-choice}]];
+            }
+            else if (q_type == "SingleChoice"){
+                btn_dropdown.innerHTML = [[#{question.single-choice}]];
+            }
+            else if(q_type == "FreeText"){
+                btn_dropdown.innerHTML = [[#{question.free-text-question}]];
+            }
+            else{
+                btn_dropdown.innerHTML = [[#{question.yes-no-question}]];
+            }
 
             title.appendChild(btn_dropdown);
 
@@ -589,7 +617,7 @@
 
                 const btn_changetoYesNO = document.createElement("a");
                 btn_changetoYesNO.className = ("dropdown-item");
-                btn_changetoYesNO.innerHTML = ("YesNo");
+                btn_changetoYesNO.innerHTML = [[#{question.yes-no-question}]];
                 btn_changetoYesNO.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 1 + ")");
                 dropdown_menu.appendChild(btn_changetoYesNO);
 
@@ -599,7 +627,7 @@
 
                 const btn_changetoMultipleChoice = document.createElement("a");
                 btn_changetoMultipleChoice.className = ("dropdown-item");
-                btn_changetoMultipleChoice.innerHTML = ("MultipleChoice");
+                btn_changetoMultipleChoice.innerHTML = [[#{question.multiple-choice}]];
                 btn_changetoMultipleChoice.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 2 + ")");
                 dropdown_menu.appendChild(btn_changetoMultipleChoice);
 
@@ -609,7 +637,7 @@
 
                 const btn_changetoSingleChoice = document.createElement("a");
                 btn_changetoSingleChoice.className = ("dropdown-item");
-                btn_changetoSingleChoice.innerHTML = ("SingleChoice");
+                btn_changetoSingleChoice.innerHTML = [[#{question.single-choice}]];
                 btn_changetoSingleChoice.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 4 + ")");
                 dropdown_menu.appendChild(btn_changetoSingleChoice);
 
@@ -619,7 +647,7 @@
 
                 const btn_changetoFreeText = document.createElement("a");
                 btn_changetoFreeText.className = ("dropdown-item");
-                btn_changetoFreeText.innerHTML = ("FreeText");
+                btn_changetoFreeText.innerHTML = [[#{question.free-text-question}]];
                 btn_changetoFreeText.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 5 + ")");
                 dropdown_menu.appendChild(btn_changetoFreeText);
 
@@ -720,6 +748,10 @@
             document.getElementById("questionnairejson2").value = JSON.stringify(questionnaire);
             return true;
         });
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
 
     </script>
 
