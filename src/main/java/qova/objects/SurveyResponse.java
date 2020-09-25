@@ -1,8 +1,11 @@
 package qova.objects;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.ElementCollection;
@@ -11,6 +14,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderColumn;
 
 import qova.enums.CourseType;
 import qova.enums.ResponseType;
@@ -96,8 +100,17 @@ public class SurveyResponse {
         return this.instanceNumber;
     }
 
-    public Map<String, Date> getListOfStudentsThatSubmitted(){
+    public Map<String, Date> getListOfStudentsAndDatesWithSubmissions(){
         return this.listOfStundentsThatSubmitted;
+    }
+
+    public List<String> getListOfStudentsThatSubmitted(){
+        List<String> listOfStudentIds = new ArrayList<>();
+        for(Map.Entry<String, Date> entry : listOfStundentsThatSubmitted.entrySet()){
+            listOfStudentIds.add(entry.getKey());
+        }
+
+        return listOfStudentIds;
     }
 
     public Integer getNumberOfSubmissions(){
