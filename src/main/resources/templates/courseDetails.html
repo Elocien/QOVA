@@ -42,18 +42,21 @@
                         <div class="modal fade" id="copyModal" tabindex="-1" role="dialog" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content text-center">
-                                    <div class="modal-body">
-                                        <p th:text="#{detail.copyModalText}">PLEASE COPY ME!</p>
-                                        <select id="newYear" class="custom-select form-control">
-                                            <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
-                                        </select>
-                                    </div>
-                                    <div class="modal-footer text-center">
-                                        <div class="w-100"></div>
-                                        <a class="btn btn-primary" th:onclick="build_url()" method="post">Finish</a>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
-                                        <div class="w-100"></div>
-                                    </div>
+                                    <!--Duplicate Form-->
+                                    <form th:action="@{course/duplicate?id=__${course.id}__}" th:object="${DuplicateCourseForm}" method="post">
+                                        <div class="modal-body">
+                                            <p th:text="#{detail.copyModalText}">PLEASE COPY ME!</p>
+                                            <select id="newYear" class="custom-select form-control" th:field="*{semesterString}">
+                                                <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+                                            </select>
+                                        </div>
+                                        <div class="modal-footer text-center">
+                                            <div class="w-100"></div>
+                                            <button type="submit" class="btn btn-primary">Finish</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                                            <div class="w-100"></div>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -69,9 +72,7 @@
                                     </div>
                                     <div class="modal-footer text-center">
                                         <div class="w-100"></div>
-                                        <form th:action="@{/course/delete?id=__${course.id}__}" method="post">
-                                            <button type="submit" class="btn btn-primary">Yes</button>
-                                        </form>
+                                        <a th:href="@{/course/delete?id=__${course.id}__}" method="post" class="btn btn-primary">Yes</a>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
                                         <div class="w-100"></div>
                                     </div>
@@ -362,15 +363,6 @@
 
         //replaces everything else
         switcheroo();
-    }
-
-    function build_url() {
-        var url = /*[[@{/course/duplicate(id=${course.id})}]]*/"";
-        window.location = url+"&year="+getValue(document.getElementById("newYear")).replace(" ", "+");
-    }
-    function getValue(e){
-        var result = e.options[e.selectedIndex].value;
-        return result
     }
 </script>
 </html>

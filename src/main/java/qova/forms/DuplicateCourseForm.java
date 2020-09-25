@@ -6,6 +6,7 @@ public class DuplicateCourseForm {
     //Taken as String from model (in the form: "SoSe xx" | "WiSe xx/yy")
     @NotNull private String semesterString;
 
+
     public DuplicateCourseForm(String semesterString){
         this.semesterString = semesterString;
     }
