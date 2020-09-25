@@ -74,7 +74,7 @@ public class PDFGenerator {
     * @throws IOException Thrown by itextpdf
     * @throws Exception Thrown when none of the Responses Match the given types
     */
-    public byte[] createPdf(SurveyResponse response, LocalizationOption language) throws IOException, Exception {
+    public byte[] createPdf(SurveyResponse response, List<Object> listOfSurveyResponses, LocalizationOption language) throws IOException, Exception {
 
         if (language.equals(LocalizationOption.EN)) {
             total = "Total";
@@ -130,7 +130,7 @@ public class PDFGenerator {
         // (depending on Group and Instance number).
         // Each of the objects returned by the getUserResponses() method is of the type
         // BinaryResponse, TextResponse, MultipleChoiceResponse or SingleChoiceResponse
-        List<Object> rsp = response.getUserResponses();
+        List<Object> rsp = listOfSurveyResponses;
 
         //Step 2:
         //Iterate through all user responses, with each object corresponding to a question on the questionnaire
@@ -380,11 +380,11 @@ public class PDFGenerator {
         Integer responsePossibilities = mcr.getNumberOfOptions();
 
         //ArrayList containing all column titles 
-        ArrayList<String> columnTitles = mcr.getMultipleChoiceOptions();
+        List<String> columnTitles = mcr.getMultipleChoiceOptions();
 
         //DIFFERENT FROM columnTITLES!!!
         //Create an ArrayList, where each element represents a column of the bar graph. The value is the total number of responses for that option
-        ArrayList<Integer> columnTotals = mcr.getMultipleChoiceAnswers();
+        List<Integer> columnTotals = mcr.getMultipleChoiceAnswers();
 
 
         //Initialise the DataSet
@@ -439,11 +439,11 @@ public class PDFGenerator {
         Integer responsePossibilities = scr.getNumberOfOptions();
 
         //ArrayList containing all column titles 
-        ArrayList<String> columnTitles = scr.getSingleChoiceOptions();
+        List<String> columnTitles = scr.getSingleChoiceOptions();
 
         //DIFFERENT FROM columnTITLES!!!
         //Create an ArrayList, where each element represents a column of the bar graph. The value is the total number of responses for that option
-        ArrayList<Integer> columnTotals = scr.getSingleChoiceAnswers();
+        List<Integer> columnTotals = scr.getSingleChoiceAnswers();
 
 
         //Initialise the DataSet
