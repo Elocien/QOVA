@@ -16,11 +16,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 public class responseTest extends AbstractIntegrationTest {
+    
     @Test
     public void UserResponseConstructorTest() throws Exception {
 
@@ -46,25 +48,22 @@ public class responseTest extends AbstractIntegrationTest {
         // ----------------------------------------------------------------------------------------------------------------------
 
         var type = CourseType.LECTURE;
-        var instanceNumber = 12;
-        var groupNumber = 4;
+        var instance = 1;
+        var group = 1;
 
-        List<Object> responses = new ArrayList<>();
+        SurveyResponse response = new SurveyResponse(crs, type, instance, group);
 
-        BinaryResponse bnr = new BinaryResponse("Would you consider recommending the lecture to other students?");
-        for(int i = 0; i < 50 ; i++){bnr.incrementYes();}
-        for(int i = 0; i < 25 ; i++){bnr.incrementNo();}
+        BinaryResponse bnr = new BinaryResponse(response, "Would you consider recommending the lecture to other students?", 0);
+        for(int i = 0; i < 35 ; i++){bnr.incrementYes();}
+        for(int i = 0; i < 15 ; i++){bnr.incrementNo();}
 
-
-        
-        
         ArrayList<String> mcOptions = new ArrayList<String>();
         mcOptions.add("1");
         mcOptions.add("2");
         mcOptions.add("3");
         mcOptions.add("4");
         mcOptions.add("5");
-        MultipleChoiceResponse mcr = new MultipleChoiceResponse("From 1 to 5, what would you rate the lecture?", mcOptions);
+        MultipleChoiceResponse mcr = new MultipleChoiceResponse(response, "From 1 to 5, what would you rate the lecture?", 1, mcOptions);
 
         ArrayList<Integer> mcAnswers1 = new ArrayList<Integer>();
         mcAnswers1.add(0);
@@ -84,38 +83,39 @@ public class responseTest extends AbstractIntegrationTest {
         for(int i = 0; i < 15 ; i++){mcr.incrementTotals(mcAnswers2);}
         for(int i = 0; i < 10 ; i++){mcr.incrementTotals(mcAnswers3);}
 
-        
-
-
-        TextResponse txr = new TextResponse("What is your opinion of the lecture, is it helpful?");
+        TextResponse txr = new TextResponse(response, "What is your opinion of the lecture, is it helpful?", 2);
         for(int i = 0; i < 20 ; i++){txr.addTextSubmission("this is a bit of a test");}
         for(int i = 0; i < 10 ; i++){txr.addTextSubmission("this is a larger test to test the test");}
         for(int i = 0; i < 17 ; i++){txr.addTextSubmission("short test");}
         for(int i = 0; i < 3 ; i++){txr.addTextSubmission("this is a very very very very very very very very very very very very very very very very very very very very large test");}
 
 
-        responses.add(bnr);
-        responses.add(mcr);
-        responses.add(txr);
-        SurveyResponse rsp = new SurveyResponse(crs, type, instanceNumber, groupNumber, responses);
-        
+        List<String> listOfStudentIds = new ArrayList<>();
+        for(int i = 0; i < 50; i++){
+            String id = UUID.randomUUID().toString();
+            System.out.println(id);
+            response.addStundentIdToSubmissionListAndIncrementCounter(id);
+            listOfStudentIds.add(id);
+        }
         
 
-        assertEquals(crs, rsp.getCourse());
-        assertEquals(type, rsp.getCourseType());
-        assertEquals(groupNumber, rsp.getGroupNumber());
-        assertEquals(instanceNumber, rsp.getInstanceNumber());
-        // assertEquals(expected, rsp.getNumberOfSubmissions());
-        assertEquals(responses, rsp.getUserResponses());
-        
+        assertEquals(crs, response.getCourse());
+        assertEquals(type, response.getCourseType());
+        assertEquals(group, response.getGroupNumber());
+        assertEquals(instance, response.getInstanceNumber());
+        //The Maps order is not persisted in the same order the objects are added to it
+        assertEquals(listOfStudentIds.containsAll(response.getListOfStudentsThatSubmitted()), response.getListOfStudentsThatSubmitted().containsAll(listOfStudentIds));
+        assertEquals(50, response.getNumberOfSubmissions());
     }
 
     @Test
     public void BinaryResponseConstructorTest(){
+
+        SurveyResponse surveyResponse = Mockito.mock(SurveyResponse.class);
         
         var question = "Was the lecture informative";
         
-        BinaryResponse br = new BinaryResponse(question);
+        BinaryResponse br = new BinaryResponse(surveyResponse, question, 0);
         br.incrementYes();
         br.incrementNo();
         br.incrementNo();
@@ -123,23 +123,33 @@ public class responseTest extends AbstractIntegrationTest {
         assertEquals(question, br.getQuestion());
         assertEquals("1", br.getYesTotalString());
         assertEquals("2", br.getNoTotalString());
+        assertEquals(1, br.getYesTotal());
+        assertEquals(2, br.getNoTotal());
         assertEquals(3, br.getTotal());
         assertEquals(qova.enums.ResponseType.BINARY_ANSWER, br.getType());
+        assertEquals(0, br.getSurveyPosition());
+        assertEquals(surveyResponse, br.getSurveyResponse());
     }
 
     @Test
     public void TextResponseConstructorTest(){
+
+        SurveyResponse surveyResponse = Mockito.mock(SurveyResponse.class);
         
         var question = "Was the lecture informative";
         
-        TextResponse tr = new TextResponse(question);
+        TextResponse tr = new TextResponse(surveyResponse, question, 1);
         
         assertEquals(question, tr.getQuestion());
         assertEquals(qova.enums.ResponseType.TEXT_RESPONSE, tr.getType());
+        assertEquals(1, tr.getSurveyPosition());
+        assertEquals(surveyResponse, tr.getSurveyResponse());
     }
 
     @Test
     public void SingleChoiceConstructorTest() throws Exception {
+
+        SurveyResponse surveyResponse = Mockito.mock(SurveyResponse.class);
         
         String question = "Rate the lecutre from 1 to 5";
 
@@ -149,7 +159,7 @@ public class responseTest extends AbstractIntegrationTest {
         scOptions.add("3");
         scOptions.add("4");
         scOptions.add("5");
-        SingleChoiceResponse scr = new SingleChoiceResponse(question, scOptions);
+        SingleChoiceResponse scr = new SingleChoiceResponse(surveyResponse, question, 2, scOptions);
 
 
         for(int i = 0; i < 3 ; i++){scr.incrementTotal(0);}
@@ -170,11 +180,15 @@ public class responseTest extends AbstractIntegrationTest {
         assertEquals(scOptions, scr.getSingleChoiceOptions());
         assertEquals(totals, scr.getSingleChoiceAnswers());
         assertEquals(qova.enums.ResponseType.SINGLE_CHOICE, scr.getType());
+        assertEquals(2, scr.getSurveyPosition());
+        assertEquals(surveyResponse, scr.getSurveyResponse());
     }
 
 
     @Test
     public void MultipleChoiceConstructorTest() throws Exception {
+
+        SurveyResponse surveyResponse = Mockito.mock(SurveyResponse.class);
         
         String question = "What was good about the lecture (multiple options can be selected)";
 
@@ -184,7 +198,7 @@ public class responseTest extends AbstractIntegrationTest {
         mcOptions.add("I learned something new");
         mcOptions.add("I enjoyed attending the lecture");
         mcOptions.add("I would recommend the lecture to others");
-        MultipleChoiceResponse mcr = new MultipleChoiceResponse(question, mcOptions);
+        MultipleChoiceResponse mcr = new MultipleChoiceResponse(surveyResponse, question, 0, mcOptions);
 
         ArrayList<Integer> mcAnswers1 = new ArrayList<Integer>();
         mcAnswers1.add(0);
@@ -218,6 +232,8 @@ public class responseTest extends AbstractIntegrationTest {
         assertEquals(totals, mcr.getMultipleChoiceAnswers());
         assertEquals(5, mcr.getNumberOfOptions());
         assertEquals(qova.enums.ResponseType.MULTIPLE_CHOICE, mcr.getType());
+        assertEquals(0, mcr.getSurveyPosition());
+        assertEquals(surveyResponse, mcr.getSurveyResponse());
     }
 
 }
