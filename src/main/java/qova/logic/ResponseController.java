@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import qova.admin.AdminManagement;
 import qova.enums.CourseType;
 import qova.forms.SurveyForm;
+import qova.forms.SurveySelectAdminForm;
 import qova.objects.Course;
 import qova.objects.SurveyResponse;
 
@@ -111,6 +112,20 @@ public class ResponseController {
             return "survey?type=" + type + "&id=" + id + "instanceTitle=" + instance + "groupNumber="
                     + group;
         }
+    }
+
+    
+    @GetMapping("surveySelectAdmin")
+    public String surveSelectAdmin(Model model, @RequestParam UUID id) {
+        Optional<Course> crs = courseManagement.findById(id);
+        if (crs.isPresent()) {
+            model.addAttribute("courseName", crs.get().getName());
+            model.addAttribute("id", crs.get().getId());
+            return "surveySelectAdmin";
+        }
+
+        //if course does not exist, redirect to global error page
+        return "error?code=" + courseNotFound;
     }
 
     // Get Survey from Server
