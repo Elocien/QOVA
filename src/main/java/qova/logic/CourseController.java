@@ -37,8 +37,6 @@ import qova.objects.Course;
 //@Lucian please don't delete me just yet T_T
 import java.util.List;
 import java.util.Arrays;
-import java.time.LocalDate;
-import java.time.LocalTime;
 //END
 
 
@@ -100,15 +98,6 @@ public class CourseController {
         return "courses";
     }
 
-    /*@GetMapping("/courses")
-    public String courses (Model model) {
-        
-        List<Course> courseList = Arrays.asList(courseManagement.TimTestCreateCourse(), courseManagement.TimTestCreateCourse());
-        model.addAttribute("courseList", courseList);
-
-        return "courses";
-    }*/
-
 
 
     //Shows the details for a specific course
@@ -162,19 +151,6 @@ public class CourseController {
         courseManagement.updateCourseDetails(id, form);
 		return "redirect:../course/details?id=" + id;
 	}
-
-
-    /*@GetMapping("/course/details")
-    public String courseDetails(Model model, CourseForm form, UUID id) {
-
-        id = "5";
-        model.addAttribute("course", courseManagement.TimTestCreateCourse());
-        model.addAttribute("form", form);
-        model.addAttribute("semesterDates", courseManagement.findSemesters());
-
-        return "courseDetails";
-    }*/
-
 
 
     //Create Course
@@ -248,26 +224,6 @@ public class CourseController {
 
 		return "CourseNew2";
     }
-
-   
-
-    /*@GetMapping("course/new2")
-	public String createCourse_SetInstanceTitles(Model model, InstanceTitleForm form) {
-
-        model.addAttribute("lectureInstances", 2);
-        model.addAttribute("lectureExists", true);
-
-        model.addAttribute("tutorialInstances", 3);
-        model.addAttribute("tutorialExists", true);
-
-        model.addAttribute("seminarInstances", 2);
-        model.addAttribute("seminarExists", false);
-
-        model.addAttribute("practicalInstances", 5);
-        model.addAttribute("practicalExists", true);
-
-		return "courseNew2";
-    }*/
     
     //Validation of Created course
 	@PostMapping("course/new2")
@@ -343,13 +299,6 @@ public class CourseController {
         //give course name to model, to show as title
         Optional<Course> course = courseManagement.findById(id);
         model.addAttribute("coursename", course.get().getName());
-        
-        /*
-        //Just for testing:
-        LocalDate dateNow = LocalDate.now();
-        var course = new Course("Cheese", true, true, true, "Cheese Lecture Survey 2020", "Cheese Tutorial Survey 2020", "Cheese Seminar Survey 2020", 5, 5, 5, CourseFaculty.EDUCATION, "1-5", dateNow);
-        model.addAttribute("coursename", course.getName());
-        */
         
         return "questioneditor";
     }
