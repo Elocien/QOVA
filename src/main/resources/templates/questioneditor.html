@@ -29,6 +29,31 @@
             <h2 class="font-weight-bold text-center" th:text="#{editor.headline}">SURVEY EDITOR</h2>
             <h5 class="font-weight-light text-center"><span th:text="${coursename} + ': '"></span><span th:text="#{'editor.' + ${typeID}}"></span></h5>
 
+            <!--Finalize Modal-->
+            <div class="modal fade" id="finalizeModal" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content text-left">
+                        <div class="modal-header">
+                        <p class="modal-title m-0 font-weight-bold" th:text="#{finalize.headline}">HERE YOU CAN FINALIZE THE SURVEY. STUDENTS CAN ASNWERE THE SURVEY ONCE IT IS FINALIZED.</p>
+                      </div>
+                        <div class="modal-body">
+                            <p class="mb-1" th:text="#{finalize.warning}">THE FOLLOWING THNGS CAN NOT BE CHANGED ANYMORE AFTER FINALIZATION:</p>
+                            <p class="m-0 ml-2 font-weight-light" th:text="#{finalize.survey}">- THIS SURVEY</p>
+                            <p class="m-0 ml-2 font-weight-light" th:text="|- #{'editor.' + ${typeID}} #{new.instances}|">- COURSE INSTANCE</p>
+                            <p class="mb-1 ml-2 font-weight-light" th:text="|- #{'editor.' + ${typeID}} #{detail.groupAmount}|">- GROUP AMOUNT</p>
+                            <p class="mb-3" th:text="#{finalize.warning2}">MAKE SURE THESE ARE ASIGNED PROPERLY!</p>
+                            <p class="mb-1 font-weight-light" th:text="#{finalize.tip}">IF YOU WANT TO KEEP WORKING ON YOUR SURVEY LATER ON, CHOSE THE "SAVE"-BUTTON INSTEAD.</p>
+                        </div>
+                        <div class="modal-footer text-center">
+                            <div class="w-100"></div>
+                            <a href="#" method="post" class="btn btn-primary" th:text="#{question.finalize}">FINALIZE</a>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                            <div class="w-100"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="row">       
                 <div class="col-3 text-center position-fixed">
                     <!--Menu-->
@@ -41,12 +66,13 @@
                         <button type="button" class="btn btn-head btn-text-right" th:text="#{question.edit}">NEW QUESTION</button>
                         <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="submitsurvey" style="width: 100%">
                             <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
-                            <button class="btn btn-list btn-text-right" type="submit"><span th:text="#{question.submit}"></span><i class="fas fa-save custom-save ml-2"></i></button>
+                            <button class="btn btn-list btn-text-right" type="submit"><span th:text="#{question.save}"></span><i class="fas fa-save custom-save ml-2"></i></button>
                         </form>
                         <form th:action="@{/course/previewsurvey?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="previewsurvey" style="width:100%">
                             <input type="text" name="questionnairejson" id="questionnairejson2" class="input"></input>
-                            <button class="btn btn-list-last btn-text-right" type="submit" ><span th:text="#{question.preview}"></span><i class="fa fa-eye ml-2"></i></i></button>
+                            <button class="btn btn-list btn-text-right" type="submit" ><span th:text="#{question.preview}"></span><i class="fa fa-eye ml-2"></i></i></button>
                         </form>
+                        <button class="btn btn-list-last btn-text-right" type="submit" data-toggle="modal" data-target="#finalizeModal"><span th:text="#{question.finalize}"></span><i class="fas fa-stamp ml-2"></i></button>
                     </div>
                 </div>
                 <!--Questions-->
