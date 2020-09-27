@@ -127,7 +127,7 @@
                                         <th class="col-5" scope="row" th:text="#{course.semesterOfStudents}">SEMESTER</th>
                                         <td class="hide_me"><span th:text="${course.semesterOfStudents}">IDK - XXXX</span></td>
                                         <td class="show_me" style="display: none;">
-                                            <input class="form-control" type="number" th:placeholder="${course.semesterOfStudents}" th:value="${course.semesterOfStudents}" th:name="semesterOfStudents">
+                                            <input class="form-control" type="number" th:placeholder="${course.semesterOfStudents}" th:value="${course.semesterOfStudents}" th:name="semesterOfStudents" th:field="*{semesterOfStudents}">
                                         </td>
                                         <td></td>
                                     </tr>
@@ -171,7 +171,7 @@
                                         <!--4th Col-->
                                         <td class="text-center hide_me" th:text="${__'course.' + ${course_type} + '.groupAmount'__}">COUNT</td>
                                         <td class="show_me" style="display: none;">
-                                            <input class="form-control" type="text" th:value="${__'course.' + ${course_type} + '.groupAmount'__}" th:name="|groupAmount${#strings.capitalize(course_type)}|">
+                                            <input class="form-control" type="text" th:value="${__'course.' + ${course_type} + '.groupAmount'__}" th:name="|groupAmount${#strings.capitalize(course_type)}|" th:id="|groupAmount${#strings.capitalize(course_type)}|">
                                         </td>
                                         <!--5th Col-->
                                         <div th:switch="${__'course.' + ${course_type} + '.survey'__}">
