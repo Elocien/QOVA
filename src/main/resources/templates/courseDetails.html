@@ -242,7 +242,7 @@
                     <div th:if="!${course.lecture.survey.equals('[]') and course.tutorial.survey.equals('[]') and course.seminar.survey.equals('[]') and course.practical.survey.equals('[]')}" class="container text-center mt-3">
                         <p class="m-0 font-weight-light" th:text="#{detail.download}"></p>
                         <div class="btn-group" role="group" aria-label="First group">
-                            <a th:each="course_type: ${type_list}" th:if="!${(__'course.' + ${course_type} + '.survey'__).equals('[]')}" class="btn btn-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:href="${'/qrcode?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" target="_blank" href="#">TEXT</a>
+                            <a th:each="course_type: ${type_list}" th:if="!${(__'course.' + ${course_type} + '.survey'__).equals('[]')}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:href="${'/qrcode?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" target="_blank" href="#">TEXT</a>
                         </div>
                     </div>
 

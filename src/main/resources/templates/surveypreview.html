@@ -9,27 +9,32 @@
 	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />	
 	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
 	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/survey.css}" />
-	<title th:text="#{home.title}">TITLE</title>
 	<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-
-
+	<title th:text="#{home.title}">TITLE</title>
 </head>
 <body class="bg-light">
-<div th:include="navbar"></div>
+<div th:replace="navbar"></div>
 
-<!--Für welchen Typ die Umfrage ist würde ich vielleicht kicken, weil ich das ja weiß, wenn ich drinnen sitzte-->
-<div class="row justify-content-center">
-	<div class="col-lg-12 mt-4">
-		<h2 class="font-weight-bold text-center title"><span th:text="${coursename} +' : '"></span><span th:text="#{'editor.' + ${typeID}}"></span></h2>
-		<h5 class="font-weight-light text-center" th:text="#{editor.description}">PREVIEW YOUR SURVEY. GREY QUESTIONS ARE DEFAULT QUESTIONS.</h5>
+<div class="row justify-content-center mb-4">
+	<div class="col-lg-12">
+		
+		<!--Headline-->
+        <div class="mb-4 mt-4">
+			<h2 class="font-weight-bold text-center title"><span th:text="${coursename} +' : '"></span><span th:text="#{'editor.' + ${typeID}}"></span></h2>
+			<h5 class="font-weight-light text-center" th:text="#{editor.description}">PREVIEW YOUR SURVEY. GREY QUESTIONS ARE DEFAULT QUESTIONS.</h5>
+		</div>
+		
+		<!--Finalize Modal-->
+		<div th:replace="finalizeModal"></div>
+
 		<div class="row">
 			<div class="col-md-3"></div>
 			<!-- Survey-->
 			<div class="col-md-6">
 				<div id="survey"></div>
-				<div class="btn-group" style="width: 100%">
-					<a th:href="@{/course/details?id={id}(id=${id})}" class="btn btn-primary mt-2 btn-tu" th:text="#{question.submit}" style="margin-left: auto"> </a>
-					<a th:href="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" class="btn btn-primary mt-2 btn-tu" th:text="#{question.surveyeditor}" style="margin-right:auto"></a>
+				<div class="row mt-2 text-center justify-content-center">
+					<a  type="submit" data-toggle="modal" data-target="#finalizeModal" class="btn btn-primary btn-tu mr-4"><i class="fas fa-stamp mr-2"></i><span th:text="#{question.submit}"></span></a>
+					<a th:href="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" class="btn btn-primary btn-tu"><i class="far fa-edit mr-2"></i><span th:text="#{question.surveyeditor}"></span></a>
 				</div>
 			</div>
 			<div class="col-md-3"></div>
@@ -37,9 +42,7 @@
 	</div>
 </div>
 
-
 <div th:replace="footer"></div>
-
 <script th:inline="javascript">
 
 	const survey = [(${survey})];
