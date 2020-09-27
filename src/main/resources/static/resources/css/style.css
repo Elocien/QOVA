@@ -439,3 +439,26 @@ select {
   filter: brightness(200%);
   text-decoration: none;
 }
+
+/*error.html*/
+.huge-headline {
+  font-size: 6rem;
+}
+.bug-container {
+  margin: 6rem;
+  margin-bottom: none;
+}
+.bug-image {
+  max-width: 90%;
+  max-height: 90%;
+}
+.dialog-window {
+  max-width: 35rem;
+  padding: 1rem;
+  background-color: white;
+  border: 1px solid lightgrey;
+  border-left: 2px solid black;
+}
+.dialog-option:hover {
+  text-decoration: none;
+}

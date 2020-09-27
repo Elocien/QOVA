@@ -76,7 +76,7 @@ public class CourseController {
 
     @GetMapping("error")
 
-    public String error (Model model, @PathVariable(required = false) Integer code) {
+    public String error (Model model, @RequestParam(required = false) Integer code) {
 
         
         //add error code to model
