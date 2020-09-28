@@ -9,8 +9,14 @@ import qova.forms.CourseForm;
 import qova.forms.InstanceTitleForm;
 import qova.objects.Course;
 import qova.objects.CourseInstance;
+import qova.objects.SurveyResponse;
+import qova.repositories.BinaryResponseRepository;
 import qova.repositories.CourseInstanceRepository;
 import qova.repositories.CourseRepository;
+import qova.repositories.MultipleChoiceResponseRepository;
+import qova.repositories.SingleChoiceResponseRepository;
+import qova.repositories.SurveyResponseRepository;
+import qova.repositories.TextResponseRepository;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -36,9 +42,22 @@ public class CourseManagement {
 
     private final CourseRepository coursesRepo;
     private final CourseInstanceRepository courseInstancesRepo;
+    private final SurveyResponseRepository surveyResponseRepository;
+    private final BinaryResponseRepository binaryResponseRepository;
+    private final TextResponseRepository textResponseRepository;
+    private final SingleChoiceResponseRepository singleChoiceResponseRepository;
+    private final MultipleChoiceResponseRepository multipleChoiceResponseRepository;
 
     @Autowired
-    public CourseManagement(CourseRepository coursesRepo, CourseInstanceRepository courseInstancesRepo) {
+    public CourseManagement(CourseRepository coursesRepo, CourseInstanceRepository courseInstancesRepo, SurveyResponseRepository surveyResponseRepository, 
+            BinaryResponseRepository binaryResponseRepository, TextResponseRepository textResponseRepository, SingleChoiceResponseRepository singleChoiceResponseRepository, 
+            MultipleChoiceResponseRepository multipleChoiceResponseRepository) {
+
+        this.surveyResponseRepository = Objects.requireNonNull(surveyResponseRepository);
+        this.binaryResponseRepository = Objects.requireNonNull(binaryResponseRepository);
+        this.textResponseRepository = Objects.requireNonNull(textResponseRepository);
+        this.singleChoiceResponseRepository = Objects.requireNonNull(singleChoiceResponseRepository);
+        this.multipleChoiceResponseRepository = Objects.requireNonNull(multipleChoiceResponseRepository);
         this.coursesRepo = Objects.requireNonNull(coursesRepo);
         this.courseInstancesRepo = Objects.requireNonNull(courseInstancesRepo);
     }
@@ -196,110 +215,96 @@ public class CourseManagement {
             //These attributes are NOT editable, when the instance has been finalised!!!
 
 
-            //Only execute if lecture is not finalised
-            if(Boolean.FALSE.equals(course.getLecture().isFinalised())){
+        
+            //Lecture EXISTS, but is toggled OFF
+            if(Boolean.TRUE.equals(course.getLectureExists()) && Boolean.FALSE.equals(form.getLectureExists())){
 
-                //Lecture EXISTS, but is toggled OFF
-                if(Boolean.TRUE.equals(course.getLectureExists()) && Boolean.FALSE.equals(form.getLectureExists())){
-
-                    course.getLecture().setInactive();
-                }
-                //Lecture does NOT EXIST, but is toggled ON
-                if(Boolean.FALSE.equals(course.getLectureExists()) && Boolean.TRUE.equals(form.getLectureExists())){
-
-                    //Initialise instanceTitles array
-                    String[] instanceTitles = new String[form.getInstanceAmountLecture()];
-
-                    //Update CourseInstance
-                    CourseInstance lecture = course.getLecture();
-
-                    //Set to one for lectures (in case of change, assign form.getLectureGroupAmount)
-                    lecture.setGroupAmount(1);
-
-                    //
-                    lecture.setInstanceAmount(form.getInstanceAmountLecture());
-                    lecture.setInstanceTitles(instanceTitles);
-                    lecture.setActive();
-                }
+                course.getLecture().setInactive();
             }
+            //Lecture does NOT EXIST, but is toggled ON
+            if(Boolean.FALSE.equals(course.getLectureExists()) && Boolean.TRUE.equals(form.getLectureExists())){
 
-            //Only execute if tutorial is not finalised
-            if(Boolean.FALSE.equals(course.getTutorial().isFinalised())){
+                //Initialise instanceTitles array
+                String[] instanceTitles = new String[form.getInstanceAmountLecture()];
 
-                //tutorial EXISTS, but is toggled OFF
-                if(Boolean.TRUE.equals(course.getTutorialExists()) && Boolean.FALSE.equals(form.getTutorialExists())){
+                //Update CourseInstance
+                CourseInstance lecture = course.getLecture();
 
-                    course.getTutorial().setInactive();
-                }
-                //tutorial does NOT EXIST, but is toggled ON
-                if(Boolean.FALSE.equals(course.getTutorialExists()) && Boolean.TRUE.equals(form.getTutorialExists())){
+                //Set to one for lectures (in case of change, assign form.getLectureGroupAmount)
+                lecture.setGroupAmount(1);
 
-                    //Initialise instanceTitles array
-                    String[] instanceTitles = new String[form.getInstanceAmountTutorial()];
-
-                    //Update CourseInstance
-                    CourseInstance tutorial = course.getTutorial();
-
-                    //
-                    tutorial.setGroupAmount(form.getGroupAmountTutorial());
-                    tutorial.setInstanceAmount(form.getInstanceAmountTutorial());
-                    tutorial.setInstanceTitles(instanceTitles);
-                    tutorial.setActive();
-                }
+                //
+                lecture.setInstanceAmount(form.getInstanceAmountLecture());
+                lecture.setInstanceTitles(instanceTitles);
+                lecture.setActive();
             }
+            
 
+            //tutorial EXISTS, but is toggled OFF
+            if(Boolean.TRUE.equals(course.getTutorialExists()) && Boolean.FALSE.equals(form.getTutorialExists())){
 
-            //Only execute if seminar is not finalised
-            if(Boolean.FALSE.equals(course.getSeminar().isFinalised())){
-
-                //seminar EXISTS, but is toggled OFF
-                if(Boolean.TRUE.equals(course.getSeminarExists()) && Boolean.FALSE.equals(form.getSeminarExists())){
-
-                    course.getSeminar().setInactive();
-                }
-                //seminar does NOT EXIST, but is toggled ON
-                if(Boolean.FALSE.equals(course.getSeminarExists()) && Boolean.TRUE.equals(form.getSeminarExists())){
-
-                    //Initialise instanceTitles array
-                    String[] instanceTitles = new String[form.getInstanceAmountSeminar()];
-
-                    //Update CourseInstance
-                    CourseInstance seminar = course.getSeminar();
-
-                    //
-                    seminar.setGroupAmount(form.getGroupAmountSeminar());
-                    seminar.setInstanceAmount(form.getInstanceAmountSeminar());
-                    seminar.setInstanceTitles(instanceTitles);
-                    seminar.setActive();
-                }
+                course.getTutorial().setInactive();
             }
+            //tutorial does NOT EXIST, but is toggled ON
+            if(Boolean.FALSE.equals(course.getTutorialExists()) && Boolean.TRUE.equals(form.getTutorialExists())){
 
+                //Initialise instanceTitles array
+                String[] instanceTitles = new String[form.getInstanceAmountTutorial()];
 
+                //Update CourseInstance
+                CourseInstance tutorial = course.getTutorial();
 
-            //Only execute if practical is not finalised
-            if(Boolean.FALSE.equals(course.getPractical().isFinalised())){
-
-                //practical EXISTS, but is toggled OFF
-                if(Boolean.TRUE.equals(course.getPracticalExists()) && Boolean.FALSE.equals(form.getPracticalExists())){
-
-                    course.getPractical().setInactive();
-                }
-                //practical does NOT EXIST, but is toggled ON
-                if(Boolean.FALSE.equals(course.getPracticalExists()) && Boolean.TRUE.equals(form.getPracticalExists())){
-
-                    //Initialise instanceTitles array
-                    String[] instanceTitles = new String[form.getInstanceAmountPractical()];
-
-                    //Update CourseInstance
-                    CourseInstance practical = course.getPractical();
-
-                    //
-                    practical.setGroupAmount(form.getGroupAmountPractical());
-                    practical.setInstanceAmount(form.getInstanceAmountPractical());
-                    practical.setInstanceTitles(instanceTitles);
-                    practical.setActive();
-                }
+                //
+                tutorial.setGroupAmount(form.getGroupAmountTutorial());
+                tutorial.setInstanceAmount(form.getInstanceAmountTutorial());
+                tutorial.setInstanceTitles(instanceTitles);
+                tutorial.setActive();
             }
+            
+
+            //seminar EXISTS, but is toggled OFF
+            if(Boolean.TRUE.equals(course.getSeminarExists()) && Boolean.FALSE.equals(form.getSeminarExists())){
+
+                course.getSeminar().setInactive();
+            }
+            //seminar does NOT EXIST, but is toggled ON
+            if(Boolean.FALSE.equals(course.getSeminarExists()) && Boolean.TRUE.equals(form.getSeminarExists())){
+
+                //Initialise instanceTitles array
+                String[] instanceTitles = new String[form.getInstanceAmountSeminar()];
+
+                //Update CourseInstance
+                CourseInstance seminar = course.getSeminar();
+
+                //
+                seminar.setGroupAmount(form.getGroupAmountSeminar());
+                seminar.setInstanceAmount(form.getInstanceAmountSeminar());
+                seminar.setInstanceTitles(instanceTitles);
+                seminar.setActive();
+            }
+            
+
+            //practical EXISTS, but is toggled OFF
+            if(Boolean.TRUE.equals(course.getPracticalExists()) && Boolean.FALSE.equals(form.getPracticalExists())){
+
+                course.getPractical().setInactive();
+            }
+            //practical does NOT EXIST, but is toggled ON
+            if(Boolean.FALSE.equals(course.getPracticalExists()) && Boolean.TRUE.equals(form.getPracticalExists())){
+
+                //Initialise instanceTitles array
+                String[] instanceTitles = new String[form.getInstanceAmountPractical()];
+
+                //Update CourseInstance
+                CourseInstance practical = course.getPractical();
+
+                //
+                practical.setGroupAmount(form.getGroupAmountPractical());
+                practical.setInstanceAmount(form.getInstanceAmountPractical());
+                practical.setInstanceTitles(instanceTitles);
+                practical.setActive();
+            }
+            
 
 
             //We are intentionally not allowing the option to edit the CourseDate of SemesterString
@@ -587,19 +592,47 @@ public class CourseManagement {
     
     //delete course
     public void deleteCourse(UUID id) {
-        coursesRepo.deleteById(id);
-    }
-
-    //delete course
-    public void deleteCourseInstancesForCourse(UUID id) {
         Optional<Course> crs = findById(id);
         if(crs.isPresent()){
             Course course = crs.get();
-            courseInstancesRepo.delete(course.getLecture());
-            courseInstancesRepo.delete(course.getTutorial());
-            courseInstancesRepo.delete(course.getSeminar());
-            courseInstancesRepo.delete(course.getPractical());
+            deleteCourseInstancesForCourse(course);
+            deleteSurveyResponseAndAsscoiatedResponses(course);
         }
+        coursesRepo.deleteById(id);
+    }
+
+    /**
+     * Delete {@linkplain qova.objects.CourseInstance}s for a given {@linkplain qova.objects.Course} Object
+     * 
+     * @param course {@linkplain qova.objects.Course}
+     */
+    public void deleteCourseInstancesForCourse(Course course) {
+        for(CourseType type : CourseType.values()){
+            courseInstancesRepo.delete(course.getInstance(type));
+        }
+    }
+
+    /**
+     * Deletes all objects of type {@linkplain qova.objects.SurveyResponse} and its subtypes {@linkplain qova.objects.BinaryResponse}, 
+     * {@linkplain qova.objects.TextResponse}, {@linkplain qova.objects.SingleChoiceResponse}, {@linkplain qova.objects.MultipleChoiceResponse}
+     * 
+     * @param course {@linkplain qova.objects.Course}
+     */
+    public void deleteSurveyResponseAndAsscoiatedResponses(Course course){
+        
+        //Get all surveyResponses for a course
+        Iterable<SurveyResponse> surveyResponses = surveyResponseRepository.findByCourse(course);
+
+        //delete all instances
+        for(SurveyResponse r : surveyResponses){
+            binaryResponseRepository.deleteAll(binaryResponseRepository.findBySurveyResponse(r));
+            textResponseRepository.deleteAll(textResponseRepository.findBySurveyResponse(r));
+            singleChoiceResponseRepository.deleteAll(singleChoiceResponseRepository.findBySurveyResponse(r));
+            multipleChoiceResponseRepository.deleteAll(multipleChoiceResponseRepository.findBySurveyResponse(r));
+        }
+
+        //delete the surveyresponses
+        surveyResponseRepository.deleteAll(surveyResponses);
     }
 
 

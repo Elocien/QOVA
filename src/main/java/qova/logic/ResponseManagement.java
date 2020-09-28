@@ -131,18 +131,18 @@ public class ResponseManagement {
 
         if(groupNumber.equals("all") && instanceNumber.equals("all") ){
             
-            findByCourseAndCourseType(course, type).forEach(listOfSurveyResponses::add);
+            findSurveyResponseByCourseAndCourseType(course, type).forEach(listOfSurveyResponses::add);
 
         }
         else if(groupNumber.equals("all")){
-            findByCourseAndCourseTypeAndInstanceNumber(course, type, Integer.parseInt(instanceNumber)).forEach(listOfSurveyResponses::add);
+            findSurveyResponseByCourseAndCourseTypeAndInstanceNumber(course, type, Integer.parseInt(instanceNumber)).forEach(listOfSurveyResponses::add);
             System.out.println(listOfSurveyResponses);
         }
         else if(instanceNumber.equals("all") ){
-            findByCourseAndCourseTypeAndGroupNumber(course, type, Integer.parseInt(groupNumber)).forEach(listOfSurveyResponses::add);
+            findSurveyResponseByCourseAndCourseTypeAndGroupNumber(course, type, Integer.parseInt(groupNumber)).forEach(listOfSurveyResponses::add);
         }
         else{
-            Optional<SurveyResponse> s = findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, type, Integer.parseInt(groupNumber), Integer.parseInt(instanceNumber));
+            Optional<SurveyResponse> s = findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, type, Integer.parseInt(groupNumber), Integer.parseInt(instanceNumber));
             if(s.isPresent()){
                 listOfSurveyResponses.add(s.get());
             }
@@ -303,7 +303,7 @@ public class ResponseManagement {
      * 
      * @return an Iterable containing all Responses that fit criteria
      */
-	public Optional<SurveyResponse> findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(Course course, CourseType type, Integer groupNumber, Integer instanceNumber){
+	public Optional<SurveyResponse> findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(Course course, CourseType type, Integer groupNumber, Integer instanceNumber){
 		return surveyResponseRepository.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, type, groupNumber, instanceNumber);
 	}
 
@@ -316,7 +316,7 @@ public class ResponseManagement {
      * 
      * @return an Iterable containing all Responses that fit criteria
      */
-	public Iterable<SurveyResponse> findByCourseAndCourseTypeAndGroupNumber(Course course, CourseType type, Integer groupNumber){
+	public Iterable<SurveyResponse> findSurveyResponseByCourseAndCourseTypeAndGroupNumber(Course course, CourseType type, Integer groupNumber){
 		return surveyResponseRepository.findByCourseAndCourseTypeAndGroupNumber(course, type, groupNumber);
 	}
 
@@ -329,7 +329,7 @@ public class ResponseManagement {
      * 
      * @return an Iterable containing all Responses that fit criteria
      */
-	public Iterable<SurveyResponse> findByCourseAndCourseTypeAndInstanceNumber(Course course, CourseType type, Integer instanceNumber){
+	public Iterable<SurveyResponse> findSurveyResponseByCourseAndCourseTypeAndInstanceNumber(Course course, CourseType type, Integer instanceNumber){
 		return surveyResponseRepository.findByCourseAndCourseTypeAndInstanceNumber(course, type, instanceNumber);
 	}
 
@@ -341,7 +341,7 @@ public class ResponseManagement {
      * 
      * @return an Iterable containing all Responses that fit criteria
      */
-	public Iterable<SurveyResponse> findByCourseAndCourseType(Course course, CourseType type){
+	public Iterable<SurveyResponse> findSurveyResponseByCourseAndCourseType(Course course, CourseType type){
 		return surveyResponseRepository.findByCourseAndCourseType(course, type);
     }
     

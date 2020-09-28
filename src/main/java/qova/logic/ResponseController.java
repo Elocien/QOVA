@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -132,11 +133,12 @@ public class ResponseController {
     // Mapping for Survey HTML
     @GetMapping("survey")
     public String SurveyView(Model model,  @RequestParam(required = false) UUID id, @RequestParam(required = false) String type, 
-            @RequestParam(required = false) String group, @RequestParam(required = false) String isntance) {
+            @RequestParam(required = false) String group, @RequestParam(required = false) String instance) {
         // redirect
-        if (id == null) {
+        if (id == null || type == null || group == null || instance == null) {
 			return "error?code=" + courseNotFound;
         }
+
 
         // fetch course and go to details if present
         Optional<Course> course = courseManagement.findById(id);
@@ -169,10 +171,45 @@ public class ResponseController {
     // PostMapping to submit survey and serialize results
     // ---------------------------------------------------------------------------
     @PostMapping("/survey")
-    public String recieveResponseJSON(SurveyForm form, @RequestParam String type, @RequestParam UUID id) {
+    public String recieveResponseJSON(Model model, SurveyForm form,  @RequestParam(required = false) UUID id, @RequestParam(required = false) String type, 
+    @RequestParam(required = false) String group, @RequestParam(required = false) String instance) {
 
-        // get JSON Response as string
-        String JsonResponse = form.getQuestionnairejson();
+        if (id == null || type == null || group == null || instance == null) {
+			return "error?code=" + courseNotFound;
+        }
+
+        JSONArray studentResponseJson;
+
+        //get JSON Response
+        try {
+            studentResponseJson = new JSONArray(form.getQuestionnairejson());
+        } catch (Exception e) {
+            return "error?code=" + internalError;
+        }
+
+
+
+        // fetch course and go to details if present
+        Optional<Course> crs = courseManagement.findById(id);
+
+        // Validate that course exists, and that the survey is not empty
+        if (crs.isPresent()) {
+            
+            Course course = crs.get();
+
+            Optional<SurveyResponse> survRsp = responseManagement.findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, 
+                    responseManagement.parseCourseType(type), Integer.valueOf(group), Integer.valueOf(instance));
+            
+            if(survRsp.isPresent()){
+                SurveyResponse surveyResponse = survRsp.get();
+                
+                
+            }
+
+            
+        }
+        
+
 
         //Manager Method
         //Increment numberOfSubmissions in SurveyResponse
@@ -199,9 +236,11 @@ public class ResponseController {
     public String surveyResultsTest(Model model, @RequestParam String type, @RequestParam UUID id, @RequestParam String group, @RequestParam String instance) {
         Optional<Course> crs = courseManagement.findById(id);
         if(crs.isPresent()){
-            Optional<SurveyResponse> srv = responseManagement.findByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(crs.get(), responseManagement.parseCourseType(type), Integer.valueOf(group), Integer.valueOf(instance));
-            if(srv.isPresent()){
-                model.addAttribute("response", srv.get());
+            Optional<SurveyResponse> surveyResponse = responseManagement.findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(crs.get(), 
+                    responseManagement.parseCourseType(type), Integer.valueOf(group), Integer.valueOf(instance));
+            
+                    if(surveyResponse.isPresent()){
+                model.addAttribute("response", surveyResponse);
             }
         }
         return "surveyResults";
