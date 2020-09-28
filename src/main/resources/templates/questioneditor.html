@@ -147,6 +147,8 @@
             questionnaire.forEach(renderquestionnaireelement);
             document.getElementById("questionnairejson").value = JSON.stringify(questionnaire);
             refreshTextareas();
+            $('[data-toggle="tooltip"]').tooltip();
+
         }
 
         //Bootsrapped
@@ -432,6 +434,8 @@
             const btn_newAnswer = document.createElement("Button");
             btn_newAnswer.className="btn btn-primary mb-2";
             btn_newAnswer.innerHTML=[[#{question.add-new-answer}]];
+
+
             btn_newAnswer.setAttribute("onclick","addnewAnswer("+index+")");
 
 
@@ -482,6 +486,11 @@
 
             const btn_icon = document.createElement("i");
             btn_icon.className = "fa fa-times";
+
+            btn_deleteAnswer.setAttribute("data-toggle","tooltip");
+            btn_deleteAnswer.setAttribute("data-placement","top");
+            btn_deleteAnswer.title =[[#{question.answer-delete}]];
+
             btn_deleteAnswer.appendChild(btn_icon);
 
             return btn_deleteAnswer;
@@ -495,6 +504,11 @@
 
             const btn_icon = document.createElement("i");
             btn_icon.className = "fa fa-arrow-up";
+
+            btn_upAnswer.setAttribute("data-toggle","tooltip");
+            btn_upAnswer.setAttribute("data-placement","top");
+            btn_upAnswer.title = [[#{question.up}]];
+
             btn_upAnswer.appendChild(btn_icon);
 
             return btn_upAnswer;
@@ -554,6 +568,11 @@
 
             const btn_icon = document.createElement("i");
             btn_icon.className = "fa fa-arrow-down";
+
+            btn_downAnswer.setAttribute("data-toggle","tooltip");
+            btn_downAnswer.setAttribute("data-placement","top");
+            btn_downAnswer.title = [[#{question.down}]];
+
             btn_downAnswer.appendChild(btn_icon);
 
             return btn_downAnswer;
@@ -753,10 +772,6 @@
             document.getElementById("questionnairejson2").value = JSON.stringify(questionnaire);
             return true;
         });
-
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
 
     </script>
 
