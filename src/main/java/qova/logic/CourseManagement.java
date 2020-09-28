@@ -30,7 +30,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -105,7 +107,7 @@ public class CourseManagement {
 
             // Initialise the instanceTitles array with the amount of instances that are set
             // to exist
-            String[] instanceTitles = new String[form.getInstanceAmountLecture()];
+            List<String> instanceTitles = new ArrayList<>(form.getInstanceAmountLecture());
 
             // Create the courseInstance
             CourseInstance lecture = new CourseInstance(CourseType.LECTURE, groupAmount,
@@ -126,7 +128,7 @@ public class CourseManagement {
 
             // Initialise the instanceTitles array with the amount of instances that are set
             // to exist
-            String[] instanceTitles = new String[form.getInstanceAmountLecture()];
+            List<String> instanceTitles = new ArrayList<>(form.getInstanceAmountTutorial());
 
             // Create the courseInstance
             CourseInstance tutorial = new CourseInstance(CourseType.TUTORIAL, form.getGroupAmountPractical(),
@@ -147,7 +149,7 @@ public class CourseManagement {
 
             // Initialise the instanceTitles array with the amount of instances that are set
             // to exist
-            String[] instanceTitles = new String[form.getInstanceAmountLecture()];
+            List<String> instanceTitles = new ArrayList<>(form.getInstanceAmountSeminar());
 
             // Create the courseInstance
             CourseInstance seminar = new CourseInstance(CourseType.SEMINAR, form.getGroupAmountPractical(),
@@ -168,7 +170,7 @@ public class CourseManagement {
 
             // Initialise the instanceTitles array with the amount of instances that are set
             // to exist
-            String[] instanceTitles = new String[form.getInstanceAmountLecture()];
+            List<String> instanceTitles = new ArrayList<>(form.getInstanceAmountPractical());
 
             // Create the courseInstance
             CourseInstance practical = new CourseInstance(CourseType.PRACTICAL, form.getGroupAmountPractical(),
@@ -213,7 +215,7 @@ public class CourseManagement {
             if (Boolean.FALSE.equals(course.getLectureExists()) && Boolean.TRUE.equals(form.getLectureExists())) {
 
                 // Initialise instanceTitles array
-                String[] instanceTitles = new String[form.getInstanceAmountLecture()];
+                List<String> instanceTitles = new ArrayList<>(form.getInstanceAmountLecture());
 
                 // Update CourseInstance
                 CourseInstance lecture = course.getLecture();
@@ -237,7 +239,7 @@ public class CourseManagement {
             if (Boolean.FALSE.equals(course.getTutorialExists()) && Boolean.TRUE.equals(form.getTutorialExists())) {
 
                 // Initialise instanceTitles array
-                String[] instanceTitles = new String[form.getInstanceAmountTutorial()];
+                List<String> instanceTitles = new ArrayList<>(form.getInstanceAmountTutorial());
 
                 // Update CourseInstance
                 CourseInstance tutorial = course.getTutorial();
@@ -258,7 +260,7 @@ public class CourseManagement {
             if (Boolean.FALSE.equals(course.getSeminarExists()) && Boolean.TRUE.equals(form.getSeminarExists())) {
 
                 // Initialise instanceTitles array
-                String[] instanceTitles = new String[form.getInstanceAmountSeminar()];
+                List<String> instanceTitles = new ArrayList<>(form.getInstanceAmountSeminar());
 
                 // Update CourseInstance
                 CourseInstance seminar = course.getSeminar();
@@ -279,7 +281,7 @@ public class CourseManagement {
             if (Boolean.FALSE.equals(course.getPracticalExists()) && Boolean.TRUE.equals(form.getPracticalExists())) {
 
                 // Initialise instanceTitles array
-                String[] instanceTitles = new String[form.getInstanceAmountPractical()];
+                List<String> instanceTitles = new ArrayList<>(form.getGroupAmountPractical());
 
                 // Update CourseInstance
                 CourseInstance practical = course.getPractical();
@@ -373,7 +375,10 @@ public class CourseManagement {
     }
 
     public CourseInstance duplicateCourseInstance(CourseInstance oldInstance) {
-        String[] newInstanceTitles = oldInstance.getInstanceTitles();
+        List<String> newInstanceTitles = new ArrayList<>();
+        for (String title : oldInstance.getInstanceTitles()) {
+            newInstanceTitles.add(title);
+        }
         CourseInstance newInstance = new CourseInstance(oldInstance.getCourseType(), oldInstance.getGroupAmount(),
                 oldInstance.getInstanceAmount(), newInstanceTitles, oldInstance.isActive());
         courseInstancesRepo.save(newInstance);
@@ -598,33 +603,41 @@ public class CourseManagement {
     public void TestCreateCourse() {
         var name = "Rechnernetze";
 
-        String[] lectureTitles = { "Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme" };
+        List<String> lectureTitles = new ArrayList<>();
+        lectureTitles.addAll(
+                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
+                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
+                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
         var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles, true);
 
         courseInstancesRepo.save(lecture);
 
-        String[] tutorialTitles = { "Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme" };
+        List<String> tutorialTitles = new ArrayList<>();
+        lectureTitles.addAll(
+                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
+                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
+                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
         var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles, true);
         tutorial.setSurvey(
                 "[{\"type\":\"SingleChoice\",\"question\":\"Hat die Übung Wissen vermittelt, welches du dir nicht im Selbststudium hättest erarbeiten können?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in den aktiven Austausch mit den Studierenden gesucht?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Waren die Anforderung dem Wissensstand der Studierenden angemessen?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Konnte die Übung gezielt Schwerpunkte setzen und Struktur vermitteln?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Konnte der/die Leiter/in dein Interesse an dem Thema wecken?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in die Möglichkeiten einer Übung gegenüber der Vorlesung ausgeschöpft?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Online Lehre v.s. Präsenzveranstaltung\",\"answers\":[\"Die Übung war digital und soll digital bleiben.\",\"Die Übung war digital und wäre als Präsenzveranstaltung besser.\",\"Die Übung war eine Präsenzveranstaltung und soll eine bleiben.\",\"Die Übung war eine Präsenzveranstaltung und sollte digital werden.\"]}]");
 
         courseInstancesRepo.save(tutorial);
 
-        String[] seminarTitles = { "Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme" };
+        List<String> seminarTitles = new ArrayList<>();
+        lectureTitles.addAll(
+                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
+                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
+                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
         var seminar = new CourseInstance(CourseType.SEMINAR, 8, 12, seminarTitles, true);
 
         courseInstancesRepo.save(seminar);
 
-        String[] pTitles = { "Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme" };
-        var practical = new CourseInstance(CourseType.PRACTICAL, 8, 12, pTitles, true);
+        List<String> practicalTitles = new ArrayList<>();
+        lectureTitles.addAll(
+                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
+                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
+                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
+        var practical = new CourseInstance(CourseType.PRACTICAL, 8, 12, practicalTitles, true);
 
         courseInstancesRepo.save(practical);
 
@@ -639,22 +652,30 @@ public class CourseManagement {
 
     public Course TimTestCreateCourse() {
 
-        String[] lectureTitles = { "Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme" };
+        List<String> lectureTitles = new ArrayList<>();
+        lectureTitles.addAll(
+                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
+                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
+                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
         var lecture = new CourseInstance(CourseType.LECTURE, 1, 11, lectureTitles, true);
-        String[] tutorialTitles = { "Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme" };
+        List<String> tutorialTitles = new ArrayList<>();
+        tutorialTitles.addAll(
+                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
+                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
+                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
         var tutorial = new CourseInstance(CourseType.TUTORIAL, 2, 12, tutorialTitles, true);
-        String[] seminarTitles = { "Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme" };
+        List<String> seminarTitles = new ArrayList<>();
+        seminarTitles.addAll(
+                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
+                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
+                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
         var seminar = new CourseInstance(CourseType.SEMINAR, 3, 13, seminarTitles, true);
-        String[] pTitles = { "Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme" };
-        var practical = new CourseInstance(CourseType.TUTORIAL, 4, 14, pTitles, true);
+        List<String> practicalTitles = new ArrayList<>();
+        practicalTitles.addAll(
+                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
+                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
+                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
+        var practical = new CourseInstance(CourseType.TUTORIAL, 4, 14, practicalTitles, true);
 
         var name = "Rechnernetze";
         var semesterOfStudents = 4;

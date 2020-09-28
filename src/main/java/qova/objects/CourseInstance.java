@@ -1,5 +1,7 @@
 package qova.objects;
 
+import java.util.List;
+
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,7 +38,7 @@ public class CourseInstance {
     // each with a unique title)
     @ElementCollection
     @OrderColumn
-    private String[] instanceTitles;
+    private List<String> instanceTitles;
 
     // Flag used to indicate wether the instance is active (E.g. The instance is of
     // type practical, but isnt set as being evaluated by the course owner;
@@ -64,8 +66,8 @@ public class CourseInstance {
      * @param active         Flag used to determine wether results can be submitted
      *                       for this courseInstance
      */
-    public CourseInstance(CourseType courseType, Integer groupAmount, Integer instanceAmount, String[] instanceTitles,
-            Boolean active) {
+    public CourseInstance(CourseType courseType, Integer groupAmount, Integer instanceAmount,
+            List<String> instanceTitles, Boolean active) {
 
         this.courseType = courseType;
         this.survey = "[]";
@@ -121,11 +123,11 @@ public class CourseInstance {
         this.instanceAmount = amount;
     }
 
-    public String[] getInstanceTitles() {
+    public List<String> getInstanceTitles() {
         return this.instanceTitles;
     }
 
-    public void setInstanceTitles(String[] list) {
+    public void setInstanceTitles(List<String> list) {
         this.instanceTitles = list;
     }
 

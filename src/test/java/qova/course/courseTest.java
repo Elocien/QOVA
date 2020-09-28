@@ -9,19 +9,30 @@ import qova.objects.Course;
 import qova.objects.CourseInstance;
 
 import java.time.LocalDate;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class courseTest extends AbstractIntegrationTest {
 
     @Test
-	public void courseConstructorTest() throws Exception {
+    public void courseConstructorTest() throws Exception {
         var name = "Rechnernetze";
 
-        String[] lectureTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
+        List<String> lectureTitles = new ArrayList<>();
+        lectureTitles.addAll(
+                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
+                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
+                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
         var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles, true);
 
-        String[] tutorialTitles = {"Einführung" , "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2", "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance", "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"};
+        List<String> tutorialTitles = new ArrayList<>();
+        tutorialTitles.addAll(
+                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
+                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
+                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
         var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles, true);
 
         CourseInstance seminar = new CourseInstance(CourseType.SEMINAR);
@@ -33,8 +44,8 @@ public class courseTest extends AbstractIntegrationTest {
         var courseDate = LocalDate.of(2020, 10, 4);
         var semesterString = "SoSe 2020";
 
-        Course crs  = new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty, semesterString, courseDate);
-
+        Course crs = new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty,
+                semesterString, courseDate);
 
         assertEquals(name, crs.getName());
         assertEquals(true, crs.getLectureExists());
@@ -50,6 +61,6 @@ public class courseTest extends AbstractIntegrationTest {
         assertEquals(courseDate, crs.getCourseDate());
         assertEquals(semesterString, crs.getSemesterString());
 
-	}
+    }
 
 }
