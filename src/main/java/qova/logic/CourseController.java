@@ -165,11 +165,11 @@ public class CourseController {
         UUID id = courseManagement.createCourseReturnId(form);
 
         // Redirect to SurveyEditor to start creating survey
-        return "redirect:../course/new2?id=" + id;
+        return "redirect:../course/instanceTitles?id=" + id;
     }
 
     // Create Course
-    @GetMapping("course/new2")
+    @GetMapping("course/instanceTitles")
     public String createCourseSetInstanceTitles(Model model, InstanceTitleForm form, @RequestParam UUID id) {
 
         Optional<Course> crs = courseManagement.findById(id);
@@ -212,11 +212,11 @@ public class CourseController {
             }
         }
 
-        return "CourseNew2";
+        return "instanceTitles";
     }
 
     // Validation of Created course
-    @PostMapping("course/new2")
+    @PostMapping("course/instanceTitles")
     public String createCourseSetInstanceTitlesValidation(Model model,
             @Valid @ModelAttribute("form") InstanceTitleForm form, @RequestParam UUID id, BindingResult result) {
 
@@ -516,7 +516,7 @@ public class CourseController {
         return "survey";
     }
 
-    @GetMapping("coursenew2")
+    @GetMapping("instanceTitles")
     public String createCourse_SetInstanceTitles(Model model, InstanceTitleForm form) {
 
         model.addAttribute("lectureInstances", 2);
@@ -531,7 +531,7 @@ public class CourseController {
         model.addAttribute("practicalInstances", 5);
         model.addAttribute("practicalExists", true);
 
-        return "courseNew2";
+        return "instanceTitles";
     }
 
 }
