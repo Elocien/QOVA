@@ -1,5 +1,6 @@
 package qova.objects;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.ElementCollection;
@@ -85,9 +86,9 @@ public class CourseInstance {
     public CourseInstance(CourseType courseType) {
         this.courseType = courseType;
         this.survey = "[]";
-        this.groupAmount = null;
-        this.instanceAmount = null;
-        this.instanceTitles = null;
+        this.groupAmount = 0;
+        this.instanceAmount = 0;
+        this.instanceTitles = new ArrayList<>();
         this.active = false;
     }
 

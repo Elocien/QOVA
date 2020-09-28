@@ -170,43 +170,41 @@ public class CourseController {
 
     // Create Course
     @GetMapping("course/instanceTitles")
-    public String createCourseSetInstanceTitles(Model model, InstanceTitleForm form, @RequestParam UUID id) {
+    public String createCourseSetInstanceTitles(Model model, @ModelAttribute("form") InstanceTitleForm form,
+            @RequestParam UUID id) {
 
         Optional<Course> crs = courseManagement.findById(id);
-        model.addAttribute("form", form);
 
         if (crs.isPresent()) {
+
+            Course course = crs.get();
 
             model.addAttribute("id", crs.get().getId());
 
             if (Boolean.TRUE.equals(crs.get().getLectureExists())) {
                 model.addAttribute("lectureExists", true);
-                model.addAttribute("lectureInstanceTitles", crs.get().getLecture().getInstanceTitles());
-                model.addAttribute("lectureInstances", crs.get().getLecture().getInstanceAmount());
+                model.addAttribute("lectureInstances", course.getLecture().getInstanceAmount());
             } else {
                 model.addAttribute("lectureExists", false);
             }
 
             if (Boolean.TRUE.equals(crs.get().getTutorialExists())) {
                 model.addAttribute("tutorialExists", true);
-                model.addAttribute("tutorialInstanceTitles", crs.get().getTutorial().getInstanceTitles());
-                model.addAttribute("tutorialInstances", crs.get().getTutorial().getInstanceAmount());
+                model.addAttribute("tutorialInstances", course.getTutorial().getInstanceAmount());
             } else {
                 model.addAttribute("tutorialExists", false);
             }
 
             if (Boolean.TRUE.equals(crs.get().getSeminarExists())) {
                 model.addAttribute("seminarExists", true);
-                model.addAttribute("seminarInstanceTitles", crs.get().getSeminar().getInstanceTitles());
-                model.addAttribute("seminarInstances", crs.get().getSeminar().getInstanceAmount());
+                model.addAttribute("seminarInstances", course.getSeminar().getInstanceAmount());
             } else {
                 model.addAttribute("seminarExists", false);
             }
 
             if (Boolean.TRUE.equals(crs.get().getPracticalExists())) {
                 model.addAttribute("practicalExists", true);
-                model.addAttribute("practicalInstanceTitles", crs.get().getPractical().getInstanceTitles());
-                model.addAttribute("practicalInstances", crs.get().getPractical().getInstanceAmount());
+                model.addAttribute("practicalInstances", course.getPractical().getInstanceAmount());
             } else {
                 model.addAttribute("practicalExists", false);
             }
@@ -217,12 +215,8 @@ public class CourseController {
 
     // Validation of Created course
     @PostMapping("course/instanceTitles")
-    public String createCourseSetInstanceTitlesValidation(Model model,
-            @Valid @ModelAttribute("form") InstanceTitleForm form, @RequestParam UUID id, BindingResult result) {
-
-        if (result.hasErrors()) {
-            return createCourseSetInstanceTitles(model, form, id);
-        }
+    public String createCourseSetInstanceTitlesValidation(Model model, InstanceTitleForm form, @RequestParam UUID id,
+            BindingResult result) {
 
         // Management Method returns String of new Course
         courseManagement.createCourseSetInstanceTitles(form, id);
