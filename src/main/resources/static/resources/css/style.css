@@ -176,7 +176,7 @@ footer {
   bottom: -4rem;
 }
 .carousel-control-prev, .carousel-control-next {
-  bottom: -18.8rem;
+  bottom: 0;
 }
 .carousel-item {
   height: 100%;
