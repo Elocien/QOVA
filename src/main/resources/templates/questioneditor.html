@@ -33,8 +33,9 @@
             <div th:replace="finalizeModal"></div>
 
             <div class="row">       
-                <div class="col-3 text-center position-fixed">
+                <div class="col-3 text-center">
                     <!--Menu-->
+                    <div class="sticky">
                     <div class="btn-group-vertical float-lg-right border border-dark rounded mt-4" role="group" aria-label="First group">
                         <button type="button" class="btn btn-head btn-text-right" th:text="#{question.new}">NEW QUESTION</button>
                         <button type="button" class="btn btn-list btn-text-right" onclick="addYesNoQuestion()"><span th:text="#{question.yes-no-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
@@ -52,9 +53,10 @@
                         </form>
                         <button class="btn btn-list-last btn-text-right" type="submit" data-toggle="modal" data-target="#finalizeModal"><span th:text="#{question.finalize}"></span><i class="fas fa-stamp ml-2"></i></button>
                     </div>
+                    </div>
                 </div>
                 <!--Questions-->
-                <div class="col-lg-6 col-md-9 col-sm-9 offset-3">
+                <div class="col-lg-6 col-md-9 col-sm-9">
                     <div id="questionnaire"></div>
                 </div>
                 <div class="col-lg-3 col-md-0 col-sm-0"></div>
@@ -432,7 +434,7 @@
 
         function createButtonnewAnswer(index){
             const btn_newAnswer = document.createElement("Button");
-            btn_newAnswer.className="btn btn-primary mb-2";
+            btn_newAnswer.className="btn btn-primary mb-2 editor-color";
             btn_newAnswer.innerHTML=[[#{question.add-new-answer}]];
 
 
