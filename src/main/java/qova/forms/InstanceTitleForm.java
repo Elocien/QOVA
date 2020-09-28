@@ -1,37 +1,34 @@
 package qova.forms;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONArray;
+
+import qova.enums.CourseType;
 
 public class InstanceTitleForm {
 
     // String Arrays containing titles
 
-    private List<String> lectureInstanceTitles;
-    private List<String> tutorialInstanceTitles;
-    private List<String> seminarInstanceTitles;
-    private List<String> practicalInstanceTitles;
+    private String instanceTitlesJson;
 
-    public InstanceTitleForm(List<String> lectureInstanceTitles, List<String> tutorialInstanceTitles,
-            List<String> seminarInstanceTitles, List<String> practicalInstanceTitles) {
-        this.lectureInstanceTitles = lectureInstanceTitles;
-        this.tutorialInstanceTitles = tutorialInstanceTitles;
-        this.seminarInstanceTitles = seminarInstanceTitles;
-        this.practicalInstanceTitles = practicalInstanceTitles;
+    public InstanceTitleForm(String instanceTitlesJson) {
+        this.instanceTitlesJson = instanceTitlesJson;
     }
 
-    public List<String> getLectureInstanceTitles() {
-        return this.lectureInstanceTitles;
+    public List<String> getInstanceTitlesForType(CourseType courseType) {
+
+        List<String> instanceTitles = new ArrayList<>();
+
+        JSONArray titlesAsJson = new JSONArray(instanceTitlesJson);
+
+        // Parse the json and return instanceTitles as List<String>
+
+        return instanceTitles;
     }
 
-    public List<String> getTutorialInstanceTitles() {
-        return this.tutorialInstanceTitles;
-    }
-
-    public List<String> getSeminarInstanceTitles() {
-        return this.seminarInstanceTitles;
-    }
-
-    public List<String> getPracticalInstanceTitles() {
-        return this.practicalInstanceTitles;
-    }
 }
+
+// [{"lecture" : ["1. lets go", "2. test title", "3. KEKW"]},{"tutorial":[]},
+// {"seminar":[]}, {"practical":[]}]

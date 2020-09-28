@@ -199,20 +199,10 @@ public class CourseManagement {
         if (crs.isPresent()) {
             Course course = crs.get();
 
-            if (Boolean.TRUE.equals(course.getLectureExists())) {
-                course.getLecture().setInstanceTitles(form.getLectureInstanceTitles());
-            }
-
-            if (Boolean.TRUE.equals(course.getTutorialExists())) {
-                course.getTutorial().setInstanceTitles(form.getTutorialInstanceTitles());
-            }
-
-            if (Boolean.TRUE.equals(course.getSeminarExists())) {
-                course.getSeminar().setInstanceTitles(form.getSeminarInstanceTitles());
-            }
-
-            if (Boolean.TRUE.equals(course.getPracticalExists())) {
-                course.getPractical().setInstanceTitles(form.getPracticalInstanceTitles());
+            for (CourseType courseType : CourseType.values()) {
+                if (Boolean.TRUE.equals(course.getInstanceExists(courseType))) {
+                    course.getInstance(courseType).setInstanceTitles(form.getInstanceTitlesForType(courseType));
+                }
             }
         }
     }
