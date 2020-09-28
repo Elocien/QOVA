@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head>
+    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/toggle_checkbox.css}" />
     <title th:text="#{title.details}">TITLE</title>
 </head>
 
@@ -162,13 +163,12 @@
                                         <td class="show_me" style="display: none;">
                                             <div class="col-md-auto">
                                                 <label class="switch m-0 align-middle" th:switch="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}">
-                                                    <input th:case="FALSE" type="checkbox" th:id="${course_type} + 'Check'" th:onclick="set_hidden_data([[${course_type}]])">
-                                                    <input th:case="TRUE"  type="checkbox" th:id="${course_type} + 'Check'" th:onclick="set_hidden_data([[${course_type}]])" checked>
+                                                    <input th:case="true"  type="checkbox" th:id="${course_type} + 'Check'" th:onclick="set_hidden_data([[${course_type}]])" checked>
+                                                    <input th:case="false" type="checkbox" th:id="${course_type} + 'Check'" th:onclick="set_hidden_data([[${course_type}]])">
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
-                                            <input th:if="!${__'course.' + ${course_type} + '.survey'__}" type="checkbox" th:id="${course_type} + 'Hidden'" th:field="*{__${course_type} + 'Exists'__}" hidden>
-                                            <input  th:if="${__'course.' + ${course_type} + '.survey'__}" type="checkbox" th:id="${course_type} + 'Hidden'" th:field="*{__${course_type} + 'Exists'__}" hidden checked>
+                                            <input type="text" th:field="*{__${course_type} + 'Exists'__}" style="display: none;">
                                         </td>
                                         <!--2nd Col-->
                                         <td scope="row" th:text="#{'new.' + ${course_type}}">LECTURE</td>
@@ -266,7 +266,7 @@
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip(({ trigger: 'hover' }));
         document.getElementsByClassName("carousel-item")[0].className = "carousel-item active";
-        document.getElementsByClassName("carousel-indicators").getElementsByTagName("li")[0].className = "active";
+        document.getElementsByClassName("carousel-indicators")[0].getElementsByTagName("li")[0].className = "active";
     });
     $('#myModal').on('shown.bs.modal', function () {
         $('#myInput').trigger('focus')
@@ -305,15 +305,16 @@
 
     function set_hidden_data(type) {
         const og_input = document.getElementById(type + "Check");
-        const hidden_input = document.getElementById(type + "Hidden");
-        hidden_input.checked = og_input.checked;
+        const hidden_input = document.getElementById(type + "Exists");
         const table_line = document.getElementById(type + "Line");
-        if (hidden_input.checked === false) {
+        if (og_input.checked === false) {
             table_line.className = "text-light-grey";
+            hidden_input.value = "false";
             disable_inputs(table_line, true);
         }
         else {
             table_line.className = "";
+            hidden_input.value = "true";
             disable_inputs(table_line, false);
         }
         og_input.disabled = true;
@@ -323,7 +324,9 @@
     function disable_inputs(f_element, bool) {
         const all_text_inputs = f_element.querySelectorAll('input[type=text]');
         for (let index = 0; index < all_text_inputs.length; ++index) {
-            all_text_inputs[index].disabled = bool;
+            if (all_text_inputs[index].className == "form-control") {
+                all_text_inputs[index].readOnly = bool;
+            }
         }
         if (bool == true) {
             f_element.getElementsByClassName("instance_btn")[0].classList.add("disabled-link");
@@ -350,7 +353,7 @@
         const all_types = ["lecture", "tutorial", "seminar", "practical"];
         for (let index = 0; index < all_types.length; ++index) {
             set_hidden_data(all_types[index]);
-            if (document.getElementById(all_types[index] + "Hidden").checked === false) {
+            if (document.getElementById(all_types[index] + "Exists").value == "false") {
                 disable_inputs(document.getElementById(all_types[index] + "Line"), true);
             }
 
