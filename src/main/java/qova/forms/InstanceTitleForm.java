@@ -15,7 +15,14 @@ public class InstanceTitleForm {
 
     public InstanceTitleForm(String instanceTitlesJson) {
         this.instanceTitlesJson = instanceTitlesJson;
+
     }
+
+    public String getInstanceTitlesJson(){
+        return instanceTitlesJson;
+    }
+
+
 
     public List<String> getInstanceTitlesForType(CourseType courseType) {
 

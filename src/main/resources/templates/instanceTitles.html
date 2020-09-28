@@ -49,7 +49,7 @@
                             <div class="input-wrapper m-2">
                                 <div class="hidden-type" th:text="${course_type}" style="display: none;"></div>
                                 <div class="input-group mt-2 mb-2 clean-input" th:each="title, stats : ${__${course_type}+'InstanceTitles'__}">
-                                    <span class="index" th:text="${n}">N</span><span class="mr-2">.</span>
+                                    <span class="index" th:text="${stats.index}">N</span><span class="mr-2">.</span>
                                     <input class="form-control" type="text" th:value="${title}">
                                 </div>
                             </div>
@@ -88,18 +88,16 @@
     }
     function compile_data() {
         const input_col = document.getElementsByClassName("input-wrapper");
-        const type_list = ["lecture", "tutorial", "seminar", "practical"];
-        var list_of_list = [ [], [], [], [] ];
+        var list_of_list = {lecture: [], tutorial: [], seminar: [], practical: []};
         for (let i = 0; i < input_col.length; ++i) {
             var inputs = input_col[i].getElementsByClassName("input-group");
-            var type = type_list.indexOf(input_col[i].getElementsByClassName("hidden-type")[0].innerHTML);
+            var type = input_col[i].getElementsByClassName("hidden-type")[0].innerHTML;
             for (let j = 0; j < inputs.length; ++j) {
                 list_of_list[type].push(inputs[j].getElementsByClassName("form-control")[0].value);
             }
         }
         console.log(list_of_list);
-        document.getElementById("instanceTitlesJson").value = list_of_list.toString();
-        document.getElementById("hidden-submit").click();
+        document.getElementById("instanceTitlesJson").value = list_of_list.stringify();
     }
 </script>
 

@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import qova.admin.AdminManagement;
+import qova.enums.CourseType;
 import qova.forms.CourseForm;
 import qova.forms.DuplicateCourseForm;
 import qova.forms.InstanceTitleForm;
@@ -217,6 +218,8 @@ public class CourseController {
     @PostMapping("course/instanceTitles")
     public String createCourseSetInstanceTitlesValidation(Model model, InstanceTitleForm form, @RequestParam UUID id,
             BindingResult result) {
+
+        System.out.println(form.getInstanceTitlesJson());
 
         // Management Method returns String of new Course
         courseManagement.createCourseSetInstanceTitles(form, id);
