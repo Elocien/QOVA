@@ -3,6 +3,8 @@ package qova.forms;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
+
 import qova.enums.CourseType;
 
 public class InstanceTitleForm {
@@ -19,9 +21,14 @@ public class InstanceTitleForm {
 
         List<String> instanceTitles = new ArrayList<>();
 
+        JSONArray titlesAsJson = new JSONArray(instanceTitlesJson);
+
         // Parse the json and return instanceTitles as List<String>
 
         return instanceTitles;
     }
 
 }
+
+// [{"lecture" : ["1. lets go", "2. test title", "3. KEKW"]},{"tutorial":[]},
+// {"seminar":[]}, {"practical":[]}]
