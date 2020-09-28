@@ -189,8 +189,6 @@ public class CourseController {
 
             if (Boolean.TRUE.equals(crs.get().getTutorialExists())) {
                 model.addAttribute("tutorialExists", true);
-                System.out.println(
-                        "lolololololol and instanceTitles = " + crs.get().getTutorial().getInstanceTitles().size());
                 model.addAttribute("tutorialInstanceTitles", crs.get().getTutorial().getInstanceTitles());
                 model.addAttribute("tutorialInstances", crs.get().getTutorial().getInstanceAmount());
             } else {
