@@ -32,7 +32,7 @@
             <input class="form-control" type="text">
         </div>
 
-        <form id="form" method="post" th:object="${form}">
+        <form id="form" method="post" th:object="${form}" th:action="@{/course/instanceTitles?id=__${id}__}" style="display: none">
             <button id="hidden-submit" type="submit">.</button>
             <input th:field="*{instanceTitlesJson}">
         </form>
@@ -98,6 +98,7 @@
         }
         console.log(list_of_list);
         document.getElementById("instanceTitlesJson").value = JSON.stringify(list_of_list);
+        document.getElementById("hidden-submit").click();
     }
 </script>
 
