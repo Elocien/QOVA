@@ -28,7 +28,7 @@ public class InstanceTitleForm {
 
         List<String> instanceTitles = new ArrayList<>();
 
-        JSONArray titlesAsJson = new JSONArray(instanceTitlesJson);
+        // JSONArray titlesAsJson = new JSONArray(instanceTitlesJson);
 
         // Parse the json and return instanceTitles as List<String>
 
