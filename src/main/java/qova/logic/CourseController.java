@@ -192,7 +192,7 @@ public class CourseController {
             if (Boolean.TRUE.equals(crs.get().getTutorialExists())) {
                 model.addAttribute("tutorialExists", true);
                 model.addAttribute("tutorialInstances", course.getTutorial().getInstanceAmount());
-                model.addAttribute("lectureInstanceTitles", course.getTutorial().getInstanceTitles());
+                model.addAttribute("tutorialInstanceTitles", course.getTutorial().getInstanceTitles());
             } else {
                 model.addAttribute("tutorialExists", false);
             }
@@ -200,7 +200,7 @@ public class CourseController {
             if (Boolean.TRUE.equals(crs.get().getSeminarExists())) {
                 model.addAttribute("seminarExists", true);
                 model.addAttribute("seminarInstances", course.getSeminar().getInstanceAmount());
-                model.addAttribute("lectureInstanceTitles", course.getSeminar().getInstanceTitles());
+                model.addAttribute("seminarInstanceTitles", course.getSeminar().getInstanceTitles());
             } else {
                 model.addAttribute("seminarExists", false);
             }
@@ -208,7 +208,7 @@ public class CourseController {
             if (Boolean.TRUE.equals(crs.get().getPracticalExists())) {
                 model.addAttribute("practicalExists", true);
                 model.addAttribute("practicalInstances", course.getPractical().getInstanceAmount());
-                model.addAttribute("lectureInstanceTitles", course.getPractical().getInstanceTitles());
+                model.addAttribute("practicalInstanceTitles", course.getPractical().getInstanceTitles());
             } else {
                 model.addAttribute("practicalExists", false);
             }
