@@ -131,10 +131,10 @@ public class CourseController {
     // all appropriately set e.g. NotNull)
     @PostMapping("course/edit")
     public String editCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
-            BindingResult result, @RequestParam UUID id) throws Exception {
+            BindingResult result, DuplicateCourseForm duplcateCourseForm, @RequestParam UUID id) throws Exception {
 
         if (result.hasErrors()) {
-            // return courseDetails(model, form, id);
+            return courseDetails(model, duplcateCourseForm, form, id);
         }
 
         courseManagement.updateCourseDetails(id, form);
@@ -184,6 +184,7 @@ public class CourseController {
             if (Boolean.TRUE.equals(crs.get().getLectureExists())) {
                 model.addAttribute("lectureExists", true);
                 model.addAttribute("lectureInstances", course.getLecture().getInstanceAmount());
+                model.addAttribute("lectureInstanceTitles", course.getLecture().getInstanceTitles());
             } else {
                 model.addAttribute("lectureExists", false);
             }
@@ -191,6 +192,7 @@ public class CourseController {
             if (Boolean.TRUE.equals(crs.get().getTutorialExists())) {
                 model.addAttribute("tutorialExists", true);
                 model.addAttribute("tutorialInstances", course.getTutorial().getInstanceAmount());
+                model.addAttribute("lectureInstanceTitles", course.getTutorial().getInstanceTitles());
             } else {
                 model.addAttribute("tutorialExists", false);
             }
@@ -198,6 +200,7 @@ public class CourseController {
             if (Boolean.TRUE.equals(crs.get().getSeminarExists())) {
                 model.addAttribute("seminarExists", true);
                 model.addAttribute("seminarInstances", course.getSeminar().getInstanceAmount());
+                model.addAttribute("lectureInstanceTitles", course.getSeminar().getInstanceTitles());
             } else {
                 model.addAttribute("seminarExists", false);
             }
@@ -205,6 +208,7 @@ public class CourseController {
             if (Boolean.TRUE.equals(crs.get().getPracticalExists())) {
                 model.addAttribute("practicalExists", true);
                 model.addAttribute("practicalInstances", course.getPractical().getInstanceAmount());
+                model.addAttribute("lectureInstanceTitles", course.getPractical().getInstanceTitles());
             } else {
                 model.addAttribute("practicalExists", false);
             }
