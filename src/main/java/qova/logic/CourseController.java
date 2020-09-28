@@ -22,7 +22,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -39,10 +38,8 @@ import java.util.List;
 import java.util.Arrays;
 //END
 
-
 @Controller // This means that this class is a Controller
 public class CourseController {
-
 
     @Autowired
     private final CourseManagement courseManagement;
@@ -54,258 +51,235 @@ public class CourseController {
     private final AdminManagement adminManagement;
 
     @Autowired
-    CourseController(CourseManagement courseManagement, ResponseManagement responseManagement, AdminManagement adminManagement) {
+    CourseController(CourseManagement courseManagement, ResponseManagement responseManagement,
+            AdminManagement adminManagement) {
         this.courseManagement = Objects.requireNonNull(courseManagement);
         this.responseManagement = Objects.requireNonNull(responseManagement);
         this.adminManagement = Objects.requireNonNull(adminManagement);
     }
 
-    //Error codes
+    // Error codes
     int courseNotFound = 1;
     int internalError = 2;
 
+    // General Pages (relevant domain wide)
+    // -------------------------------------------------------
 
-
-    //General Pages (relevant domain wide)
-    //-------------------------------------------------------
-    
     @GetMapping("/")
-    public String welcome () {
+    public String welcome() {
         return "home";
     }
 
     @GetMapping("error")
+    public String error(Model model, @RequestParam(required = false) String code) {
 
-    public String error (Model model, @RequestParam(required = false) Integer code) {
-
-        
-        //add error code to model
+        // add error code to model
         model.addAttribute("errorCode", code);
 
-        //return template
+        // return template
         return "error";
     }
 
+    // -------------------------------------------------------
 
-    //-------------------------------------------------------
-
-
-    //Shows a table containing all courses 
+    // Shows a table containing all courses
     @GetMapping("courses")
-    public String courses (Model model) {
+    public String courses(Model model) {
 
         model.addAttribute("courseList", courseManagement.findAll());
         return "courses";
     }
 
-
-
-    //Shows the details for a specific course
+    // Shows the details for a specific course
     @GetMapping("course/details")
-    public String courseDetails(Model model, DuplicateCourseForm duplicateForm, CourseForm form, @RequestParam(required = false) UUID id) throws Exception {
-        
-        //for editing purposes:
+    public String courseDetails(Model model, DuplicateCourseForm duplicateForm, CourseForm form,
+            @RequestParam(required = false) UUID id) throws Exception {
+
+        // for editing purposes:
         model.addAttribute("semesterDates", courseManagement.findSemesters());
         model.addAttribute("form", form);
         model.addAttribute("duplicateForm", duplicateForm);
 
-        
-        //fetch course and go to details if present
+        // fetch course and go to details if present
         Optional<Course> course = courseManagement.findById(id);
-        if (course.isPresent()){
+        if (course.isPresent()) {
             model.addAttribute("course", course.get());
 
+            // QRCode URL (Redirects to a courses survey when scanned)
+            String LectureSurveyURl = "localhost:8080/surveySelect?type=LECTURE&id=" + course.get().getId();
+            String TutorialSurveyURl = "localhost:8080/survey?type=TUTORIAL&id=" + course.get().getId();
+            String SeminarSurveyURl = "localhost:8080/survey?type=SEMINAR&id=" + course.get().getId();
+            String PracticalSurveyURL = "localhost:8080/survey?type=PRACTICAL&id=" + course.get().getId();
 
-            //QRCode URL (Redirects to a courses survey when scanned)
-            String LectureSurveyURl = "localhost:8080/surveySelect?type=LECTURE&id="+ course.get().getId();
-            String TutorialSurveyURl = "localhost:8080/survey?type=TUTORIAL&id="+ course.get().getId();   //TODO: replace localhost:8080 with domain name
-            String SeminarSurveyURl = "localhost:8080/survey?type=SEMINAR&id="+ course.get().getId();
-            String PracticalSurveyURL = "localhost:8080/survey?type=PRACTICAL&id="+ course.get().getId();
+            // send byte array (the QRCode image) to model
+            model.addAttribute("lectureQRCode",
+                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(LectureSurveyURl)));
+            model.addAttribute("tutorialQRCode",
+                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(TutorialSurveyURl)));
+            model.addAttribute("seminarQRCode",
+                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(SeminarSurveyURl)));
+            model.addAttribute("practicalQRCode",
+                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(PracticalSurveyURL)));
 
-
-            //send byte array (the QRCode image) to model 
-            model.addAttribute("lectureQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(LectureSurveyURl)));  
-            model.addAttribute("tutorialQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(TutorialSurveyURl)));
-            model.addAttribute("seminarQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(SeminarSurveyURl)));
-            model.addAttribute("practicalQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(PracticalSurveyURL)));  
-            
             return "courseDetails";
         } else {
-            System.out.println("rip rip rip rip rip");
             return "error?code=" + courseNotFound;
-		}
+        }
     }
 
-
-
-
-    
-    //Edit Course Validation (when course is updated, check wether the fields are all appropriately set e.g. NotNull)
+    // Edit Course Validation (when course is updated, check wether the fields are
+    // all appropriately set e.g. NotNull)
     @PostMapping("course/edit")
-	public String editCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form, BindingResult result, @RequestParam UUID id) throws Exception {
+    public String editCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
+            BindingResult result, @RequestParam UUID id) throws Exception {
 
-		if (result.hasErrors()) {
-			//return courseDetails(model, form, id);
-		}
+        if (result.hasErrors()) {
+            // return courseDetails(model, form, id);
+        }
 
         courseManagement.updateCourseDetails(id, form);
-		return "redirect:../course/details?id=" + id;
-	}
+        return "redirect:../course/details?id=" + id;
+    }
 
-
-    //Create Course
+    // Create Course
     @GetMapping("course/new")
-	public String createCourse(Model model, CourseForm form) {
+    public String createCourse(Model model, CourseForm form) {
 
         model.addAttribute("form", form);
 
-        //List of Semesters for Course Creator to pick from
+        // List of Semesters for Course Creator to pick from
         model.addAttribute("semesterDates", courseManagement.findSemesters());
-		return "courseNew";
-	}
-
-
-
-    //Validation of Created course
-	@PostMapping("course/new")
-	public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
-			BindingResult result) {
-
-
-		if (result.hasErrors()) {
-			return createCourse(model, form);
-        }
-
-
-
-        //Management Method returns String of new Course
-        UUID id = courseManagement.createCourseReturnId(form);
-        
-        //Redirect to SurveyEditor to start creating survey
-        return "redirect:../course/new2?id=" + id;
+        return "courseNew";
     }
 
+    // Validation of Created course
+    @PostMapping("course/new")
+    public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
+            BindingResult result) {
 
-    //Create Course
-    @GetMapping("course/new2")
-	public String createCourseSetInstanceTitles(Model model, InstanceTitleForm form, @RequestParam UUID id) {
+        if (result.hasErrors()) {
+            return createCourse(model, form);
+        }
+
+        // Management Method returns String of new Course
+        UUID id = courseManagement.createCourseReturnId(form);
+
+        // Redirect to SurveyEditor to start creating survey
+        return "redirect:../course/instanceTitles?id=" + id;
+    }
+
+    // Create Course
+    @GetMapping("course/instanceTitles")
+    public String createCourseSetInstanceTitles(Model model, InstanceTitleForm form, @RequestParam UUID id) {
 
         Optional<Course> crs = courseManagement.findById(id);
         model.addAttribute("form", form);
-        model.addAttribute("id", crs.get().getId());
 
-        if(crs.isPresent()){
-            if(Boolean.TRUE.equals(crs.get().getLectureExists())){
+        if (crs.isPresent()) {
+
+            model.addAttribute("id", crs.get().getId());
+
+            if (Boolean.TRUE.equals(crs.get().getLectureExists())) {
                 model.addAttribute("lectureExists", true);
                 model.addAttribute("lectureInstanceTitles", crs.get().getLecture().getInstanceTitles());
                 model.addAttribute("lectureInstances", crs.get().getLecture().getInstanceAmount());
+            } else {
+                model.addAttribute("lectureExists", false);
             }
-            else{model.addAttribute("lectureExists", false);}
 
-            if(Boolean.TRUE.equals(crs.get().getTutorialExists())){
+            if (Boolean.TRUE.equals(crs.get().getTutorialExists())) {
                 model.addAttribute("tutorialExists", true);
                 model.addAttribute("tutorialInstanceTitles", crs.get().getTutorial().getInstanceTitles());
                 model.addAttribute("tutorialInstances", crs.get().getTutorial().getInstanceAmount());
+            } else {
+                model.addAttribute("tutorialExists", false);
             }
-            else{model.addAttribute("tutorialExists", false);}
 
-            if(Boolean.TRUE.equals(crs.get().getSeminarExists())){
+            if (Boolean.TRUE.equals(crs.get().getSeminarExists())) {
                 model.addAttribute("seminarExists", true);
                 model.addAttribute("seminarInstanceTitles", crs.get().getSeminar().getInstanceTitles());
                 model.addAttribute("seminarInstances", crs.get().getSeminar().getInstanceAmount());
+            } else {
+                model.addAttribute("seminarExists", false);
             }
-            else{model.addAttribute("seminarExists", false);}
 
-            if(Boolean.TRUE.equals(crs.get().getPracticalExists())){
+            if (Boolean.TRUE.equals(crs.get().getPracticalExists())) {
                 model.addAttribute("practicalExists", true);
                 model.addAttribute("practicalInstanceTitles", crs.get().getPractical().getInstanceTitles());
                 model.addAttribute("practicalInstances", crs.get().getPractical().getInstanceAmount());
+            } else {
+                model.addAttribute("practicalExists", false);
             }
-            else{model.addAttribute("practicalExists", false);}
         }
-        
-        return "CourseNew2";
+
+        return "instanceTitles";
     }
-    
-    //Validation of Created course
-	@PostMapping("course/new2")
-	public String createCourseSetInstanceTitlesValidation(Model model, @Valid @ModelAttribute("form") InstanceTitleForm form, @RequestParam UUID id,
-			BindingResult result) {
 
+    // Validation of Created course
+    @PostMapping("course/instanceTitles")
+    public String createCourseSetInstanceTitlesValidation(Model model,
+            @Valid @ModelAttribute("form") InstanceTitleForm form, @RequestParam UUID id, BindingResult result) {
 
-		if (result.hasErrors()) {
-			return createCourseSetInstanceTitles(model, form, id);
+        if (result.hasErrors()) {
+            return createCourseSetInstanceTitles(model, form, id);
         }
 
-
-
-        //Management Method returns String of new Course
+        // Management Method returns String of new Course
         courseManagement.createCourseSetInstanceTitles(form, id);
-        
-        //Redirect to SurveyEditor to start creating survey
-		return "redirect:../course/details" + "?id=" + id;
+
+        // Redirect to SurveyEditor to start creating survey
+        return "redirect:../course/details" + "?id=" + id;
     }
 
-    
-    
-
-
-
-    //Delete Course and its CourseInstances
+    // Delete Course and its CourseInstances
     @GetMapping("course/delete")
-	public String deleteCourse(@RequestParam UUID id) {
+    public String deleteCourse(@RequestParam UUID id) {
         courseManagement.deleteCourse(id);
-		return "redirect:../courses";
+        return "redirect:../courses";
     }
-
 
     @PostMapping("course/duplicate")
-    public String duplicateCourseWithNewSemester(@ModelAttribute("duplicateForm") DuplicateCourseForm form, @RequestParam UUID id){
+    public String duplicateCourseWithNewSemester(@ModelAttribute("duplicateForm") DuplicateCourseForm form,
+            @RequestParam UUID id) {
 
         Course newCourse = courseManagement.duplicateCourse(id, form.getSemesterString());
 
         return "redirect:../course/details?id=" + newCourse.getId();
     }
 
+    // Call Questioneditor and Submit created Survey
+    // ---------------------------------------------------------------------------
 
-
-
-    //Call Questioneditor and Submit created Survey
-    //---------------------------------------------------------------------------
-
-
-    
-    /** 
+    /**
      * Mapping for surveyeditor HTML (called from CourseDetails Page!)
      * 
      * @param model {@link org.springframework.ui.Model}
-     * @param type {@linkplain qova.enums.CourseType} in String form
-     * @param id Id of the Course
+     * @param type  {@linkplain qova.enums.CourseType} in String form
+     * @param id    Id of the Course
      * @return questioneditor.html template
      */
     @GetMapping("course/surveyeditor")
-    public String questioneditor(Model model, @RequestParam String type, @RequestParam(required = false) UUID id){
-        
-        //Give model the following attributes, which are used to submit the survey, via the post method
+    public String questioneditor(Model model, @RequestParam String type, @RequestParam(required = false) UUID id) {
+
+        // Give model the following attributes, which are used to submit the survey, via
+        // the post method
         model.addAttribute("typeID", type);
         model.addAttribute("id", id);
 
-        //Gives the survey JSON to the model, so the current survey can be assembled and added to
+        // Gives the survey JSON to the model, so the current survey can be assembled
+        // and added to
         model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
 
-        //Default survey JSON, which is sent to the server
+        // Default survey JSON, which is sent to the server
         model.addAttribute("defaultSurvey", adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
 
-
-        //give course name to model, to show as title
+        // give course name to model, to show as title
         Optional<Course> course = courseManagement.findById(id);
         model.addAttribute("coursename", course.get().getName());
-        
+
         return "questioneditor";
     }
 
-
-     
     /**
      * Mapping for submitting a created survey. The questioneditor sends JSON
      * containing the survey to the server, and this is checked for length (Can't
@@ -314,84 +288,82 @@ public class CourseController {
      * TextResponse, etc.)
      * 
      * @param model The {@linkplain org.springframework.ui.Model}
-     * @param form {@linkplain SurveyForm} which contains the JSON passed by the surveyeditor
-     * @param type {@linkplain qova.enums.CourseType} in String format
-     * @param id Id of the {@linkplain Course}
-     * @return Either the errorPage, in case of error; otherwise return the courseDetails template
+     * @param form  {@linkplain SurveyForm} which contains the JSON passed by the
+     *              surveyeditor
+     * @param type  {@linkplain qova.enums.CourseType} in String format
+     * @param id    Id of the {@linkplain Course}
+     * @return Either the errorPage, in case of error; otherwise return the
+     *         courseDetails template
      */
     @PostMapping("course/surveyeditor")
-    public String questioneditorSubmit(Model model, @Valid @ModelAttribute("form") SurveyForm form, @RequestParam String type,
-            @RequestParam(required = false) UUID id) {
-        
+    public String questioneditorSubmit(Model model, @Valid @ModelAttribute("form") SurveyForm form,
+            @RequestParam String type, @RequestParam(required = false) UUID id) {
 
-        //Form empty -> Redirect to details again 
-        if (form.getQuestionnairejson().length()==0) {
-            return "redirect:../course/details" + "?id=" + id;          //TODO: Redirects back course at the moment, think about where this should go
+        // Form empty -> Redirect to details again
+        if (form.getQuestionnairejson().length() == 0) {
+            return "redirect:../course/details" + "?id=" + id; // TODO: Redirects back course at the moment, think about
+                                                               // where this should go
         }
-        
 
-        //fetch course 
+        // fetch course
         Optional<Course> course = courseManagement.findById(id);
-        if (course.isPresent()){
+        if (course.isPresent()) {
 
             // if type is none of the correct values, then redirect to homepage
-            if(responseManagement.parseCourseType(type) == null){
-                //TODO: redirect to error page with code 02
+            if (responseManagement.parseCourseType(type) == null) {
+                // TODO: redirect to error page with code 02
                 return "redirect:/";
             }
 
-            else{
-                //check if JSON is valid
-                try {new JSONArray(form.getQuestionnairejson());} 
-                catch (Exception e) {
-                    //TODO: redirect to error page with code 02
+            else {
+                // check if JSON is valid
+                try {
+                    new JSONArray(form.getQuestionnairejson());
+                } catch (Exception e) {
+                    // TODO: redirect to error page with code 02
                     return "redirect:/";
                 }
 
-                //Create a JSON Array out of the response from the questioneditor
+                // Create a JSON Array out of the response from the questioneditor
                 JSONArray survey = new JSONArray(form.getQuestionnairejson());
 
-                //parse JSON to check for correctness (length, special characters)
+                // parse JSON to check for correctness (length, special characters)
                 Boolean validSurvey = responseManagement.verifyJsonArray(survey);
-                if(Boolean.FALSE.equals(validSurvey)){
-                    //TODO: redirect to error page with code 02
+                if (Boolean.FALSE.equals(validSurvey)) {
+                    // TODO: redirect to error page with code 02
                     return questioneditor(model, type, id);
                 }
 
-                //Sets the survey string for a given course (takes the default survey and conncatenates it with the create survey)
+                // Sets the survey string for a given course (takes the default survey and
+                // conncatenates it with the create survey)
                 courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson());
             }
 
-
-            //Redirect back to CourseDetails page
+            // Redirect back to CourseDetails page
             return "redirect:../course/details" + "?id=" + id;
-        }
-        else{
-            //TODO: need more feedback here for the user. Change this!
+        } else {
+            // TODO: need more feedback here for the user. Change this!
             return "error?code=" + courseNotFound;
         }
     }
 
-
-
-
-
     /**
-     * Used to finalise the Survey and create the relevant objects 
+     * Used to finalise the Survey and create the relevant objects
      * 
      * @param form {@linkplain qova.forms.SurveyForm}
      * @param type String form of {@linkplain qova.enums.CourseType}
-     * @param id The id of the {@linkplain qova.objects.Course}
+     * @param id   The id of the {@linkplain qova.objects.Course}
      */
     @GetMapping("course/submitfinalisedsurvey")
-    public String questioneditorFinaliseSurvey(@RequestParam String type,
-            @RequestParam(required = false) UUID id) {
-        
+    public String questioneditorFinaliseSurvey(@RequestParam String type, @RequestParam(required = false) UUID id) {
+
         Optional<Course> course = courseManagement.findById(id);
-        if (course.isPresent()){
-            //Create a JSON Array out of the response from the questioneditor and the default survey
-            //                                                                                           --Custom Survey--                                 --CourseType--           
-            String completeSurvey = adminManagement.concatenateDefaultSurveyToSurveyString(  courseManagement.getSurveyforType(id, type)  , responseManagement.parseCourseType(type));
+        if (course.isPresent()) {
+            // Create a JSON Array out of the response from the questioneditor and the
+            // default survey
+            // --Custom Survey-- --CourseType--
+            String completeSurvey = adminManagement.concatenateDefaultSurveyToSurveyString(
+                    courseManagement.getSurveyforType(id, type), responseManagement.parseCourseType(type));
 
             try {
                 new JSONArray(completeSurvey);
@@ -399,118 +371,114 @@ public class CourseController {
                 return "redirect:../course/details" + "?id=" + id;
             }
 
-            //Create JSON Array
+            // Create JSON Array
             JSONArray survey = new JSONArray(completeSurvey);
 
-            //Create the relevant objects
+            // Create the relevant objects
             responseManagement.createSurveyResponse(survey, course.get(), type);
-        }  
+        }
         return "redirect:../course/details" + "?id=" + id;
     }
-    
 
+    // ---------------------------------------------------------------------------
 
-
-    //---------------------------------------------------------------------------
-
-    //Die Ganze Methode ist Same wie questioneditorSubmit nur der Return ist auf die Preview Html
+    // Die Ganze Methode ist Same wie questioneditorSubmit nur der Return ist auf
+    // die Preview Html
     @PostMapping("course/previewsurvey")
-    public String questioneditorpreview(Model model,SurveyForm form, @RequestParam String type,
-                                       @RequestParam(required = false) UUID id) {
+    public String questioneditorpreview(Model model, SurveyForm form, @RequestParam String type,
+            @RequestParam(required = false) UUID id) {
 
-
-        //Form empty -> Redirect to details again
-        if (form.getQuestionnairejson().length()==0) {
-            return "redirect:../course/details" + "?id=" + id;          //TODO: Redirects back course at the moment, think about where this should go
+        // Form empty -> Redirect to details again
+        if (form.getQuestionnairejson().length() == 0) {
+            return "redirect:../course/details" + "?id=" + id; // TODO: Redirects back course at the moment, think about
+                                                               // where this should go
         }
 
-
-        //fetch course
+        // fetch course
         Optional<Course> course = courseManagement.findById(id);
-        if (course.isPresent()){
+        if (course.isPresent()) {
 
             // if type is none of the correct values, then redirect to homepage
-            if(responseManagement.parseCourseType(type) == null){
-                //TODO: redirect to error page with code 02
+            if (responseManagement.parseCourseType(type) == null) {
+                // TODO: redirect to error page with code 02
                 return "redirect:/";
             }
 
-            else{
-                //Sets the survey string for a given course (takes the default survey and conncatenates it with the create survey)
+            else {
+                // Sets the survey string for a given course (takes the default survey and
+                // conncatenates it with the create survey)
                 courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson());
             }
 
-
-            //Part der anders ist als questioneditorSubmit
+            // Part der anders ist als questioneditorSubmit
             model.addAttribute("typeID", type);
             model.addAttribute("id", id);
 
-            return "redirect:../course/previewsurvey?id="+id+"&type="+type;
-        }
-        else{
-            //TODO: need more feedback here for the user. Change this!
+            return "redirect:../course/previewsurvey?id=" + id + "&type=" + type;
+        } else {
+            // TODO: need more feedback here for the user. Change this!
             return "error?code=" + courseNotFound;
         }
     }
 
-
-    //SUrveyPreview als getrequest
+    // SUrveyPreview als getrequest
     @GetMapping("course/previewsurvey")
     public String questioneditorpreviewget(Model model, @RequestParam String type,
-                                        @RequestParam(required = false) UUID id) {
+            @RequestParam(required = false) UUID id) {
 
-
-        //fetch course
+        // fetch course
         Optional<Course> course = courseManagement.findById(id);
-        if (course.isPresent()){
+        if (course.isPresent()) {
 
             // if type is none of the correct values, then redirect to homepage
-            if(responseManagement.parseCourseType(type) == null){
-                //TODO: redirect to error page with code 02
+            if (responseManagement.parseCourseType(type) == null) {
+                // TODO: redirect to error page with code 02
                 return "redirect:/";
             }
-
 
             model.addAttribute("typeID", type);
             model.addAttribute("id", id);
             model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
-            model.addAttribute("defaultSurvey", adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
+            model.addAttribute("defaultSurvey",
+                    adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
             model.addAttribute("coursename", course.get().getName());
 
             return "surveypreview";
-        }
-        else{
-            //TODO: need more feedback here for the user. Change this!
+        } else {
+            // TODO: need more feedback here for the user. Change this!
             return "error?code=" + courseNotFound;
         }
     }
-    
+
     /**
-     * This method takes id and CourseType as parameters, and returns a qrcode with the given string that is assembled below
+     * This method takes id and CourseType as parameters, and returns a qrcode with
+     * the given string that is assembled below
      * 
      * @param response {@link javax.servlet.http.HttpServletResponse}
-     * @param type {@linkplain qova.enums.CourseType}
-     * @param id Id of the {@linkplain Course}
+     * @param type     {@linkplain qova.enums.CourseType}
+     * @param id       Id of the {@linkplain Course}
      * @return The QRCode as a byte[], bundled into a {@link HttpEntity}
-     * @throws IOException Thrown by QRCode generator 
-     * @throws WriterException Thrown by QRCode generator 
+     * @throws IOException     Thrown by QRCode generator
+     * @throws WriterException Thrown by QRCode generator
      */
     @GetMapping("qrcode")
-    public HttpEntity<byte[]> qrcode(HttpServletResponse response, @RequestParam String type, @RequestParam UUID id) throws IOException, WriterException  {
+    public HttpEntity<byte[]> qrcode(HttpServletResponse response, @RequestParam String type, @RequestParam UUID id)
+            throws IOException, WriterException {
 
-        //QRCode URL (Redirects to a courses survey when scanned). Generated using pathvariables
-        String url = "localhost:8080/survey?type=" + type + "&id=" + id;  
-        
-        //find course
+        // QRCode URL (Redirects to a courses survey when scanned). Generated using
+        // pathvariables
+        String url = "localhost:8080/survey?type=" + type + "&id=" + id;
+
+        // find course
         Optional<Course> crs = courseManagement.findById(id);
 
-        //generate filename
+        // generate filename
         String filename = crs.get().getName() + "_" + type + "_" + "QRCode";
 
-        //Generate QRCode
+        // Generate QRCode
         byte[] qrcode = courseManagement.generateQRCodeImage(url);
 
-        //Set HTTP headers and return HttpEntity
+        // Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.IMAGE_PNG);
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
@@ -518,73 +486,38 @@ public class CourseController {
 
         return new HttpEntity<byte[]>(qrcode, header);
     }
-    
-
 
     @GetMapping("studentBrowser")
-    public String studentBrowser (Model model) {
+    public String studentBrowser(Model model) {
 
-        //model.addAttribute("courseList", courseManagement.findAll());
-        List<Course> courseList = Arrays.asList(courseManagement.TimTestCreateCourse(), courseManagement.TimTestCreateCourse());
+        // model.addAttribute("courseList", courseManagement.findAll());
+        List<Course> courseList = Arrays.asList(courseManagement.TimTestCreateCourse(),
+                courseManagement.TimTestCreateCourse());
         model.addAttribute("courseList", courseList);
 
         return "studentBrowser";
     }
 
-
     @GetMapping("/easterEgg/tim")
-    public String easterEgg(){return "subject.html";}
+    public String easterEgg() {
+        return "subject.html";
+    }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //test method
+    // test method
     @GetMapping("/createC")
     public String createC() throws Exception {
         courseManagement.TestCreateCourse();
         return "home";
     }
 
-    //test method
+    // test method
     @GetMapping("/jsTest")
-    public String JsTest(){
+    public String JsTest() {
         return "survey";
     }
 
-    @GetMapping("coursenew2")
-	public String createCourse_SetInstanceTitles(Model model, InstanceTitleForm form) {
+    @GetMapping("instanceTitles")
+    public String createCourse_SetInstanceTitles(Model model, InstanceTitleForm form) {
 
         model.addAttribute("lectureInstances", 2);
         model.addAttribute("lectureExists", true);
@@ -598,10 +531,7 @@ public class CourseController {
         model.addAttribute("practicalInstances", 5);
         model.addAttribute("practicalExists", true);
 
-		return "courseNew2";
+        return "instanceTitles";
     }
 
-
 }
-
-

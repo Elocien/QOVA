@@ -1,5 +1,6 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -10,21 +11,27 @@
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/toggle_checkbox.css}" />
-    
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+        integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+        crossorigin="anonymous"></script>
 
     <script src="https://kit.fontawesome.com/5b9febade6.js" crossorigin="anonymous"></script>
 
     <title th:text="#{title.details}">TITLE</title>
 </head>
+
 <body class="bg-light">
     <div th:include="navbar"></div>
     <div class="col-lg-12 mb-4">
 
         <div class="mb-4 mt-4">
             <h2 class="font-weight-bold text-center mb-4 mt-4 hide_me" th:text="${course.name}">COURSE NAME</h2>
-            <input id="name-input" type="text" class="input-group headline-edit show_me" style="display: none;" th:placeholder="${course.name}" th:value="${course.name}"></input>
+            <input id="name-input" type="text" class="input-group headline-edit show_me" style="display: none;"
+                th:placeholder="${course.name}" th:value="${course.name}"></input>
         </div>
 
         <div class="container bg-light border border-dark rounded p-0">
@@ -34,23 +41,28 @@
                 <div class="btn-delete">
                     <!--Copy Course-->
                     <button type="submit" class="btn btn-link" data-toggle="modal" data-target="#copyModal">
-                        <i class="far fa-clone" data-toggle="tooltip" data-placement="top" title="COPY COURSE" th:title="#{detail.copyCourse}"></i>
+                        <i class="far fa-clone" data-toggle="tooltip" data-placement="top" title="COPY COURSE"
+                            th:title="#{detail.copyCourse}"></i>
                     </button>
                     <div class="modal fade" id="copyModal" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content text-center">
                                 <!--Duplicate Form-->
-                                <form th:action="@{/course/duplicate?id=__${course.id}__}" th:object="${duplicateForm}" method="post">
+                                <form th:action="@{/course/duplicate?id=__${course.id}__}" th:object="${duplicateForm}"
+                                    method="post">
                                     <div class="modal-body">
                                         <p th:text="#{detail.copyModalText}">PLEASE COPY ME!</p>
-                                        <select id="newYear" class="custom-select form-control" th:field="*{semesterString}">
-                                            <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+                                        <select id="newYear" class="custom-select form-control"
+                                            th:field="*{semesterString}">
+                                            <option class="dropdown-item" th:each="year : ${semesterDates}"
+                                                th:text="${year}" th:value="${year}">YEAR</option>
                                         </select>
                                     </div>
                                     <div class="modal-footer text-center">
                                         <div class="w-100"></div>
                                         <button type="submit" class="btn btn-primary">Finish</button>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                            th:text="#{cancel}">Cancel</button>
                                         <div class="w-100"></div>
                                     </div>
                                 </form>
@@ -59,7 +71,8 @@
                     </div>
                     <!-- Delete Course -->
                     <button type="submit" class="btn red-link btn-link" data-toggle="modal" data-target="#deleteModal">
-                        <i class="fas fa-trash-alt" data-toggle="tooltip" data-placement="top" title="DELETE COURSE" th:title="#{detail.deleteCourse}"></i>
+                        <i class="fas fa-trash-alt" data-toggle="tooltip" data-placement="top" title="DELETE COURSE"
+                            th:title="#{detail.deleteCourse}"></i>
                     </button>
                     <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -69,8 +82,10 @@
                                 </div>
                                 <div class="modal-footer text-center">
                                     <div class="w-100"></div>
-                                    <a th:href="@{/course/delete?id=__${course.id}__}" method="post" class="btn btn-primary">Yes</a>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                                    <a th:href="@{/course/delete?id=__${course.id}__}" method="post"
+                                        class="btn btn-primary">Yes</a>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                                        th:text="#{cancel}">Cancel</button>
                                     <div class="w-100"></div>
                                 </div>
                             </div>
@@ -80,7 +95,8 @@
             </div>
 
             <!--Left Side-->
-            <div class="row justify-content-md-center p-4" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
+            <div class="row justify-content-md-center p-4"
+                th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
                 <!--Course Details-->
                 <div class="col-6">
                     <form id="form" method="post" th:action="@{/course/edit?id=__${course.id}__}" th:object="${form}">
@@ -88,9 +104,16 @@
                         <!--Headline & Buttons-->
                         <div class="row">
                             <h5 class="font-weight-light text-left" th:text="#{course.details}">COURSE DETAILS</h5>
-                            <button type="button" id="startEdit" class="btn edit_details btn-link p-0 ml-4 align-middle" onclick="edit_mode()" data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}"><i class="far fa-edit"></i></button>
-                            <button type="button" onClick="window.location.reload();" class="btn edit_details btn-link p-0 ml-4 align-middle show_me" style="display: none;" data-toggle="tooltip" data-placement="right" th:title="#{detail.cancelEdit}"><i class="fas fa-times"></i></button>
-                            <button type="submit" class="btn edit_details btn-link p-0 ml-4 align-middle show_me" style="display: none;" data-toggle="tooltip" data-placement="right" th:title="#{detail.finishEdit}"><i class="fas fa-check"></i></button>
+                            <button type="button" id="startEdit" class="btn edit_details btn-link p-0 ml-4 align-middle"
+                                onclick="edit_mode()" data-toggle="tooltip" data-placement="right"
+                                th:title="#{detail.editCourse}"><i class="far fa-edit"></i></button>
+                            <button type="button" onClick="window.location.reload();"
+                                class="btn edit_details btn-link p-0 ml-4 align-middle show_me" style="display: none;"
+                                data-toggle="tooltip" data-placement="right" th:title="#{detail.cancelEdit}"><i
+                                    class="fas fa-times"></i></button>
+                            <button type="submit" class="btn edit_details btn-link p-0 ml-4 align-middle show_me"
+                                style="display: none;" data-toggle="tooltip" data-placement="right"
+                                th:title="#{detail.finishEdit}"><i class="fas fa-check"></i></button>
                         </div>
 
                         <!--Hidden Headline-->
@@ -103,9 +126,13 @@
                                     <!--Faculty-->
                                     <tr>
                                         <th class="col-5" scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
-                                        <td class="hide_me" id="faculty_original"><span th:id="'og: ' + ${course.faculty}" th:text="#{'course.faculty.' + ${course.faculty}}">FACULTY</span></td>
+                                        <td class="hide_me" id="faculty_original"><span
+                                                th:id="'og: ' + ${course.faculty}"
+                                                th:text="#{'course.faculty.' + ${course.faculty}}">FACULTY</span></td>
                                         <td class="show_me" id="faculty_dropdown" style="display: none">
-                                            <select id="faculty_select" class="custom-select form-control" th:with="faculties = ${T(qova.enums.CourseFaculty).values()}" th:field="*{faculty}">
+                                            <select id="faculty_select" class="custom-select form-control"
+                                                th:with="faculties = ${T(qova.enums.CourseFaculty).values()}"
+                                                th:field="*{faculty}">
                                                 <option class="dropdown-item" th:id="${faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
                                             </select>
                                         </td>
@@ -167,7 +194,7 @@
                                         <!--3rd Col-->
                                         <td class="text-center" th:text="${__'course.' + ${course_type} + '.instanceAmount'__}">COUNT</td>
                                         <input type="hidden" th:value="${__'course.' + ${course_type} + '.instanceAmount'__}" th:name="|instanceAmount${#strings.capitalize(course_type)}|"></input>
-                                        <td class="show_me text-center" style="display: none;"><a type="button" class="btn btn-link p-0 align-middle instance_btn show_me" style="display: none;" href="#" th:href="${'/course/new2?id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.editInstance}"><i class="far fa-edit"></i></a></td>
+                                        <td class="show_me text-center" style="display: none;"><a type="button" class="btn btn-link p-0 align-middle instance_btn show_me" style="display: none;" href="#" th:href="${'/course/instanceTitles?id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.editInstance}"><i class="far fa-edit"></i></a></td>
                                         <!--4th Col-->
                                         <td class="text-center hide_me" th:text="${__'course.' + ${course_type} + '.groupAmount'__}">COUNT</td>
                                         <td class="show_me" style="display: none;">
@@ -255,28 +282,28 @@
     <div th:replace="footer"></div>
 </body>
 <script th:inline="javascript">
-    $( document ).ready(function() {
-        $('[data-toggle="tooltip"]').tooltip(({trigger : 'hover'}));
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip(({ trigger: 'hover' }));
         document.getElementsByClassName("carousel-item")[0].className = "carousel-item active";
         document.getElementsByClassName("carousel-indicators").getElementsByTagName("li")[0].className = "active";
     });
     $('#myModal').on('shown.bs.modal', function () {
         $('#myInput').trigger('focus')
     })
-    $('#name-input').keyup(function() {
+    $('#name-input').keyup(function () {
         $('#name-input-hidden').val($(this).val());
     });
 
     function sort_options(select_element) {
         const all_options = select_element.children;
-        
+
         //sorting by innerHTML
         var sorted_option = [];
         for (let index = 0; index < all_options.length; ++index) {
             const option = all_options[index];
             sorted_option.push([option.id, option.innerHTML]);
         }
-        sorted_option.sort(function(a, b) { 
+        sorted_option.sort(function (a, b) {
             return a[1] > b[1] ? 1 : -1;
         });
 
@@ -309,7 +336,7 @@
             disable_inputs(table_line, false);
         }
         og_input.disabled = true;
-        setTimeout(function(){og_input.disabled = false;}, 500)
+        setTimeout(function () { og_input.disabled = false; }, 500)
     }
 
     function disable_inputs(f_element, bool) {
@@ -326,8 +353,8 @@
     }
 
     const name_input = document.getElementById("name-input")
-    name_input.addEventListener("change", function() {
-        document.getElementById("hidden-name-input").value  = name_input.value;
+    name_input.addEventListener("change", function () {
+        document.getElementById("hidden-name-input").value = name_input.value;
     });
 
     function switcheroo() {
@@ -348,7 +375,7 @@
 
         }
     }
-    
+
     function edit_mode() {
         //turns finish edit button visable & disables edit button
         document.getElementById("startEdit").disabled = true;
