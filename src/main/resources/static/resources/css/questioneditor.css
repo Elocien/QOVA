@@ -41,7 +41,7 @@ body {
     transition: 0.5s;
 }
 .btn-list-last {
-    background-color: transparent;
+    background-color: white;
     color: var(--fancy_grey);
 }
 .btn-list-last:hover {
@@ -97,6 +97,7 @@ body {
 .Textarea.Question{
     width: 100%;
     margin: 0.5rem 0rem;
+    padding: none;
     border:none;
     border-radius: 0px;
     border-bottom: 1px solid black;
@@ -135,4 +136,3 @@ body {
 @media only screen and (max-width: ) {
     
 }
-
