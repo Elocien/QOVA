@@ -78,7 +78,7 @@ public class CourseManagement {
         var semesterString = form.getSemesterString();
 
         // create CourseInstances
-        Map<CourseType, CourseInstance> courseInstances = createCourseInstance(form);
+        Map<CourseType, CourseInstance> courseInstances = createCourseInstances(form);
 
         Course crs = new Course(name, courseInstances.get(CourseType.LECTURE), courseInstances.get(CourseType.TUTORIAL),
                 courseInstances.get(CourseType.SEMINAR), courseInstances.get(CourseType.PRACTICAL), semesterOfStudents,
@@ -90,100 +90,42 @@ public class CourseManagement {
 
     // Method for createing CourseInstances
 
-    private Map<CourseType, CourseInstance> createCourseInstance(CourseForm form) {
+    private Map<CourseType, CourseInstance> createCourseInstances(CourseForm form) {
 
         // Map containing CourseInstances, with CourseType as key
         EnumMap<CourseType, CourseInstance> courseInstances = new EnumMap<>(CourseType.class);
 
-        // Create CourseInstances if bool is true
-        // LECTURE
-        if (Boolean.TRUE.equals(form.getLectureExists())) {
+        for (CourseType courseType : CourseType.values()) {
+            if (Boolean.TRUE.equals(form.getInstanceExists(courseType))) {
 
-            // In the current implementation, the groupAmount for LECTURE is always set to 1
-            // (The attribute exists in case of a future need for this to be editable. It
-            // would have to be bound to the form in the frontend, and called here with
-            // form.getGroupAmountLecture)
-            var groupAmount = 1;
+                // In the current implementation, the groupAmount for LECTURE is always set to 1
+                // (The attribute exists in case of a future need for this to be editable. It
+                // would have to be bound to the form in the frontend, and called here with
+                // form.getGroupAmountLecture)
+                Integer groupAmount;
 
-            // Initialise the instanceTitles array with the amount of instances that are set
-            // to exist
-            List<String> instanceTitles = new ArrayList<>(form.getInstanceAmountLecture());
+                if (courseType.equals(CourseType.LECTURE)) {
+                    groupAmount = 1;
+                } else {
+                    groupAmount = form.getGroupAmount(courseType);
+                }
 
-            // Create the courseInstance
-            CourseInstance lecture = new CourseInstance(CourseType.LECTURE, groupAmount,
-                    form.getInstanceAmountLecture(), instanceTitles, true);
+                // Initialise the instanceTitles array with the amount of instances that are set
+                // to exist
+                List<String> instanceTitles = new ArrayList<>(form.getInstanceAmount(courseType));
 
-            // save to database
-            courseInstancesRepo.save(lecture);
+                // Create the courseInstance
+                CourseInstance instance = new CourseInstance(CourseType.LECTURE, groupAmount,
+                        form.getInstanceAmount(courseType), instanceTitles, true);
 
-            // Add CourseInstance to map
-            courseInstances.put(lecture.getCourseType(), lecture);
-        } else {
-            CourseInstance lecture = new CourseInstance(CourseType.LECTURE);
-            courseInstances.put(lecture.getCourseType(), lecture);
-        }
+                // save to database
+                courseInstancesRepo.save(instance);
 
-        // TUTORIAL
-        if (Boolean.TRUE.equals(form.getTutorialExists())) {
-
-            // Initialise the instanceTitles array with the amount of instances that are set
-            // to exist
-            List<String> instanceTitles = new ArrayList<>(form.getInstanceAmountTutorial());
-
-            // Create the courseInstance
-            CourseInstance tutorial = new CourseInstance(CourseType.TUTORIAL, form.getGroupAmountPractical(),
-                    form.getInstanceAmountLecture(), instanceTitles, true);
-
-            // save to database
-            courseInstancesRepo.save(tutorial);
-
-            // Add CourseInstance to map
-            courseInstances.put(tutorial.getCourseType(), tutorial);
-        } else {
-            CourseInstance tutorial = new CourseInstance(CourseType.TUTORIAL);
-            courseInstances.put(tutorial.getCourseType(), tutorial);
-        }
-
-        // SEMINAR
-        if (Boolean.TRUE.equals(form.getSeminarExists())) {
-
-            // Initialise the instanceTitles array with the amount of instances that are set
-            // to exist
-            List<String> instanceTitles = new ArrayList<>(form.getInstanceAmountSeminar());
-
-            // Create the courseInstance
-            CourseInstance seminar = new CourseInstance(CourseType.SEMINAR, form.getGroupAmountPractical(),
-                    form.getInstanceAmountLecture(), instanceTitles, true);
-
-            // save to database
-            courseInstancesRepo.save(seminar);
-
-            // Add CourseInstance to map
-            courseInstances.put(seminar.getCourseType(), seminar);
-        } else {
-            CourseInstance seminar = new CourseInstance(CourseType.SEMINAR);
-            courseInstances.put(seminar.getCourseType(), seminar);
-        }
-
-        // PRACTICAL
-        if (Boolean.TRUE.equals(form.getPracticalExists())) {
-
-            // Initialise the instanceTitles array with the amount of instances that are set
-            // to exist
-            List<String> instanceTitles = new ArrayList<>(form.getInstanceAmountPractical());
-
-            // Create the courseInstance
-            CourseInstance practical = new CourseInstance(CourseType.PRACTICAL, form.getGroupAmountPractical(),
-                    form.getInstanceAmountLecture(), instanceTitles, true);
-
-            // save to database
-            courseInstancesRepo.save(practical);
-
-            // Add CourseInstance to map
-            courseInstances.put(practical.getCourseType(), practical);
-        } else {
-            CourseInstance practical = new CourseInstance(CourseType.PRACTICAL);
-            courseInstances.put(practical.getCourseType(), practical);
+                // Add CourseInstance to map
+                courseInstances.put(courseType, instance);
+            } else {
+                courseInstances.put(courseType, new CourseInstance(courseType));
+            }
         }
 
         // Return the Map of CourseInstances
@@ -206,91 +148,36 @@ public class CourseManagement {
 
             // These attributes are NOT editable, when the instance has been finalised!!!
 
-            // Lecture EXISTS, but is toggled OFF
-            if (Boolean.TRUE.equals(course.getLectureExists()) && Boolean.FALSE.equals(form.getLectureExists())) {
+            for (CourseType courseType : CourseType.values()) {
+                // Lecture EXISTS, but is toggled OFF
+                if (Boolean.TRUE.equals(course.getInstanceExists(courseType))
+                        && Boolean.FALSE.equals(form.getInstanceExists(courseType))) {
 
-                course.getLecture().setInactive();
-            }
-            // Lecture does NOT EXIST, but is toggled ON
-            if (Boolean.FALSE.equals(course.getLectureExists()) && Boolean.TRUE.equals(form.getLectureExists())) {
+                    course.getInstance(courseType).setInactive();
+                }
+                // Lecture does NOT EXIST, but is toggled ON
+                if (Boolean.FALSE.equals(course.getInstanceExists(courseType))
+                        && Boolean.TRUE.equals(form.getInstanceExists(courseType))) {
 
-                // Initialise instanceTitles array
-                List<String> instanceTitles = new ArrayList<>(form.getInstanceAmountLecture());
+                    // Initialise instanceTitles array
+                    List<String> instanceTitles = new ArrayList<>(form.getInstanceAmount(courseType));
 
-                // Update CourseInstance
-                CourseInstance lecture = course.getLecture();
+                    // Update CourseInstance
+                    CourseInstance instance = course.getInstance(courseType);
 
-                // Set to one for lectures (in case of change, assign
-                // form.getLectureGroupAmount)
-                lecture.setGroupAmount(1);
+                    // Set to one for lectures (in case of change, assign
+                    // form.getLectureGroupAmount)
+                    if (courseType.equals(CourseType.LECTURE)) {
+                        instance.setGroupAmount(1);
+                    } else {
+                        instance.setGroupAmount(form.getGroupAmount(courseType));
+                    }
 
-                //
-                lecture.setInstanceAmount(form.getInstanceAmountLecture());
-                lecture.setInstanceTitles(instanceTitles);
-                lecture.setActive();
-            }
-
-            // tutorial EXISTS, but is toggled OFF
-            if (Boolean.TRUE.equals(course.getTutorialExists()) && Boolean.FALSE.equals(form.getTutorialExists())) {
-
-                course.getTutorial().setInactive();
-            }
-            // tutorial does NOT EXIST, but is toggled ON
-            if (Boolean.FALSE.equals(course.getTutorialExists()) && Boolean.TRUE.equals(form.getTutorialExists())) {
-
-                // Initialise instanceTitles array
-                List<String> instanceTitles = new ArrayList<>(form.getInstanceAmountTutorial());
-
-                // Update CourseInstance
-                CourseInstance tutorial = course.getTutorial();
-
-                //
-                tutorial.setGroupAmount(form.getGroupAmountTutorial());
-                tutorial.setInstanceAmount(form.getInstanceAmountTutorial());
-                tutorial.setInstanceTitles(instanceTitles);
-                tutorial.setActive();
-            }
-
-            // seminar EXISTS, but is toggled OFF
-            if (Boolean.TRUE.equals(course.getSeminarExists()) && Boolean.FALSE.equals(form.getSeminarExists())) {
-
-                course.getSeminar().setInactive();
-            }
-            // seminar does NOT EXIST, but is toggled ON
-            if (Boolean.FALSE.equals(course.getSeminarExists()) && Boolean.TRUE.equals(form.getSeminarExists())) {
-
-                // Initialise instanceTitles array
-                List<String> instanceTitles = new ArrayList<>(form.getInstanceAmountSeminar());
-
-                // Update CourseInstance
-                CourseInstance seminar = course.getSeminar();
-
-                //
-                seminar.setGroupAmount(form.getGroupAmountSeminar());
-                seminar.setInstanceAmount(form.getInstanceAmountSeminar());
-                seminar.setInstanceTitles(instanceTitles);
-                seminar.setActive();
-            }
-
-            // practical EXISTS, but is toggled OFF
-            if (Boolean.TRUE.equals(course.getPracticalExists()) && Boolean.FALSE.equals(form.getPracticalExists())) {
-
-                course.getPractical().setInactive();
-            }
-            // practical does NOT EXIST, but is toggled ON
-            if (Boolean.FALSE.equals(course.getPracticalExists()) && Boolean.TRUE.equals(form.getPracticalExists())) {
-
-                // Initialise instanceTitles array
-                List<String> instanceTitles = new ArrayList<>(form.getGroupAmountPractical());
-
-                // Update CourseInstance
-                CourseInstance practical = course.getPractical();
-
-                //
-                practical.setGroupAmount(form.getGroupAmountPractical());
-                practical.setInstanceAmount(form.getInstanceAmountPractical());
-                practical.setInstanceTitles(instanceTitles);
-                practical.setActive();
+                    //
+                    instance.setInstanceAmount(form.getInstanceAmount(courseType));
+                    instance.setInstanceTitles(instanceTitles);
+                    instance.setActive();
+                }
             }
 
             // We are intentionally not allowing the option to edit the CourseDate of

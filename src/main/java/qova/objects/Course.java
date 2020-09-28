@@ -15,200 +15,218 @@ import org.hibernate.annotations.GenericGenerator;
 import qova.enums.CourseFaculty;
 import qova.enums.CourseType;
 
-
-
-
-
 //Terminology
 
 //course types
-    //meaning either the lecture, tutorial, seminar or practical
-    //auf deutsch:       Vorlesung, übung , seminar oder praktika
-
+//meaning either the lecture, tutorial, seminar or practical
+//auf deutsch:       Vorlesung, übung , seminar oder praktika
 
 //
 
-
-
-
 @Entity
 public class Course {
- 
-    @Id
-	@GeneratedValue(generator = "UUID")
-	@GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-	@Column(name = "id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
-	private UUID id;
 
-    //Name of the course
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
+    private UUID id;
+
+    // Name of the course
     private String name;
 
-    @ManyToOne private CourseInstance lecture;
-    @ManyToOne private CourseInstance tutorial;
-    @ManyToOne private CourseInstance seminar;
-    @ManyToOne private CourseInstance practical;
+    @ManyToOne
+    private CourseInstance lecture;
+    @ManyToOne
+    private CourseInstance tutorial;
+    @ManyToOne
+    private CourseInstance seminar;
+    @ManyToOne
+    private CourseInstance practical;
 
-    //The number representing the semester this course is taken by students
+    // The number representing the semester this course is taken by students
     private Integer semesterOfStudents;
 
-    //Faculty the course belongs to 
+    // Faculty the course belongs to
     private CourseFaculty faculty;
 
-    //The date at which indicates to which semester the course belongs to (used to find courses using repository methods)
-    private LocalDate courseDate;  
+    // The date at which indicates to which semester the course belongs to (used to
+    // find courses using repository methods)
+    private LocalDate courseDate;
 
-    //The string which is displayed in UI
+    // The string which is displayed in UI
     private String semesterString;
 
-    //Used to indicate that the course is finalised and cannot be edited anymore
+    // Used to indicate that the course is finalised and cannot be edited anymore
     private Boolean finalised;
 
-
-    //Needed for JPA purposes
+    // Needed for JPA purposes
     @SuppressWarnings("unused")
-	protected Course() {
+    protected Course() {
     }
-    
-    
+
     /**
      * Instance of a Course (meaning a Subject [DE Lehrveranstaltung])
      * 
-     * @param name                      Name of the course
-     * @param lecture                   CourseInstance with courseType LECTURE
-     * @param tutorial                  CourseInstance with courseType SEMINAR
-     * @param seminar                   CourseInstance with courseType TUTORIAL
-     * @param practical                 CourseInstance with courseType PRACTICAL
-     * @param semesterOfStudents        What is the semester of the students attending the subject
-     * @param faculty                   Enum defining which faculty the subject belongs to 
-     * @param semesterString            The string displaying the semester (an instance of a course. E.g. algorithms 1 is offered each year, and this is the instance of Summer semester 2020). This field is primarily used in the UI
-     * @param courseDate                The time period (start date) of when the course takes place. This field is primarily used for sorting purposes
+     * @param name               Name of the course
+     * @param lecture            CourseInstance with courseType LECTURE
+     * @param tutorial           CourseInstance with courseType SEMINAR
+     * @param seminar            CourseInstance with courseType TUTORIAL
+     * @param practical          CourseInstance with courseType PRACTICAL
+     * @param semesterOfStudents What is the semester of the students attending the
+     *                           subject
+     * @param faculty            Enum defining which faculty the subject belongs to
+     * @param semesterString     The string displaying the semester (an instance of
+     *                           a course. E.g. algorithms 1 is offered each year,
+     *                           and this is the instance of Summer semester 2020).
+     *                           This field is primarily used in the UI
+     * @param courseDate         The time period (start date) of when the course
+     *                           takes place. This field is primarily used for
+     *                           sorting purposes
      */
-    public Course(String name, CourseInstance lecture, CourseInstance tutorial, CourseInstance seminar, CourseInstance practical, Integer semesterOfStudents, CourseFaculty faculty, String semesterString, LocalDate courseDate){
+    public Course(String name, CourseInstance lecture, CourseInstance tutorial, CourseInstance seminar,
+            CourseInstance practical, Integer semesterOfStudents, CourseFaculty faculty, String semesterString,
+            LocalDate courseDate) {
         this.name = name;
         this.lecture = lecture;
         this.seminar = seminar;
         this.tutorial = tutorial;
         this.practical = practical;
         this.semesterOfStudents = semesterOfStudents;
-        this.faculty=faculty;
+        this.faculty = faculty;
         this.semesterString = semesterString;
         this.courseDate = courseDate;
         this.finalised = false;
     }
 
-
-
-
-
-    public UUID getId(){
+    public UUID getId() {
         return this.id;
     }
 
-    public String getName(){
+    public String getName() {
         return this.name;
     }
 
-    public void setName(String name){
+    public void setName(String name) {
         this.name = name;
     }
 
-
-    public Boolean getLectureExists(){
+    public Boolean getLectureExists() {
         return (Boolean.TRUE.equals(getLecture().isActive()));
     }
-    public Boolean getTutorialExists(){
+
+    public Boolean getTutorialExists() {
         return (Boolean.TRUE.equals(getTutorial().isActive()));
     }
-    public Boolean getSeminarExists(){
+
+    public Boolean getSeminarExists() {
         return (Boolean.TRUE.equals(getSeminar().isActive()));
     }
-    public Boolean getPracticalExists(){
+
+    public Boolean getPracticalExists() {
         return (Boolean.TRUE.equals(getPractical().isActive()));
     }
 
-    public void setLecture(CourseInstance lecture){
+    public void setLecture(CourseInstance lecture) {
         this.lecture = lecture;
     }
-    public CourseInstance getLecture(){
+
+    public CourseInstance getLecture() {
         return this.lecture;
     }
 
-    public void setTutorial(CourseInstance tutorial){
+    public void setTutorial(CourseInstance tutorial) {
         this.tutorial = tutorial;
     }
-    public CourseInstance getTutorial(){
+
+    public CourseInstance getTutorial() {
         return this.tutorial;
     }
 
-    public void setSeminar(CourseInstance seminar){
+    public void setSeminar(CourseInstance seminar) {
         this.seminar = seminar;
     }
-    public CourseInstance getSeminar(){
+
+    public CourseInstance getSeminar() {
         return this.seminar;
     }
 
-    public void setPractical(CourseInstance practical){
+    public void setPractical(CourseInstance practical) {
         this.practical = practical;
     }
-    public CourseInstance getPractical(){
+
+    public CourseInstance getPractical() {
         return this.practical;
     }
 
+    public CourseInstance getInstance(CourseType type) {
+        switch (type) {
+            case LECTURE:
+                return this.lecture;
+            case TUTORIAL:
+                return this.tutorial;
+            case SEMINAR:
+                return this.seminar;
+            case PRACTICAL:
+                return this.practical;
+            default:
+                return null;
+        }
+    }
 
+    public Boolean getInstanceExists(CourseType type) {
+        switch (type) {
+            case LECTURE:
+                return (Boolean.TRUE.equals(getLecture().isActive()));
+            case TUTORIAL:
+                return (Boolean.TRUE.equals(getLecture().isActive()));
+            case SEMINAR:
+                return (Boolean.TRUE.equals(getLecture().isActive()));
+            case PRACTICAL:
+                return (Boolean.TRUE.equals(getLecture().isActive()));
+            default:
+                return false;
+        }
+    }
 
-
-
-    public int getSemesterOfStudents(){
+    public int getSemesterOfStudents() {
         return this.semesterOfStudents;
     }
 
-    public void setSemesterOfStudents(int semester){
+    public void setSemesterOfStudents(int semester) {
         this.semesterOfStudents = semester;
     }
 
-    public CourseFaculty getFaculty(){
+    public CourseFaculty getFaculty() {
         return this.faculty;
     }
 
-    public void setFaculty(CourseFaculty faculty){
+    public void setFaculty(CourseFaculty faculty) {
         this.faculty = faculty;
     }
 
-    public LocalDate getCourseDate(){
+    public LocalDate getCourseDate() {
         return this.courseDate;
     }
 
-    public void setCourseDate(LocalDate date){
+    public void setCourseDate(LocalDate date) {
         this.courseDate = date;
     }
 
-    public String getSemesterString(){
+    public String getSemesterString() {
         return this.semesterString;
     }
 
-    public void setSemesterString(String str){
+    public void setSemesterString(String str) {
         this.semesterString = str;
     }
 
-
-
-    public CourseInstance getInstance(CourseType type){
-        if(type.equals(CourseType.LECTURE)){return lecture;}
-        else if(type.equals(CourseType.TUTORIAL)){return tutorial;}
-        else if(type.equals(CourseType.SEMINAR)){return seminar;}
-        else if(type.equals(CourseType.PRACTICAL)){return practical;}
-        else return null;
-    }
-
-    public Boolean getFinalised(){
+    public Boolean getFinalised() {
         return this.finalised;
     }
 
-    public void setFinalised(){
+    public void setFinalised() {
         this.finalised = true;
     }
 
 }
-
-
-
