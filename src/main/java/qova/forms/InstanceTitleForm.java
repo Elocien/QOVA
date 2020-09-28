@@ -1,35 +1,37 @@
 package qova.forms;
 
+import java.util.List;
+
 public class InstanceTitleForm {
-    
-    //String Arrays containing titles
 
-    private String[] lectureInstanceTitles;
-    private String[] tutorialInstanceTitles;
-    private String[] seminarInstanceTitles;
-    private String[] practicalInstanceTitles;
+    // String Arrays containing titles
 
+    private List<String> lectureInstanceTitles;
+    private List<String> tutorialInstanceTitles;
+    private List<String> seminarInstanceTitles;
+    private List<String> practicalInstanceTitles;
 
-    public InstanceTitleForm(String[] lectureTitles, String[] tutorialTitles, String[] seminarTitles, String[] practicalTitles){
+    public InstanceTitleForm(List<String> lectureTitles, List<String> tutorialTitles, List<String> seminarTitles,
+            List<String> practicalTitles) {
         this.lectureInstanceTitles = lectureTitles;
         this.tutorialInstanceTitles = tutorialTitles;
         this.seminarInstanceTitles = seminarTitles;
         this.practicalInstanceTitles = practicalTitles;
     }
 
-    public String[] getLectureInstanceTitles(){
+    public List<String> getLectureInstanceTitles() {
         return this.lectureInstanceTitles;
     }
 
-    public String[] getTutorialInstanceTitles(){
+    public List<String> getTutorialInstanceTitles() {
         return this.tutorialInstanceTitles;
     }
 
-    public String[] getSeminarInstanceTitles(){
+    public List<String> getSeminarInstanceTitles() {
         return this.seminarInstanceTitles;
     }
 
-    public String[] getPracticalInstanceTitles(){
+    public List<String> getPracticalInstanceTitles() {
         return this.practicalInstanceTitles;
     }
 }

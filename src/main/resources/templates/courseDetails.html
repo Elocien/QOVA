@@ -40,7 +40,7 @@
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content text-center">
                                 <!--Duplicate Form-->
-                                <form th:action="@{course/duplicate?id=__${course.id}__}" th:object="${duplicateForm}" method="post">
+                                <form th:action="@{/course/duplicate?id=__${course.id}__}" th:object="${duplicateForm}" method="post">
                                     <div class="modal-body">
                                         <p th:text="#{detail.copyModalText}">PLEASE COPY ME!</p>
                                         <select id="newYear" class="custom-select form-control" th:field="*{semesterString}">
