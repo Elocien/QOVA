@@ -135,7 +135,6 @@ public class CourseController {
             BindingResult result, DuplicateCourseForm duplcateCourseForm, @RequestParam UUID id) throws Exception {
 
         if (result.hasErrors()) {
-            //The result always throws errors currently
             return courseDetails(model, duplcateCourseForm, form, id);
         }
 
