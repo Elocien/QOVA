@@ -11,12 +11,12 @@ public class InstanceTitleForm {
     private List<String> seminarInstanceTitles;
     private List<String> practicalInstanceTitles;
 
-    public InstanceTitleForm(List<String> lectureTitles, List<String> tutorialTitles, List<String> seminarTitles,
-            List<String> practicalTitles) {
-        this.lectureInstanceTitles = lectureTitles;
-        this.tutorialInstanceTitles = tutorialTitles;
-        this.seminarInstanceTitles = seminarTitles;
-        this.practicalInstanceTitles = practicalTitles;
+    public InstanceTitleForm(List<String> lectureInstanceTitles, List<String> tutorialInstanceTitles,
+            List<String> seminarInstanceTitles, List<String> practicalInstanceTitles) {
+        this.lectureInstanceTitles = lectureInstanceTitles;
+        this.tutorialInstanceTitles = tutorialInstanceTitles;
+        this.seminarInstanceTitles = seminarInstanceTitles;
+        this.practicalInstanceTitles = practicalInstanceTitles;
     }
 
     public List<String> getLectureInstanceTitles() {

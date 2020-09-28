@@ -1,6 +1,5 @@
 package qova.forms;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 import qova.enums.CourseFaculty;
@@ -118,6 +117,54 @@ public class CourseForm {
             default:
                 return 0;
         }
+    }
+
+    public Boolean getLectureExists() {
+        return this.lectureExists;
+    }
+
+    public Boolean getTutorialExists() {
+        return this.tutorialExists;
+    }
+
+    public Boolean getSeminarExists() {
+        return this.seminarExists;
+    }
+
+    public Boolean getPracticalExists() {
+        return this.practicalExists;
+    }
+
+    public Integer getGroupAmountLecture() {
+        return this.groupAmountLecture;
+    }
+
+    public Integer getGroupAmountTutorial() {
+        return this.groupAmountTutorial;
+    }
+
+    public Integer getGroupAmountSeminar() {
+        return this.groupAmountSeminar;
+    }
+
+    public Integer getGroupAmountPractical() {
+        return this.groupAmountPractical;
+    }
+
+    public Integer getInstanceAmountLecture() {
+        return this.instanceAmountLecture;
+    }
+
+    public Integer getInstanceAmountTutorial() {
+        return this.instanceAmountTutorial;
+    }
+
+    public Integer getInstanceAmountSeminar() {
+        return this.instanceAmountSeminar;
+    }
+
+    public Integer getInstanceAmountPractical() {
+        return this.instanceAmountPractical;
     }
 
     public Integer getSemesterOfStudents() {

@@ -112,7 +112,10 @@ public class CourseManagement {
 
                 // Initialise the instanceTitles array with the amount of instances that are set
                 // to exist
-                List<String> instanceTitles = new ArrayList<>(form.getInstanceAmount(courseType));
+                List<String> instanceTitles = new ArrayList<>();
+                for (int i = 0; i < form.getInstanceAmount(courseType); i++) {
+                    instanceTitles.add("");
+                }
 
                 // Create the courseInstance
                 CourseInstance instance = new CourseInstance(CourseType.LECTURE, groupAmount,
@@ -124,7 +127,9 @@ public class CourseManagement {
                 // Add CourseInstance to map
                 courseInstances.put(courseType, instance);
             } else {
-                courseInstances.put(courseType, new CourseInstance(courseType));
+                CourseInstance instance = new CourseInstance(courseType);
+                courseInstancesRepo.save(instance);
+                courseInstances.put(courseType, instance);
             }
         }
 
@@ -160,7 +165,10 @@ public class CourseManagement {
                         && Boolean.TRUE.equals(form.getInstanceExists(courseType))) {
 
                     // Initialise instanceTitles array
-                    List<String> instanceTitles = new ArrayList<>(form.getInstanceAmount(courseType));
+                    List<String> instanceTitles = new ArrayList<>();
+                    for (int i = 0; i < form.getInstanceAmount(courseType); i++) {
+                        instanceTitles.add("");
+                    }
 
                     // Update CourseInstance
                     CourseInstance instance = course.getInstance(courseType);
