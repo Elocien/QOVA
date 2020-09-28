@@ -49,7 +49,7 @@
                             <div class="input-wrapper m-2">
                                 <div class="hidden-type" th:text="${course_type}" style="display: none;"></div>
                                 <div class="input-group mt-2 mb-2 clean-input" th:each="title, stats : ${__${course_type}+'InstanceTitles'__}">
-                                    <span class="index" th:text="${stats.index}">N</span><span class="mr-2">.</span>
+                                    <span class="index" th:text="${stats.index+1}">N</span><span class="mr-2">.</span>
                                     <input class="form-control" type="text" th:value="${title}">
                                 </div>
                             </div>
@@ -97,7 +97,7 @@
             }
         }
         console.log(list_of_list);
-        document.getElementById("instanceTitlesJson").value = list_of_list.stringify();
+        document.getElementById("instanceTitlesJson").value = JSON.stringify(list_of_list);
     }
 </script>
 
