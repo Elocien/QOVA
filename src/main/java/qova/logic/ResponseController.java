@@ -1,6 +1,7 @@
 package qova.logic;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -384,15 +385,17 @@ public class ResponseController {
         return new HttpEntity<byte[]>(pdf, header);
     }
 
-    // @GetMapping("/surveyResults")
-    // public String surveyResults(Model model) throws Exception {
+    @GetMapping("/surveyresults")
+    public String surveyResults(Model model) throws Exception {
 
-    // Course course = courseManagement.TimTestCreateCourse();
-    // SurveyResponse rsp = responseManagement.timCreateTestResponses(course);
+        Course course = courseManagement.TimTestCreateCourse();
+        SurveyResponse rsp = responseManagement.TimCreateTestResponses(course);
+        List<Object> objects = responseManagement.TimCreateTestListOfResponses(rsp);
 
-    // model.addAttribute("response", rsp);
+        model.addAttribute("response", rsp);
+        model.addAttribute("responseList", objects);
 
-    // return "surveyResults";
-    // }
+        return "surveyResults";
+    }
 
 }
