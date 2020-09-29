@@ -26,7 +26,6 @@ import qova.forms.SurveySelectForm;
 import qova.objects.Course;
 import qova.objects.SurveyResponse;
 
-
 @Controller // This means that this class is a Controller
 public class ResponseController {
 
@@ -40,19 +39,20 @@ public class ResponseController {
     private final AdminManagement adminManagement;
 
     @Autowired
-    ResponseController(ResponseManagement responseManagement, CourseManagement courseManagement, AdminManagement adminManagement) {
+    ResponseController(ResponseManagement responseManagement, CourseManagement courseManagement,
+            AdminManagement adminManagement) {
         this.responseManagement = Objects.requireNonNull(responseManagement);
         this.courseManagement = Objects.requireNonNull(courseManagement);
         this.adminManagement = Objects.requireNonNull(adminManagement);
     }
 
-    //Error codes
+    // Error codes
     int courseNotFound = 1;
     int internalError = 2;
 
-
-    //Mapping to which one is redirected to by the QRCode. This is where students enter which group and which topic they are handing their response in for
-    //---------------------------------------------------------------------------
+    // Mapping to which one is redirected to by the QRCode. This is where students
+    // enter which group and which topic they are handing their response in for
+    // ---------------------------------------------------------------------------
 
     @GetMapping("surveySelect")
     public String selectSurvey(Model model, SurveySelectForm form, @RequestParam UUID id, @RequestParam String type) {
@@ -83,8 +83,8 @@ public class ResponseController {
             }
             return "surveySelect";
         }
-        
-        //if course does not exist, redirect to global error page
+
+        // if course does not exist, redirect to global error page
         return "error?code=" + courseNotFound;
     }
 
@@ -93,28 +93,29 @@ public class ResponseController {
     // TODO: rename path variables
     // Validation of entry of surveySelect page, and redirect to the actual survey
     @PostMapping("surveySelect")
-    public String selectSurveySubmission(Model model, @ModelAttribute("form") SurveySelectForm form, @RequestParam UUID id, @RequestParam String type) {
+    public String selectSurveySubmission(Model model, @ModelAttribute("form") SurveySelectForm form,
+            @RequestParam UUID id, @RequestParam String type) {
 
         Optional<Course> crs = courseManagement.findById(id);
 
-        //if anything is null or not an allowed value, redirect back
-        if(!crs.isPresent()){
+        // if anything is null or not an allowed value, redirect back
+        if (!crs.isPresent()) {
             return "error?code=" + courseNotFound;
         }
         // if type is not one of the defined values
-        if(!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR")) && !(type.equals("PRACTICAL"))){
+        if (!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR"))
+                && !(type.equals("PRACTICAL"))) {
             return "error?code=" + internalError;
         }
 
-
-        //TODO validate that parameters only contain valid charachters. E.g. a-zA-Z0-9
+        // TODO validate that parameters only contain valid charachters. E.g. a-zA-Z0-9
 
         else {
-            return "survey?type="+type+"&id="+id+"instanceTitle="+form.getInstance()+"groupNumber="+form.getGroup();
+            return "survey?type=" + type + "&id=" + id + "instanceTitle=" + form.getInstance() + "groupNumber="
+                    + form.getGroup();
         }
     }
 
-    
     @GetMapping("surveySelectAdmin")
     public String surveSelectAdmin(Model model, @RequestParam UUID id) {
         Optional<Course> crs = courseManagement.findById(id);
@@ -123,7 +124,7 @@ public class ResponseController {
             return "surveySelectAdmin";
         }
 
-        //if course does not exist, redirect to global error page
+        // if course does not exist, redirect to global error page
         return "error?code=" + courseNotFound;
     }
 
@@ -132,13 +133,13 @@ public class ResponseController {
 
     // Mapping for Survey HTML
     @GetMapping("survey")
-    public String SurveyView(Model model,  @RequestParam(required = false) UUID id, @RequestParam(required = false) String type, 
-            @RequestParam(required = false) String group, @RequestParam(required = false) String instance) {
+    public String SurveyView(Model model, @RequestParam(required = false) UUID id,
+            @RequestParam(required = false) String type, @RequestParam(required = false) String group,
+            @RequestParam(required = false) String instance) {
         // redirect
         if (id == null || type == null || group == null || instance == null) {
-			return "error?code=" + courseNotFound;
+            return "error?code=" + courseNotFound;
         }
-
 
         // fetch course and go to details if present
         Optional<Course> course = courseManagement.findById(id);
@@ -150,8 +151,9 @@ public class ResponseController {
                 return "redirect:/";
             } else {
 
-                //Concatenate the default survey to the course survey
-                survey = adminManagement.concatenateDefaultSurveyToSurveyString(survey, responseManagement.parseCourseType(type));
+                // Concatenate the default survey to the course survey
+                survey = adminManagement.concatenateDefaultSurveyToSurveyString(survey,
+                        responseManagement.parseCourseType(type));
 
                 model.addAttribute("typeID", type);
                 model.addAttribute("id", id);
@@ -161,9 +163,9 @@ public class ResponseController {
             }
 
         }
-        
-        //If condition not met, redirect to home
-        else{
+
+        // If condition not met, redirect to home
+        else {
             return "error?code=" + courseNotFound;
         }
     }
@@ -171,50 +173,46 @@ public class ResponseController {
     // PostMapping to submit survey and serialize results
     // ---------------------------------------------------------------------------
     @PostMapping("/survey")
-    public String recieveResponseJSON(Model model, SurveyForm form,  @RequestParam(required = false) UUID id, @RequestParam(required = false) String type, 
-    @RequestParam(required = false) String group, @RequestParam(required = false) String instance) {
+    public String recieveResponseJSON(Model model, SurveyForm form, @RequestParam(required = false) UUID id,
+            @RequestParam(required = false) String type, @RequestParam(required = false) String group,
+            @RequestParam(required = false) String instance) {
 
         if (id == null || type == null || group == null || instance == null) {
-			return "error?code=" + courseNotFound;
+            return "error?code=" + courseNotFound;
         }
 
         JSONArray studentResponseJson;
 
-        //get JSON Response
+        // get JSON Response
         try {
             studentResponseJson = new JSONArray(form.getQuestionnairejson());
         } catch (Exception e) {
             return "error?code=" + internalError;
         }
 
-
-
         // fetch course and go to details if present
         Optional<Course> crs = courseManagement.findById(id);
 
         // Validate that course exists, and that the survey is not empty
         if (crs.isPresent()) {
-            
+
             Course course = crs.get();
 
-            Optional<SurveyResponse> survRsp = responseManagement.findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, 
-                    responseManagement.parseCourseType(type), Integer.valueOf(group), Integer.valueOf(instance));
-            
-            if(survRsp.isPresent()){
+            Optional<SurveyResponse> survRsp = responseManagement
+                    .findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course,
+                            responseManagement.parseCourseType(type), Integer.valueOf(group),
+                            Integer.valueOf(instance));
+
+            if (survRsp.isPresent()) {
                 SurveyResponse surveyResponse = survRsp.get();
-                
-                
+
             }
 
-            
         }
-        
 
-
-        //Manager Method
-        //Increment numberOfSubmissions in SurveyResponse
-        //Add stundent ID to SurveyResponse List
-
+        // Manager Method
+        // Increment numberOfSubmissions in SurveyResponse
+        // Add stundent ID to SurveyResponse List
 
         // if all goes well
         return "postSubmissionLanding";
@@ -225,33 +223,49 @@ public class ResponseController {
     /**
      * Used to retrieve the results for a given questionnaire
      * 
-     * @param model {@link org.springframework.ui.Model}
-     * @param type {@linkplain qova.enums.CourseType}
-     * @param id The Id of the {@linkplain qova.objects.Course}
-     * @param group The groupNumber of the {@linkplain qova.objects.Course}
+     * @param model    {@link org.springframework.ui.Model}
+     * @param type     {@linkplain qova.enums.CourseType}
+     * @param id       The Id of the {@linkplain qova.objects.Course}
+     * @param group    The groupNumber of the {@linkplain qova.objects.Course}
      * @param instance The instanceNumber of the {@linkplain qova.objects.Course}
-     * @return The surveyResults template, which shows the compiled results of the requested questionnaire
+     * @return The surveyResults template, which shows the compiled results of the
+     *         requested questionnaire
      */
     @GetMapping("/surveyresults")
-    public String surveyResultsTest(Model model, @RequestParam String type, @RequestParam UUID id, @RequestParam String group, @RequestParam String instance) {
+    public String surveyResultsTest(Model model, @RequestParam String type, @RequestParam UUID id,
+            @RequestParam String group, @RequestParam String instance) {
         Optional<Course> crs = courseManagement.findById(id);
-        if(crs.isPresent()){
-            Optional<SurveyResponse> surveyResponse = responseManagement.findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(crs.get(), 
-                    responseManagement.parseCourseType(type), Integer.valueOf(group), Integer.valueOf(instance));
-            
-                    if(surveyResponse.isPresent()){
+        if (crs.isPresent()) {
+            Optional<SurveyResponse> surveyResponse = responseManagement
+                    .findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(crs.get(),
+                            responseManagement.parseCourseType(type), Integer.valueOf(group),
+                            Integer.valueOf(instance));
+
+            if (surveyResponse.isPresent()) {
                 model.addAttribute("response", surveyResponse);
             }
         }
         return "surveyResults";
     }
 
+    /**
+     * The Mapping where students can browse the full set of Courses and View the
+     * results of
+     * 
+     * @param model
+     * @return
+     */
+    @GetMapping("studentBrowser")
+    public String studentBrowser(Model model) {
+        model.addAttribute("courseList", courseManagement.findAll());
 
-
+        return "studentBrowser";
+    }
 
     // PDF Generation
     @GetMapping("/generatePDF")
-    public HttpEntity<byte[]> generatePdf(@RequestParam UUID id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
+    public HttpEntity<byte[]> generatePdf(@RequestParam UUID id, @RequestParam String type,
+            @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
             throws NumberFormatException, IOException, Exception {
 
         // generate filename
@@ -283,36 +297,36 @@ public class ResponseController {
         return new HttpEntity<byte[]>(pdf, header);
     }
 
-   
     // CSV Generation
     @GetMapping("/generateCSV")
-    public HttpEntity<byte[]> generateCsv(@RequestParam UUID id, @RequestParam String type, @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
+    public HttpEntity<byte[]> generateCsv(@RequestParam UUID id, @RequestParam String type,
+            @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
             throws Exception {
-    
-        //generate filename
+
+        // generate filename
         String filename = "testCsv.csv";
 
         Optional<Course> crs = courseManagement.findById(id);
 
-        //verify that course is present
-        if(!crs.isPresent()){
+        // verify that course is present
+        if (!crs.isPresent()) {
             return null;
         }
 
-        //Try to parse the courseType
+        // Try to parse the courseType
         CourseType courseType = responseManagement.parseCourseType(type);
-        if(courseType == null){
+        if (courseType == null) {
             return null;
         }
 
-        //Generate PDF
+        // Generate PDF
         byte[] csv = responseManagement.generateCSV_en(crs.get(), courseType, groupNumber, instanceNumber);
 
-        if(csv == new byte[0]){
+        if (csv == new byte[0]) {
             return null;
         }
-       
-        //Set HTTP headers and return HttpEntity
+
+        // Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_PDF);
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
@@ -321,78 +335,42 @@ public class ResponseController {
         return new HttpEntity<byte[]>(csv, header);
     }
 
-
-
-
-
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //test method
+    // test method
     @GetMapping("/createR")
     public String createR() {
         responseManagement.createTestResponses(courseManagement.findAll().iterator().next());
         return "home";
     }
 
-    //PDF Generation
+    // PDF Generation
     @GetMapping("/pdftest")
     public HttpEntity<byte[]> pdfTest(HttpServletResponse response) throws Exception {
-    
-        //generate filename
+
+        // generate filename
         String filename = "testPdf.pdf";
 
-        //Generate PDF
+        // Generate PDF
         byte[] pdf = responseManagement.generatePDF_test();
 
-        //Set HTTP headers and return HttpEntity
+        // Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_PDF);
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
         header.setContentLength(pdf.length);
 
         return new HttpEntity<byte[]>(pdf, header);
-    }    
+    }
 
-    //CSV Generation
+    // CSV Generation
     @GetMapping("csv")
     public HttpEntity<byte[]> csvtest(HttpServletResponse response) throws Exception {
-        
+
         Course crs = courseManagement.findAll().iterator().next();
 
-        //Generate PDF
+        // Generate PDF
         byte[] pdf = responseManagement.generateCSV_en(crs, CourseType.TUTORIAL, "1", "all");
 
-
-        //Set HTTP headers and return HttpEntity
+        // Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();
         header.setContentType(MediaType.APPLICATION_PDF);
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "csvTest.csv");
@@ -404,16 +382,12 @@ public class ResponseController {
     // @GetMapping("/surveyResults")
     // public String surveyResults(Model model) throws Exception {
 
-    //     Course course = courseManagement.TimTestCreateCourse();
-    //     SurveyResponse rsp = responseManagement.timCreateTestResponses(course);
-        
-    //     model.addAttribute("response", rsp);
+    // Course course = courseManagement.TimTestCreateCourse();
+    // SurveyResponse rsp = responseManagement.timCreateTestResponses(course);
 
-    //     return "surveyResults";
+    // model.addAttribute("response", rsp);
+
+    // return "surveyResults";
     // }
 
-    
 }
-    
-
-    
