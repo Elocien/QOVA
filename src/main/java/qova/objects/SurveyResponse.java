@@ -42,7 +42,7 @@ public class SurveyResponse {
 
     // The ID's of all of the people that have submitted to this survey
     @ElementCollection
-    private Map<String, Date> listOfStundentsThatSubmitted;
+    private Map<String, Date> listOfStudentsThatSubmitted;
 
     // Needed for JPA puposes
     @SuppressWarnings("unused")
@@ -56,7 +56,7 @@ public class SurveyResponse {
         this.instanceNumber = instanceNumber;
         this.groupNumber = groupNumber;
         this.numberOfSubmissions = 0;
-        this.listOfStundentsThatSubmitted = new HashMap<>();
+        this.listOfStudentsThatSubmitted = new HashMap<>();
     }
 
     public Long getId() {
@@ -80,12 +80,12 @@ public class SurveyResponse {
     }
 
     public Map<String, Date> getListOfStudentsAndDatesWithSubmissions() {
-        return this.listOfStundentsThatSubmitted;
+        return this.listOfStudentsThatSubmitted;
     }
 
     public List<String> getListOfStudentsThatSubmitted() {
         List<String> listOfStudentIds = new ArrayList<>();
-        for (Map.Entry<String, Date> entry : listOfStundentsThatSubmitted.entrySet()) {
+        for (Map.Entry<String, Date> entry : listOfStudentsThatSubmitted.entrySet()) {
             listOfStudentIds.add(entry.getKey());
         }
 
@@ -97,7 +97,7 @@ public class SurveyResponse {
     }
 
     public void addStundentIdToSubmissionListAndIncrementCounter(String id) {
-        this.listOfStundentsThatSubmitted.put(id, new Date());
+        this.listOfStudentsThatSubmitted.put(id, new Date());
         this.numberOfSubmissions++;
     }
 
