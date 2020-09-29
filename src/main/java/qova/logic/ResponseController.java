@@ -251,7 +251,7 @@ public class ResponseController {
                         responseManagement.findResponsesBySurveyResponse(surveyResponse.get()));
             }
         }
-        return "surveyResults";
+        return "surveyResultsTest";
     }
 
     /**
@@ -385,8 +385,8 @@ public class ResponseController {
         return new HttpEntity<byte[]>(pdf, header);
     }
 
-    @GetMapping("/surveyresults")
-    public String surveyResults(Model model) throws Exception {
+    @GetMapping("/surveyResults")
+    public String surveyresults(Model model) throws Exception {
 
         Course course = courseManagement.TimTestCreateCourse();
         SurveyResponse rsp = responseManagement.TimCreateTestResponses(course);
