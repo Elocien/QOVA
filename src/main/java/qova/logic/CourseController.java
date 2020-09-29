@@ -223,7 +223,7 @@ public class CourseController {
     public String createCourseSetInstanceTitlesValidation(Model model, InstanceTitleForm form, @RequestParam UUID id,
             BindingResult result) {
 
-        System.out.println(form.getInstanceTitlesJson());
+        System.out.println("This is the post mapping: " + form.getInstanceTitlesJson());
 
         // Management Method returns String of new Course
         courseManagement.createCourseSetInstanceTitles(form, id);

@@ -179,11 +179,11 @@ public class Course {
             case LECTURE:
                 return (Boolean.TRUE.equals(getLecture().isActive()));
             case TUTORIAL:
-                return (Boolean.TRUE.equals(getLecture().isActive()));
+                return (Boolean.TRUE.equals(getTutorial().isActive()));
             case SEMINAR:
-                return (Boolean.TRUE.equals(getLecture().isActive()));
+                return (Boolean.TRUE.equals(getSeminar().isActive()));
             case PRACTICAL:
-                return (Boolean.TRUE.equals(getLecture().isActive()));
+                return (Boolean.TRUE.equals(getPractical().isActive()));
             default:
                 return false;
         }

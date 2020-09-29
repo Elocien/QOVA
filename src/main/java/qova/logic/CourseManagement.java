@@ -200,6 +200,7 @@ public class CourseManagement {
             Course course = crs.get();
 
             for (CourseType courseType : CourseType.values()) {
+
                 if (Boolean.TRUE.equals(course.getInstanceExists(courseType))) {
                     course.getInstance(courseType).setInstanceTitles(form.getInstanceTitlesForType(courseType));
                 }
