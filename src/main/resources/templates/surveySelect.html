@@ -25,7 +25,7 @@
                 <div th:if="!${courseType == 'LECTURE'}">
                     <h5 class="mt-3" th:text="#{group}">GROUP</h5>
                     <select id="group" class="custom-select form-control" th:field="*{group}">
-                        <option class="dropdown-item" th:each="n : ${groupAmount}" th:text="|#{group} ${n}|" th:value="${n}">GROUP</option>
+                        <option class="dropdown-item" th:each="n : ${#numbers.sequence(1, groupAmount)}" th:text="|#{group} ${n}|" th:value="${n}">GROUP</option>
                     </select>
                 </div>
                 <input th:if="${courseType == 'LECTURE'}" id="group" name="group" value="1" type="hidden">
