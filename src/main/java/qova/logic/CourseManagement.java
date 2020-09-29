@@ -288,6 +288,14 @@ public class CourseManagement {
         }
     }
 
+    public void setCourseFinalised(UUID id) {
+        Optional<Course> crs = findById(id);
+
+        if (crs.isPresent()) {
+            crs.get().setFinalised();
+        }
+    }
+
     /**
      * QR-Code Generator
      * 

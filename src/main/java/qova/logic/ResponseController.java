@@ -94,7 +94,7 @@ public class ResponseController {
     // Validation of entry of surveySelect page, and redirect to the actual survey
     @PostMapping("surveySelect")
     public String selectSurveySubmission(Model model, @ModelAttribute("form") SurveySelectForm form,
-            @RequestParam UUID id, @RequestParam String type) {
+            @RequestParam String type, @RequestParam UUID id) {
 
         Optional<Course> crs = courseManagement.findById(id);
 
@@ -111,7 +111,7 @@ public class ResponseController {
         // TODO validate that parameters only contain valid charachters. E.g. a-zA-Z0-9
 
         else {
-            return "survey?type=" + type + "&id=" + id + "instanceTitle=" + form.getInstance() + "groupNumber="
+            return "redirect:/survey?id=" + id + "&type=" + type + "&instance=" + form.getInstance() + "&group="
                     + form.getGroup();
         }
     }
@@ -136,6 +136,9 @@ public class ResponseController {
     public String SurveyView(Model model, @RequestParam(required = false) UUID id,
             @RequestParam(required = false) String type, @RequestParam(required = false) String group,
             @RequestParam(required = false) String instance) {
+
+        System.out.println("Yes made it");
+
         // redirect
         if (id == null || type == null || group == null || instance == null) {
             return "error?code=" + courseNotFound;
@@ -243,6 +246,8 @@ public class ResponseController {
 
             if (surveyResponse.isPresent()) {
                 model.addAttribute("response", surveyResponse);
+                model.addAttribute("responseList",
+                        responseManagement.findResponsesBySurveyResponse(surveyResponse.get()));
             }
         }
         return "surveyResults";

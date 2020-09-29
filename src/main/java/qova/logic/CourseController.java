@@ -266,13 +266,11 @@ public class CourseController {
         return "redirect:../course/details?id=" + newCourse.getId();
     }
 
-    @PostMapping("course/finalise")
-    public String finaliseCourse(Model model, @RequestParam UUID id) {
-        Optional<Course> crs = courseManagement.findById(id);
+    @GetMapping("course/finalise")
+    public String finaliseCourse(@RequestParam UUID id) {
 
-        if (crs.isPresent()) {
-            crs.get().setFinalised();
-        }
+        courseManagement.setCourseFinalised(id);
+
         return "redirect:../course/details?id=" + id;
     }
 
