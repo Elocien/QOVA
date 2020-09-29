@@ -250,10 +250,10 @@ public class ResponseController {
 
     /**
      * The Mapping where students can browse the full set of Courses and View the
-     * results of
+     * results of the student evaluations
      * 
-     * @param model
-     * @return
+     * @param model {@link org.springframework.ui.Model}
+     * @return studentBrowser template
      */
     @GetMapping("studentBrowser")
     public String studentBrowser(Model model) {
