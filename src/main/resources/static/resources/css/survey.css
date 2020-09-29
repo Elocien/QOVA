@@ -45,6 +45,11 @@ I read that somewhere ;) */
     font-weight: 300;
 }
 
+.Edit.Buttons{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
 .row.survey {
 }
 

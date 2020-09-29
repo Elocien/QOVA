@@ -322,7 +322,7 @@ public class CourseManagement {
      * 
      * @return ArrayList with strings of type: "SoSe xxxx" or "WiSe xxxx/yyyy"
      */
-    public ArrayList<String> findSemesters() {
+    public List<String> findSemesters() {
 
         // Current Date
         LocalDate dateNow = LocalDate.now();
