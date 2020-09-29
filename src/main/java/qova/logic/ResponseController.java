@@ -70,16 +70,16 @@ public class ResponseController {
                 model.addAttribute("groupAmount", crs.get().getLecture().getGroupAmount());
             }
             if (type.equals("TUTORIAL")) {
-                model.addAttribute("instanceTitles", crs.get().getLecture().getInstanceTitles());
-                model.addAttribute("groupAmount", crs.get().getLecture().getGroupAmount());
+                model.addAttribute("instanceTitles", crs.get().getTutorial().getInstanceTitles());
+                model.addAttribute("groupAmount", crs.get().getTutorial().getGroupAmount());
             }
             if (type.equals("SEMINAR")) {
-                model.addAttribute("instanceTitles", crs.get().getLecture().getInstanceTitles());
-                model.addAttribute("groupAmount", crs.get().getLecture().getGroupAmount());
+                model.addAttribute("instanceTitles", crs.get().getSeminar().getInstanceTitles());
+                model.addAttribute("groupAmount", crs.get().getSeminar().getGroupAmount());
             }
             if (type.equals("PRACTICAL")) {
-                model.addAttribute("instanceTitles", crs.get().getLecture().getInstanceTitles());
-                model.addAttribute("groupAmount", crs.get().getLecture().getGroupAmount());
+                model.addAttribute("instanceTitles", crs.get().getPractical().getInstanceTitles());
+                model.addAttribute("groupAmount", crs.get().getPractical().getGroupAmount());
             }
             return "surveySelect";
         }

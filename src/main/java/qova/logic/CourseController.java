@@ -108,9 +108,9 @@ public class CourseController {
 
             // QRCode URL (Redirects to a courses survey when scanned)
             String LectureSurveyURl = "localhost:8080/surveySelect?type=LECTURE&id=" + course.get().getId();
-            String TutorialSurveyURl = "localhost:8080/survey?type=TUTORIAL&id=" + course.get().getId();
-            String SeminarSurveyURl = "localhost:8080/survey?type=SEMINAR&id=" + course.get().getId();
-            String PracticalSurveyURL = "localhost:8080/survey?type=PRACTICAL&id=" + course.get().getId();
+            String TutorialSurveyURl = "localhost:8080/surveySelect?type=TUTORIAL&id=" + course.get().getId();
+            String SeminarSurveyURl = "localhost:8080/surveySelect?type=SEMINAR&id=" + course.get().getId();
+            String PracticalSurveyURL = "localhost:8080/surveySelect?type=PRACTICAL&id=" + course.get().getId();
 
             // send byte array (the QRCode image) to model
             model.addAttribute("lectureQRCode",
@@ -273,7 +273,6 @@ public class CourseController {
         if (crs.isPresent()) {
             crs.get().setFinalised();
         }
-
         return "redirect:../course/details?id=" + id;
     }
 
