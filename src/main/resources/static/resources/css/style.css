@@ -48,7 +48,11 @@ input[type=number] {
 }
 
 .text-light-grey {
-  color: rgb(200, 200, 200)
+  color: rgb(200, 200, 200);
+}
+
+.text-danger {
+  color: rgb(255, 0, 0) !important;
 }
 
 /*footer.html*/

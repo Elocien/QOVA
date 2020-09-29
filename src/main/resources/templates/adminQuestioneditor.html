@@ -34,13 +34,13 @@
                                 <div class="modal-content text-center">
                                     <div class="modal-body">
                                         <p th:text="#{admin.defaultEditModalText1}">R U SURE?!</p>
-                                        <p th:text="#{admin.defaultEditModalText2}" class="font-weight-bold text-warning">RLY?!</p>
+                                        <p th:text="#{admin.defaultEditModalText2}" class="font-weight-bold text-danger">RLY?!</p>
                                     </div>
                                     <div class="modal-footer text-center">
                                         <div class="w-100"></div>
                                         <form th:action="@{/admin/updateDefaultSurvey}" method="post" th:object="${form}" id="submitsurvey">
                                             <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
-                                            <button class="btn btn-primary mt-2" type="submit" th:text="#{Yes}">YES</button>
+                                            <button class="btn btn-primary" type="submit" th:text="#{Yes}">YES</button>
                                         </form>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
                                         <div class="w-100"></div>
