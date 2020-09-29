@@ -149,7 +149,7 @@
                                             <a class="status-btn" th:case="false" type="submit" data-toggle="modal" data-target="#finalizeModal">
                                                 <span th:text="#{course.status.pending}">WIP</span>
                                             </a>
-                                            <span class="text-success" th:case="true" th:text="#{course.status.finished}">DONE</span>
+                                            <span th:case="true"><span class="text-success" th:text="#{course.status.finished}">DONE</span><span> </span><span class="text-success font-weight-light" th:text="#{course.status.finished2}">STUDENTS CAN NOW ANSWERE THE SURVEYS!</span></span>
                                         </td>
                                         <td></td>
                                     </tr>
