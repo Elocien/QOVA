@@ -138,6 +138,14 @@ public class CourseController {
             return courseDetails(model, duplcateCourseForm, form, id);
         }
 
+        Optional<Course> crs = courseManagement.findById(id);
+        if (crs.isPresent()) {
+            if (Boolean.TRUE.equals(crs.get().getFinalised())) {
+                return courseDetails(model, duplcateCourseForm, form, id);
+            }
+            return "redirect:../";
+        }
+
         courseManagement.updateCourseDetails(id, form);
         return "redirect:../course/details?id=" + id;
     }
@@ -256,6 +264,17 @@ public class CourseController {
         Course newCourse = courseManagement.duplicateCourse(id, form.getSemesterString());
 
         return "redirect:../course/details?id=" + newCourse.getId();
+    }
+
+    @PostMapping("course/finalise")
+    public String finaliseCourse(Model model, @RequestParam UUID id) {
+        Optional<Course> crs = courseManagement.findById(id);
+
+        if (crs.isPresent()) {
+            crs.get().setFinalised();
+        }
+
+        return "redirect:../course/details?id=" + id;
     }
 
     // Call Questioneditor and Submit created Survey
