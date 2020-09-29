@@ -246,6 +246,8 @@ public class ResponseController {
 
             if (surveyResponse.isPresent()) {
                 model.addAttribute("response", surveyResponse);
+                model.addAttribute("responseList",
+                        responseManagement.findResponsesBySurveyResponse(surveyResponse.get()));
             }
         }
         return "surveyResults";
