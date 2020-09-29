@@ -10,14 +10,14 @@
             <div class="modal-body">
                 <p class="mb-1" th:text="#{finalize.warning}">THE FOLLOWING THNGS CAN NOT BE CHANGED ANYMORE AFTER FINALIZATION:</p>
                 <p class="m-0 ml-2 font-weight-light" th:text="#{finalize.survey}">- THIS SURVEY</p>
-                <p class="m-0 ml-2 font-weight-light" th:text="|- #{'editor.' + ${typeID}} #{new.instances}|">- COURSE INSTANCE</p>
-                <p class="mb-1 ml-2 font-weight-light" th:text="|- #{'editor.' + ${typeID}} #{detail.groupAmount}|">- GROUP AMOUNT</p>
+                <p class="m-0 ml-2 font-weight-light" th:text="#{groupAmount}">- COURSE INSTANCE</p>
+                <p class="mb-1 ml-2 font-weight-light" th:text="#{courseInstances}">- GROUP AMOUNT</p>
                 <p class="mb-3" th:text="#{finalize.warning2}">MAKE SURE THESE ARE ASIGNED PROPERLY!</p>
                 <p class="mb-1 font-weight-light" th:text="#{finalize.tip}">IF YOU WANT TO KEEP WORKING ON YOUR SURVEY LATER ON, CHOSE THE "SAVE"-BUTTON INSTEAD.</p>
             </div>
             <div class="modal-footer text-center">
                 <div class="w-100"></div>
-                <a href="#" method="post" class="btn btn-primary" th:text="#{question.finalize}">FINALIZE</a>
+                <a href="#" method="post" class="btn btn-primary" th:href="@{/course/finalise?id=__${course.id}__}" th:text="#{question.finalize}">FINALIZE</a>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
                 <div class="w-100"></div>
             </div>
