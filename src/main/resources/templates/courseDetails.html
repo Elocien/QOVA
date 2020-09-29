@@ -98,7 +98,6 @@
                             <button type="submit" class="btn edit_details btn-link p-0 ml-4 align-middle show_me"
                                 style="display: none;" data-toggle="tooltip" data-placement="right"
                                 th:title="#{detail.finishEdit}"><i class="fas fa-check"></i></button>
-                            <a th:if="!${course.finalised}" type="submit" data-toggle="modal" data-target="#finalizeModal" class="btn edit_details btn-link p-0 ml-4 align-middle"><i class="fas fa-stamp"></i></a>
                         </div>
 
                         <!--Hidden Headline-->
@@ -140,6 +139,17 @@
                                         <td class="hide_me"><span th:text="${course.semesterOfStudents}">IDK - XXXX</span></td>
                                         <td class="show_me" style="display: none;">
                                             <input class="form-control" type="number" th:placeholder="${course.semesterOfStudents}" th:value="${course.semesterOfStudents}" name="semesterOfStudents" id="semesterOfStudents">
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <!--Status-->
+                                    <tr class="hide_me">
+                                        <th class="col-5" scope="row" th:text="#{course.status}">SEMESTER</th>
+                                        <td th:switch="${course.finalised}">
+                                            <a class="status-btn" th:case="false" type="submit" data-toggle="modal" data-target="#finalizeModal">
+                                                <span th:text="#{course.status.pending}">WIP</span>
+                                            </a>
+                                            <span class="text-success" th:case="true" th:text="#{course.status.finished}">DONE</span>
                                         </td>
                                         <td></td>
                                     </tr>

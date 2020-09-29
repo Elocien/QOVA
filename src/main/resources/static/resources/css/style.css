@@ -269,6 +269,23 @@ input[type="text"]:disabled::placeholder {
   background-color: red;
   transition: 0.5s;
 }
+.status-btn {
+  border: 1px solid red;
+  background-color: white;
+}
+.status-btn:hover {
+  cursor: pointer;
+  border-color: black;
+  transition: 0.8s;
+}
+.status-btn > span {
+  color: red;
+  padding: 0.2rem;
+}
+.status-btn:hover > span {
+  color: black;
+  transition: 0.8s;
+}
 
 .btn-center {
   margin: 0;
