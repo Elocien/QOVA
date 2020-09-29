@@ -7,7 +7,7 @@
 <body class="bg-light">
 <div th:replace="navbar"></div>
 
-<div class="row justify-content-center mb-4">
+<div class="justify-content-center mb-4">
 	<div class="col-lg-12">
 		
 		<!--Headline-->
@@ -121,10 +121,7 @@
 			selectionOption.appendChild(fullOptionNo);
 
 
-			if(index<5){
-				x.classList.remove("bg-white")
-				x.classList.add("bg-light-grey")
-			}
+
 			x.appendChild(selectionOption);
 
 
@@ -144,11 +141,46 @@
 			text_area.placeholder = "Antwort";
 
 			div.appendChild(text_area);				
-			if(index<5){
-				x.classList.remove("bg-white")
-				x.classList.add("bg-light-grey")
-			}
+
 			x.appendChild(div);
+
+
+
+
+		}
+		else if (value.type === "SingleChoice" && value.answers.length==5 && value.answers[2]==3) {
+
+			x.className = "container bg-white border border-secondary rounded mt-4 SingleChoice";
+			x.setAttribute("id", index);
+
+			const selectionOption = document.createElement("DIV");
+			selectionOption.className = "Options OnetoFive";
+
+
+			for (let i = 0; i< value.answers.length;i++){
+
+				const fullOption = document.createElement("DIV");
+				fullOption.className = "Option OnetoFive "+i;
+				const tickbox = document.createElement("INPUT");
+				tickbox.className ="tickbox OnetoFive";
+				tickbox.setAttribute("type","radio");
+				tickbox.setAttribute("value", value.answers[i]);
+				tickbox.setAttribute("id",value.answers[i]);
+				tickbox.setAttribute("name",index);
+				const description = document.createElement("LABEL");
+				description.className ="Label OnetoFive";
+				description.innerText = value.answers[i];
+				description.setAttribute("for",value.answers[i]);
+
+
+				fullOption.appendChild(tickbox);
+				fullOption.appendChild(description);
+				selectionOption.appendChild(fullOption);
+
+			}
+
+			x.appendChild(selectionOption);
+
 
 
 
@@ -185,10 +217,6 @@
 
 				}
 
-				if(index<5){
-					x.classList.remove("bg-white")
-					x.classList.add("bg-light-grey")
-				}
 				x.appendChild(selectionOption);
 
 
@@ -235,6 +263,7 @@
 
 			const footer = document.createElement("DIV");
 			const hint = document.createElement("h6");
+			hint.className = "Hint Multiplechoice text-center";
 			hint.innerHTML = [[#{question.hint}]];
 
 			footer.appendChild(hint);

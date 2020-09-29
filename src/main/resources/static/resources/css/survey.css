@@ -35,6 +35,14 @@ I read that somewhere ;) */
 
 .Question {
     padding-left: 60px;
+    margin-bottom: 1.5rem;
+}
+
+.Hint.Multiplechoice{
+    color: grey;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: 300;
 }
 
 .row.survey {
@@ -42,6 +50,17 @@ I read that somewhere ;) */
 
 .tickbox {
     margin-right: 12px;
+}
+
+.tickbox.OnetoFive{
+    margin-bottom: 1.5rem;
+    margin-top: 1rem;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.Label.OnetoFive{
+    margin: auto;
 }
 
 .index-number {
@@ -61,6 +80,19 @@ I read that somewhere ;) */
     flex-direction: column;
     display: flex;
 }
+
+.Options.OnetoFive{
+    flex-direction: row;
+    display: flex;
+}
+
+.Option.OnetoFive{
+    flex-direction: column-reverse;
+    display: flex;
+    margin: auto;
+}
+
+
 
 .bg-light-grey {
     background-color: lightgrey;
