@@ -16,6 +16,8 @@
                 th:placeholder="${course.name}" th:value="${course.name}"></input>
         </div>
 
+        <div th:include="finalizeModal"></div>
+
         <div class="container bg-light border border-dark rounded p-0">
 
             <!--Option Buttons-->
@@ -86,7 +88,7 @@
                         <!--Headline & Buttons-->
                         <div class="row">
                             <h5 class="font-weight-light text-left" th:text="#{course.details}">COURSE DETAILS</h5>
-                            <button type="button" id="startEdit" class="btn edit_details btn-link p-0 ml-4 align-middle"
+                            <button th:if="!${course.finalised}" type="button" id="startEdit" class="btn edit_details btn-link p-0 ml-4 align-middle"
                                 onclick="edit_mode()" data-toggle="tooltip" data-placement="right"
                                 th:title="#{detail.editCourse}"><i class="far fa-edit"></i></button>
                             <button type="button" onClick="window.location.reload();"
@@ -96,6 +98,7 @@
                             <button type="submit" class="btn edit_details btn-link p-0 ml-4 align-middle show_me"
                                 style="display: none;" data-toggle="tooltip" data-placement="right"
                                 th:title="#{detail.finishEdit}"><i class="fas fa-check"></i></button>
+                            <a th:if="!${course.finalised}" type="submit" data-toggle="modal" data-target="#finalizeModal" class="btn edit_details btn-link p-0 ml-4 align-middle"><i class="fas fa-stamp"></i></a>
                         </div>
 
                         <!--Hidden Headline-->
