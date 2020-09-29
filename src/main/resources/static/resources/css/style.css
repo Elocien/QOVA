@@ -7,14 +7,19 @@ body {
   --tu_blue_light: rgb(0, 74, 174);
   --tu_blue_highlight: rgb(230, 230, 255);
   --fancy_grey: darkslategrey;
-  background: url(../images/seamless-bg.jpg);
-  background-size: 300px 300px;
+  background-color: #d0d1da;
+  background-image: url(../images/qovaBackgroundSquare.png);
+  background-size: 100% auto;
+  background-repeat: no-repeat;
   min-height: 100vh;
   height: 100%;
   position: relative;
   margin: 0;
   padding-bottom: 56px;
   overflow-x: hidden;
+}
+.bg-light {
+  background-color: #d0d1da;
 }
 
 /*Removes arrows from number input fields*/
@@ -464,4 +469,7 @@ select {
 }
 .dialog-option:hover {
   text-decoration: none;
+}
+table {
+  background-color: rgba(221, 221, 221, 0.7) !important;
 }
