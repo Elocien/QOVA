@@ -150,7 +150,7 @@ public class ResponseController {
 
         // Validate that course exists, and that the survey is not empty
         if (course.isPresent()) {
-            String survey = courseManagement.getSurveyforType(id, type);
+            String survey = courseManagement.getSurveyforType(id, responseManagement.parseCourseType(type));
             if (survey.equals("Something went wrong")) {
                 return "redirect:/";
             } else {

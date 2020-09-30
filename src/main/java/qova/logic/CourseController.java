@@ -259,6 +259,29 @@ public class CourseController {
 
         courseManagement.setCourseFinalised(id);
 
+        Optional<Course> course = courseManagement.findById(id);
+        if (course.isPresent()) {
+            for (CourseType courseType : CourseType.values()) {
+                // Create a JSON Array out of the response from the questioneditor and the
+                // default survey
+                // --Custom Survey-- --CourseType--
+                String completeSurvey = adminManagement.concatenateDefaultSurveyToSurveyString(
+                        courseManagement.getSurveyforType(id, courseType), courseType);
+
+                try {
+                    new JSONArray(completeSurvey);
+                } catch (Exception e) {
+                    return "redirect:../course/details" + "?id=" + id;
+                }
+
+                // Create JSON Array
+                JSONArray survey = new JSONArray(completeSurvey);
+
+                // Create the relevant objects
+                responseManagement.createSurveyResponse(survey, course.get(), courseType);
+            }
+        }
+
         return "redirect:../course/details?id=" + id;
     }
 
@@ -283,7 +306,7 @@ public class CourseController {
 
         // Gives the survey JSON to the model, so the current survey can be assembled
         // and added to
-        model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
+        model.addAttribute("survey", courseManagement.getSurveyforType(id, responseManagement.parseCourseType(type)));
 
         // Default survey JSON, which is sent to the server
         model.addAttribute("defaultSurvey", adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
@@ -362,39 +385,6 @@ public class CourseController {
         }
     }
 
-    /**
-     * Used to finalise the Survey and create the relevant objects
-     * 
-     * @param form {@linkplain qova.forms.SurveyForm}
-     * @param type String form of {@linkplain qova.enums.CourseType}
-     * @param id   The id of the {@linkplain qova.objects.Course}
-     */
-    @GetMapping("course/submitfinalisedsurvey")
-    public String questioneditorFinaliseSurvey(@RequestParam String type, @RequestParam(required = false) UUID id) {
-
-        Optional<Course> course = courseManagement.findById(id);
-        if (course.isPresent()) {
-            // Create a JSON Array out of the response from the questioneditor and the
-            // default survey
-            // --Custom Survey-- --CourseType--
-            String completeSurvey = adminManagement.concatenateDefaultSurveyToSurveyString(
-                    courseManagement.getSurveyforType(id, type), responseManagement.parseCourseType(type));
-
-            try {
-                new JSONArray(completeSurvey);
-            } catch (Exception e) {
-                return "redirect:../course/details" + "?id=" + id;
-            }
-
-            // Create JSON Array
-            JSONArray survey = new JSONArray(completeSurvey);
-
-            // Create the relevant objects
-            responseManagement.createSurveyResponse(survey, course.get(), type);
-        }
-        return "redirect:../course/details" + "?id=" + id;
-    }
-
     // ---------------------------------------------------------------------------
 
     // Die Ganze Methode ist Same wie questioneditorSubmit nur der Return ist auf
@@ -453,7 +443,8 @@ public class CourseController {
 
             model.addAttribute("typeID", type);
             model.addAttribute("id", id);
-            model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
+            model.addAttribute("survey",
+                    courseManagement.getSurveyforType(id, responseManagement.parseCourseType(type)));
             model.addAttribute("defaultSurvey",
                     adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
             model.addAttribute("coursename", course.get().getName());

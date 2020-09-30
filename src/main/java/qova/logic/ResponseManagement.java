@@ -194,10 +194,9 @@ public class ResponseManagement {
      * @param course     {@linkplain Course}
      * @param stringType {@linkplain CourseType} as a String, passed from the model
      */
-    public void createSurveyResponse(JSONArray jsonArray, Course course, String stringType) {
+    public void createSurveyResponse(JSONArray jsonArray, Course course, CourseType type) {
 
         // Resolve type and find correct instance of course (lecture, tutorial, etc.)
-        CourseType type = parseCourseType(stringType);
         CourseInstance courseInstance = course.getInstance(type);
 
         // for each instance and group, create a SurveyResponse and persist it
