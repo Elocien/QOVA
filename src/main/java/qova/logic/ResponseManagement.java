@@ -437,6 +437,95 @@ public class ResponseManagement {
         }
     }
 
+    // Test Method, remove in build
+    public SurveyResponse TimCreateTestResponses(Course course) {
+
+        var type = CourseType.TUTORIAL;
+        var instance = 1;
+        var group = 1;
+
+        SurveyResponse response = new SurveyResponse(course, type, instance, group);
+
+        return response;
+    }
+
+    public List<Object> TimCreateTestListOfResponses(SurveyResponse response) {
+
+        BinaryResponse bnr = new BinaryResponse(response,
+                "Would you consider recommending the lecture to other students?", 0);
+        binaryResponseRepository.save(bnr);
+        for (int i = 0; i < 35; i++) {
+            bnr.incrementYes();
+        }
+        for (int i = 0; i < 15; i++) {
+            bnr.incrementNo();
+        }
+
+        ArrayList<String> mcOptions = new ArrayList<>();
+        mcOptions.add("1");
+        mcOptions.add("2");
+        mcOptions.add("3");
+        mcOptions.add("4");
+        mcOptions.add("5");
+
+        MultipleChoiceResponse mcr = new MultipleChoiceResponse(response,
+                "From 1 to 5, what would you rate the lecture?", 1, mcOptions);
+        multipleChoiceResponseRepository.save(mcr);
+
+        ArrayList<Integer> mcAnswers1 = new ArrayList<>();
+        mcAnswers1.add(0);
+        mcAnswers1.add(1);
+        mcAnswers1.add(3);
+
+        ArrayList<Integer> mcAnswers2 = new ArrayList<>();
+        mcAnswers2.add(1);
+        mcAnswers2.add(4);
+
+        ArrayList<Integer> mcAnswers3 = new ArrayList<>();
+        mcAnswers3.add(2);
+        mcAnswers3.add(4);
+
+        for (int i = 0; i < 25; i++) {
+            mcr.incrementTotals(mcAnswers1);
+        }
+        for (int i = 0; i < 15; i++) {
+            mcr.incrementTotals(mcAnswers2);
+        }
+        for (int i = 0; i < 10; i++) {
+            mcr.incrementTotals(mcAnswers3);
+        }
+
+        TextResponse txr = new TextResponse(response, "What is your opinion of the lecture, is it helpful?", 2);
+        textResponseRepository.save(txr);
+        for (int i = 0; i < 20; i++) {
+            txr.addTextSubmission("this is a bit of a test");
+        }
+        for (int i = 0; i < 10; i++) {
+            txr.addTextSubmission("this is a larger test to test the test");
+        }
+        for (int i = 0; i < 17; i++) {
+            txr.addTextSubmission("short test");
+        }
+        for (int i = 0; i < 3; i++) {
+            txr.addTextSubmission(
+                    "this is a very very very very very very very very very very very very very very very very very very very very large test");
+        }
+
+        List<String> listOfStudentIds = new ArrayList<>();
+        for (int i = 0; i < 50; i++) {
+            String id = UUID.randomUUID().toString();
+            response.addStundentIdToSubmissionListAndIncrementCounter(id);
+            listOfStudentIds.add(id);
+        }
+
+        List<Object> objects = new ArrayList<>();
+        objects.add(bnr);
+        objects.add(txr);
+        objects.add(mcr);
+
+        return objects;
+    }
+
     public byte[] generatePDF_test() throws IOException, Exception {
 
         // Add responses to arrayList

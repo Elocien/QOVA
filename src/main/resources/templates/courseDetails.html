@@ -98,7 +98,6 @@
                             <button type="submit" class="btn edit_details btn-link p-0 ml-4 align-middle show_me"
                                 style="display: none;" data-toggle="tooltip" data-placement="right"
                                 th:title="#{detail.finishEdit}"><i class="fas fa-check"></i></button>
-                            <a th:if="!${course.finalised}" type="submit" data-toggle="modal" data-target="#finalizeModal" class="btn edit_details btn-link p-0 ml-4 align-middle"><i class="fas fa-stamp"></i></a>
                         </div>
 
                         <!--Hidden Headline-->
@@ -140,6 +139,17 @@
                                         <td class="hide_me"><span th:text="${course.semesterOfStudents}">IDK - XXXX</span></td>
                                         <td class="show_me" style="display: none;">
                                             <input class="form-control" type="number" th:placeholder="${course.semesterOfStudents}" th:value="${course.semesterOfStudents}" name="semesterOfStudents" id="semesterOfStudents">
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <!--Status-->
+                                    <tr class="hide_me">
+                                        <th class="col-5" scope="row" th:text="#{course.status}">SEMESTER</th>
+                                        <td th:switch="${course.finalised}">
+                                            <a class="status-btn" th:case="false" type="submit" data-toggle="modal" data-target="#finalizeModal">
+                                                <span th:text="#{course.status.pending}">WIP</span>
+                                            </a>
+                                            <span th:case="true"><span class="text-success" th:text="#{course.status.finished}">DONE</span><span> </span><span class="text-success font-weight-light" th:text="#{course.status.finished2}">STUDENTS CAN NOW ANSWERE THE SURVEYS!</span></span>
                                         </td>
                                         <td></td>
                                     </tr>
@@ -188,12 +198,12 @@
                                         <div th:switch="${__'course.' + ${course_type} + '.survey'__}">
                                             <div th:case="'[]'">
                                                 <td th:switch="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}" class="text-center">
-                                                    <a th:case="TRUE" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
+                                                    <a  th:if="!${course.finalised}" th:case="TRUE" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
                                                 </td>
                                             </div>
                                             <div th:case="*">
                                                 <td th:if="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}" class="text-center">
-                                                    <a type="button" class="btn btn-link p-0 align-middle hide_me mr-2" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="left" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
+                                                    <a th:if="!${course.finalised}" type="button" class="btn btn-link p-0 align-middle hide_me mr-2" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="left" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
                                                     <a type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/previewsurvey?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.previewSurvey}"><i class="fa fa-eye"></i></a>
                                                 </td>
                                             </div>
