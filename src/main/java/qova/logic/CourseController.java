@@ -149,11 +149,12 @@ public class CourseController {
             if (Boolean.TRUE.equals(crs.get().getFinalisedFlag())) {
                 return courseDetails(model, duplcateCourseForm, form, id);
             }
-            return "redirect:../";
+            courseManagement.updateCourseDetails(id, form);
+            return "redirect:../course/details?id=" + id;
         }
 
-        courseManagement.updateCourseDetails(id, form);
-        return "redirect:../course/details?id=" + id;
+        return "redirect:/";
+
     }
 
     // Create Course
