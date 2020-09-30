@@ -107,20 +107,25 @@ public class CourseController {
             model.addAttribute("course", course.get());
 
             // QRCode URL (Redirects to a courses survey when scanned)
-            String LectureSurveyURl = "localhost:8080/surveySelect?type=LECTURE&id=" + course.get().getId();
-            String TutorialSurveyURl = "localhost:8080/surveySelect?type=TUTORIAL&id=" + course.get().getId();
-            String SeminarSurveyURl = "localhost:8080/surveySelect?type=SEMINAR&id=" + course.get().getId();
-            String PracticalSurveyURL = "localhost:8080/surveySelect?type=PRACTICAL&id=" + course.get().getId();
+            String LectureSurveyUrl = "localhost:8080/surveySelect?type=LECTURE&id=" + course.get().getId();
+            String TutorialSurveyUrl = "localhost:8080/surveySelect?type=TUTORIAL&id=" + course.get().getId();
+            String SeminarSurveyUrl = "localhost:8080/surveySelect?type=SEMINAR&id=" + course.get().getId();
+            String PracticalSurveyUrl = "localhost:8080/surveySelect?type=PRACTICAL&id=" + course.get().getId();
+
+            model.addAttribute("lectureLink", LectureSurveyUrl);
+            model.addAttribute("tutorialLink", TutorialSurveyUrl);
+            model.addAttribute("seminarLink", SeminarSurveyUrl);
+            model.addAttribute("practicalLink", PracticalSurveyUrl);
 
             // send byte array (the QRCode image) to model
             model.addAttribute("lectureQRCode",
-                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(LectureSurveyURl)));
+                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(LectureSurveyUrl)));
             model.addAttribute("tutorialQRCode",
-                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(TutorialSurveyURl)));
+                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(TutorialSurveyUrl)));
             model.addAttribute("seminarQRCode",
-                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(SeminarSurveyURl)));
+                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(SeminarSurveyUrl)));
             model.addAttribute("practicalQRCode",
-                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(PracticalSurveyURL)));
+                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(PracticalSurveyUrl)));
 
             return "courseDetails";
         } else {
@@ -238,18 +243,6 @@ public class CourseController {
         return "redirect:../course/details" + "?id=" + id;
     }
 
-    // Validation of Created course
-    @PostMapping("course/editInstanceTitles")
-    public String updateInstanceTitles(Model model, InstanceTitleForm form, @RequestParam UUID id,
-            BindingResult result) {
-
-        // Management Method returns String of new Course
-        courseManagement.updateInstanceTitles(form, id);
-
-        // Redirect to SurveyEditor to start creating survey
-        return "redirect:../course/details" + "?id=" + id;
-    }
-
     // Delete Course and its CourseInstances
     @GetMapping("course/delete")
     public String deleteCourse(@RequestParam UUID id) {
@@ -270,6 +263,29 @@ public class CourseController {
     public String finaliseCourse(@RequestParam UUID id) {
 
         courseManagement.setCourseFinalised(id);
+
+        Optional<Course> course = courseManagement.findById(id);
+        if (course.isPresent()) {
+            for (CourseType courseType : CourseType.values()) {
+                // Create a JSON Array out of the response from the questioneditor and the
+                // default survey
+                // --Custom Survey-- --CourseType--
+                String completeSurvey = adminManagement.concatenateDefaultSurveyToSurveyString(
+                        courseManagement.getSurveyforType(id, courseType), courseType);
+
+                try {
+                    new JSONArray(completeSurvey);
+                } catch (Exception e) {
+                    return "redirect:../course/details" + "?id=" + id;
+                }
+
+                // Create JSON Array
+                JSONArray survey = new JSONArray(completeSurvey);
+
+                // Create the relevant objects
+                responseManagement.createSurveyResponse(survey, course.get(), courseType);
+            }
+        }
 
         return "redirect:../course/details?id=" + id;
     }
@@ -295,7 +311,7 @@ public class CourseController {
 
         // Gives the survey JSON to the model, so the current survey can be assembled
         // and added to
-        model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
+        model.addAttribute("survey", courseManagement.getSurveyforType(id, responseManagement.parseCourseType(type)));
 
         // Default survey JSON, which is sent to the server
         model.addAttribute("defaultSurvey", adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
@@ -374,39 +390,6 @@ public class CourseController {
         }
     }
 
-    /**
-     * Used to finalise the Survey and create the relevant objects
-     * 
-     * @param form {@linkplain qova.forms.SurveyForm}
-     * @param type String form of {@linkplain qova.enums.CourseType}
-     * @param id   The id of the {@linkplain qova.objects.Course}
-     */
-    @GetMapping("course/submitfinalisedsurvey")
-    public String questioneditorFinaliseSurvey(@RequestParam String type, @RequestParam(required = false) UUID id) {
-
-        Optional<Course> course = courseManagement.findById(id);
-        if (course.isPresent()) {
-            // Create a JSON Array out of the response from the questioneditor and the
-            // default survey
-            // --Custom Survey-- --CourseType--
-            String completeSurvey = adminManagement.concatenateDefaultSurveyToSurveyString(
-                    courseManagement.getSurveyforType(id, type), responseManagement.parseCourseType(type));
-
-            try {
-                new JSONArray(completeSurvey);
-            } catch (Exception e) {
-                return "redirect:../course/details" + "?id=" + id;
-            }
-
-            // Create JSON Array
-            JSONArray survey = new JSONArray(completeSurvey);
-
-            // Create the relevant objects
-            responseManagement.createSurveyResponse(survey, course.get(), type);
-        }
-        return "redirect:../course/details" + "?id=" + id;
-    }
-
     // ---------------------------------------------------------------------------
 
     // Die Ganze Methode ist Same wie questioneditorSubmit nur der Return ist auf
@@ -465,7 +448,8 @@ public class CourseController {
 
             model.addAttribute("typeID", type);
             model.addAttribute("id", id);
-            model.addAttribute("survey", courseManagement.getSurveyforType(id, type));
+            model.addAttribute("survey",
+                    courseManagement.getSurveyforType(id, responseManagement.parseCourseType(type)));
             model.addAttribute("defaultSurvey",
                     adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
             model.addAttribute("coursename", course.get().getName());

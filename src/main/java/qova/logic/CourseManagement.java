@@ -202,28 +202,35 @@ public class CourseManagement {
             for (CourseType courseType : CourseType.values()) {
 
                 if (Boolean.TRUE.equals(course.getInstanceExists(courseType))) {
-                    course.getInstance(courseType).setInstanceTitles(form.getInstanceTitlesForType(courseType));
+                    CourseInstance instance = course.getInstance(courseType);
+                    instance.setInstanceTitles(form.getInstanceTitlesForType(courseType));
+                    instance.setInstanceAmount(form.getInstanceTitlesForType(courseType).size());
                 }
             }
         }
     }
 
     // Gets the relevant Survey in the course objects, based on the given surveyType
-    public String getSurveyforType(UUID id, String type) {
+    public String getSurveyforType(UUID id, CourseType type) {
         Optional<Course> crs = coursesRepo.findById(id);
         if (crs.isPresent()) {
             Course course = crs.get();
-            if (type.equals("LECTURE")) {
-                return course.getLecture().getSurvey();
-            } else if (type.equals("TUTORIAL")) {
-                return course.getTutorial().getSurvey();
-            } else if (type.equals("SEMINAR")) {
-                return course.getSeminar().getSurvey();
-            } else if (type.equals("PRACTICAL")) {
-                return course.getPractical().getSurvey();
+
+            switch (type) {
+                case LECTURE:
+                    return course.getLecture().getSurvey();
+                case TUTORIAL:
+                    return course.getTutorial().getSurvey();
+                case SEMINAR:
+                    return course.getSeminar().getSurvey();
+                case PRACTICAL:
+                    return course.getPractical().getSurvey();
+                default:
+                    return "[]";
             }
         }
-        return "Something went wrong";
+
+        return "[]";
     }
 
     // Sets the relevant Survey in the course objects, based on the given surveyType
@@ -269,23 +276,6 @@ public class CourseManagement {
                 oldInstance.getInstanceAmount(), newInstanceTitles, oldInstance.isActive());
         courseInstancesRepo.save(newInstance);
         return newInstance;
-    }
-
-    // Set Instance titles for each CourseInstance
-    public void updateInstanceTitles(InstanceTitleForm form, UUID id) {
-        Optional<Course> crs = coursesRepo.findById(id);
-        if (crs.isPresent()) {
-            Course course = crs.get();
-
-            for (CourseType courseType : CourseType.values()) {
-
-                if (Boolean.TRUE.equals(course.getInstanceExists(courseType))) {
-                    CourseInstance instance = course.getInstance(courseType);
-                    instance.setInstanceTitles(form.getInstanceTitlesForType(courseType));
-                    instance.setInstanceAmount(form.getInstanceTitlesForType(courseType).size());
-                }
-            }
-        }
     }
 
     public void setCourseFinalised(UUID id) {
