@@ -14,9 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javassist.bytecode.ByteArray;
-import qova.admin.DefaultSurvey;
-import qova.enums.CourseFaculty;
 import qova.enums.CourseType;
 import qova.enums.LocalizationOption;
 import qova.enums.ResponseType;

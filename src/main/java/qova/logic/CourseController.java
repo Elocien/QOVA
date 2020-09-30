@@ -107,20 +107,25 @@ public class CourseController {
             model.addAttribute("course", course.get());
 
             // QRCode URL (Redirects to a courses survey when scanned)
-            String LectureSurveyURl = "localhost:8080/surveySelect?type=LECTURE&id=" + course.get().getId();
-            String TutorialSurveyURl = "localhost:8080/surveySelect?type=TUTORIAL&id=" + course.get().getId();
-            String SeminarSurveyURl = "localhost:8080/surveySelect?type=SEMINAR&id=" + course.get().getId();
-            String PracticalSurveyURL = "localhost:8080/surveySelect?type=PRACTICAL&id=" + course.get().getId();
+            String LectureSurveyUrl = "localhost:8080/surveySelect?type=LECTURE&id=" + course.get().getId();
+            String TutorialSurveyUrl = "localhost:8080/surveySelect?type=TUTORIAL&id=" + course.get().getId();
+            String SeminarSurveyUrl = "localhost:8080/surveySelect?type=SEMINAR&id=" + course.get().getId();
+            String PracticalSurveyUrl = "localhost:8080/surveySelect?type=PRACTICAL&id=" + course.get().getId();
+
+            model.addAttribute("lectureLink", LectureSurveyUrl);
+            model.addAttribute("tutorialLink", TutorialSurveyUrl);
+            model.addAttribute("seminarLink", SeminarSurveyUrl);
+            model.addAttribute("practicalLink", PracticalSurveyUrl);
 
             // send byte array (the QRCode image) to model
             model.addAttribute("lectureQRCode",
-                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(LectureSurveyURl)));
+                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(LectureSurveyUrl)));
             model.addAttribute("tutorialQRCode",
-                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(TutorialSurveyURl)));
+                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(TutorialSurveyUrl)));
             model.addAttribute("seminarQRCode",
-                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(SeminarSurveyURl)));
+                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(SeminarSurveyUrl)));
             model.addAttribute("practicalQRCode",
-                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(PracticalSurveyURL)));
+                    Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(PracticalSurveyUrl)));
 
             return "courseDetails";
         } else {
