@@ -202,7 +202,9 @@ public class CourseManagement {
             for (CourseType courseType : CourseType.values()) {
 
                 if (Boolean.TRUE.equals(course.getInstanceExists(courseType))) {
-                    course.getInstance(courseType).setInstanceTitles(form.getInstanceTitlesForType(courseType));
+                    CourseInstance instance = course.getInstance(courseType);
+                    instance.setInstanceTitles(form.getInstanceTitlesForType(courseType));
+                    instance.setInstanceAmount(form.getInstanceTitlesForType(courseType).size());
                 }
             }
         }
@@ -269,23 +271,6 @@ public class CourseManagement {
                 oldInstance.getInstanceAmount(), newInstanceTitles, oldInstance.isActive());
         courseInstancesRepo.save(newInstance);
         return newInstance;
-    }
-
-    // Set Instance titles for each CourseInstance
-    public void updateInstanceTitles(InstanceTitleForm form, UUID id) {
-        Optional<Course> crs = coursesRepo.findById(id);
-        if (crs.isPresent()) {
-            Course course = crs.get();
-
-            for (CourseType courseType : CourseType.values()) {
-
-                if (Boolean.TRUE.equals(course.getInstanceExists(courseType))) {
-                    CourseInstance instance = course.getInstance(courseType);
-                    instance.setInstanceTitles(form.getInstanceTitlesForType(courseType));
-                    instance.setInstanceAmount(form.getInstanceTitlesForType(courseType).size());
-                }
-            }
-        }
     }
 
     public void setCourseFinalised(UUID id) {

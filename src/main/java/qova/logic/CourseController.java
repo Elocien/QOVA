@@ -238,18 +238,6 @@ public class CourseController {
         return "redirect:../course/details" + "?id=" + id;
     }
 
-    // Validation of Created course
-    @PostMapping("course/editInstanceTitles")
-    public String updateInstanceTitles(Model model, InstanceTitleForm form, @RequestParam UUID id,
-            BindingResult result) {
-
-        // Management Method returns String of new Course
-        courseManagement.updateInstanceTitles(form, id);
-
-        // Redirect to SurveyEditor to start creating survey
-        return "redirect:../course/details" + "?id=" + id;
-    }
-
     // Delete Course and its CourseInstances
     @GetMapping("course/delete")
     public String deleteCourse(@RequestParam UUID id) {

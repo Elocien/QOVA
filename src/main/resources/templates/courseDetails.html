@@ -88,9 +88,10 @@
                         <!--Headline & Buttons-->
                         <div class="row">
                             <h5 class="font-weight-light text-left" th:text="#{course.details}">COURSE DETAILS</h5>
-                            <button th:if="!${course.finalised}" type="button" id="startEdit" class="btn edit_details btn-link p-0 ml-4 align-middle"
-                                onclick="edit_mode()" data-toggle="tooltip" data-placement="right"
-                                th:title="#{detail.editCourse}"><i class="far fa-edit"></i></button>
+                            <button th:if="!${course.finalised}" type="button" id="startEdit"
+                                class="btn edit_details btn-link p-0 ml-4 align-middle" onclick="edit_mode()"
+                                data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}"><i
+                                    class="far fa-edit"></i></button>
                             <button type="button" onClick="window.location.reload();"
                                 class="btn edit_details btn-link p-0 ml-4 align-middle show_me" style="display: none;"
                                 data-toggle="tooltip" data-placement="right" th:title="#{detail.cancelEdit}"><i
@@ -188,7 +189,7 @@
                                         <!--3rd Col-->
                                         <td class="text-center" th:text="${__'course.' + ${course_type} + '.instanceAmount'__}">COUNT</td>
                                         <input type="hidden" th:value="${__'course.' + ${course_type} + '.instanceAmount'__}" th:name="|instanceAmount${#strings.capitalize(course_type)}|"></input>
-                                        <td class="show_me text-center" style="display: none;"><a type="button" class="btn btn-link p-0 align-middle instance_btn show_me" style="display: none;" href="#" th:href="${'/course/editInstanceTitles?id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.editInstance}"><i class="far fa-edit"></i></a></td>
+                                        <td class="show_me text-center" style="display: none;"><a type="button" class="btn btn-link p-0 align-middle instance_btn show_me" style="display: none;" href="#" th:href="${'/course/instanceTitles?id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.editInstance}"><i class="far fa-edit"></i></a></td>
                                         <!--4th Col-->
                                         <td class="text-center hide_me" th:text="${__'course.' + ${course_type} + '.groupAmount'__}">COUNT</td>
                                         <td class="show_me" style="display: none;">
@@ -282,7 +283,7 @@
         try {
             document.getElementsByClassName("carousel-indicators")[0].getElementsByTagName("li")[0].className = "active";
         }
-        catch(e) {
+        catch (e) {
             console.log("No QR-Code aviable yet.")
         }
     });
