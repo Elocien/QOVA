@@ -268,7 +268,7 @@
                         </div>
                         <p class="m-0 mt-3 font-weight-light" th:text="#{detail.download.link}"></p>
                         <div class="btn-group" role="group" aria-label="First group">
-                            <a th:each="course_type: ${type_list}" th:if="!${(__'course.' + ${course_type} + '.survey   '__).equals('[]')}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:onclick="copy_url([[${course_type}]])">TEXT</a>
+                            <a th:each="course_type: ${type_list}" th:if="!${(__'course.' + ${course_type} + '.survey   '__).equals('[]')}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:onclick="copy_url([[${course_type}]])" href="#">TEXT</a>
                         </div>
                         <input th:each="course_type: ${type_list}" th:if="!${(__'course.' + ${course_type} + '.survey   '__).equals('[]')}" th:id="|${course_type}Link|" th:value="${__${course_type}+'Link'__}" style="display: none">
                     </div>
