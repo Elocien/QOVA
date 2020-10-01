@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import qova.enums.CourseType;
 
@@ -44,19 +45,25 @@ public class SurveyResponse {
     @ElementCollection
     private Map<String, Date> listOfStudentsThatSubmitted;
 
+    @ElementCollection
+    @OneToMany
+    private List<AbstractResponse> listOfResponses;
+
     // Needed for JPA puposes
     @SuppressWarnings("unused")
     protected SurveyResponse() {
     }
 
     // Constructor
-    public SurveyResponse(Course course, CourseType type, Integer instanceNumber, Integer groupNumber) {
+    public SurveyResponse(Course course, CourseType type, Integer instanceNumber, Integer groupNumber,
+            List<AbstractResponse> listOfResponses) {
         this.course = course;
         this.courseType = type;
         this.instanceNumber = instanceNumber;
         this.groupNumber = groupNumber;
         this.numberOfSubmissions = 0;
         this.listOfStudentsThatSubmitted = new HashMap<>();
+        this.listOfResponses = listOfResponses;
     }
 
     public Long getId() {
@@ -99,6 +106,10 @@ public class SurveyResponse {
     public void addStundentIdToSubmissionListAndIncrementCounter(String id) {
         this.listOfStudentsThatSubmitted.put(id, new Date());
         this.numberOfSubmissions++;
+    }
+
+    public List<AbstractResponse> getListOfResponses() {
+        return this.listOfResponses;
     }
 
 }
