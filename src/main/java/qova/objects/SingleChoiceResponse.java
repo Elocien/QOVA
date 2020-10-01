@@ -30,8 +30,9 @@ public class SingleChoiceResponse extends AbstractResponse {
     protected SingleChoiceResponse() {
     }
 
-    public SingleChoiceResponse(String question, Integer surveyPosition, List<String> singleChoiceOptions) {
-        super(question, surveyPosition, ResponseType.SINGLE_CHOICE);
+    public SingleChoiceResponse(String question, Integer surveyPosition, List<String> singleChoiceOptions,
+            Boolean isDefaultQuestion) {
+        super(question, surveyPosition, ResponseType.SINGLE_CHOICE, isDefaultQuestion);
         this.singleChoiceOptions = singleChoiceOptions;
         this.singleChoiceAnswers = new ArrayList<>(this.singleChoiceOptions.size());
 

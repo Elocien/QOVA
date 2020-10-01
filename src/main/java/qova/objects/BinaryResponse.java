@@ -27,8 +27,8 @@ public class BinaryResponse extends AbstractResponse {
      * @param surveyPosition The position in the survey, that this question is
      *                       positioned at.
      */
-    public BinaryResponse(String question, Integer surveyPosition) {
-        super(question, surveyPosition, ResponseType.BINARY_ANSWER);
+    public BinaryResponse(String question, Integer surveyPosition, Boolean isDefaultQuestion) {
+        super(question, surveyPosition, ResponseType.BINARY_ANSWER, isDefaultQuestion);
     }
 
     /**

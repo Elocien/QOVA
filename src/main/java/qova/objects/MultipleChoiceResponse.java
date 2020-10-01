@@ -24,8 +24,9 @@ public class MultipleChoiceResponse extends AbstractResponse {
     protected MultipleChoiceResponse() {
     }
 
-    public MultipleChoiceResponse(String question, Integer surveyPosition, List<String> multipleChoiceOptions) {
-        super(question, surveyPosition, ResponseType.MULTIPLE_CHOICE);
+    public MultipleChoiceResponse(String question, Integer surveyPosition, List<String> multipleChoiceOptions,
+            Boolean isDefaultQuestion) {
+        super(question, surveyPosition, ResponseType.MULTIPLE_CHOICE, isDefaultQuestion);
         this.multipleChoiceOptions = multipleChoiceOptions;
         this.multipleChoiceAnswers = new ArrayList<>(this.multipleChoiceOptions.size());
         for (String s : multipleChoiceOptions) {
