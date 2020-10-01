@@ -112,9 +112,8 @@ public class CSVGenerator {
             // CSV Standar Values
             List<String> row = new ArrayList<>(Arrays.asList(courseName, courseSemesterString, semesterOfStudents));
 
-            row.addAll(
-                    Arrays.asList(String.valueOf(currentSurveyResponse.getGroupNumber()), String.valueOf(currentSurveyResponse.getInstanceNumber());
-
+            row.addAll(Arrays.asList(String.valueOf(currentSurveyResponse.getGroupNumber()),
+                    String.valueOf(currentSurveyResponse.getInstanceNumber())));
 
             // Append Header with the rest of the survey questions
             for (AbstractResponse abstractResponse : currentSurveyResponse.getListOfResponses()) {
