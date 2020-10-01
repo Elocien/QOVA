@@ -7,9 +7,11 @@ import qova.enums.CourseFaculty;
 import qova.enums.CourseType;
 import qova.forms.CourseForm;
 import qova.forms.InstanceTitleForm;
+import qova.objects.AbstractResponse;
 import qova.objects.Course;
 import qova.objects.CourseInstance;
 import qova.objects.SurveyResponse;
+import qova.repositories.AbstractResponseRepository;
 import qova.repositories.BinaryResponseRepository;
 import qova.repositories.CourseInstanceRepository;
 import qova.repositories.CourseRepository;
@@ -45,23 +47,14 @@ public class CourseManagement {
     private final CourseRepository coursesRepo;
     private final CourseInstanceRepository courseInstancesRepo;
     private final SurveyResponseRepository surveyResponseRepository;
-    private final BinaryResponseRepository binaryResponseRepository;
-    private final TextResponseRepository textResponseRepository;
-    private final SingleChoiceResponseRepository singleChoiceResponseRepository;
-    private final MultipleChoiceResponseRepository multipleChoiceResponseRepository;
+    private final AbstractResponseRepository abstractResponseRepository;
 
     @Autowired
     public CourseManagement(CourseRepository coursesRepo, CourseInstanceRepository courseInstancesRepo,
-            SurveyResponseRepository surveyResponseRepository, BinaryResponseRepository binaryResponseRepository,
-            TextResponseRepository textResponseRepository,
-            SingleChoiceResponseRepository singleChoiceResponseRepository,
-            MultipleChoiceResponseRepository multipleChoiceResponseRepository) {
+            SurveyResponseRepository surveyResponseRepository, AbstractResponseRepository abstractResponseRepository) {
 
         this.surveyResponseRepository = Objects.requireNonNull(surveyResponseRepository);
-        this.binaryResponseRepository = Objects.requireNonNull(binaryResponseRepository);
-        this.textResponseRepository = Objects.requireNonNull(textResponseRepository);
-        this.singleChoiceResponseRepository = Objects.requireNonNull(singleChoiceResponseRepository);
-        this.multipleChoiceResponseRepository = Objects.requireNonNull(multipleChoiceResponseRepository);
+        this.abstractResponseRepository = Objects.requireNonNull(abstractResponseRepository);
         this.coursesRepo = Objects.requireNonNull(coursesRepo);
         this.courseInstancesRepo = Objects.requireNonNull(courseInstancesRepo);
     }
@@ -502,13 +495,9 @@ public class CourseManagement {
         // Get all surveyResponses for a course
         Iterable<SurveyResponse> surveyResponses = surveyResponseRepository.findByCourse(course);
 
-        // delete all instances
-        for (SurveyResponse r : surveyResponses) {
-            binaryResponseRepository.deleteAll(binaryResponseRepository.findBySurveyResponse(r));
-            textResponseRepository.deleteAll(textResponseRepository.findBySurveyResponse(r));
-            singleChoiceResponseRepository.deleteAll(singleChoiceResponseRepository.findBySurveyResponse(r));
-            multipleChoiceResponseRepository.deleteAll(multipleChoiceResponseRepository.findBySurveyResponse(r));
-        }
+        for (SurveyResponse surveyResponse : surveyResponses)
+            // delete all instances
+            abstractResponseRepository.deleteAll(surveyResponse.getListOfResponses());
 
         // delete the surveyresponses
         surveyResponseRepository.deleteAll(surveyResponses);
