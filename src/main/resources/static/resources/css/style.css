@@ -225,6 +225,9 @@ input[type="text"]:disabled::placeholder {
 .disabled-link {
   color: lightgrey;
 }
+.url-input {
+  margin-left: 0.6rem;
+}
 
 /*courseNew.html*/
 .form-col {
