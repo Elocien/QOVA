@@ -7,11 +7,11 @@
 <body>
 <div th:include="navbar"></div>
 
-<div class="container">
+<div class="container mt-4 mb-4">
     <div class="row justify-content-center">
 
         <!--Headline-->
-        <div class="col-12 text-center mt-4">
+        <div class="col-12 text-center">
             <h2 class="font-weight-bold" th:text="#{student.browser}">COURSE BROWSER</h2>
             <h5 class="font-weight-light" th:text="#{student.description}">DESCRIPTION</h5>
         </div>
@@ -34,6 +34,23 @@
 <div th:replace="footer"></div>
 </body>
 <script>
+$(document).ready(function () {
+    delete_empty_faculties();
+});
+
+function delete_empty_faculties() {
+    var faculties = document.getElementsByClassName("clWrapper");
+    var naughty_list = []
+    for (let i = 0; i < faculties.length; i++) {
+        if (faculties[i].getElementsByClassName("clSurvey").length == 0) {
+            naughty_list.push(faculties[i]);
+        }
+    }
+    for (let i = 0; i < naughty_list.length; i++) {
+        naughty_list[i].parentElement.removeChild(naughty_list[i]);
+    }
+}
+
 function expand(input) {
     var target = input.parentElement.parentElement.getElementsByClassName("clCollapse")[0];
     var trash = document.getElementsByClassName("clButton_after");

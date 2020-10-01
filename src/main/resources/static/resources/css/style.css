@@ -416,6 +416,7 @@ select {
   float: right;
 }
 
+/*studentBrowser.html*/
 .clWrapper {
   border-top: solid 0.01rem var(--tu_blue);
   border-bottom: solid 0.01rem var(--tu_blue);
