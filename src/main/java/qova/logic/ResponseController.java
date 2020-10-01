@@ -247,8 +247,6 @@ public class ResponseController {
 
             if (surveyResponse.isPresent()) {
                 model.addAttribute("response", surveyResponse);
-                model.addAttribute("responseList",
-                        responseManagement.findResponsesBySurveyResponse(surveyResponse.get()));
             }
         }
         return "surveyResultsTest";
@@ -348,25 +346,6 @@ public class ResponseController {
         return "home";
     }
 
-    // PDF Generation
-    @GetMapping("/pdftest")
-    public HttpEntity<byte[]> pdfTest(HttpServletResponse response) throws Exception {
-
-        // generate filename
-        String filename = "testPdf.pdf";
-
-        // Generate PDF
-        byte[] pdf = responseManagement.generatePDF_test();
-
-        // Set HTTP headers and return HttpEntity
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_PDF);
-        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
-        header.setContentLength(pdf.length);
-
-        return new HttpEntity<byte[]>(pdf, header);
-    }
-
     // CSV Generation
     @GetMapping("csv")
     public HttpEntity<byte[]> csvtest(HttpServletResponse response) throws Exception {
@@ -383,19 +362,6 @@ public class ResponseController {
         header.setContentLength(pdf.length);
 
         return new HttpEntity<byte[]>(pdf, header);
-    }
-
-    @GetMapping("/surveyResults")
-    public String surveyresults(Model model) throws Exception {
-
-        Course course = courseManagement.TimTestCreateCourse();
-        SurveyResponse rsp = responseManagement.TimCreateTestResponses(course);
-        List<Object> objects = responseManagement.TimCreateTestListOfResponses(rsp);
-
-        model.addAttribute("response", rsp);
-        model.addAttribute("responseList", objects);
-
-        return "surveyResults";
     }
 
 }
