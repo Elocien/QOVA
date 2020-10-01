@@ -196,19 +196,15 @@
                                             <input class="form-control" type="text" th:value="${__'course.' + ${course_type} + '.groupAmount'__}" th:name="|groupAmount${#strings.capitalize(course_type)}|" th:id="|groupAmount${#strings.capitalize(course_type)}|">
                                         </td>
                                         <!--5th Col-->
-                                        <div th:switch="${__'course.' + ${course_type} + '.survey'__}">
-                                            <div th:case="'[]'">
-                                                <td th:switch="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}" class="text-center">
-                                                    <a  th:if="!${course.finalisedFlag}" th:case="TRUE" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
-                                                </td>
-                                            </div>
-                                            <div th:case="*">
-                                                <td th:if="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}" class="text-center">
-                                                    <a th:if="!${course.finalisedFlag}" type="button" class="btn btn-link p-0 align-middle hide_me mr-2" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="left" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
-                                                    <a type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/previewsurvey?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.previewSurvey}"><i class="fa fa-eye"></i></a>
-                                                </td>
-                                            </div>
-                                        </div>
+                                        <th:block th:switch="!${course.finalisedFlag} and !${'course.'+{course_type}+'.surveyEditedFlag'}">
+                                            <td th:case="true" class="text-center">
+                                                <a type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
+                                            </td>
+                                            <td th:case="false" class="text-center">
+                                                <a th:if="!${course.finalisedFlag}" type="button" class="btn btn-link p-0 align-middle hide_me mr-2" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="left" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
+                                                <a th:if="${'course.'+{course_type}+'.surveyEditedFlag'}" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/previewsurvey?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.previewSurvey}"><i class="fa fa-eye"></i></a>
+                                            </td>
+                                        </th:block>
                                     </tr>
                                 </tbody>
                             </table>
