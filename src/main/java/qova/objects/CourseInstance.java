@@ -6,21 +6,26 @@ import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OrderColumn;
 
+import jdk.jfr.BooleanFlag;
 import qova.enums.CourseType;
 
 @Entity
 public class CourseInstance {
 
     // Id
-    private @Id @GeneratedValue(strategy = GenerationType.AUTO) Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     // Either LECTURE, TUTORIAL, SEMINAR OR PRACTICAL
+    @Enumerated
     private CourseType courseType;
 
     // The Survey as JSON
@@ -45,11 +50,13 @@ public class CourseInstance {
     // Flag used to indicate wether the instance is active (E.g. The instance is of
     // type practical, but isn't set as being evaluated by the course owner;
     // therefore it is set as active = false)
+    @BooleanFlag
     private Boolean active;
 
     // Flag used to indicate that the survey has been edited an saved in some form
     // (This is primarilly used to allow surveys to be set without adding to the
     // default survey)
+    @BooleanFlag
     private Boolean surveyEditedFlag;
 
     // Needed for JPA purposes
