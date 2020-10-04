@@ -12,51 +12,20 @@
     <div class="container mb-4">
 
         <div class="row justify-content-md-center">
-            <div class="col-lg-12">
+            <div class="col-lg-12" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
 
                 <h2 class="font-weight-bold text-center mb-4 mt-4" th:text="#{new.headline}">NEW COURSE</h2>
 
                 <form id="form" method="post" class="border border-dark form_color rounded" th:object="${form}" th:action="@{/course/new}">
                     <!--Checkboxes-->
                     <div class="form-row justify-content-md-center p-4">
-                        <!--Lecture-->
-                        <div class="col-md-auto">
+                        <div th:each="type: ${type_list}" class="col-md-auto ml-2 mr-2">
                             <label class="switch m-0 align-middle">
-                                <input type="checkbox" id="lectureCheck" onclick="set_hidden_data('lecture')">
+                                <input type="checkbox" th:id="|${type}Check|" th:onclick="set_hidden_data([[${type}]])">
                                 <span class="slider round"></span>
                             </label>
-                            <p class="d-inline m-0 switch-label" th:text="#{new.lecture}">LECTURE</p>
-                            <input type="checkbox" id="lectureHidden" hidden th:field="*{lectureExists}">
-                        </div>
-                        <div class="col-md-1"></div>
-                        <!--Tutorial-->
-                        <div class="col-md-auto">
-                            <label class="switch m-0 align-middle">
-                                <input type="checkbox" id="tutorialCheck" onclick="set_hidden_data('tutorial')">
-                                <span class="slider round"></span>
-                            </label>
-                            <p class="d-inline m-0 switch-label" th:text="#{new.tutorial}">TUTORIAL</p>
-                            <input type="checkbox" id="tutorialHidden" hidden th:field="*{tutorialExists}">
-                        </div>
-                        <div class="col-md-1"></div>
-                        <!--Seminar-->
-                        <div class="col-md-auto">
-                            <label class="switch m-0 align-middle">
-                                <input type="checkbox" id="seminarCheck" onclick="set_hidden_data('seminar')">
-                                <span class="slider round"></span>
-                            </label>
-                            <p class="d-inline m-0 switch-label" th:text="#{new.seminar}">SEMINAR</p>
-                            <input type="checkbox" id="seminarHidden" hidden th:field="*{seminarExists}">
-                        </div>
-                        <div class="col-md-1"></div>
-                        <!--Practical-->
-                        <div class="col-md-auto">
-                            <label class="switch m-0 align-middle">
-                                <input type="checkbox" id="practicalCheck" onclick="set_hidden_data('practical')">
-                                <span class="slider round"></span>
-                            </label>
-                            <p class="d-inline m-0 switch-label" th:text="#{new.practical}">SEMINAR</p>
-                            <input type="checkbox" id="practicalHidden" hidden th:field="*{practicalExists}">
+                            <p class="d-inline m-0 switch-label" th:text="#{new.+${type}}">LECTURE</p>
+                            <input type="text" th:field="*{__${type} + 'Exists'__}" style="display: none;">
                         </div>
                     </div>
                     <div class="dropdown-divider border-dark m-0"></div>
@@ -102,25 +71,25 @@
                                     </thead>
                                     <tbody>
                                         <!--Lecture-->
-                                        <tr class="slim-line" id="lectureCollapse" style="display: none">
+                                        <tr class="slim-line" id="lectureLine" style="display: none">
                                             <td th:text="#{new.lecture}">LECTURE</td>
                                             <td><input type="number" class="form-control" placeholder="1" min="0" value="1" id="groupAmountLecture" name="groupAmountLecture" readonly></td>
                                             <td><input type="number" class="form-control" placeholder="0" min="0" value="0" th:field="*{instanceAmountLecture}"></td>
                                         </tr>
                                         <!--Tutorial-->
-                                        <tr class="slim-line" id="tutorialCollapse" style="display: none">
+                                        <tr class="slim-line" id="tutorialLine" style="display: none">
                                             <td th:text="#{new.tutorial}">TUTORIAL</td>
                                             <td><input type="number" class="form-control" th:field="*{groupAmountTutorial}" placeholder="0" min="0" value="0"></td>
                                             <td><input type="number" class="form-control" placeholder="0" min="0" value="0" th:field="*{instanceAmountTutorial}"></td>
                                         </tr>
                                         <!--Seminar-->
-                                        <tr class="slim-line" id="seminarCollapse" style="display: none">
+                                        <tr class="slim-line" id="seminarLine" style="display: none">
                                             <td th:text="#{new.seminar}">SEMINAR</td=>
                                             <td><input type="number" class="form-control" th:field="*{groupAmountSeminar}" placeholder="0" min="0" value="0"></td>
                                             <td><input type="number" class="form-control" placeholder="0" min="0" value="0" th:field="*{instanceAmountSeminar}"></td>
                                         </tr>
                                         <!--Practical-->
-                                        <tr class="slim-line" id="practicalCollapse" style="display: none">
+                                        <tr class="slim-line" id="practicalLine" style="display: none">
                                             <td th:text="#{new.practical}">PRACTICAL</td> 
                                            <td><input type="number" class="form-control" placeholder="0" min="0" value="0" th:field="*{instanceAmountPractical}"></td>
                                             <td><input type="number" class="form-control" placeholder="0" min="0" value="0" th:field="*{instanceAmountPractical}"></td>
@@ -178,7 +147,7 @@
         var success = 0;
         const all_types = ["lecture", "tutorial", "seminar", "practical"];
         for (let index = 0; index < all_types.length; ++index) {
-            if (document.getElementById(all_types[index] + "Hidden").checked == true) {
+            if (document.getElementById(all_types[index] + "Exists").checked == true) {
                 document.getElementById("input_table").style.display = "";
                 success = 1;
             }
@@ -189,17 +158,33 @@
     }
 
     function set_hidden_data(type) {
-        const original = document.getElementById(type + "Check");
-        document.getElementById(type + "Hidden").checked = original.checked;
-        if (original.checked === true) {
-            document.getElementById(type + "Collapse").style.display = "";
+        const og_input = document.getElementById(type + "Check");
+        const hidden_input = document.getElementById(type + "Exists");
+        const table_line = document.getElementById(type + "Line");
+        if (og_input.checked === false) {
+            table_line.style.display = "none";
+            hidden_input.value = "false";
         }
         else {
-            document.getElementById(type + "Collapse").style.display = "none";
+            table_line.style.display = "";
+            hidden_input.value = "true";
         }
-        anything_going_on();
-        original.disabled = true;
-        setTimeout(function(){original.disabled = false;}, 500)
+        const input_table = document.getElementById("input_table");
+        const inputs = input_table.getElementsByTagName("tbody")[0].getElementsByClassName("slim-line");
+        var kill = true;
+        for (let i = 0; i < inputs.length; ++i) {
+            if (inputs[i].style.display == "") {
+                kill = false;
+            }
+        }
+        if (kill == true) {
+            input_table.style.display = "none"
+        }
+        else {
+            input_table.style.display = ""
+        }
+        og_input.disabled = true;
+        setTimeout(function () { og_input.disabled = false; }, 500)
     };
 
 </script>
