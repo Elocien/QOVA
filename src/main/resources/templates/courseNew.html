@@ -9,12 +9,12 @@
 
     <div th:include="navbar"></div>
 
-    <div class="container mb-4">
+    <div class="container mt-4 mb-4">
 
         <div class="row justify-content-md-center">
             <div class="col-lg-12" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
 
-                <h2 class="font-weight-bold text-center mb-4 mt-4" th:text="#{new.headline}">NEW COURSE</h2>
+                <h2 class="font-weight-bold text-center mb-4" th:text="#{new.headline}">NEW COURSE</h2>
 
                 <form id="form" method="post" class="border border-dark form_color rounded" th:object="${form}" th:action="@{/course/new}">
                     <!--Checkboxes-->
@@ -28,7 +28,24 @@
                             <input type="text" th:id="|${type}Exists|" th:name="|${type}Exists|" value="false" style="display: none;">
                         </div>
                     </div>
+
                     <div class="dropdown-divider border-dark m-0"></div>
+
+                    <!--Description-->
+                    <div class="col-12 bg-light p-0">
+                        <table class="table table-bordered m-0">
+                            <tbody th:with="list = ${ {'groups', 'instances'} }">
+                                <tr th:each="x: ${list}" class="m-2">
+                                    <th scope="row" th:text="#{new.+${x}}" class="p-2 font-weight-bold text-right align-middle">NAME</th>
+                                    <td th:text="#{new.+${x}+.description}" class="p-2">DESCRIPTION</td>
+                                    <td th:text="#{new.+${x}+.example}" class="p-2">EXAMPLE</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="dropdown-divider border-dark m-0"></div>
+
                     <!--Inputs-->
                     <div class="text-center p-4 bg-light">
                         <!--Permanent-->
@@ -65,7 +82,7 @@
                                     <thead>
                                         <tr class="slim-line">
                                             <th class="border-0 col-md-2" scope="col"></th>
-                                            <th class="border-0 col-md-2" scope="col" th:text="#{new.count}">COUNT</th>
+                                            <th class="border-0 col-md-2" scope="col" th:text="#{new.groups}">GROUPS</th>
                                             <th class="border-0 col-md-2" scope="col" th:text="#{new.instances}">INSTANCES</th>
                                         </tr>
                                     </thead>
@@ -83,7 +100,9 @@
                             </div>
                         </div>
                     </div>
+
                     <div class="dropdown-divider border-dark m-0"></div>
+
                     <!--Confirm-->
                     <div class="form-row p-4">
                         <div class="col-md-8"></div>
