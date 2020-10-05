@@ -323,8 +323,9 @@ public class ResponseController {
             return null;
         }
 
-        // Generate PDF
-        byte[] csv = responseManagement.generateCSV_en(crs.get(), courseType, groupNumber, instanceNumber);
+        // Generate CSV
+        byte[] csv = responseManagement.generateCSV_en(
+                responseManagement.findSurveyResponses(crs.get(), courseType, groupNumber, instanceNumber));
 
         if (csv == new byte[0]) {
             return null;
@@ -353,7 +354,8 @@ public class ResponseController {
         Course crs = courseManagement.findAll().iterator().next();
 
         // Generate PDF
-        byte[] pdf = responseManagement.generateCSV_en(crs, CourseType.TUTORIAL, "1", "all");
+        byte[] pdf = responseManagement
+                .generateCSV_en(responseManagement.findSurveyResponses(crs, CourseType.TUTORIAL, "1", "all"));
 
         // Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();

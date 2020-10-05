@@ -104,7 +104,8 @@ public class ResponseManagement {
     }
 
     /**
-     * This method retrieves all of the surveyResponses
+     * This method retrieves all of the surveyResponses and compiles their results
+     * into a csv file
      * 
      * @param course
      * @param type
@@ -113,28 +114,8 @@ public class ResponseManagement {
      * @return
      * @throws Exception
      */
-    public byte[] generateCSV_en(Course course, CourseType type, String groupNumber, String instanceNumber)
-            throws Exception {
+    public byte[] generateCSV_en(List<SurveyResponse> listOfSurveyResponses) throws Exception {
 
-        // Initalise List of SurveyResponses to be passed to the CSV generator
-        List<SurveyResponse> listOfSurveyResponses = new ArrayList<>();
-
-        if (groupNumber.equals("all") && instanceNumber.equals("all")) {
-
-            findSurveyResponseByCourseAndCourseType(course, type).forEach(listOfSurveyResponses::add);
-
-        } else if (groupNumber.equals("all")) {
-            findSurveyResponseByCourseAndCourseTypeAndInstanceNumber(course, type, Integer.parseInt(instanceNumber))
-                    .forEach(listOfSurveyResponses::add);
-        } else if (instanceNumber.equals("all")) {
-            findSurveyResponseByCourseAndCourseTypeAndGroupNumber(course, type, Integer.parseInt(groupNumber))
-                    .forEach(listOfSurveyResponses::add);
-        } else {
-            Optional<SurveyResponse> s = findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course,
-                    type, Integer.parseInt(groupNumber), Integer.parseInt(instanceNumber));
-            listOfSurveyResponses.add(s.get());
-
-        }
         if (listOfSurveyResponses.isEmpty()) {
             return new byte[0];
         }
@@ -303,6 +284,31 @@ public class ResponseManagement {
             }
         }
         return listOfResponses;
+    }
+
+    public List<SurveyResponse> findSurveyResponses(Course course, CourseType type, String groupNumber,
+            String instanceNumber) {
+
+        // Initalise List of SurveyResponses to be passed to the CSV generator
+        List<SurveyResponse> listOfSurveyResponses = new ArrayList<>();
+
+        if (groupNumber.equals("all") && instanceNumber.equals("all")) {
+
+            findSurveyResponseByCourseAndCourseType(course, type).forEach(listOfSurveyResponses::add);
+
+        } else if (groupNumber.equals("all")) {
+            findSurveyResponseByCourseAndCourseTypeAndInstanceNumber(course, type, Integer.parseInt(instanceNumber))
+                    .forEach(listOfSurveyResponses::add);
+        } else if (instanceNumber.equals("all")) {
+            findSurveyResponseByCourseAndCourseTypeAndGroupNumber(course, type, Integer.parseInt(groupNumber))
+                    .forEach(listOfSurveyResponses::add);
+        } else {
+            Optional<SurveyResponse> s = findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course,
+                    type, Integer.parseInt(groupNumber), Integer.parseInt(instanceNumber));
+            listOfSurveyResponses.add(s.get());
+        }
+
+        return listOfSurveyResponses;
     }
 
     /**
