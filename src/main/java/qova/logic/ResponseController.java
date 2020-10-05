@@ -268,6 +268,12 @@ public class ResponseController {
         return "studentBrowser";
     }
 
+    @GetMapping("surveyCheckout")
+    public String surveyCheckout(Model model) {
+
+        return "surveyCheckout";
+    }
+
     // PDF Generation
     @GetMapping("/generatePDF")
     public HttpEntity<byte[]> generatePdf(@RequestParam UUID id, @RequestParam String type,
