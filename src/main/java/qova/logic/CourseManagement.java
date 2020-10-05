@@ -524,7 +524,7 @@ public class CourseManagement {
     // TODO: Remove Before Production
 
     // Test Method, remove in final build
-    public void TestCreateCourse() {
+    public Course TestCreateCourse() {
         var name = "Rechnernetze";
 
         List<String> lectureTitles = new ArrayList<>();
@@ -570,8 +570,10 @@ public class CourseManagement {
         var courseDate = LocalDate.of(2020, 10, 4);
         var semesterString = "SoSe 2020";
 
-        coursesRepo.save(new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty,
-                semesterString, courseDate));
+        Course course = new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty,
+                semesterString, courseDate);
+        coursesRepo.save(course);
+        return course;
     }
 
     public Course TimTestCreateCourse() {
