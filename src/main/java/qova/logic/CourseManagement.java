@@ -278,12 +278,29 @@ public class CourseManagement {
         return newInstance;
     }
 
+    /**
+     * Used to set the finalisedFalg attribute of a
+     * {@linkplain qova.objects.Course}.
+     * 
+     * @param id the {@link java.util.UUID} of the {@linkplain qova.objects.Course}
+     */
     public void setCourseFinalised(UUID id) {
         Optional<Course> crs = findById(id);
 
         if (crs.isPresent()) {
-            crs.get().setFinalised();
+            crs.get().setCourseAsFinalised();
         }
+    }
+
+    /**
+     * Used to set the surveyEditedFlag attribute of a
+     * {@linkplain qova.objects.CourseInstance}.
+     * 
+     * @param courseInstance The {@linkplain qova.objects.CourseInstance} for which
+     *                       the flag is to be set
+     */
+    public void setSurveyEditedFlagForCourseInstance(CourseInstance courseInstance) {
+        courseInstance.setSurveEditedFlag();
     }
 
     /**

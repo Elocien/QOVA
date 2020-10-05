@@ -32,6 +32,7 @@ import qova.forms.DuplicateCourseForm;
 import qova.forms.InstanceTitleForm;
 import qova.forms.SurveyForm;
 import qova.objects.Course;
+import qova.objects.CourseInstance;
 
 //TODO: Temporary Imports (can be removed later)
 //@Lucian please don't delete me just yet T_T
@@ -145,14 +146,15 @@ public class CourseController {
 
         Optional<Course> crs = courseManagement.findById(id);
         if (crs.isPresent()) {
-            if (Boolean.TRUE.equals(crs.get().getFinalised())) {
+            if (Boolean.TRUE.equals(crs.get().getFinalisedFlag())) {
                 return courseDetails(model, duplcateCourseForm, form, id);
             }
-            return "redirect:../";
+            courseManagement.updateCourseDetails(id, form);
+            return "redirect:../course/details?id=" + id;
         }
 
-        courseManagement.updateCourseDetails(id, form);
-        return "redirect:../course/details?id=" + id;
+        return "redirect:/";
+
     }
 
     // Create Course
@@ -326,9 +328,9 @@ public class CourseController {
     /**
      * Mapping for submitting a created survey. The questioneditor sends JSON
      * containing the survey to the server, and this is checked for length (Can't
-     * exceed 100 questions) and special characters. After this, a new
-     * SurveyResponse object is created along with its subclasses (BinaryResponse,
-     * TextResponse, etc.)
+     * exceed 100 questions) and special characters. If the
+     * {@linkplain qova.objects.CourseInstance} hasn't had a survey set before, then
+     * the flag is set for that given {@linkplain qova.objects.CourseInstance}
      * 
      * @param model The {@linkplain org.springframework.ui.Model}
      * @param form  {@linkplain SurveyForm} which contains the JSON passed by the
@@ -352,10 +354,18 @@ public class CourseController {
         Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()) {
 
+            CourseType courseType = responseManagement.parseCourseType(type);
+
             // if type is none of the correct values, then redirect to homepage
-            if (responseManagement.parseCourseType(type) == null) {
+            if (courseType == null) {
                 // TODO: redirect to error page with code 02
                 return "redirect:/";
+            }
+
+            CourseInstance instance = course.get().getInstance(courseType);
+
+            if (Boolean.FALSE.equals(instance.getSurveyEditedFlag())) {
+                courseManagement.setSurveyEditedFlagForCourseInstance(instance);
             }
 
             else {
@@ -363,8 +373,7 @@ public class CourseController {
                 try {
                     new JSONArray(form.getQuestionnairejson());
                 } catch (Exception e) {
-                    // TODO: redirect to error page with code 02
-                    return "redirect:/";
+                    return questioneditor(model, type, id);
                 }
 
                 // Create a JSON Array out of the response from the questioneditor

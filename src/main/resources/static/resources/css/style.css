@@ -7,14 +7,19 @@ body {
   --tu_blue_light: rgb(0, 74, 174);
   --tu_blue_highlight: rgb(230, 230, 255);
   --fancy_grey: darkslategrey;
-  background: url(../images/seamless-bg.jpg);
-  background-size: 300px 300px;
+  background-color: #d0d1da;
+  background-image: url(../images/qovaBackgroundSquare.png);
+  background-size: 100% auto;
+  background-repeat: no-repeat;
   min-height: 100vh;
   height: 100%;
   position: relative;
   margin: 0;
   padding-bottom: 56px;
   overflow-x: hidden;
+}
+.bg-light {
+  background-color: #d0d1da;
 }
 
 /*Removes arrows from number input fields*/
@@ -71,7 +76,6 @@ footer {
   border: 0;
   margin-bottom: 1rem;
   padding: 0.3rem;
-  box-shadow: 0px 1px rgba(100, 100, 100, 0.9);
 }
 
 .navbar-brand {
@@ -133,6 +137,10 @@ footer {
 }
 .uk-icon {
   background-image: url(..//images/uk.svg);
+}
+.mobile-collapse {
+  background-color: var(--tu_blue);
+  border-top: 1px solid white;
 }
 
 /*home.html start*/
@@ -223,6 +231,9 @@ input[type="text"]:disabled::placeholder {
 }
 .disabled-link {
   color: lightgrey;
+}
+.url-input {
+  margin-left: 0.6rem;
 }
 
 /*courseNew.html*/
@@ -412,6 +423,7 @@ select {
   float: right;
 }
 
+/*studentBrowser.html*/
 .clWrapper {
   border-top: solid 0.01rem var(--tu_blue);
   border-bottom: solid 0.01rem var(--tu_blue);
@@ -445,22 +457,25 @@ select {
   line-height: 3rem;
   padding: 0.5rem;
 }
+.clCollapse {
+  border: 3px solid var(--tu_blue);
+  border-top: none;
+}
 .clInner {
+  border-bottom: 1px solid var(--tu_blue);
   height: 2rem;
   position: relative;
 }
 .clSurvey {
+  font-weight: 400 !important;
   position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;
   line-height: 2rem;
   padding-left: 0.5rem;
-  background-color: var(--tu_blue) !important;
-  color: white !important;
-  filter: brightness(150%);
+  color: black !important;
 }
 .clSurvey:hover {
-  background-color: var(--tu_blue) !important;
+  background-color: grey;
   color: white !important;
-  filter: brightness(200%);
   text-decoration: none;
 }
 

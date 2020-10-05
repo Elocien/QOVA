@@ -20,17 +20,22 @@ public class CourseForm {
     @NotNull
     private Boolean practicalExists;
 
-    // Total Number of tutorial/seminar/practical !!GROUPS!!
-    private Integer groupAmountLecture; // Assumed to always be one, but in case of future change of functionality, this
-                                        // is included for the sake of completeness
+    @NotNull
+    private Integer groupAmountLecture;
+    @NotNull
     private Integer groupAmountTutorial;
+    @NotNull
     private Integer groupAmountSeminar;
+    @NotNull
     private Integer groupAmountPractical;
 
-    // Total Number of times a tutorial/seminar/practical !!TAKES PLACE!!
+    @NotNull
     private Integer instanceAmountLecture;
+    @NotNull
     private Integer instanceAmountTutorial;
+    @NotNull
     private Integer instanceAmountSeminar;
+    @NotNull
     private Integer instanceAmountPractical;
 
     // 'Intended' Semester of Students partaking in the given Subject

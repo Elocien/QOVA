@@ -3,6 +3,7 @@ package qova.objects;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -42,9 +43,14 @@ public class CourseInstance {
     private List<String> instanceTitles;
 
     // Flag used to indicate wether the instance is active (E.g. The instance is of
-    // type practical, but isnt set as being evaluated by the course owner;
+    // type practical, but isn't set as being evaluated by the course owner;
     // therefore it is set as active = false)
     private Boolean active;
+
+    // Flag used to indicate that the survey has been edited an saved in some form
+    // (This is primarilly used to allow surveys to be set without adding to the
+    // default survey)
+    private Boolean surveyEditedFlag;
 
     // Needed for JPA purposes
     @SuppressWarnings("unused")
@@ -53,7 +59,7 @@ public class CourseInstance {
 
     /**
      * Instance representing either a Lecture, Tutorial, Seminar or Practical.
-     * Nested into {@linkplain Course}
+     * Nested into {@linkplain Course}. This object holds the survey for
      * 
      * @param courseType     Enumeration of the possible types rendered by JS in
      *                       survey template
@@ -76,10 +82,14 @@ public class CourseInstance {
         this.instanceAmount = instanceAmount;
         this.instanceTitles = instanceTitles;
         this.active = active;
+        this.surveyEditedFlag = false;
     }
 
     /**
-     * Constructor for inactive CourseInstances
+     * Constructor for inactive {@linkplain qova.objects.CourseInstance}'s'. Used
+     * when a {@linkplain qova.objects.Course} is created, but the Instance itself
+     * is not set. The CourseInstance is created regardless, in case it must be used
+     * in future
      * 
      * @param courseType
      */
@@ -90,6 +100,7 @@ public class CourseInstance {
         this.instanceAmount = 0;
         this.instanceTitles = new ArrayList<>();
         this.active = false;
+        this.surveyEditedFlag = false;
     }
 
     public CourseType getCourseType() {
@@ -145,6 +156,14 @@ public class CourseInstance {
         this.groupAmount = null;
         this.instanceAmount = null;
         this.instanceTitles = null;
+    }
+
+    public void setSurveEditedFlag() {
+        this.surveyEditedFlag = true;
+    }
+
+    public Boolean getSurveyEditedFlag() {
+        return this.surveyEditedFlag;
     }
 
 }
