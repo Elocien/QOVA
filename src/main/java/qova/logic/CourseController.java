@@ -515,8 +515,8 @@ public class CourseController {
     // test method
     @GetMapping("/createC")
     public String createC() throws Exception {
-        courseManagement.TestCreateCourse();
-        return "home";
+        Course course = courseManagement.TestCreateCourse();
+        return "redirect:../course/details" + "?id=" + course.getId();
     }
 
     // test method
