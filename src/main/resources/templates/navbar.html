@@ -18,23 +18,67 @@
 </head>
 
 <body>
-<nav th:fragment="navigation">
-    <div class="navbar navbar-expand-lg align-items-center">
+<div th:fragment="navigation">
 
-        <div class="navbar-collapse collapse order-1 order-md-0 dual-collapse2">
-            <ul class="navbar-nav mr-auto">
-                <a class="navbar-brand nav-bar-icon" href="/">
-                    <img class="logo logo_qr img-fluid" th:src="@{/resources/images/qova_logo_qr.png}" src="../static/resources/images/qova_logo_qr.png" alt="Logo"/>
-                    <img class="logo logo_text img-fluid" th:src="@{/resources/images/qova_logo_text.png}" src="../static/resources/images/qova_logo_text.png" alt="Logo"/>
-                </a>
-            </ul>
-        </div>
+    <!--Normal Navbar-->
+    <div class="d-none d-md-block d-lg-block d-xl-block">
+        <nav class="navbar navbar-expand align-items-center">
+            <div class="navbar-collapse order-1 mr-auto">
+                <ul class="navbar-nav">
+                    <a class="navbar-brand nav-bar-icon" href="/">
+                        <img class="logo logo_qr img-fluid" th:src="@{/resources/images/qova_logo_qr.png}" src="../static/resources/images/qova_logo_qr.png" alt="Logo"/>
+                        <img class="logo logo_text img-fluid" th:src="@{/resources/images/qova_logo_text.png}" src="../static/resources/images/qova_logo_text.png" alt="Logo"/>
+                    </a>
+                </ul>
+            </div>
 
-        <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-            <ul class="navbar-nav ml-auto">
+            <div class="navbar-collapse order-2 ml-auto justify-content-end">
+                <ul class="navbar-nav">
+                    <li class="nav-item media"><a class="nav-link link_to_page" th:text="#{navbar.course}" th:href="@{/courses}">course managment</a></li>
+                    <li class="nav-item media" sec:authorize="hasRole('TEILZEIT')"><a class="nav-link link_to_page" th:text="#{navbar.results}" th:href="@{/studentBrowser}">survey results</a></li>
+                    <li class="nav-item media" sec:authorize="hasRole('ADMIN')"><a class="nav-link link_to_page" th:text="#{navbar.account}" th:href="@{/admin}">accounting</a></li>
+                    <li class="nav-item media" sec:authorize="isAnonymous()"><a class="nav-link link_to_page" href="/">Login</a></li>
+                    <!--Settings-->
+                    <li class="nav-item media dropdown p-0">
+                        <a class="btn btn-link align-self-center" href="#" id="dropdownSettings" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-cog fa-lg settings_icon"></i>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right mt-3" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item font-weight-bold" href="#" th:text="#{navbar.language}">LANGUAGE</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#"><svg class="custom-icon ger-icon"></svg><span class="custom-icon-text align-top">DE</span></a>
+                            <a class="dropdown-item" href="#"><svg class="custom-icon uk-icon"></svg><span class="custom-icon-text align-top">ENG</span></a>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+
+    <!--Mobile Navbar-->
+    <div class="d-md-none d-lg-none d-xl-none d-sm-block d-xs-block">
+        <nav class="navbar navbar-expand align-items-center m-0">
+            
+            <div class="navbar-collapse order-1 mr-auto">
+                <ul class="navbar-nav">
+                    <a class="navbar-brand nav-bar-icon" href="/">
+                        <img class="logo logo_qr img-fluid" th:src="@{/resources/images/qova_logo_qr.png}" src="../static/resources/images/qova_logo_qr.png" alt="Logo"/>
+                        <img class="logo logo_text img-fluid" th:src="@{/resources/images/qova_logo_text.png}" src="../static/resources/images/qova_logo_text.png" alt="Logo"/>
+                    </a>
+                </ul>
+            </div>
+
+            <div class="navbar-collapse order-2 ml-auto justify-content-end">
+                <div class="navbar-nav">
+                    <a class="mr-3" data-toggle="collapse" href="#mobileCollapse" role="button" aria-expanded="false" aria-controls="mobileCollapse"><i class="fas fa-bars fa-2x text-white"></i></a>
+                </div>
+            </div>
+        </nav>
+        <div class="collapse mobile-collapse" id="mobileCollapse">
+            <ul class="navbar-nav align-items-end">
                 <li class="nav-item media"><a class="nav-link link_to_page" th:text="#{navbar.course}" th:href="@{/courses}">course managment</a></li>
-                <li class="nav-item media" sec:authorize="hasRole('TEILZEIT')"><a class="nav-link link_to_page" th:text="#{navbar.results}" th:href="@{/surveys}">survey results</a></li>
-                <li class="nav-item media" sec:authorize="hasRole('ADMIN')"><a class="nav-link link_to_page" th:text="#{navbar.account}" th:href="@{/account}">accounting</a></li>
+                <li class="nav-item media" sec:authorize="hasRole('TEILZEIT')"><a class="nav-link link_to_page" th:text="#{navbar.results}" th:href="@{/studentBrowser}">survey results</a></li>
+                <li class="nav-item media" sec:authorize="hasRole('ADMIN')"><a class="nav-link link_to_page" th:text="#{navbar.account}" th:href="@{/admin}">accounting</a></li>
                 <li class="nav-item media" sec:authorize="isAnonymous()"><a class="nav-link link_to_page" href="/">Login</a></li>
                 <!--Settings-->
                 <li class="nav-item media dropdown p-0">
@@ -50,9 +94,9 @@
                 </li>
             </ul>
         </div>
-
     </div>
-</nav>
+
+</div>
 </body>
 
 </html>

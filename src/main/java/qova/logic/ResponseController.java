@@ -117,12 +117,12 @@ public class ResponseController {
         }
     }
 
-    @GetMapping("surveySelectAdmin")
-    public String surveSelectAdmin(Model model, @RequestParam UUID id) {
+    @GetMapping("surveySelectType")
+    public String surveySelectType(Model model, @RequestParam UUID id) {
         Optional<Course> crs = courseManagement.findById(id);
         if (crs.isPresent()) {
             model.addAttribute("course", crs.get());
-            return "surveySelectAdmin";
+            return "surveySelectType";
         }
 
         // if course does not exist, redirect to global error page
