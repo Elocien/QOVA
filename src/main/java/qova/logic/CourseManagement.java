@@ -143,18 +143,19 @@ public class CourseManagement {
             course.setName(form.getName());
             course.setSemesterOfStudents(form.getSemesterOfStudents());
             course.setFaculty(form.getFaculty());
+            course.setSemesterString(form.getSemesterString());
 
             // These attributes are NOT editable, when the instance has been finalised!!!
 
             for (CourseType courseType : CourseType.values()) {
-                // Lecture EXISTS, but is toggled OFF
+                // Instance EXISTS, but is toggled OFF
                 if (Boolean.TRUE.equals(course.getInstanceExists(courseType))
                         && Boolean.FALSE.equals(form.getInstanceExists(courseType))) {
 
                     course.getInstance(courseType).setInactive();
                 }
-                // Lecture does NOT EXIST, but is toggled ON
-                if (Boolean.FALSE.equals(course.getInstanceExists(courseType))
+                // Instance does NOT EXIST, but is toggled ON
+                else if (Boolean.FALSE.equals(course.getInstanceExists(courseType))
                         && Boolean.TRUE.equals(form.getInstanceExists(courseType))) {
 
                     // Initialise instanceTitles array
@@ -178,6 +179,22 @@ public class CourseManagement {
                     instance.setInstanceAmount(form.getInstanceAmount(courseType));
                     instance.setInstanceTitles(instanceTitles);
                     instance.setActive();
+                }
+                // The Instance hasn't been activated or deactivate, but has been edited
+                else {
+                    // Update CourseInstance
+                    CourseInstance instance = course.getInstance(courseType);
+
+                    // Set to one for lectures (in case of change, assign
+                    // form.getLectureGroupAmount)
+                    if (courseType.equals(CourseType.LECTURE)) {
+                        instance.setGroupAmount(1);
+                    } else {
+                        instance.setGroupAmount(form.getGroupAmount(courseType));
+                    }
+
+                    //
+                    instance.setInstanceAmount(form.getInstanceAmount(courseType));
                 }
             }
 
