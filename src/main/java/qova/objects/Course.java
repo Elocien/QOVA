@@ -133,32 +133,16 @@ public class Course {
         return (Boolean.TRUE.equals(getPractical().isActive()));
     }
 
-    public void setLecture(CourseInstance lecture) {
-        this.lecture = lecture;
-    }
-
     public CourseInstance getLecture() {
         return this.lecture;
-    }
-
-    public void setTutorial(CourseInstance tutorial) {
-        this.tutorial = tutorial;
     }
 
     public CourseInstance getTutorial() {
         return this.tutorial;
     }
 
-    public void setSeminar(CourseInstance seminar) {
-        this.seminar = seminar;
-    }
-
     public CourseInstance getSeminar() {
         return this.seminar;
-    }
-
-    public void setPractical(CourseInstance practical) {
-        this.practical = practical;
     }
 
     public CourseInstance getPractical() {
