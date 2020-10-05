@@ -160,9 +160,9 @@ public class CourseInstance {
 
     public void setInactive() {
         this.active = false;
-        this.groupAmount = null;
-        this.instanceAmount = null;
-        this.instanceTitles = null;
+        this.groupAmount = 0;
+        this.instanceAmount = 0;
+        this.instanceTitles = new ArrayList<>();
     }
 
     public void setSurveEditedFlag() {
