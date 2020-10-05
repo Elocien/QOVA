@@ -245,7 +245,6 @@ public class CourseManagement {
 
     // Sets the relevant Survey in the course objects, based on the given surveyType
     public void setSurveyforType(Course course, String type, String survey) {
-
         if (type.equals("LECTURE")) {
             course.getLecture().setSurvey(survey);
         } else if (type.equals("TUTORIAL")) {

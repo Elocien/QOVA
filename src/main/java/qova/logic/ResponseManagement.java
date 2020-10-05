@@ -65,11 +65,11 @@ public class ResponseManagement {
         if (stringType.equals("LECTURE")) {
             type = CourseType.LECTURE;
         } else if (stringType.equals("TUTORIAL")) {
-            type = CourseType.LECTURE;
+            type = CourseType.TUTORIAL;
         } else if (stringType.equals("SEMINAR")) {
-            type = CourseType.LECTURE;
+            type = CourseType.SEMINAR;
         } else if (stringType.equals("PRACTICAL")) {
-            type = CourseType.LECTURE;
+            type = CourseType.PRACTICAL;
         } else
             type = null;
 
