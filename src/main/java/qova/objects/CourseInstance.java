@@ -2,6 +2,7 @@ package qova.objects;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
@@ -13,6 +14,8 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OrderColumn;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import jdk.jfr.BooleanFlag;
 import qova.enums.CourseType;
 
@@ -21,8 +24,10 @@ public class CourseInstance {
 
     // Id
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
+    private UUID id;
 
     // Either LECTURE, TUTORIAL, SEMINAR OR PRACTICAL
     @Enumerated
@@ -108,6 +113,10 @@ public class CourseInstance {
         this.instanceTitles = new ArrayList<>();
         this.active = false;
         this.surveyEditedFlag = false;
+    }
+
+    public UUID getId() {
+        return this.id;
     }
 
     public CourseType getCourseType() {

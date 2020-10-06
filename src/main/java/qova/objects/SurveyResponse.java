@@ -5,7 +5,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import qova.enums.CourseType;
 
 @Entity
@@ -21,8 +25,10 @@ public class SurveyResponse {
 
     // -----------------------------------------------------------------------
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
+    private UUID id;
 
     // Course and CourseType are used for more detailed search purposes (primarily
     // when compiling responses into results pdf)
@@ -66,7 +72,7 @@ public class SurveyResponse {
         this.listOfResponses = listOfResponses;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return this.id;
     }
 

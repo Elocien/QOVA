@@ -22,8 +22,8 @@ public class TextResponse extends AbstractResponse {
     protected TextResponse() {
     }
 
-    public TextResponse(String question, Integer surveyPosition, Boolean isDefaultQuestion) {
-        super(question, surveyPosition, ResponseType.TEXT_RESPONSE, isDefaultQuestion);
+    public TextResponse(Integer surveyPosition, Boolean isDefaultQuestion) {
+        super(surveyPosition, ResponseType.TEXT_RESPONSE, isDefaultQuestion);
     }
 
     public List<String> getResponses() {

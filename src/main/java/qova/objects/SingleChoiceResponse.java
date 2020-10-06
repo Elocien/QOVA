@@ -17,45 +17,40 @@ public class SingleChoiceResponse extends AbstractResponse {
 
     // ----------------------------------------------------------------------
 
-    // Array of the different options presented to the user
-    @ElementCollection
-    private List<String> singleChoiceOptions;
-
     // Array of the user response
     @ElementCollection
     private List<Integer> singleChoiceAnswers;
+
+    private Integer numberOfAnswerPossibilities;
 
     // Needed for JPA puposes
     @SuppressWarnings("unused")
     protected SingleChoiceResponse() {
     }
 
-    public SingleChoiceResponse(String question, Integer surveyPosition, List<String> singleChoiceOptions,
+    public SingleChoiceResponse(Integer surveyPosition, Integer numberOfAnswerPossibilities,
             Boolean isDefaultQuestion) {
-        super(question, surveyPosition, ResponseType.SINGLE_CHOICE, isDefaultQuestion);
-        this.singleChoiceOptions = singleChoiceOptions;
-        this.singleChoiceAnswers = new ArrayList<>(this.singleChoiceOptions.size());
+        super(surveyPosition, ResponseType.SINGLE_CHOICE, isDefaultQuestion);
+        this.numberOfAnswerPossibilities = numberOfAnswerPossibilities;
+        this.singleChoiceAnswers = new ArrayList<>();
 
-        // Populate the array
-        for (String s : singleChoiceOptions) {
+        for (int i = 0; i < numberOfAnswerPossibilities; i++) {
             singleChoiceAnswers.add(0);
         }
     }
 
-    public List<String> getSingleChoiceOptions() {
-        return this.singleChoiceOptions;
-    }
-
-    public List<Integer> getSingleChoiceAnswers() {
+    public List<Integer> getMultipleChoiceAnswers() {
         return this.singleChoiceAnswers;
     }
 
-    public void incrementTotal(Integer pos) {
-        Integer totalAtPosition = singleChoiceAnswers.get(pos) + 1;
-        singleChoiceAnswers.set(pos, totalAtPosition);
+    public void incrementTotals(List<Integer> totals) {
+        for (Integer i : totals) {
+            singleChoiceAnswers.set(i, singleChoiceAnswers.get(i) + 1);
+        }
     }
 
-    public Integer getNumberOfOptions() {
-        return this.singleChoiceOptions.size();
+    public Integer getNumberOfAnswerPossibilites() {
+        return this.numberOfAnswerPossibilities;
     }
+
 }

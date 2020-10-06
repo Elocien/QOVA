@@ -11,31 +11,25 @@ import qova.enums.ResponseType;
 @Entity
 public class MultipleChoiceResponse extends AbstractResponse {
 
-    // Array of the different options presented to the user
-    @ElementCollection
-    private List<String> multipleChoiceOptions;
-
     // Array of the user response
     @ElementCollection
     private List<Integer> multipleChoiceAnswers;
+
+    private Integer numberOfAnswerPossibilities;
 
     // Needed for JPA puposes
     @SuppressWarnings("unused")
     protected MultipleChoiceResponse() {
     }
 
-    public MultipleChoiceResponse(String question, Integer surveyPosition, List<String> multipleChoiceOptions,
+    public MultipleChoiceResponse(Integer surveyPosition, Integer numberOfAnswerPossibilities,
             Boolean isDefaultQuestion) {
-        super(question, surveyPosition, ResponseType.MULTIPLE_CHOICE, isDefaultQuestion);
-        this.multipleChoiceOptions = multipleChoiceOptions;
-        this.multipleChoiceAnswers = new ArrayList<>(this.multipleChoiceOptions.size());
-        for (String s : multipleChoiceOptions) {
+        super(surveyPosition, ResponseType.MULTIPLE_CHOICE, isDefaultQuestion);
+        this.numberOfAnswerPossibilities = numberOfAnswerPossibilities;
+        this.multipleChoiceAnswers = new ArrayList<>();
+        for (int i = 0; i < numberOfAnswerPossibilities; i++) {
             multipleChoiceAnswers.add(0);
         }
-    }
-
-    public List<String> getMultipleChoiceOptions() {
-        return this.multipleChoiceOptions;
     }
 
     public List<Integer> getMultipleChoiceAnswers() {
@@ -48,8 +42,8 @@ public class MultipleChoiceResponse extends AbstractResponse {
         }
     }
 
-    public Integer getNumberOfOptions() {
-        return this.multipleChoiceOptions.size();
+    public Integer getNumberOfAnswerPossibilites() {
+        return this.numberOfAnswerPossibilities;
     }
 
 }

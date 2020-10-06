@@ -1,5 +1,7 @@
 package qova.objects;
 
+import java.util.UUID;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -9,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -21,12 +24,10 @@ import qova.enums.ResponseType;
 public class AbstractResponse {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    // container for the question set
-    @Column(length = 1024)
-    private String question;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
+    private UUID id;
 
     // Position in the survey
     private Integer surveyPosition;
@@ -56,24 +57,18 @@ public class AbstractResponse {
      * @param responseType   The {@linkplain qova.enums.ResponseType} of the
      *                       response object
      */
-    public AbstractResponse(String question, Integer surveyPosition, ResponseType responseType,
-            Boolean isDefaultQuestion) {
-        this.question = question;
+    public AbstractResponse(Integer surveyPosition, ResponseType responseType, Boolean isDefaultQuestion) {
         this.surveyPosition = surveyPosition;
         this.responseType = responseType;
         this.isDefaultQuestionFlag = isDefaultQuestion;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return this.id;
     }
 
     public ResponseType getType() {
         return this.responseType;
-    }
-
-    public String getQuestion() {
-        return this.question;
     }
 
     public Integer getSurveyPosition() {
