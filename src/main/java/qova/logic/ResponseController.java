@@ -219,7 +219,7 @@ public class ResponseController {
         // Add stundent ID to SurveyResponse List
 
         // if all goes well
-        return "postSubmissionLanding";
+        return "surveyCheckout";
     }
 
     // ---------------------------------------------------------------------------
