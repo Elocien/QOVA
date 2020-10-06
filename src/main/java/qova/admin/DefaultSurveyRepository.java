@@ -11,15 +11,12 @@ import org.springframework.data.repository.CrudRepository;
 @Repository
 public interface DefaultSurveyRepository extends CrudRepository<DefaultSurvey, Long> {
 
-    public static final Long lectureDefaultSurveyId = 1L;
-    public static final Long tutorialDefaultSurveyId = 2L;
-    public static final Long seminarDefaultSurveyId = 3L;
-    public static final Long practicalDefaultSurveyId = 4L;
+    Optional<DefaultSurvey> findByCourseType(CourseType type);
 
     default DefaultSurvey findLectureSurvey() {
-        Optional<DefaultSurvey> lecture = findById(1L);
+        Optional<DefaultSurvey> lecture = findByCourseType(CourseType.LECTURE);
         if (lecture.isEmpty()) {
-            DefaultSurvey lectureDefaultSurvey = new DefaultSurvey(1L, CourseType.LECTURE);
+            DefaultSurvey lectureDefaultSurvey = new DefaultSurvey(CourseType.LECTURE);
             save(lectureDefaultSurvey);
             return lectureDefaultSurvey;
         } else {
@@ -29,9 +26,9 @@ public interface DefaultSurveyRepository extends CrudRepository<DefaultSurvey, L
     }
 
     default DefaultSurvey findTutorialSurvey() {
-        Optional<DefaultSurvey> tutorial = findById(2L);
+        Optional<DefaultSurvey> tutorial = findByCourseType(CourseType.TUTORIAL);
         if (tutorial.isEmpty()) {
-            DefaultSurvey tutorialDefaultSurvey = new DefaultSurvey(2L, CourseType.TUTORIAL);
+            DefaultSurvey tutorialDefaultSurvey = new DefaultSurvey(CourseType.TUTORIAL);
             save(tutorialDefaultSurvey);
             return tutorialDefaultSurvey;
         } else {
@@ -41,9 +38,9 @@ public interface DefaultSurveyRepository extends CrudRepository<DefaultSurvey, L
     }
 
     default DefaultSurvey findSeminarSurvey() {
-        Optional<DefaultSurvey> seminar = findById(3L);
+        Optional<DefaultSurvey> seminar = findByCourseType(CourseType.SEMINAR);
         if (seminar.isEmpty()) {
-            DefaultSurvey seminarDefaultSurvey = new DefaultSurvey(3L, CourseType.SEMINAR);
+            DefaultSurvey seminarDefaultSurvey = new DefaultSurvey(CourseType.SEMINAR);
             save(seminarDefaultSurvey);
             return seminarDefaultSurvey;
         } else {
@@ -53,9 +50,9 @@ public interface DefaultSurveyRepository extends CrudRepository<DefaultSurvey, L
     }
 
     default DefaultSurvey findPracticalSurvey() {
-        Optional<DefaultSurvey> practical = findById(4L);
+        Optional<DefaultSurvey> practical = findByCourseType(CourseType.PRACTICAL);
         if (practical.isEmpty()) {
-            DefaultSurvey practicalDefaultSurvey = new DefaultSurvey(4L, CourseType.PRACTICAL);
+            DefaultSurvey practicalDefaultSurvey = new DefaultSurvey(CourseType.PRACTICAL);
             save(practicalDefaultSurvey);
             return practicalDefaultSurvey;
         } else {

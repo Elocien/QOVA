@@ -1,19 +1,34 @@
 package qova.admin;
 
+import java.util.UUID;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 
+import org.hibernate.annotations.GenericGenerator;
+
 import qova.enums.CourseType;
+import qova.objects.Course;
 
 @Entity
 public class DefaultSurvey {
 
     // Attributes
     @Id
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
+    private UUID id;
+
     @Lob
     private String defaultSurveyJson;
+
+    @Enumerated
+    private CourseType courseType;
 
     // Needed for JPA purposes
     @SuppressWarnings("unused")
@@ -21,9 +36,9 @@ public class DefaultSurvey {
     }
 
     // Constructor
-    public DefaultSurvey(Long id, CourseType type) {
+    public DefaultSurvey(CourseType type) {
 
-        this.id = id;
+        this.courseType = type;
 
         switch (type) {
             case LECTURE:
@@ -44,8 +59,12 @@ public class DefaultSurvey {
     }
 
     // Getters and Setters
-    public Long getId() {
+    public UUID getId() {
         return this.id;
+    }
+
+    public CourseType getCourseType() {
+        return this.courseType;
     }
 
     public void setDefaultSurveyJson(String surveyJson) {
