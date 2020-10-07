@@ -76,7 +76,7 @@ public class CourseController {
     public String error(Model model, @RequestParam(required = false) String code) {
 
         // add error code to model
-        model.addAttribute("errorCode", code);
+        model.addAttribute("code", code);
 
         // return template
         return "error";
