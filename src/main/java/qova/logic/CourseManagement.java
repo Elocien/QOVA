@@ -7,9 +7,11 @@ import qova.enums.CourseFaculty;
 import qova.enums.CourseType;
 import qova.forms.CourseForm;
 import qova.forms.InstanceTitleForm;
+import qova.objects.AbstractResponse;
 import qova.objects.Course;
 import qova.objects.CourseInstance;
 import qova.objects.SurveyResponse;
+import qova.repositories.AbstractResponseRepository;
 import qova.repositories.BinaryResponseRepository;
 import qova.repositories.CourseInstanceRepository;
 import qova.repositories.CourseRepository;
@@ -45,23 +47,14 @@ public class CourseManagement {
     private final CourseRepository coursesRepo;
     private final CourseInstanceRepository courseInstancesRepo;
     private final SurveyResponseRepository surveyResponseRepository;
-    private final BinaryResponseRepository binaryResponseRepository;
-    private final TextResponseRepository textResponseRepository;
-    private final SingleChoiceResponseRepository singleChoiceResponseRepository;
-    private final MultipleChoiceResponseRepository multipleChoiceResponseRepository;
+    private final AbstractResponseRepository abstractResponseRepository;
 
     @Autowired
     public CourseManagement(CourseRepository coursesRepo, CourseInstanceRepository courseInstancesRepo,
-            SurveyResponseRepository surveyResponseRepository, BinaryResponseRepository binaryResponseRepository,
-            TextResponseRepository textResponseRepository,
-            SingleChoiceResponseRepository singleChoiceResponseRepository,
-            MultipleChoiceResponseRepository multipleChoiceResponseRepository) {
+            SurveyResponseRepository surveyResponseRepository, AbstractResponseRepository abstractResponseRepository) {
 
         this.surveyResponseRepository = Objects.requireNonNull(surveyResponseRepository);
-        this.binaryResponseRepository = Objects.requireNonNull(binaryResponseRepository);
-        this.textResponseRepository = Objects.requireNonNull(textResponseRepository);
-        this.singleChoiceResponseRepository = Objects.requireNonNull(singleChoiceResponseRepository);
-        this.multipleChoiceResponseRepository = Objects.requireNonNull(multipleChoiceResponseRepository);
+        this.abstractResponseRepository = Objects.requireNonNull(abstractResponseRepository);
         this.coursesRepo = Objects.requireNonNull(coursesRepo);
         this.courseInstancesRepo = Objects.requireNonNull(courseInstancesRepo);
     }
@@ -150,18 +143,19 @@ public class CourseManagement {
             course.setName(form.getName());
             course.setSemesterOfStudents(form.getSemesterOfStudents());
             course.setFaculty(form.getFaculty());
+            course.setSemesterString(form.getSemesterString());
 
             // These attributes are NOT editable, when the instance has been finalised!!!
 
             for (CourseType courseType : CourseType.values()) {
-                // Lecture EXISTS, but is toggled OFF
+                // Instance EXISTS, but is toggled OFF
                 if (Boolean.TRUE.equals(course.getInstanceExists(courseType))
                         && Boolean.FALSE.equals(form.getInstanceExists(courseType))) {
 
                     course.getInstance(courseType).setInactive();
                 }
-                // Lecture does NOT EXIST, but is toggled ON
-                if (Boolean.FALSE.equals(course.getInstanceExists(courseType))
+                // Instance does NOT EXIST, but is toggled ON
+                else if (Boolean.FALSE.equals(course.getInstanceExists(courseType))
                         && Boolean.TRUE.equals(form.getInstanceExists(courseType))) {
 
                     // Initialise instanceTitles array
@@ -185,6 +179,22 @@ public class CourseManagement {
                     instance.setInstanceAmount(form.getInstanceAmount(courseType));
                     instance.setInstanceTitles(instanceTitles);
                     instance.setActive();
+                }
+                // The Instance hasn't been activated or deactivate, but has been edited
+                else {
+                    // Update CourseInstance
+                    CourseInstance instance = course.getInstance(courseType);
+
+                    // Set to one for lectures (in case of change, assign
+                    // form.getLectureGroupAmount)
+                    if (courseType.equals(CourseType.LECTURE)) {
+                        instance.setGroupAmount(1);
+                    } else {
+                        instance.setGroupAmount(form.getGroupAmount(courseType));
+                    }
+
+                    //
+                    instance.setInstanceAmount(form.getInstanceAmount(courseType));
                 }
             }
 
@@ -235,7 +245,6 @@ public class CourseManagement {
 
     // Sets the relevant Survey in the course objects, based on the given surveyType
     public void setSurveyforType(Course course, String type, String survey) {
-
         if (type.equals("LECTURE")) {
             course.getLecture().setSurvey(survey);
         } else if (type.equals("TUTORIAL")) {
@@ -502,13 +511,9 @@ public class CourseManagement {
         // Get all surveyResponses for a course
         Iterable<SurveyResponse> surveyResponses = surveyResponseRepository.findByCourse(course);
 
-        // delete all instances
-        for (SurveyResponse r : surveyResponses) {
-            binaryResponseRepository.deleteAll(binaryResponseRepository.findBySurveyResponse(r));
-            textResponseRepository.deleteAll(textResponseRepository.findBySurveyResponse(r));
-            singleChoiceResponseRepository.deleteAll(singleChoiceResponseRepository.findBySurveyResponse(r));
-            multipleChoiceResponseRepository.deleteAll(multipleChoiceResponseRepository.findBySurveyResponse(r));
-        }
+        for (SurveyResponse surveyResponse : surveyResponses)
+            // delete all instances
+            abstractResponseRepository.deleteAll(surveyResponse.getListOfResponses());
 
         // delete the surveyresponses
         surveyResponseRepository.deleteAll(surveyResponses);
@@ -518,7 +523,7 @@ public class CourseManagement {
     // TODO: Remove Before Production
 
     // Test Method, remove in final build
-    public void TestCreateCourse() {
+    public Course TestCreateCourse() {
         var name = "Rechnernetze";
 
         List<String> lectureTitles = new ArrayList<>();
@@ -564,8 +569,10 @@ public class CourseManagement {
         var courseDate = LocalDate.of(2020, 10, 4);
         var semesterString = "SoSe 2020";
 
-        coursesRepo.save(new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty,
-                semesterString, courseDate));
+        Course course = new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty,
+                semesterString, courseDate);
+        coursesRepo.save(course);
+        return course;
     }
 
     public Course TimTestCreateCourse() {

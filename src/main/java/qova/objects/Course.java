@@ -5,13 +5,16 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
 
 //id-generator imports
 import org.hibernate.annotations.GenericGenerator;
 
+import jdk.jfr.BooleanFlag;
 import qova.enums.CourseFaculty;
 import qova.enums.CourseType;
 
@@ -48,6 +51,7 @@ public class Course {
     private Integer semesterOfStudents;
 
     // Faculty the course belongs to
+    @Enumerated
     private CourseFaculty faculty;
 
     // The date at which indicates to which semester the course belongs to (used to
@@ -59,6 +63,7 @@ public class Course {
 
     // Flag used to indicate that the course is finalised and cannot be edited
     // anymore
+    @BooleanFlag
     private Boolean finalisedFlag;
 
     // Needed for JPA purposes
@@ -128,32 +133,16 @@ public class Course {
         return (Boolean.TRUE.equals(getPractical().isActive()));
     }
 
-    public void setLecture(CourseInstance lecture) {
-        this.lecture = lecture;
-    }
-
     public CourseInstance getLecture() {
         return this.lecture;
-    }
-
-    public void setTutorial(CourseInstance tutorial) {
-        this.tutorial = tutorial;
     }
 
     public CourseInstance getTutorial() {
         return this.tutorial;
     }
 
-    public void setSeminar(CourseInstance seminar) {
-        this.seminar = seminar;
-    }
-
     public CourseInstance getSeminar() {
         return this.seminar;
-    }
-
-    public void setPractical(CourseInstance practical) {
-        this.practical = practical;
     }
 
     public CourseInstance getPractical() {

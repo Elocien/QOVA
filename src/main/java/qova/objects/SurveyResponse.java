@@ -5,13 +5,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.GenericGenerator;
 
 import qova.enums.CourseType;
 
@@ -20,8 +25,10 @@ public class SurveyResponse {
 
     // -----------------------------------------------------------------------
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
+    private UUID id;
 
     // Course and CourseType are used for more detailed search purposes (primarily
     // when compiling responses into results pdf)
@@ -44,27 +51,37 @@ public class SurveyResponse {
     @ElementCollection
     private Map<String, Date> listOfStudentsThatSubmitted;
 
+    @ElementCollection
+    @OneToMany
+    private List<AbstractResponse> listOfResponses;
+
     // Needed for JPA puposes
     @SuppressWarnings("unused")
     protected SurveyResponse() {
     }
 
     // Constructor
-    public SurveyResponse(Course course, CourseType type, Integer instanceNumber, Integer groupNumber) {
+    public SurveyResponse(Course course, CourseType type, Integer instanceNumber, Integer groupNumber,
+            List<AbstractResponse> listOfResponses) {
         this.course = course;
         this.courseType = type;
         this.instanceNumber = instanceNumber;
         this.groupNumber = groupNumber;
         this.numberOfSubmissions = 0;
         this.listOfStudentsThatSubmitted = new HashMap<>();
+        this.listOfResponses = listOfResponses;
     }
 
-    public Long getId() {
+    public UUID getId() {
         return this.id;
     }
 
     public Course getCourse() {
         return this.course;
+    }
+
+    public CourseInstance getCourseInstance() {
+        return this.course.getInstance(courseType);
     }
 
     public CourseType getCourseType() {
@@ -99,6 +116,10 @@ public class SurveyResponse {
     public void addStundentIdToSubmissionListAndIncrementCounter(String id) {
         this.listOfStudentsThatSubmitted.put(id, new Date());
         this.numberOfSubmissions++;
+    }
+
+    public List<AbstractResponse> getListOfResponses() {
+        return this.listOfResponses;
     }
 
 }
