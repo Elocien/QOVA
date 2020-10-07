@@ -38,10 +38,8 @@ public class SingleChoiceResponse extends AbstractResponse {
         return this.singleChoiceAnswers;
     }
 
-    public void incrementTotals(List<Integer> totals) {
-        for (Integer i : totals) {
-            singleChoiceAnswers.set(i, singleChoiceAnswers.get(i) + 1);
-        }
+    public void incrementTotal(Integer position) {
+        this.singleChoiceAnswers.set(position, singleChoiceAnswers.get(position) + 1);
     }
 
     public Integer getNumberOfAnswerPossibilites() {
