@@ -206,19 +206,19 @@
                             <div id="carouselExampleIndicators" class="carousel slide" interval="false">
 
                                 <ol class="carousel-indicators">
-                                    <li th:each="course_type: ${type_list}" th:if="!${__'course.'+${course_type}+'.surveyEditedFlag'__}" data-target="#carouselExampleIndicators" data-slide-to="0"></li>
+                                    <li th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" data-target="#carouselExampleIndicators" data-slide-to="0"></li>
                                 </ol>
 
                                 <div class="carousel-inner">
 
-                                    <div th:each="course_type: ${type_list}" th:if="!${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="carousel-item">
+                                    <div th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="carousel-item">
                                         <img class="d-block w-100 mb-5" th:src="'data:image/jpeg;base64,' + ${__${course_type} + 'QRCode'__}" alt=">.<">
                                         <div class="carousel-caption text-dark d-block mb-1">
                                             <h5 th:text="#{${course_type}}">TEXT</h5>
                                         </div>
                                     </div>
 
-                                    <div th:if="${course.lecture.surveyEditedFlag and course.tutorial.surveyEditedFlag and course.seminar.surveyEditedFlag and course.practical.surveyEditedFlag}" class="carousel-item">
+                                    <div th:if="${!course.lecture.surveyEditedFlag and !course.tutorial.surveyEditedFlag and !course.seminar.surveyEditedFlag and !course.practical.surveyEditedFlag}" class="carousel-item">
                                         <img class="d-block w-100 mb-5 bg-dark" src="..." alt="" style="width: 300px; height: 300px;">
                                         <div class="carousel-caption text-dark d-block mb-0">
                                             <h5>No Surveys yet</h5>
@@ -243,15 +243,15 @@
                     <div th:if="!${course.lecture.surveyEditedFlag and course.tutorial.surveyEditedFlag and course.seminar.surveyEditedFlag and course.practical.surveyEditedFlag}" class="col-12 text-center">
                         <p class="m-0 font-weight-light mt-3" th:text="#{detail.download}"></p>
                         <div class="btn-group row" role="group" aria-label="First group">
-                            <a th:each="course_type: ${type_list}" th:if="!${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:href="${'/qrcode?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" target="_blank" href="#">TEXT</a>
+                            <a th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:href="${'/qrcode?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" target="_blank" href="#">TEXT</a>
                         </div>
                         <p class="m-0 font-weight-light mt-2" th:text="#{detail.download.link}"></p>
                         <div class="btn-group row" role="group" aria-label="First group">
-                            <button th:each="course_type: ${type_list}" th:if="!${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:onclick="copy_url([[${course_type}]])">TEXT</button>
+                            <button th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:onclick="copy_url([[${course_type}]])">TEXT</button>
                         </div>
                         <div class="row justify-content-center align-items-center mt-2">
                             <p id="url-label" class="m-0" th:text="|#{copied}:|" style="display: none;">Copied: </p>
-                            <input class="url-input" th:each="course_type: ${type_list}" th:if="!${__'course.'+${course_type}+'.surveyEditedFlag'__}" th:id="|${course_type}Link|" th:name="|${course_type}Link|" th:value="${__${course_type}+'Link'__}" style="display: none;" readonly>
+                            <input class="url-input" th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" th:id="|${course_type}Link|" th:name="|${course_type}Link|" th:value="${__${course_type}+'Link'__}" style="display: none;" readonly>
                         </div>
                     </div>
 

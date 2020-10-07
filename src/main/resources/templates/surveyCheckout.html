@@ -1,0 +1,23 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<title th:text="#{title.checkout}">TITLE</title>
+</head>
+<body>
+<div th:include="navbar"></div>
+<div class="container-fluid mt-4 mb-4">
+    <div class="row justify-content-center">
+        
+        <!--Headline-->
+        <div class="col-12 text-center justify-content-center">
+            <h2 class="font-weight-bold huge-headline" th:text="#{checkout.headline}">CHECKOUT</h2>
+            <h5 class="font-weight-light" th:text="#{checkout.description}">CHECKOUT DESCRIPTION</h5>
+            
+            <img class="img-fluid" th:src="@{/resources/images/ty_cat.png}" src="../static/resources/images/ty_cat.png" alt="CAT"/>
+        </div>
+
+    </div>
+</div>
+<footer th:replace="footer"></footer>
+</body>
+</html>
