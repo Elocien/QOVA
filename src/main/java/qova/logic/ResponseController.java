@@ -1,5 +1,6 @@
 package qova.logic;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -23,6 +24,7 @@ import qova.enums.CourseType;
 import qova.forms.SurveyForm;
 import qova.forms.SurveySelectForm;
 import qova.objects.Course;
+import qova.objects.CourseInstance;
 import qova.objects.SurveyResponse;
 
 @Controller // This means that this class is a Controller
@@ -220,7 +222,7 @@ public class ResponseController {
     // ---------------------------------------------------------------------------
 
     /**
-     * Used to retrieve the results for a given questionnaire
+     * Used to retrieve the results for a given questionnaire.
      * 
      * @param model    {@link org.springframework.ui.Model}
      * @param type     {@linkplain qova.enums.CourseType}
@@ -233,16 +235,28 @@ public class ResponseController {
     @GetMapping("/surveyresults")
     public String surveyResultsTest(Model model, @RequestParam String type, @RequestParam UUID id,
             @RequestParam String group, @RequestParam String instance) {
+
+        // The Course object in an optional
         Optional<Course> crs = courseManagement.findById(id);
         if (crs.isPresent()) {
-            Optional<SurveyResponse> surveyResponse = responseManagement
-                    .findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(crs.get(),
-                            responseManagement.parseCourseType(type), Integer.valueOf(group),
-                            Integer.valueOf(instance));
 
-            if (surveyResponse.isPresent()) {
-                model.addAttribute("response", surveyResponse);
-            }
+            CourseType courseType = responseManagement.parseCourseType(type);
+
+            // The actual Course Object
+            Course course = crs.get();
+
+            // The courseInstance Object
+            CourseInstance courseInstance = course.getInstance(courseType);
+
+            // Eine Liste aller SurveyResponses
+            List<SurveyResponse> listOfSurveyResponses = responseManagement.findSurveyResponses(course, courseType,
+                    group, instance);
+
+            JSONArray resultsJsonString = responseManagement.generateSurveyResultsJson(courseInstance,
+                    listOfSurveyResponses);
+
+            model.addAttribute("resultsJson", resultsJsonString);
+
         }
         return "surveyResultsTest";
     }

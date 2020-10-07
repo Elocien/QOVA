@@ -320,6 +320,24 @@ public class ResponseManagement {
         return listOfResponses;
     }
 
+    public JSONArray generateSurveyResultsJson(CourseInstance courseInstance,
+            List<SurveyResponse> listOfSurveyResponses) {
+
+        // Die CourseInstance hat eine methode,
+        // getOptionsForResponseAtPosition(Integer position), welche dir die optionen
+        // (also z.b. "Die Vorlesung war gut", "Die Vorlesung war ok", "Die Vorlesung
+        // war schlecht") als List zurück gibt. Das brauchts du für die MultipleChoice
+        // und SingleChoiceResponse dinger, um die optionen darzustellen. Dazu hat jede
+        // AbstractResponse, die superclass von den BinaryResponse, TextResponse, etc.
+        // eine methode getQuestion(), welche dir die frage zu der response liefert.
+        // Beide methoden brauchen die position der frage in der survey, welche bei 0
+        // startet. Essentially musst du dir alle werte holen, zusammenrechnen, und dann
+        // in den JSONArray packen, um ihn dann im frontend zu bearbeiten.
+
+        JSONArray jsonArray = new JSONArray();
+        return jsonArray;
+    }
+
     public List<SurveyResponse> findSurveyResponses(Course course, CourseType type, String groupNumber,
             String instanceNumber) {
 
