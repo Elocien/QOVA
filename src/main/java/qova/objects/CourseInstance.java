@@ -9,15 +9,17 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OrderColumn;
 
 import org.hibernate.annotations.GenericGenerator;
+import org.json.JSONObject;
+import org.json.JSONArray;
 
 import jdk.jfr.BooleanFlag;
 import qova.enums.CourseType;
+import qova.enums.ResponseType;
 
 @Entity
 public class CourseInstance {
@@ -180,6 +182,24 @@ public class CourseInstance {
 
     public Boolean getSurveyEditedFlag() {
         return this.surveyEditedFlag;
+    }
+
+    public List<String> getOptionsForResponseAtPosition(Integer position) {
+
+        JSONArray jsonArray = new JSONArray(survey);
+        JSONObject jsonObject = jsonArray.getJSONObject(position);
+
+        JSONArray answerOptions = jsonObject.getJSONArray("answers");
+
+        // Array of all possibilieties, passed to the constructor of the
+        // MultipleChoiceResponse
+        ArrayList<String> singleChoiceOptions = new ArrayList<>(answerOptions.length());
+
+        for (int j = 0; j < answerOptions.length(); j++) {
+            singleChoiceOptions.add(answerOptions.getString(j));
+        }
+
+        return singleChoiceOptions;
     }
 
 }
