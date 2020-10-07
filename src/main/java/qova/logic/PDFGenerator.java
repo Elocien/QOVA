@@ -37,7 +37,6 @@ import qova.enums.LocalizationOption;
 import qova.enums.ResponseType;
 import qova.objects.AbstractResponse;
 import qova.objects.BinaryResponse;
-import qova.objects.CourseInstance;
 import qova.objects.MultipleChoiceResponse;
 import qova.objects.SingleChoiceResponse;
 import qova.objects.SurveyResponse;

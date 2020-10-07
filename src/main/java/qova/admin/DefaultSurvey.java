@@ -12,7 +12,6 @@ import javax.persistence.Lob;
 import org.hibernate.annotations.GenericGenerator;
 
 import qova.enums.CourseType;
-import qova.objects.Course;
 
 @Entity
 public class DefaultSurvey {

@@ -7,7 +7,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -89,7 +88,7 @@ public class ResponseManagement {
     }
 
     // PDF Generation (ENGLISH)
-    public byte[] generatePDF_en(Course course, CourseType type, Integer groupNumber, Integer instanceNumber)
+    public byte[] generatePDFEnglish(Course course, CourseType type, Integer groupNumber, Integer instanceNumber)
             throws Exception {
 
         // retrieve the SurveyResponse object from repository
@@ -112,7 +111,7 @@ public class ResponseManagement {
      * @return
      * @throws Exception
      */
-    public byte[] generateCSV_en(List<SurveyResponse> listOfSurveyResponses) throws Exception {
+    public byte[] generateCSVEnglish(List<SurveyResponse> listOfSurveyResponses) throws Exception {
 
         if (listOfSurveyResponses.isEmpty()) {
             return new byte[0];

@@ -140,7 +140,6 @@ public class responseTest extends AbstractIntegrationTest {
     @Test
     public void SingleChoiceConstructorTest() throws Exception {
 
-        String question = "Rate the lecutre from 1 to 5";
         var surveyPosition = 5;
         var isDefaultQuestion = false;
 

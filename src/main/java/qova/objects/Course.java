@@ -9,7 +9,6 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.Temporal;
 
 //id-generator imports
 import org.hibernate.annotations.GenericGenerator;

@@ -7,11 +7,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import qova.AbstractIntegrationTest;
 import qova.enums.CourseType;
-import qova.objects.Course;
 import qova.objects.CourseInstance;
 
 public class courseInstanceTest extends AbstractIntegrationTest {

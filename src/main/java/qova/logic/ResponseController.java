@@ -1,7 +1,5 @@
 package qova.logic;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -91,7 +89,6 @@ public class ResponseController {
 
     // ---------------------------------------------------------------------------
 
-    // TODO: rename path variables
     // Validation of entry of surveySelect page, and redirect to the actual survey
     @PostMapping("surveySelect")
     public String selectSurveySubmission(Model model, @ModelAttribute("form") SurveySelectForm form,
@@ -134,11 +131,9 @@ public class ResponseController {
 
     // Mapping for Survey HTML
     @GetMapping("survey")
-    public String SurveyView(Model model, @RequestParam(required = false) UUID id,
+    public String surveyView(Model model, @RequestParam(required = false) UUID id,
             @RequestParam(required = false) String type, @RequestParam(required = false) String group,
             @RequestParam(required = false) String instance) {
-
-        System.out.println("Yes made it");
 
         // redirect
         if (id == null || type == null || group == null || instance == null) {
@@ -276,7 +271,7 @@ public class ResponseController {
     @GetMapping("/generatePDF")
     public HttpEntity<byte[]> generatePdf(@RequestParam UUID id, @RequestParam String type,
             @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
-            throws NumberFormatException, IOException, Exception {
+            throws Exception {
 
         // generate filename
         String filename = "testPdf.pdf";
@@ -295,7 +290,7 @@ public class ResponseController {
         }
 
         // Generate PDF
-        byte[] pdf = responseManagement.generatePDF_en(crs.get(), courseType, Integer.parseInt(groupNumber),
+        byte[] pdf = responseManagement.generatePDFEnglish(crs.get(), courseType, Integer.parseInt(groupNumber),
                 Integer.parseInt(instanceNumber));
 
         // Set HTTP headers and return HttpEntity
@@ -304,7 +299,7 @@ public class ResponseController {
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
         header.setContentLength(pdf.length);
 
-        return new HttpEntity<byte[]>(pdf, header);
+        return new HttpEntity<>(pdf, header);
     }
 
     // CSV Generation
@@ -330,7 +325,7 @@ public class ResponseController {
         }
 
         // Generate CSV
-        byte[] csv = responseManagement.generateCSV_en(
+        byte[] csv = responseManagement.generateCSVEnglish(
                 responseManagement.findSurveyResponses(crs.get(), courseType, groupNumber, instanceNumber));
 
         if (csv == new byte[0]) {
@@ -343,7 +338,7 @@ public class ResponseController {
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
         header.setContentLength(csv.length);
 
-        return new HttpEntity<byte[]>(csv, header);
+        return new HttpEntity<>(csv, header);
     }
 
     // test method
@@ -361,7 +356,7 @@ public class ResponseController {
 
         // Generate PDF
         byte[] pdf = responseManagement
-                .generateCSV_en(responseManagement.findSurveyResponses(crs, CourseType.TUTORIAL, "1", "all"));
+                .generateCSVEnglish(responseManagement.findSurveyResponses(crs, CourseType.TUTORIAL, "1", "all"));
 
         // Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();
@@ -369,7 +364,7 @@ public class ResponseController {
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "csvTest.csv");
         header.setContentLength(pdf.length);
 
-        return new HttpEntity<byte[]>(pdf, header);
+        return new HttpEntity<>(pdf, header);
     }
 
 }

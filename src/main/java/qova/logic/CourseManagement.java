@@ -7,18 +7,13 @@ import qova.enums.CourseFaculty;
 import qova.enums.CourseType;
 import qova.forms.CourseForm;
 import qova.forms.InstanceTitleForm;
-import qova.objects.AbstractResponse;
 import qova.objects.Course;
 import qova.objects.CourseInstance;
 import qova.objects.SurveyResponse;
 import qova.repositories.AbstractResponseRepository;
-import qova.repositories.BinaryResponseRepository;
 import qova.repositories.CourseInstanceRepository;
 import qova.repositories.CourseRepository;
-import qova.repositories.MultipleChoiceResponseRepository;
-import qova.repositories.SingleChoiceResponseRepository;
 import qova.repositories.SurveyResponseRepository;
-import qova.repositories.TextResponseRepository;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
