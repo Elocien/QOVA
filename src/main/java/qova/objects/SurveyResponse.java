@@ -80,6 +80,10 @@ public class SurveyResponse {
         return this.course;
     }
 
+    public CourseInstance getCourseInstance() {
+        return this.course.getInstance(courseType);
+    }
+
     public CourseType getCourseType() {
         return this.courseType;
     }

@@ -202,4 +202,12 @@ public class CourseInstance {
         return singleChoiceOptions;
     }
 
+    // We assume a JSONArray can be created without exception, as this is checked
+    // when a created survey is submitted
+    public String getQuestionTextForQuestionAtPosition(Integer position) {
+        JSONArray jsonArray = new JSONArray(survey);
+
+        return jsonArray.getJSONObject(position).getString("question");
+    }
+
 }

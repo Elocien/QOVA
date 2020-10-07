@@ -3,13 +3,8 @@ package qova.objects;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import qova.enums.ResponseType;
 
 @Entity
@@ -39,7 +34,7 @@ public class SingleChoiceResponse extends AbstractResponse {
         }
     }
 
-    public List<Integer> getMultipleChoiceAnswers() {
+    public List<Integer> getSingleChoiceAnswers() {
         return this.singleChoiceAnswers;
     }
 
