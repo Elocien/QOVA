@@ -23,6 +23,7 @@ import qova.admin.AdminManagement;
 import qova.enums.CourseType;
 import qova.forms.SurveyForm;
 import qova.forms.SurveySelectForm;
+import qova.objects.AbstractResponse;
 import qova.objects.Course;
 import qova.objects.CourseInstance;
 import qova.objects.SurveyResponse;
@@ -182,6 +183,10 @@ public class ResponseController {
             return "error?code=" + courseNotFound;
         }
 
+        // Get the CourseType
+        CourseType courseType = responseManagement.parseCourseType(type);
+
+        // Initialise JSONArray
         JSONArray studentResponseJson;
 
         // get JSON Response
@@ -191,7 +196,7 @@ public class ResponseController {
             return "error?code=" + internalError;
         }
 
-        // fetch course and go to details if present
+        // fetch course
         Optional<Course> crs = courseManagement.findById(id);
 
         // Validate that course exists, and that the survey is not empty
@@ -199,13 +204,18 @@ public class ResponseController {
 
             Course course = crs.get();
 
+            responseManagement.verifyStudentResponseJson(studentResponseJson,
+                    course.getInstance(courseType).getSurvey());
+
             Optional<SurveyResponse> survRsp = responseManagement
-                    .findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course,
-                            responseManagement.parseCourseType(type), Integer.valueOf(group),
-                            Integer.valueOf(instance));
+                    .findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, courseType,
+                            Integer.valueOf(group), Integer.valueOf(instance));
 
             if (survRsp.isPresent()) {
                 SurveyResponse surveyResponse = survRsp.get();
+
+                // The manager method that increments & sets the correct values
+                responseManagement.submitStudentResponse(surveyResponse, studentResponseJson);
 
             }
 

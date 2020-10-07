@@ -1,6 +1,7 @@
 package qova.logic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -149,6 +150,29 @@ public class ResponseManagement {
         // [{"type":"YesNo","question":""},{"type":"MultipleChoice","question":"","answers":["1","2","3","4","5"]},{"type":"DropDown","question":"","answers":["Answer","Answer","Answer"]}]
 
         return true;
+    }
+
+    /**
+     * Verifies the response of the student. Also makes sure that all quesitons were
+     * answered
+     * 
+     * @param json {@link org.json.JSONArray}
+     * @return A boolean flag, which is handled in the controller
+     */
+    public Boolean verifyStudentResponseJson(JSONArray studentResponseJson, String surveyAsString) {
+
+        try {
+            Integer surveyArrayLength = new JSONArray(surveyAsString).length();
+            if (studentResponseJson.length() == surveyArrayLength) {
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+
+        // TODO: Check for other malicious strings
+
+        return false;
     }
 
     /**
@@ -361,6 +385,38 @@ public class ResponseManagement {
         }
 
         return listOfSurveyResponses;
+    }
+
+    public void submitStudentResponse(SurveyResponse surveyResponse, JSONArray studentResponseJson) {
+
+        Integer surveyPosition = 0;
+
+        JSONArray currentPositionArray = studentResponseJson.getJSONArray(surveyPosition);
+
+        for (AbstractResponse abstractResponse : surveyResponse.getListOfResponses()) {
+
+            if (abstractResponse instanceof qova.objects.BinaryResponse) {
+                if (currentPositionArray.getInt(0) == 0) {
+                    ((BinaryResponse) abstractResponse).incrementYes();
+                } else {
+                    ((BinaryResponse) abstractResponse).incrementNo();
+                }
+            }
+
+            if (abstractResponse instanceof qova.objects.TextResponse) {
+                ((TextResponse) abstractResponse).addTextSubmission(currentPositionArray.getString(0));
+            }
+
+            if (abstractResponse instanceof qova.objects.SingleChoiceResponse) {
+                ((SingleChoiceResponse) abstractResponse).incrementTotal(currentPositionArray.getInt(0));
+            }
+
+            if (abstractResponse instanceof qova.objects.MultipleChoiceResponse) {
+                ((MultipleChoiceResponse) abstractResponse).incrementTotals(currentPositionArray);
+            }
+
+            surveyPosition++;
+        }
     }
 
     /**

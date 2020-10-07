@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.json.JSONArray;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -45,18 +46,21 @@ public class responseTest extends AbstractIntegrationTest {
 
         MultipleChoiceResponse mcr = new MultipleChoiceResponse(1, 5, true);
 
-        List<Integer> mcAnswers1 = new ArrayList<>();
-        mcAnswers1.add(0);
-        mcAnswers1.add(1);
-        mcAnswers1.add(3);
+        List<Integer> Answers1 = new ArrayList<>();
+        Answers1.add(0);
+        Answers1.add(1);
+        Answers1.add(3);
+        JSONArray mcAnswers1 = new JSONArray(Answers1);
 
-        List<Integer> mcAnswers2 = new ArrayList<>();
-        mcAnswers2.add(1);
-        mcAnswers2.add(4);
+        List<Integer> Answers2 = new ArrayList<>();
+        Answers2.add(1);
+        Answers2.add(4);
+        JSONArray mcAnswers2 = new JSONArray(Answers2);
 
-        List<Integer> mcAnswers3 = new ArrayList<>();
-        mcAnswers3.add(2);
-        mcAnswers3.add(4);
+        List<Integer> Answers3 = new ArrayList<>();
+        Answers3.add(2);
+        Answers3.add(4);
+        JSONArray mcAnswers3 = new JSONArray(Answers3);
 
         for (int i = 0; i < 25; i++) {
             mcr.incrementTotals(mcAnswers1);
@@ -182,18 +186,21 @@ public class responseTest extends AbstractIntegrationTest {
 
         MultipleChoiceResponse mcr = new MultipleChoiceResponse(surveyPosition, 5, isDefaultQuestion);
 
-        List<Integer> mcAnswers1 = new ArrayList<>();
-        mcAnswers1.add(0);
-        mcAnswers1.add(1);
-        mcAnswers1.add(3);
+        List<Integer> Answers1 = new ArrayList<>();
+        Answers1.add(0);
+        Answers1.add(1);
+        Answers1.add(3);
+        JSONArray mcAnswers1 = new JSONArray(Answers1);
 
-        List<Integer> mcAnswers2 = new ArrayList<>();
-        mcAnswers2.add(1);
-        mcAnswers2.add(4);
+        List<Integer> Answers2 = new ArrayList<>();
+        Answers2.add(1);
+        Answers2.add(4);
+        JSONArray mcAnswers2 = new JSONArray(Answers2);
 
-        List<Integer> mcAnswers3 = new ArrayList<>();
-        mcAnswers3.add(2);
-        mcAnswers3.add(4);
+        List<Integer> Answers3 = new ArrayList<>();
+        Answers3.add(2);
+        Answers3.add(4);
+        JSONArray mcAnswers3 = new JSONArray(Answers3);
 
         for (int i = 0; i < 25; i++) {
             mcr.incrementTotals(mcAnswers1);
