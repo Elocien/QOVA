@@ -1,6 +1,7 @@
 package qova.objects;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +20,6 @@ import org.json.JSONArray;
 
 import jdk.jfr.BooleanFlag;
 import qova.enums.CourseType;
-import qova.enums.ResponseType;
 
 @Entity
 public class CourseInstance {
@@ -187,19 +187,32 @@ public class CourseInstance {
     public List<String> getOptionsForResponseAtPosition(Integer position) {
 
         JSONArray jsonArray = new JSONArray(survey);
-        JSONObject jsonObject = jsonArray.getJSONObject(position);
-
-        JSONArray answerOptions = jsonObject.getJSONArray("answers");
-
-        // Array of all possibilieties, passed to the constructor of the
-        // MultipleChoiceResponse
-        ArrayList<String> singleChoiceOptions = new ArrayList<>(answerOptions.length());
-
-        for (int j = 0; j < answerOptions.length(); j++) {
-            singleChoiceOptions.add(answerOptions.getString(j));
+        JSONObject jsonObject;
+        try {
+            jsonObject = jsonArray.getJSONObject(position);
+        } catch (Exception e) {
+            return new ArrayList<>();
         }
 
-        return singleChoiceOptions;
+        if (jsonObject.getString("type").equals("OnetoFive")) {
+            return new ArrayList<>(Arrays.asList("1", "2", "3", "4", "5"));
+        } else if (jsonObject.getString("type").equals("SingleChoice")) {
+            JSONArray answerOptions = jsonObject.getJSONArray("answers");
+
+            // Array of all possibilieties, passed to the constructor of the
+            // MultipleChoiceResponse
+            ArrayList<String> singleChoiceOptions = new ArrayList<>(answerOptions.length());
+
+            for (int j = 0; j < answerOptions.length(); j++) {
+                singleChoiceOptions.add(answerOptions.getString(j));
+            }
+
+            return singleChoiceOptions;
+        }
+
+        else {
+            return new ArrayList<>();
+        }
     }
 
     // We assume a JSONArray can be created without exception, as this is checked

@@ -297,6 +297,23 @@ public class ResponseManagement {
                     }
                     break;
 
+                case "OnetoFive":
+                    // Array of all possibilities
+                    numberOfAnswerPossibilities = 5;
+                    try {
+                        defaultQuestionFlag = jsonObject.getBoolean("default");
+                    } catch (Exception e) {
+                        defaultQuestionFlag = false;
+                    }
+
+                    for (int sublistPosition = 0; sublistPosition < numberOfCopies; sublistPosition++) {
+                        SingleChoiceResponse scr = new SingleChoiceResponse(surveyPosition, numberOfAnswerPossibilities,
+                                defaultQuestionFlag);
+                        singleChoiceResponseRepository.save(scr);
+                        listOfResponses.get(sublistPosition).add(scr);
+                    }
+                    break;
+
                 default:
                     break;
             }
