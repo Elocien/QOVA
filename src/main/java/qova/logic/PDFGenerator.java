@@ -37,6 +37,7 @@ import qova.enums.LocalizationOption;
 import qova.enums.ResponseType;
 import qova.objects.AbstractResponse;
 import qova.objects.BinaryResponse;
+import qova.objects.CourseInstance;
 import qova.objects.MultipleChoiceResponse;
 import qova.objects.SingleChoiceResponse;
 import qova.objects.SurveyResponse;
@@ -159,7 +160,7 @@ public class PDFGenerator {
                 MultipleChoiceResponse mcr = (MultipleChoiceResponse) rsp.get(i);
 
                 // Generate the bar graph and add to list
-                ImageList.add(generateMultipleChoiceBarGraph(mcr));
+                ImageList.add(generateMultipleChoiceBarGraph(mcr, response));
 
             }
             // ----------------------------------------------------------------------------------------------------------------
@@ -171,7 +172,7 @@ public class PDFGenerator {
                 SingleChoiceResponse scr = (SingleChoiceResponse) rsp.get(i);
 
                 // Generate the bar graph and add to list
-                ImageList.add(generateSingleChoiceBarGraph(scr));
+                ImageList.add(generateSingleChoiceBarGraph(scr, response));
 
             }
             // ----------------------------------------------------------------------------------------------------------------
@@ -186,7 +187,7 @@ public class PDFGenerator {
                 // Add Corresponding question to questionList
                 Paragraph questionpara = new Paragraph();
                 questionpara.setTextAlignment(TextAlignment.CENTER);
-                questionpara.add(new Text(txr.getQuestion()).addStyle(header_2));
+                questionpara.add(new Text(txr.getQuestion(response, i)).addStyle(header_2));
                 TableQuestionList.add(questionpara);
 
                 // Create Table
@@ -212,7 +213,7 @@ public class PDFGenerator {
                 // Create new Paragraph for Question
                 Paragraph questionpara = new Paragraph();
                 questionpara.setTextAlignment(TextAlignment.CENTER);
-                questionpara.add(new Text(bnr.getQuestion()).addStyle(header_2));
+                questionpara.add(new Text(bnr.getQuestion(response, i)).addStyle(header_2));
                 ParagraphList.add(questionpara);
 
                 // Create new Paragraph for Results
@@ -341,13 +342,14 @@ public class PDFGenerator {
     }
 
     // --------------------------------------------------------------------------------------------------
-    public Image generateMultipleChoiceBarGraph(MultipleChoiceResponse mcr) {
+    public Image generateMultipleChoiceBarGraph(MultipleChoiceResponse mcr, SurveyResponse surveyResponse) {
         // The number of response possibilities determines the number of columns in the
         // bar graph
-        Integer responsePossibilities = mcr.getNumberOfOptions();
+        Integer responsePossibilities = mcr.getNumberOfAnswerPossibilites();
 
         // ArrayList containing all column titles
-        List<String> columnTitles = mcr.getMultipleChoiceOptions();
+        List<String> columnTitles = surveyResponse.getCourseInstance()
+                .getOptionsForResponseAtPosition(mcr.getSurveyPosition());
 
         // DIFFERENT FROM columnTITLES!!!
         // Create an ArrayList, where each element represents a column of the bar graph.
@@ -363,7 +365,8 @@ public class PDFGenerator {
         }
 
         // Chart Configuration
-        JFreeChart chart = ChartFactory.createBarChart(mcr.getQuestion(), // Title of BarGraph = Question in Survey
+        JFreeChart chart = ChartFactory.createBarChart(mcr.getQuestion(surveyResponse, mcr.getSurveyPosition()),
+                // Title of Bargraph = Question in Survey
                 responseOptions, // x-axis heading
                 total, // y-axis heading
                 dataSet, // dataset
@@ -394,13 +397,14 @@ public class PDFGenerator {
     // --------------------------------------------------------------------------------------------------
 
     // --------------------------------------------------------------------------------------------------
-    public Image generateSingleChoiceBarGraph(SingleChoiceResponse scr) {
+    public Image generateSingleChoiceBarGraph(SingleChoiceResponse scr, SurveyResponse surveyResponse) {
         // The number of response possibilities determines the number of columns in the
         // bar graph
-        Integer responsePossibilities = scr.getNumberOfOptions();
+        Integer responsePossibilities = scr.getNumberOfAnswerPossibilites();
 
         // ArrayList containing all column titles
-        List<String> columnTitles = scr.getSingleChoiceOptions();
+        List<String> columnTitles = surveyResponse.getCourseInstance()
+                .getOptionsForResponseAtPosition(scr.getSurveyPosition());
 
         // DIFFERENT FROM columnTITLES!!!
         // Create an ArrayList, where each element represents a column of the bar graph.
@@ -416,7 +420,7 @@ public class PDFGenerator {
         }
 
         // Chart Configuration
-        JFreeChart chart = ChartFactory.createBarChart(scr.getQuestion(), // Title of BarGraph = Question in Survey
+        JFreeChart chart = ChartFactory.createBarChart(scr.getQuestion(surveyResponse, scr.getSurveyPosition()),
                 responseOptions, // x-axis heading
                 total, // y-axis heading
                 dataSet, // dataset

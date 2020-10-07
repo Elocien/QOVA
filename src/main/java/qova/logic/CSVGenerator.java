@@ -13,6 +13,7 @@ import qova.enums.LocalizationOption;
 import qova.objects.AbstractResponse;
 import qova.objects.BinaryResponse;
 import qova.objects.Course;
+import qova.objects.CourseInstance;
 import qova.objects.MultipleChoiceResponse;
 import qova.objects.SingleChoiceResponse;
 import qova.objects.SurveyResponse;
@@ -38,10 +39,14 @@ public class CSVGenerator {
         // passed to the CSV Gen
         // It is assumed that all SurveyResponses passed to the CSV Gen are of the same
         // Course and CourseType
-        Course course = listOfSurveyResponses.get(0).getCourse();
+        SurveyResponse surveyResponse = listOfSurveyResponses.get(0);
+
+        Course course = surveyResponse.getCourse();
         String courseName = course.getName();
         String courseSemesterString = course.getSemesterString();
         String semesterOfStudents = String.valueOf(course.getSemesterOfStudents());
+
+        CourseInstance courseInstance = course.getInstance(surveyResponse.getCourseType());
 
         // CSV Header
         ArrayList<String> header = new ArrayList<>();
@@ -61,12 +66,14 @@ public class CSVGenerator {
         // Fill the underhead with blanks for the above header attributes
         underHeader.addAll(Arrays.asList("", "", "", "", ""));
 
-        // Append Header with the rest of the survey questions
-        for (AbstractResponse abstractResponse : listOfSurveyResponses.get(0).getListOfResponses()) {
+        List<AbstractResponse> listOfResponsesForSurveyResponse = listOfSurveyResponses.get(0).getListOfResponses();
+
+        for (Integer surveyPosition = 0; surveyPosition < listOfResponsesForSurveyResponse.size(); surveyPosition++) {
+            AbstractResponse abstractResponse = listOfResponsesForSurveyResponse.get(surveyPosition);
 
             // Adds the question to the header, and a blank field to the underheader
             if (abstractResponse instanceof qova.objects.BinaryResponse) {
-                header.add(((BinaryResponse) abstractResponse).getQuestion());
+                header.add(abstractResponse.getQuestion(surveyResponse, surveyPosition));
                 header.add("");
                 underHeader.add("Total Yes");
                 underHeader.add("Total No");
@@ -81,13 +88,14 @@ public class CSVGenerator {
             // Adds the question to the header, and a blank field to the underheader. Then,
             // for each singleChoiceOption, a blank field is added to the header and the
             // option itself to the underheader
+
             if (abstractResponse instanceof qova.objects.SingleChoiceResponse) {
-                SingleChoiceResponse scr = (SingleChoiceResponse) abstractResponse;
-                header.add(scr.getQuestion());
-                underHeader.add(scr.getSingleChoiceOptions().get(0));
-                for (int i = 1; i < scr.getNumberOfOptions(); i++) {
+                header.add(abstractResponse.getQuestion(surveyResponse, surveyPosition));
+                List<String> singleChoiceOptions = courseInstance.getOptionsForResponseAtPosition(surveyPosition);
+                underHeader.add(singleChoiceOptions.get(0));
+                for (int i = 1; i < singleChoiceOptions.size(); i++) {
                     header.add("-");
-                    underHeader.add(scr.getSingleChoiceOptions().get(i));
+                    underHeader.add(singleChoiceOptions.get(i));
                 }
             }
 
@@ -95,12 +103,12 @@ public class CSVGenerator {
             // for each multipleChoiceOption, a blank field is added to the header and the
             // option itself to the underheader
             if (abstractResponse instanceof qova.objects.MultipleChoiceResponse) {
-                MultipleChoiceResponse mcr = (MultipleChoiceResponse) abstractResponse;
-                header.add(mcr.getQuestion());
-                underHeader.add(mcr.getMultipleChoiceOptions().get(0));
-                for (int i = 1; i < mcr.getNumberOfOptions(); i++) {
+                header.add(abstractResponse.getQuestion(surveyResponse, surveyPosition));
+                List<String> multipleChoiceOptions = courseInstance.getOptionsForResponseAtPosition(surveyPosition);
+                underHeader.add(multipleChoiceOptions.get(0));
+                for (int i = 1; i < multipleChoiceOptions.size(); i++) {
                     header.add("-");
-                    underHeader.add(mcr.getMultipleChoiceOptions().get(i));
+                    underHeader.add(multipleChoiceOptions.get(i));
                 }
             }
         }
