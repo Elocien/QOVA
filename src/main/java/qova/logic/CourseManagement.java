@@ -360,7 +360,6 @@ public class CourseManagement {
         if (currentMonth < 4) {
 
             // previous semesters
-            semesters.add("WiSe " + String.valueOf(currentYear - 2) + "/" + String.valueOf(currentYear - 1));
             semesters.add("SoSe " + String.valueOf(currentYear - 1));
 
             // current Semester
@@ -369,12 +368,12 @@ public class CourseManagement {
             // future semesters
             semesters.add("SoSe " + String.valueOf(currentYear));
             semesters.add("WiSe " + String.valueOf(currentYear) + "/" + String.valueOf(currentYear + 1));
+            semesters.add("SoSe " + String.valueOf(currentYear + 1));
         }
 
         // if winter semster and in year yy
         else if (currentMonth >= 10) {
             // previous semesters
-            semesters.add("WiSe " + String.valueOf(currentYear - 1 + "/" + String.valueOf(currentYear)));
             semesters.add("SoSe " + String.valueOf(currentYear));
 
             // current Semester
@@ -383,12 +382,12 @@ public class CourseManagement {
             // future semesters
             semesters.add("SoSe " + String.valueOf(currentYear + 1));
             semesters.add("WiSe " + String.valueOf(currentYear + 1) + "/" + String.valueOf(currentYear + 2));
+            semesters.add("SoSe " + String.valueOf(currentYear + 2));
         }
 
         // if summer semester
         else {
             // previous semesters
-            semesters.add("SoSe " + String.valueOf(currentYear - 1));
             semesters.add("WiSe " + String.valueOf(currentYear - 1) + "/" + String.valueOf(currentYear));
 
             // current Semester
@@ -397,6 +396,7 @@ public class CourseManagement {
             // future semesters
             semesters.add("WiSe " + String.valueOf(currentYear) + "/" + String.valueOf(currentYear + 1));
             semesters.add("SoSe " + String.valueOf(currentYear + 1));
+            semesters.add("WiSe " + String.valueOf(currentYear + 1) + "/" + String.valueOf(currentYear + 2));
         }
 
         // return arraylist
