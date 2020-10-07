@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 
+import org.json.JSONArray;
+
 import qova.enums.ResponseType;
 
 @Entity
@@ -36,9 +38,10 @@ public class MultipleChoiceResponse extends AbstractResponse {
         return this.multipleChoiceAnswers;
     }
 
-    public void incrementTotals(List<Integer> totals) {
-        for (Integer i : totals) {
-            multipleChoiceAnswers.set(i, multipleChoiceAnswers.get(i) + 1);
+    public void incrementTotals(JSONArray jsonArray) {
+        for (int i = 0; i < jsonArray.length(); i++) {
+            int position = jsonArray.getInt(i);
+            multipleChoiceAnswers.set(position, multipleChoiceAnswers.get(position) + 1);
         }
     }
 
