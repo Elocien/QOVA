@@ -105,7 +105,7 @@ public class CourseInstance {
      * is not set. The CourseInstance is created regardless, in case it must be used
      * in future
      * 
-     * @param courseType
+     * @param courseType The {@linkplain qova.enums.CourseType}
      */
     public CourseInstance(CourseType courseType) {
         this.courseType = courseType;

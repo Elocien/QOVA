@@ -23,9 +23,10 @@ public class BinaryResponse extends AbstractResponse {
      * {@linkplain qova.objects.BinaryResponse} has only two options: yes or no. The
      * variables yesTotal and noTotal are used to tally the users responses.
      * 
-     * @param question       The question corresponding to the yes/no answer.
-     * @param surveyPosition The position in the survey, that this question is
-     *                       positioned at.
+     * @param surveyPosition    The position in the survey, that this question is
+     *                          positioned at.
+     * @param isDefaultQuestion Flag used to indicate wether the Response is one of
+     *                          the questions set in the default survey
      */
     public BinaryResponse(Integer surveyPosition, Boolean isDefaultQuestion) {
         super(surveyPosition, ResponseType.BINARY_ANSWER, isDefaultQuestion);

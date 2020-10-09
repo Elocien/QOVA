@@ -26,8 +26,9 @@ public class CSVGenerator {
      * {@linkplain qova.enums.CourseType}. Each line of the CSV represents one
      * {@linkplain qova.objects.SurveyResponse} object.
      * 
-     * @param listOfSurveyResponse List of {@linkplain SurveyResponse}s
-     * @param language             {@linkplain LocalizationOption}
+     * @param listOfSurveyResponses List of
+     *                              {@linkplain qova.objects.SurveyResponse}'s
+     * @param language              The {@linkplain LocalizationOption}
      * @return a byte[] of the CSV
      * @throws java.io.IOException Thrown by CSVWriter
      */

@@ -102,15 +102,13 @@ public class ResponseManagement {
     }
 
     /**
-     * This method retrieves all of the surveyResponses and compiles their results
-     * into a csv file
+     * Generates a CSV file of out of the student responses compiled in the
+     * {@linkplain qova.objects.SurveyResponse}
      * 
-     * @param course
-     * @param type
-     * @param groupNumber
-     * @param instanceNumber
-     * @return
-     * @throws Exception
+     * @param listOfSurveyResponses A {@link java.util.List} of
+     *                              {@linkplain qova.objects.SurveyResponse}
+     * @return a ayte[] containing the CSV
+     * @throws Exception WriterException from the csvGen
      */
     public byte[] generateCSVEnglish(List<SurveyResponse> listOfSurveyResponses) throws Exception {
 
@@ -127,7 +125,7 @@ public class ResponseManagement {
      * Verifies that the length of the submitted JSONArray does not exceed 100
      * elements, as the number of questions per survey is limited to 100;
      * 
-     * @param json {@link org.json.JSONArray}
+     * @param jsonArray A {@link org.json.JSONArray}
      * @return A boolean flag, which is handled in the controller
      */
     public Boolean verifyJsonArray(JSONArray jsonArray) {
@@ -156,7 +154,10 @@ public class ResponseManagement {
      * Verifies the response of the student. Also makes sure that all quesitons were
      * answered
      * 
-     * @param json {@link org.json.JSONArray}
+     * @param studentResponseJson A {@link org.json.JSONArray}
+     * @param surveyAsString      The survey String that is saved in a
+     *                            {@linkplain qova.objects.CourseInstance}
+     * 
      * @return A boolean flag, which is handled in the controller
      */
     public Boolean verifyStudentResponseJson(JSONArray studentResponseJson, String surveyAsString) {
@@ -179,13 +180,13 @@ public class ResponseManagement {
      * Used in the finalisation process of a {@linkplain qova.objects.Course}. When
      * a User finalises a Course, this method is used to serialise the
      * {@linkplain SurveyResponse}s, as well as all
-     * {@linkplain qova.objects.AbstractResponses} needed to persist students
+     * {@linkplain qova.objects.AbstractResponse} needed to persist students
      * answers.
      * 
-     * @param jsonArray  json.org.JSONArray containing the JSON string representing
-     *                   the created survey
-     * @param course     {@linkplain Course}
-     * @param stringType {@linkplain CourseType} as a String, passed from the model
+     * @param jsonArray json.org.JSONArray containing the JSON string representing
+     *                  the created survey
+     * @param course    {@linkplain Course}
+     * @param type      {@linkplain CourseType} as a String, passed from the model
      */
     public void createSurveyResponse(JSONArray jsonArray, Course course, CourseType type) {
 
@@ -225,7 +226,7 @@ public class ResponseManagement {
      * represents the default survey, concatenated with the survey created by the
      * course owner. This method takes care of serialising the Response Objects, as
      * well as persisting them. It creates a list containing sublists of
-     * {@linkplain qova.objects.AbstracResponses}. Each sublist is then passed to a
+     * {@linkplain qova.objects.AbstractResponse}. Each sublist is then passed to a
      * {@linkplain qova.objects.SurveyResponse}
      * 
      * @param jsonArray      An {@link org.json.JSONArray} containing the survey
@@ -235,7 +236,7 @@ public class ResponseManagement {
      *                       of group and instance amount, because this is the
      *                       amount of SurveyResponses, that must be created.
      * @return A {@link java.util.List} of {@link java.util.List}'s, which contain
-     *         {@linkplain qova.objects.AbstractResponses}
+     *         {@linkplain qova.objects.AbstractResponse}
      */
     public List<List<AbstractResponse>> generateResponseListFromJsonArray(JSONArray jsonArray, Integer numberOfCopies) {
 

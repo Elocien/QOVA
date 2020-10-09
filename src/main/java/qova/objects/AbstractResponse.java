@@ -49,12 +49,12 @@ public class AbstractResponse {
      * An abstract version of a Response, used to inherit from. An
      * {@linkplain qova.objects.AbstractResponse} is
      * 
-     * @param question       The question corresponding to the response of the
-     *                       student.
-     * @param surveyPosition The position in the survey, that this question is
-     *                       positioned at.
-     * @param responseType   The {@linkplain qova.enums.ResponseType} of the
-     *                       response object
+     * @param surveyPosition    The position in the survey, that this question is
+     *                          positioned at.
+     * @param responseType      The {@linkplain qova.enums.ResponseType} of the
+     *                          response object
+     * @param isDefaultQuestion Flag used to indicate wether the Response is one of
+     *                          the questions set in the default survey
      */
     public AbstractResponse(Integer surveyPosition, ResponseType responseType, Boolean isDefaultQuestion) {
         this.surveyPosition = surveyPosition;
