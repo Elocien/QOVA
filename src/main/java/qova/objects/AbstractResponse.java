@@ -19,7 +19,6 @@ import qova.enums.ResponseType;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-@OnDelete(action = OnDeleteAction.CASCADE)
 public class AbstractResponse {
 
     @Id
