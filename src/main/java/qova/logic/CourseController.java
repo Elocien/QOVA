@@ -72,16 +72,6 @@ public class CourseController {
         return "home";
     }
 
-    @GetMapping("error")
-    public String error(Model model, @RequestParam(required = false) String code) {
-
-        // add error code to model
-        model.addAttribute("code", code);
-
-        // return template
-        return "error";
-    }
-
     // -------------------------------------------------------
 
     // Shows a table containing all courses
