@@ -7,13 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -48,6 +42,7 @@ public class SurveyResponse {
 
     // The ID's of all of the people that have submitted to this survey
     @ElementCollection
+    @MapKeyColumn
     private Map<String, Date> listOfStudentsThatSubmitted;
 
     @ElementCollection
