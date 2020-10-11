@@ -386,9 +386,9 @@
 
     function copy_url(type) {
         const target = document.getElementById(type+"Link");
-        navigator.clipboard.writeText(target.value);
+        navigator.clipboard.writeText(target.value); //copys the text from the input
         var hide_us = document.getElementsByClassName("url-input");
-        for (let i = 0; i < hide_us.lenght; ++i) {
+        for (let i = 0; i < hide_us.length; ++i) {
             hide_us[i].style.display = "none";
         }
         target.style.display = "";
