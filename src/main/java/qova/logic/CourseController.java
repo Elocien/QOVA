@@ -34,11 +34,6 @@ import qova.forms.SurveyForm;
 import qova.objects.Course;
 import qova.objects.CourseInstance;
 
-//TODO: Temporary Imports (can be removed later)
-//@Lucian please don't delete me just yet T_T
-import java.util.List;
-import java.util.Arrays;
-//END
 
 @Controller // This means that this class is a Controller
 public class CourseController {
