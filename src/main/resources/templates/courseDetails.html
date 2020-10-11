@@ -23,8 +23,7 @@
             <div class="options-wrapper">
                 <div class="btn-delete">
                     <!--Copy Course-->
-                    <button type="submit" class="btn btn-link" data-toggle="modal" data-target="#copyModal"><i class="far fa-clone" data-toggle="tooltip" data-placement="top" title="COPY COURSE" th:title="#{detail.copyCourse}"></i>
-                    </button>
+                    <button type="submit" class="btn btn-link" data-toggle="modal" data-target="#copyModal"><i class="far fa-clone" data-toggle="tooltip" data-placement="top" title="COPY COURSE" th:title="#{detail.copyCourse}"></i></button>
                     <div class="modal fade" id="copyModal" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content text-center">
@@ -181,7 +180,7 @@
                                         <!--5th Col-->
                                         <th:block th:switch="!${course.finalisedFlag} and !${__'course.'+${course_type}+'.surveyEditedFlag'__}">
                                             <td th:case="true" class="text-center">
-                                                <a type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
+                                                <a th:if="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
                                             </td>
                                             <td th:case="false" class="text-center">
                                                 <a th:if="!${course.finalisedFlag}" type="button" class="btn btn-link p-0 align-middle hide_me mr-2" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="left" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
