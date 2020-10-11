@@ -17,10 +17,12 @@
         </div>
 
         <!--JS-Template-->
-        <div class="input-group mt-2 mb-2 js-temp" style="display: none;">
-            <span class="index">N</span><span class="mr-2">.</span>
-            <input class="form-control" type="text">
-        </div>
+        <table style="display: none;">
+            <tr class="js-temp">
+                <td><p class="index text-right m-0 mr-1">N</p></td>
+                <td><input class="form-control" type="text"></td>
+            </tr>
+        </table>
 
         <form id="form" method="post" th:object="${form}" th:action="@{/course/instanceTitles?id=__${id}__}" style="display: none">
             <button id="hidden-submit" type="submit">.</button>
@@ -38,10 +40,14 @@
                             <!--Vanilla Inputs-->
                             <div class="input-wrapper m-2">
                                 <div class="hidden-type" th:text="${course_type}" style="display: none;"></div>
-                                <div class="input-group mt-2 mb-2 clean-input" th:each="title, stats : ${__${course_type}+'InstanceTitles'__}">
-                                    <span class="index" th:text="${stats.index+1}">N</span><span class="mr-2">.</span>
-                                    <input class="form-control" type="text" th:value="${title}">
-                                </div>
+                                <table>
+                                    <tbody class="input-table">
+                                        <tr class="clean-input" th:each="title, stats : ${__${course_type}+'InstanceTitles'__}">
+                                            <td><p class="index text-right m-0 mr-1" th:text="${(stats.index+1)+'.'}">N</p></td>
+                                            <td><input class="form-control" type="text" th:value="${title}"></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                         <div class="btn-group mt-2 text-center w-100">
@@ -64,15 +70,14 @@
         var new_input = document.getElementsByClassName("js-temp")[0].cloneNode(true);
         new_input.classList.remove("js-temp");
         new_input.classList.add("clean-input");
-        new_input.style.display = "";
 
         const final_destination = document.getElementById(type + "-input-col");
-        new_input.getElementsByClassName("index")[0].innerHTML = (final_destination.getElementsByClassName("clean-input").length + 1);
-        final_destination.getElementsByClassName("input-wrapper")[0].appendChild(new_input);
+        new_input.getElementsByClassName("index")[0].innerHTML = (final_destination.getElementsByClassName("clean-input").length + 1)+".";
+        final_destination.getElementsByClassName("input-wrapper")[0].getElementsByClassName("input-table")[0].appendChild(new_input);
     }
     function remove_input(type) {
         var target = document.getElementById(type + "-input-col").getElementsByClassName("clean-input");
-        console.log(target.length)
+        console.log("Deleted name "+target.length+" of "+type+".")
         target = target[target.length - 1];
         target.parentNode.removeChild(target);
     }
@@ -86,7 +91,6 @@
                 list_of_list[type].push(inputs[j].getElementsByClassName("form-control")[0].value);
             }
         }
-        console.log(list_of_list);
         document.getElementById("instanceTitlesJson").value = JSON.stringify(list_of_list);
         document.getElementById("hidden-submit").click();
     }
