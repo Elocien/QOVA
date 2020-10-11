@@ -523,18 +523,18 @@ public class CourseManagement {
 
         List<String> lectureTitles = new ArrayList<>();
         lectureTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
+                Arrays.asList("V - Einführung", "V - Bitübertragungsschicht", "V - Netztechnologien 1", "V - Netztechnologien 2",
+                        "V - Sicherungsschicht", "V - Vermittlungsschicht", "V - Transportschicht", "V - Netzwerkperformance",
+                        "V - Internetdienste", "V - Multimediakommunikation", "V - Mobile Computing", "V - Verteilte Systeme"));
         var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles, true);
 
         courseInstancesRepo.save(lecture);
 
         List<String> tutorialTitles = new ArrayList<>();
         lectureTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
+                Arrays.asList("T - Einführung", "T - Bitübertragungsschicht", "T - Netztechnologien 1", "T - Netztechnologien 2",
+                        "T - Sicherungsschicht", "T - Vermittlungsschicht", "T - Transportschicht", "T - Netzwerkperformance",
+                        "T - Internetdienste", "T - Multimediakommunikation", "T - Mobile Computing", "T - Verteilte Systeme"));
         var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles, true);
         tutorial.setSurvey(
                 "[{\"type\":\"SingleChoice\",\"question\":\"Hat die Übung Wissen vermittelt, welches du dir nicht im Selbststudium hättest erarbeiten können?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in den aktiven Austausch mit den Studierenden gesucht?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Waren die Anforderung dem Wissensstand der Studierenden angemessen?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Konnte die Übung gezielt Schwerpunkte setzen und Struktur vermitteln?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Konnte der/die Leiter/in dein Interesse an dem Thema wecken?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in die Möglichkeiten einer Übung gegenüber der Vorlesung ausgeschöpft?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Online Lehre v.s. Präsenzveranstaltung\",\"answers\":[\"Die Übung war digital und soll digital bleiben.\",\"Die Übung war digital und wäre als Präsenzveranstaltung besser.\",\"Die Übung war eine Präsenzveranstaltung und soll eine bleiben.\",\"Die Übung war eine Präsenzveranstaltung und sollte digital werden.\"]}]");
@@ -564,47 +564,9 @@ public class CourseManagement {
         var courseDate = LocalDate.of(2020, 10, 4);
         var semesterString = "SoSe 2020";
 
-        Course course = new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty,
-                semesterString, courseDate);
+        Course course = new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty, semesterString, courseDate);
         coursesRepo.save(course);
         return course;
-    }
-
-    public Course TimTestCreateCourse() {
-
-        List<String> lectureTitles = new ArrayList<>();
-        lectureTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var lecture = new CourseInstance(CourseType.LECTURE, 1, 11, lectureTitles, true);
-        List<String> tutorialTitles = new ArrayList<>();
-        tutorialTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var tutorial = new CourseInstance(CourseType.TUTORIAL, 2, 12, tutorialTitles, true);
-        List<String> seminarTitles = new ArrayList<>();
-        seminarTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var seminar = new CourseInstance(CourseType.SEMINAR, 3, 13, seminarTitles, true);
-        List<String> practicalTitles = new ArrayList<>();
-        practicalTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var practical = new CourseInstance(CourseType.TUTORIAL, 4, 14, practicalTitles, true);
-
-        var name = "Rechnernetze";
-        var semesterOfStudents = 4;
-        var faculty = CourseFaculty.COMPUTER_SCIENCE;
-        var courseDate = LocalDate.of(2020, 10, 4);
-        var semesterString = "SoSe 2020";
-
-        return new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty, semesterString,
-                courseDate);
     }
 
 }

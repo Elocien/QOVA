@@ -517,11 +517,6 @@ public class CourseController {
         return new HttpEntity<byte[]>(qrcode, header);
     }
 
-    @GetMapping("/easterEgg/tim")
-    public String easterEgg() {
-        return "subject.html";
-    }
-
     // test method
     @GetMapping("/createC")
     public String createC() throws Exception {
