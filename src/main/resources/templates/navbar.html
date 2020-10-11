@@ -22,7 +22,7 @@
             if (url.includes(trigger)) {
                 var position = url.indexOf(trigger)+trigger.length;
                 var url_start = url.slice(0, position);
-                var url_end = url.slice(position+3);
+                var url_end = url.slice(position+2);
                 url = url_start+lang+url_end;
             }
             else {
@@ -69,8 +69,8 @@
                         <div class="dropdown-menu dropdown-menu-right mt-3" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item font-weight-bold" href="#" th:text="#{navbar.language}">LANGUAGE</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" th:onclick="change_language('ger')"><svg class="custom-icon ger-icon" th:src="@{/resources/images/ger.svg}"></svg><span class="custom-icon-text align-top">DE</span></a>
-                            <a class="dropdown-item" th:onclick="change_language('eng')"><svg class="custom-icon uk-icon" th:src="@{/resources/images/uk.svg}"></svg><span class="custom-icon-text align-top">ENG</span></a>
+                            <a class="dropdown-item" th:onclick="change_language('de')"><svg class="custom-icon ger-icon" th:src="@{/resources/images/ger.svg}"></svg><span class="custom-icon-text align-top">DE</span></a>
+                            <a class="dropdown-item" th:onclick="change_language('')"><svg class="custom-icon uk-icon" th:src="@{/resources/images/uk.svg}"></svg><span class="custom-icon-text align-top">ENG</span></a>
                         </div>
                     </li>
                 </ul>
@@ -111,8 +111,8 @@
                     <div class="dropdown-menu dropdown-menu-right mt-3" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item font-weight-bold" href="#" th:text="#{navbar.language}">LANGUAGE</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" th:onclick="change_language('ger')"><svg class="custom-icon ger-icon" th:src="@{/resources/images/ger.svg}"></svg><span class="custom-icon-text align-top">DE</span></a>
-                        <a class="dropdown-item" th:onclick="change_language('eng')"><svg class="custom-icon uk-icon" th:src="@{/resources/images/uk.svg}"></svg><span class="custom-icon-text align-top">ENG</span></a>
+                        <a class="dropdown-item" th:onclick="change_language('de')"><svg class="custom-icon ger-icon" th:src="@{/resources/images/ger.svg}"></svg><span class="custom-icon-text align-top">DE</span></a>
+                        <a class="dropdown-item" th:onclick="change_language('')"><svg class="custom-icon uk-icon" th:src="@{/resources/images/uk.svg}"></svg><span class="custom-icon-text align-top">ENG</span></a>
                     </div>
                 </li>
             </ul>
