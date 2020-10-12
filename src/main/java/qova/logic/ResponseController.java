@@ -1,6 +1,5 @@
 package qova.logic;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -24,7 +23,9 @@ import qova.admin.AdminManagement;
 import qova.enums.CourseType;
 import qova.forms.SurveyForm;
 import qova.forms.SurveySelectForm;
+import qova.objects.AbstractResponse;
 import qova.objects.Course;
+import qova.objects.CourseInstance;
 import qova.objects.SurveyResponse;
 
 @Controller // This means that this class is a Controller
@@ -91,7 +92,6 @@ public class ResponseController {
 
     // ---------------------------------------------------------------------------
 
-    // TODO: rename path variables
     // Validation of entry of surveySelect page, and redirect to the actual survey
     @PostMapping("surveySelect")
     public String selectSurveySubmission(Model model, @ModelAttribute("form") SurveySelectForm form,
@@ -134,11 +134,9 @@ public class ResponseController {
 
     // Mapping for Survey HTML
     @GetMapping("survey")
-    public String SurveyView(Model model, @RequestParam(required = false) UUID id,
+    public String surveyView(Model model, @RequestParam(required = false) UUID id,
             @RequestParam(required = false) String type, @RequestParam(required = false) String group,
             @RequestParam(required = false) String instance) {
-
-        System.out.println("Yes made it");
 
         // redirect
         if (id == null || type == null || group == null || instance == null) {
@@ -185,6 +183,10 @@ public class ResponseController {
             return "error?code=" + courseNotFound;
         }
 
+        // Get the CourseType
+        CourseType courseType = responseManagement.parseCourseType(type);
+
+        // Initialise JSONArray
         JSONArray studentResponseJson;
 
         // get JSON Response
@@ -194,7 +196,7 @@ public class ResponseController {
             return "error?code=" + internalError;
         }
 
-        // fetch course and go to details if present
+        // fetch course
         Optional<Course> crs = courseManagement.findById(id);
 
         // Validate that course exists, and that the survey is not empty
@@ -202,13 +204,18 @@ public class ResponseController {
 
             Course course = crs.get();
 
+            responseManagement.verifyStudentResponseJson(studentResponseJson,
+                    course.getInstance(courseType).getSurvey());
+
             Optional<SurveyResponse> survRsp = responseManagement
-                    .findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course,
-                            responseManagement.parseCourseType(type), Integer.valueOf(group),
-                            Integer.valueOf(instance));
+                    .findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, courseType,
+                            Integer.valueOf(group), Integer.valueOf(instance));
 
             if (survRsp.isPresent()) {
                 SurveyResponse surveyResponse = survRsp.get();
+
+                // The manager method that increments & sets the correct values
+                responseManagement.submitStudentResponse(surveyResponse, studentResponseJson);
 
             }
 
@@ -219,13 +226,13 @@ public class ResponseController {
         // Add stundent ID to SurveyResponse List
 
         // if all goes well
-        return "postSubmissionLanding";
+        return "surveyCheckout";
     }
 
     // ---------------------------------------------------------------------------
 
     /**
-     * Used to retrieve the results for a given questionnaire
+     * Used to retrieve the results for a given questionnaire.
      * 
      * @param model    {@link org.springframework.ui.Model}
      * @param type     {@linkplain qova.enums.CourseType}
@@ -238,18 +245,28 @@ public class ResponseController {
     @GetMapping("/surveyresults")
     public String surveyResultsTest(Model model, @RequestParam String type, @RequestParam UUID id,
             @RequestParam String group, @RequestParam String instance) {
+
+        // The Course object in an optional
         Optional<Course> crs = courseManagement.findById(id);
         if (crs.isPresent()) {
-            Optional<SurveyResponse> surveyResponse = responseManagement
-                    .findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(crs.get(),
-                            responseManagement.parseCourseType(type), Integer.valueOf(group),
-                            Integer.valueOf(instance));
 
-            if (surveyResponse.isPresent()) {
-                model.addAttribute("response", surveyResponse);
-                model.addAttribute("responseList",
-                        responseManagement.findResponsesBySurveyResponse(surveyResponse.get()));
-            }
+            CourseType courseType = responseManagement.parseCourseType(type);
+
+            // The actual Course Object
+            Course course = crs.get();
+
+            // The courseInstance Object
+            CourseInstance courseInstance = course.getInstance(courseType);
+
+            // Eine Liste aller SurveyResponses
+            List<SurveyResponse> listOfSurveyResponses = responseManagement.findSurveyResponses(course, courseType,
+                    group, instance);
+
+            JSONArray resultsJsonString = responseManagement.generateSurveyResultsJson(courseInstance,
+                    listOfSurveyResponses);
+
+            model.addAttribute("resultsJson", resultsJsonString);
+
         }
         return "surveyResultsTest";
     }
@@ -268,11 +285,17 @@ public class ResponseController {
         return "studentBrowser";
     }
 
+    @GetMapping("surveyCheckout")
+    public String surveyCheckout(Model model) {
+
+        return "surveyCheckout";
+    }
+
     // PDF Generation
     @GetMapping("/generatePDF")
     public HttpEntity<byte[]> generatePdf(@RequestParam UUID id, @RequestParam String type,
             @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
-            throws NumberFormatException, IOException, Exception {
+            throws Exception {
 
         // generate filename
         String filename = "testPdf.pdf";
@@ -291,7 +314,7 @@ public class ResponseController {
         }
 
         // Generate PDF
-        byte[] pdf = responseManagement.generatePDF_en(crs.get(), courseType, Integer.parseInt(groupNumber),
+        byte[] pdf = responseManagement.generatePDFEnglish(crs.get(), courseType, Integer.parseInt(groupNumber),
                 Integer.parseInt(instanceNumber));
 
         // Set HTTP headers and return HttpEntity
@@ -300,7 +323,7 @@ public class ResponseController {
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
         header.setContentLength(pdf.length);
 
-        return new HttpEntity<byte[]>(pdf, header);
+        return new HttpEntity<>(pdf, header);
     }
 
     // CSV Generation
@@ -325,8 +348,9 @@ public class ResponseController {
             return null;
         }
 
-        // Generate PDF
-        byte[] csv = responseManagement.generateCSV_en(crs.get(), courseType, groupNumber, instanceNumber);
+        // Generate CSV
+        byte[] csv = responseManagement.generateCSVEnglish(
+                responseManagement.findSurveyResponses(crs.get(), courseType, groupNumber, instanceNumber));
 
         if (csv == new byte[0]) {
             return null;
@@ -338,7 +362,7 @@ public class ResponseController {
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
         header.setContentLength(csv.length);
 
-        return new HttpEntity<byte[]>(csv, header);
+        return new HttpEntity<>(csv, header);
     }
 
     // test method
@@ -348,25 +372,6 @@ public class ResponseController {
         return "home";
     }
 
-    // PDF Generation
-    @GetMapping("/pdftest")
-    public HttpEntity<byte[]> pdfTest(HttpServletResponse response) throws Exception {
-
-        // generate filename
-        String filename = "testPdf.pdf";
-
-        // Generate PDF
-        byte[] pdf = responseManagement.generatePDF_test();
-
-        // Set HTTP headers and return HttpEntity
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_PDF);
-        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
-        header.setContentLength(pdf.length);
-
-        return new HttpEntity<byte[]>(pdf, header);
-    }
-
     // CSV Generation
     @GetMapping("csv")
     public HttpEntity<byte[]> csvtest(HttpServletResponse response) throws Exception {
@@ -374,7 +379,8 @@ public class ResponseController {
         Course crs = courseManagement.findAll().iterator().next();
 
         // Generate PDF
-        byte[] pdf = responseManagement.generateCSV_en(crs, CourseType.TUTORIAL, "1", "all");
+        byte[] pdf = responseManagement
+                .generateCSVEnglish(responseManagement.findSurveyResponses(crs, CourseType.TUTORIAL, "1", "all"));
 
         // Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();
@@ -382,20 +388,7 @@ public class ResponseController {
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "csvTest.csv");
         header.setContentLength(pdf.length);
 
-        return new HttpEntity<byte[]>(pdf, header);
-    }
-
-    @GetMapping("/surveyResults")
-    public String surveyresults(Model model) throws Exception {
-
-        Course course = courseManagement.TimTestCreateCourse();
-        SurveyResponse rsp = responseManagement.TimCreateTestResponses(course);
-        List<Object> objects = responseManagement.TimCreateTestListOfResponses(rsp);
-
-        model.addAttribute("response", rsp);
-        model.addAttribute("responseList", objects);
-
-        return "surveyResults";
+        return new HttpEntity<>(pdf, header);
     }
 
 }

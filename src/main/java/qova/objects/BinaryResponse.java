@@ -1,104 +1,96 @@
 package qova.objects;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-
 
 import qova.enums.ResponseType;
 
-
 @Entity
-public class BinaryResponse {
+public class BinaryResponse extends AbstractResponse {
 
-    //-----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
-
-    //container for the question set
-    @Column(length = 1024) 
-    private String question;
-
-    @ManyToOne
-    private SurveyResponse surveyResponse;
-
-    //Position in the survey
-    private Integer surveyPosition;
-
-    //Container for response
+    // Container for response
     private Integer yesTotal = 0;
     private Integer noTotal = 0;
 
-    private ResponseType responseType = ResponseType.BINARY_ANSWER;
-
-    //Needed for JPA puposes
+    // Needed for JPA puposes
     @SuppressWarnings("unused")
-	protected BinaryResponse(){
+    protected BinaryResponse() {
     }
 
     /**
-     * Constructor
+     * Implementation of an {@linkplain qova.objects.AbstractResponse}. A
+     * {@linkplain qova.objects.BinaryResponse} has only two options: yes or no. The
+     * variables yesTotal and noTotal are used to tally the users responses.
      * 
-     * @param question The question set by the user in the quesitoneditor
+     * @param surveyPosition    The position in the survey, that this question is
+     *                          positioned at.
+     * @param isDefaultQuestion Flag used to indicate wether the Response is one of
+     *                          the questions set in the default survey
      */
-    public BinaryResponse(SurveyResponse response, String question, Integer surveyPosition){
-        this.question = question;
-        this.surveyResponse = response;
-        this.surveyPosition = surveyPosition;
+    public BinaryResponse(Integer surveyPosition, Boolean isDefaultQuestion) {
+        super(surveyPosition, ResponseType.BINARY_ANSWER, isDefaultQuestion);
     }
 
-
-
-    public Long getId(){
-        return this.id;
-    }
-    
-    public String getQuestion() {
-        return this.question;
-    }
-
+    /**
+     * Return the total amount of respondents that answered yes to the set question,
+     * as a String. This primary use for this function is in the pdf and csv
+     * generator.
+     * 
+     * @return yesTotal as String
+     */
     public String getYesTotalString() {
         return String.valueOf(this.yesTotal);
     }
 
+    /**
+     * Identical to {@code getYesTotalString()}, but for the noTotal
+     * 
+     * @return noTotal as String
+     */
     public String getNoTotalString() {
         return String.valueOf(this.noTotal);
     }
 
+    /**
+     * Return the total amount of respondents that answered yes to the set question.
+     * 
+     * @return Integer
+     */
     public Integer getYesTotal() {
         return this.yesTotal;
     }
 
+    /**
+     * Return the total amount of respondents that answered no to the set question.
+     * 
+     * @return Integer
+     */
     public Integer getNoTotal() {
         return this.noTotal;
     }
 
+    /**
+     * The total amount of responses
+     * 
+     * @return Integer
+     */
     public Integer getTotal() {
         return this.noTotal + this.yesTotal;
     }
 
-    public ResponseType getType(){
-        return this.responseType;
-    }
-
-    public void incrementYes(){
+    /**
+     * Increments the {@code yesTotal} attribute
+     */
+    public void incrementYes() {
         this.yesTotal = yesTotal + 1;
     }
 
-    public void incrementNo(){
+    /**
+     * Increments the {@code noTotal} attribute
+     */
+    public void incrementNo() {
         this.noTotal = noTotal + 1;
-    }
-
-    public Integer getSurveyPosition(){
-        return this.surveyPosition;
-    }
-
-    public SurveyResponse getSurveyResponse(){
-        return this.surveyResponse;
     }
 
 }

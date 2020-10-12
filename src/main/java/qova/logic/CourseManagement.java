@@ -10,13 +10,10 @@ import qova.forms.InstanceTitleForm;
 import qova.objects.Course;
 import qova.objects.CourseInstance;
 import qova.objects.SurveyResponse;
-import qova.repositories.BinaryResponseRepository;
+import qova.repositories.AbstractResponseRepository;
 import qova.repositories.CourseInstanceRepository;
 import qova.repositories.CourseRepository;
-import qova.repositories.MultipleChoiceResponseRepository;
-import qova.repositories.SingleChoiceResponseRepository;
 import qova.repositories.SurveyResponseRepository;
-import qova.repositories.TextResponseRepository;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -45,23 +42,14 @@ public class CourseManagement {
     private final CourseRepository coursesRepo;
     private final CourseInstanceRepository courseInstancesRepo;
     private final SurveyResponseRepository surveyResponseRepository;
-    private final BinaryResponseRepository binaryResponseRepository;
-    private final TextResponseRepository textResponseRepository;
-    private final SingleChoiceResponseRepository singleChoiceResponseRepository;
-    private final MultipleChoiceResponseRepository multipleChoiceResponseRepository;
+    private final AbstractResponseRepository abstractResponseRepository;
 
     @Autowired
     public CourseManagement(CourseRepository coursesRepo, CourseInstanceRepository courseInstancesRepo,
-            SurveyResponseRepository surveyResponseRepository, BinaryResponseRepository binaryResponseRepository,
-            TextResponseRepository textResponseRepository,
-            SingleChoiceResponseRepository singleChoiceResponseRepository,
-            MultipleChoiceResponseRepository multipleChoiceResponseRepository) {
+            SurveyResponseRepository surveyResponseRepository, AbstractResponseRepository abstractResponseRepository) {
 
         this.surveyResponseRepository = Objects.requireNonNull(surveyResponseRepository);
-        this.binaryResponseRepository = Objects.requireNonNull(binaryResponseRepository);
-        this.textResponseRepository = Objects.requireNonNull(textResponseRepository);
-        this.singleChoiceResponseRepository = Objects.requireNonNull(singleChoiceResponseRepository);
-        this.multipleChoiceResponseRepository = Objects.requireNonNull(multipleChoiceResponseRepository);
+        this.abstractResponseRepository = Objects.requireNonNull(abstractResponseRepository);
         this.coursesRepo = Objects.requireNonNull(coursesRepo);
         this.courseInstancesRepo = Objects.requireNonNull(courseInstancesRepo);
     }
@@ -150,18 +138,19 @@ public class CourseManagement {
             course.setName(form.getName());
             course.setSemesterOfStudents(form.getSemesterOfStudents());
             course.setFaculty(form.getFaculty());
+            course.setSemesterString(form.getSemesterString());
 
             // These attributes are NOT editable, when the instance has been finalised!!!
 
             for (CourseType courseType : CourseType.values()) {
-                // Lecture EXISTS, but is toggled OFF
+                // Instance EXISTS, but is toggled OFF
                 if (Boolean.TRUE.equals(course.getInstanceExists(courseType))
                         && Boolean.FALSE.equals(form.getInstanceExists(courseType))) {
 
                     course.getInstance(courseType).setInactive();
                 }
-                // Lecture does NOT EXIST, but is toggled ON
-                if (Boolean.FALSE.equals(course.getInstanceExists(courseType))
+                // Instance does NOT EXIST, but is toggled ON
+                else if (Boolean.FALSE.equals(course.getInstanceExists(courseType))
                         && Boolean.TRUE.equals(form.getInstanceExists(courseType))) {
 
                     // Initialise instanceTitles array
@@ -185,6 +174,22 @@ public class CourseManagement {
                     instance.setInstanceAmount(form.getInstanceAmount(courseType));
                     instance.setInstanceTitles(instanceTitles);
                     instance.setActive();
+                }
+                // The Instance hasn't been activated or deactivate, but has been edited
+                else {
+                    // Update CourseInstance
+                    CourseInstance instance = course.getInstance(courseType);
+
+                    // Set to one for lectures (in case of change, assign
+                    // form.getLectureGroupAmount)
+                    if (courseType.equals(CourseType.LECTURE)) {
+                        instance.setGroupAmount(1);
+                    } else {
+                        instance.setGroupAmount(form.getGroupAmount(courseType));
+                    }
+
+                    //
+                    instance.setInstanceAmount(form.getInstanceAmount(courseType));
                 }
             }
 
@@ -235,7 +240,6 @@ public class CourseManagement {
 
     // Sets the relevant Survey in the course objects, based on the given surveyType
     public void setSurveyforType(Course course, String type, String survey) {
-
         if (type.equals("LECTURE")) {
             course.getLecture().setSurvey(survey);
         } else if (type.equals("TUTORIAL")) {
@@ -269,9 +273,7 @@ public class CourseManagement {
 
     public CourseInstance duplicateCourseInstance(CourseInstance oldInstance) {
         List<String> newInstanceTitles = new ArrayList<>();
-        for (String title : oldInstance.getInstanceTitles()) {
-            newInstanceTitles.add(title);
-        }
+        newInstanceTitles.addAll(oldInstance.getInstanceTitles());
         CourseInstance newInstance = new CourseInstance(oldInstance.getCourseType(), oldInstance.getGroupAmount(),
                 oldInstance.getInstanceAmount(), newInstanceTitles, oldInstance.isActive());
         courseInstancesRepo.save(newInstance);
@@ -287,9 +289,7 @@ public class CourseManagement {
     public void setCourseFinalised(UUID id) {
         Optional<Course> crs = findById(id);
 
-        if (crs.isPresent()) {
-            crs.get().setCourseAsFinalised();
-        }
+        crs.ifPresent(Course::setCourseAsFinalised);
     }
 
     /**
@@ -356,7 +356,6 @@ public class CourseManagement {
         if (currentMonth < 4) {
 
             // previous semesters
-            semesters.add("WiSe " + String.valueOf(currentYear - 2) + "/" + String.valueOf(currentYear - 1));
             semesters.add("SoSe " + String.valueOf(currentYear - 1));
 
             // current Semester
@@ -365,12 +364,12 @@ public class CourseManagement {
             // future semesters
             semesters.add("SoSe " + String.valueOf(currentYear));
             semesters.add("WiSe " + String.valueOf(currentYear) + "/" + String.valueOf(currentYear + 1));
+            semesters.add("SoSe " + String.valueOf(currentYear + 1));
         }
 
         // if winter semster and in year yy
         else if (currentMonth >= 10) {
             // previous semesters
-            semesters.add("WiSe " + String.valueOf(currentYear - 1 + "/" + String.valueOf(currentYear)));
             semesters.add("SoSe " + String.valueOf(currentYear));
 
             // current Semester
@@ -379,12 +378,12 @@ public class CourseManagement {
             // future semesters
             semesters.add("SoSe " + String.valueOf(currentYear + 1));
             semesters.add("WiSe " + String.valueOf(currentYear + 1) + "/" + String.valueOf(currentYear + 2));
+            semesters.add("SoSe " + String.valueOf(currentYear + 2));
         }
 
         // if summer semester
         else {
             // previous semesters
-            semesters.add("SoSe " + String.valueOf(currentYear - 1));
             semesters.add("WiSe " + String.valueOf(currentYear - 1) + "/" + String.valueOf(currentYear));
 
             // current Semester
@@ -393,6 +392,7 @@ public class CourseManagement {
             // future semesters
             semesters.add("WiSe " + String.valueOf(currentYear) + "/" + String.valueOf(currentYear + 1));
             semesters.add("SoSe " + String.valueOf(currentYear + 1));
+            semesters.add("WiSe " + String.valueOf(currentYear + 1) + "/" + String.valueOf(currentYear + 2));
         }
 
         // return arraylist
@@ -502,13 +502,9 @@ public class CourseManagement {
         // Get all surveyResponses for a course
         Iterable<SurveyResponse> surveyResponses = surveyResponseRepository.findByCourse(course);
 
-        // delete all instances
-        for (SurveyResponse r : surveyResponses) {
-            binaryResponseRepository.deleteAll(binaryResponseRepository.findBySurveyResponse(r));
-            textResponseRepository.deleteAll(textResponseRepository.findBySurveyResponse(r));
-            singleChoiceResponseRepository.deleteAll(singleChoiceResponseRepository.findBySurveyResponse(r));
-            multipleChoiceResponseRepository.deleteAll(multipleChoiceResponseRepository.findBySurveyResponse(r));
-        }
+        for (SurveyResponse surveyResponse : surveyResponses)
+            // delete all instances
+            abstractResponseRepository.deleteAll(surveyResponse.getListOfResponses());
 
         // delete the surveyresponses
         surveyResponseRepository.deleteAll(surveyResponses);
@@ -518,23 +514,23 @@ public class CourseManagement {
     // TODO: Remove Before Production
 
     // Test Method, remove in final build
-    public void TestCreateCourse() {
+    public Course TestCreateCourse() {
         var name = "Rechnernetze";
 
         List<String> lectureTitles = new ArrayList<>();
         lectureTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
+                Arrays.asList("V - Einführung", "V - Bitübertragungsschicht", "V - Netztechnologien 1", "V - Netztechnologien 2",
+                        "V - Sicherungsschicht", "V - Vermittlungsschicht", "V - Transportschicht", "V - Netzwerkperformance",
+                        "V - Internetdienste", "V - Multimediakommunikation", "V - Mobile Computing", "V - Verteilte Systeme"));
         var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles, true);
 
         courseInstancesRepo.save(lecture);
 
         List<String> tutorialTitles = new ArrayList<>();
         lectureTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
+                Arrays.asList("T - Einführung", "T - Bitübertragungsschicht", "T - Netztechnologien 1", "T - Netztechnologien 2",
+                        "T - Sicherungsschicht", "T - Vermittlungsschicht", "T - Transportschicht", "T - Netzwerkperformance",
+                        "T - Internetdienste", "T - Multimediakommunikation", "T - Mobile Computing", "T - Verteilte Systeme"));
         var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles, true);
         tutorial.setSurvey(
                 "[{\"type\":\"SingleChoice\",\"question\":\"Hat die Übung Wissen vermittelt, welches du dir nicht im Selbststudium hättest erarbeiten können?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in den aktiven Austausch mit den Studierenden gesucht?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Waren die Anforderung dem Wissensstand der Studierenden angemessen?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Konnte die Übung gezielt Schwerpunkte setzen und Struktur vermitteln?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Konnte der/die Leiter/in dein Interesse an dem Thema wecken?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in die Möglichkeiten einer Übung gegenüber der Vorlesung ausgeschöpft?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Online Lehre v.s. Präsenzveranstaltung\",\"answers\":[\"Die Übung war digital und soll digital bleiben.\",\"Die Übung war digital und wäre als Präsenzveranstaltung besser.\",\"Die Übung war eine Präsenzveranstaltung und soll eine bleiben.\",\"Die Übung war eine Präsenzveranstaltung und sollte digital werden.\"]}]");
@@ -564,45 +560,9 @@ public class CourseManagement {
         var courseDate = LocalDate.of(2020, 10, 4);
         var semesterString = "SoSe 2020";
 
-        coursesRepo.save(new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty,
-                semesterString, courseDate));
-    }
-
-    public Course TimTestCreateCourse() {
-
-        List<String> lectureTitles = new ArrayList<>();
-        lectureTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var lecture = new CourseInstance(CourseType.LECTURE, 1, 11, lectureTitles, true);
-        List<String> tutorialTitles = new ArrayList<>();
-        tutorialTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var tutorial = new CourseInstance(CourseType.TUTORIAL, 2, 12, tutorialTitles, true);
-        List<String> seminarTitles = new ArrayList<>();
-        seminarTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var seminar = new CourseInstance(CourseType.SEMINAR, 3, 13, seminarTitles, true);
-        List<String> practicalTitles = new ArrayList<>();
-        practicalTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var practical = new CourseInstance(CourseType.TUTORIAL, 4, 14, practicalTitles, true);
-
-        var name = "Rechnernetze";
-        var semesterOfStudents = 4;
-        var faculty = CourseFaculty.COMPUTER_SCIENCE;
-        var courseDate = LocalDate.of(2020, 10, 4);
-        var semesterString = "SoSe 2020";
-
-        return new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty, semesterString,
-                courseDate);
+        Course course = new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty, semesterString, courseDate);
+        coursesRepo.save(course);
+        return course;
     }
 
 }

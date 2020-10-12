@@ -28,9 +28,9 @@ public class InstanceTitleForm {
      * converts it to a {@link org.json.JSONArray}. On position for each position 0
      * to 3, the corresponding titles for lecture, tutorial, seminar and practical,
      * respectively, can be found. The method iterates through, and uses the titles
-     * to set them in the {@linkplain qova.logic.courseManagement}
+     * to set them in the {@linkplain qova.logic.CourseManagement}
      * 
-     * @param courseType
+     * @param courseType The {@linkplain qova.enums.CourseType}
      * @return The instance titles as a {@link java.util.List}
      */
     public List<String> getInstanceTitlesForType(CourseType courseType) {

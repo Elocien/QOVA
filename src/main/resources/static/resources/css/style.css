@@ -480,6 +480,36 @@ select {
 }
 
 /*error.html*/
+.mail-container {
+  margin-top: 3rem;
+}
+.fake-tip {
+  margin-top: 2.5rem;
+}
+.fake-mail {
+  text-align: left;
+  background-color: white;
+  display: inline-block;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 10px 10px 5px grey;
+}
+.new-message {
+  color: white;
+  background-color: rgb(20, 20, 20);
+  padding: 0.5rem 1rem;
+}
+.mail-content {
+  margin: 0rem 0.5rem;
+  padding: 0.5rem 0rem;
+  border-bottom: 1px solid rgb(200, 200, 200);
+}
+.mail-content:first-of-type {
+  padding-top: none;
+}
+.mail-content:last-of-type {
+  border-bottom: none;
+}
 .huge-headline {
   font-size: 6rem;
 }

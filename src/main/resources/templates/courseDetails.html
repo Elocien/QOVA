@@ -23,8 +23,7 @@
             <div class="options-wrapper">
                 <div class="btn-delete">
                     <!--Copy Course-->
-                    <button type="submit" class="btn btn-link" data-toggle="modal" data-target="#copyModal"><i class="far fa-clone" data-toggle="tooltip" data-placement="top" title="COPY COURSE" th:title="#{detail.copyCourse}"></i>
-                    </button>
+                    <button type="submit" class="btn btn-link" data-toggle="modal" data-target="#copyModal"><i class="far fa-clone" data-toggle="tooltip" data-placement="top" title="COPY COURSE" th:title="#{detail.copyCourse}"></i></button>
                     <div class="modal fade" id="copyModal" tabindex="-1" role="dialog" aria-hidden="true">
                         <div class="modal-dialog modal-dialog-centered" role="document">
                             <div class="modal-content text-center">
@@ -181,7 +180,7 @@
                                         <!--5th Col-->
                                         <th:block th:switch="!${course.finalisedFlag} and !${__'course.'+${course_type}+'.surveyEditedFlag'__}">
                                             <td th:case="true" class="text-center">
-                                                <a type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
+                                                <a th:if="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
                                             </td>
                                             <td th:case="false" class="text-center">
                                                 <a th:if="!${course.finalisedFlag}" type="button" class="btn btn-link p-0 align-middle hide_me mr-2" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="left" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
@@ -206,19 +205,19 @@
                             <div id="carouselExampleIndicators" class="carousel slide" interval="false">
 
                                 <ol class="carousel-indicators">
-                                    <li th:each="course_type: ${type_list}" th:if="!${__'course.'+${course_type}+'.surveyEditedFlag'__}" data-target="#carouselExampleIndicators" data-slide-to="0"></li>
+                                    <li th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" data-target="#carouselExampleIndicators" data-slide-to="0"></li>
                                 </ol>
 
                                 <div class="carousel-inner">
 
-                                    <div th:each="course_type: ${type_list}" th:if="!${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="carousel-item">
+                                    <div th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="carousel-item">
                                         <img class="d-block w-100 mb-5" th:src="'data:image/jpeg;base64,' + ${__${course_type} + 'QRCode'__}" alt=">.<">
                                         <div class="carousel-caption text-dark d-block mb-1">
                                             <h5 th:text="#{${course_type}}">TEXT</h5>
                                         </div>
                                     </div>
 
-                                    <div th:if="${course.lecture.surveyEditedFlag and course.tutorial.surveyEditedFlag and course.seminar.surveyEditedFlag and course.practical.surveyEditedFlag}" class="carousel-item">
+                                    <div th:if="${!course.lecture.surveyEditedFlag and !course.tutorial.surveyEditedFlag and !course.seminar.surveyEditedFlag and !course.practical.surveyEditedFlag}" class="carousel-item">
                                         <img class="d-block w-100 mb-5 bg-dark" src="..." alt="" style="width: 300px; height: 300px;">
                                         <div class="carousel-caption text-dark d-block mb-0">
                                             <h5>No Surveys yet</h5>
@@ -243,15 +242,15 @@
                     <div th:if="!${course.lecture.surveyEditedFlag and course.tutorial.surveyEditedFlag and course.seminar.surveyEditedFlag and course.practical.surveyEditedFlag}" class="col-12 text-center">
                         <p class="m-0 font-weight-light mt-3" th:text="#{detail.download}"></p>
                         <div class="btn-group row" role="group" aria-label="First group">
-                            <a th:each="course_type: ${type_list}" th:if="!${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:href="${'/qrcode?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" target="_blank" href="#">TEXT</a>
+                            <a th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:href="${'/qrcode?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" target="_blank" href="#">TEXT</a>
                         </div>
                         <p class="m-0 font-weight-light mt-2" th:text="#{detail.download.link}"></p>
                         <div class="btn-group row" role="group" aria-label="First group">
-                            <button th:each="course_type: ${type_list}" th:if="!${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:onclick="copy_url([[${course_type}]])">TEXT</button>
+                            <button th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:onclick="copy_url([[${course_type}]])">TEXT</button>
                         </div>
                         <div class="row justify-content-center align-items-center mt-2">
                             <p id="url-label" class="m-0" th:text="|#{copied}:|" style="display: none;">Copied: </p>
-                            <input class="url-input" th:each="course_type: ${type_list}" th:if="!${__'course.'+${course_type}+'.surveyEditedFlag'__}" th:id="|${course_type}Link|" th:name="|${course_type}Link|" th:value="${__${course_type}+'Link'__}" style="display: none;" readonly>
+                            <input class="url-input" th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" th:id="|${course_type}Link|" th:name="|${course_type}Link|" th:value="${__${course_type}+'Link'__}" style="display: none;" readonly>
                         </div>
                     </div>
 
@@ -386,9 +385,9 @@
 
     function copy_url(type) {
         const target = document.getElementById(type+"Link");
-        navigator.clipboard.writeText(target.value);
+        navigator.clipboard.writeText(target.value); //copys the text from the input
         var hide_us = document.getElementsByClassName("url-input");
-        for (let i = 0; i < hide_us.lenght; ++i) {
+        for (let i = 0; i < hide_us.length; ++i) {
             hide_us[i].style.display = "none";
         }
         target.style.display = "";

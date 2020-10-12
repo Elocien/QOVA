@@ -14,6 +14,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
 
+    <!--Change Language-->
+    <script>
+        function change_language(lang) {
+            var url = window.location.href;
+            const trigger = "lang=";
+            if (url.includes(trigger)) {
+                var position = url.indexOf(trigger)+trigger.length;
+                var url_start = url.slice(0, position);
+                var url_end = url.slice(position+2);
+                url = url_start+lang+url_end;
+            }
+            else {
+                if (url.includes("?")) {
+                    url = url+"&"+trigger+lang;
+                }
+                else {
+                    url = url+"?"+trigger+lang;
+                }
+            }
+            window.location.replace(url);
+        }
+    </script>
+
     <script src="https://kit.fontawesome.com/5b9febade6.js" crossorigin="anonymous"></script>
 </head>
 
@@ -26,8 +49,8 @@
             <div class="navbar-collapse order-1 mr-auto">
                 <ul class="navbar-nav">
                     <a class="navbar-brand nav-bar-icon" href="/">
-                        <img class="logo logo_qr img-fluid" th:src="@{/resources/images/qova_logo_qr.png}" src="../static/resources/images/qova_logo_qr.png" alt="Logo"/>
-                        <img class="logo logo_text img-fluid" th:src="@{/resources/images/qova_logo_text.png}" src="../static/resources/images/qova_logo_text.png" alt="Logo"/>
+                        <img class="logo logo_qr img-fluid" th:src="@{/resources/images/qova_logo_qr.png}" alt="Logo"/>
+                        <img class="logo logo_text img-fluid" th:src="@{/resources/images/qova_logo_text.png}" alt="Logo"/>
                     </a>
                 </ul>
             </div>
@@ -46,8 +69,8 @@
                         <div class="dropdown-menu dropdown-menu-right mt-3" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item font-weight-bold" href="#" th:text="#{navbar.language}">LANGUAGE</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#"><svg class="custom-icon ger-icon"></svg><span class="custom-icon-text align-top">DE</span></a>
-                            <a class="dropdown-item" href="#"><svg class="custom-icon uk-icon"></svg><span class="custom-icon-text align-top">ENG</span></a>
+                            <a class="dropdown-item" th:onclick="change_language('de')"><svg class="custom-icon ger-icon" th:src="@{/resources/images/ger.svg}"></svg><span class="custom-icon-text align-top">DE</span></a>
+                            <a class="dropdown-item" th:onclick="change_language('')"><svg class="custom-icon uk-icon" th:src="@{/resources/images/uk.svg}"></svg><span class="custom-icon-text align-top">ENG</span></a>
                         </div>
                     </li>
                 </ul>
@@ -88,8 +111,8 @@
                     <div class="dropdown-menu dropdown-menu-right mt-3" aria-labelledby="navbarDropdown">
                         <a class="dropdown-item font-weight-bold" href="#" th:text="#{navbar.language}">LANGUAGE</a>
                         <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#"><svg class="custom-icon ger-icon"></svg><span class="custom-icon-text align-top">DE</span></a>
-                        <a class="dropdown-item" href="#"><svg class="custom-icon uk-icon"></svg><span class="custom-icon-text align-top">ENG</span></a>
+                        <a class="dropdown-item" th:onclick="change_language('de')"><svg class="custom-icon ger-icon" th:src="@{/resources/images/ger.svg}"></svg><span class="custom-icon-text align-top">DE</span></a>
+                        <a class="dropdown-item" th:onclick="change_language('')"><svg class="custom-icon uk-icon" th:src="@{/resources/images/uk.svg}"></svg><span class="custom-icon-text align-top">ENG</span></a>
                     </div>
                 </li>
             </ul>
@@ -98,5 +121,4 @@
 
 </div>
 </body>
-
 </html>

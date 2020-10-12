@@ -130,7 +130,64 @@
 			text_area.placeholder = "Antwort";
 
 			div.appendChild(text_area);
+
 			x.appendChild(div);
+
+
+
+
+		}
+		else if (value.type === "OnetoFive") {
+
+			x.className = "container bg-white border border-secondary rounded mt-4 SingleChoice";
+			x.setAttribute("id", index);
+
+			const selectionOption = document.createElement("DIV");
+			selectionOption.className = "Options OnetoFive";
+
+			const descriptionleft = document.createElement("DIV");
+			descriptionleft.className = "Option Label";
+			const description =document.createElement("Label");
+			description.className = "mb-0"
+			description.innerText = "Nicht zutreffend";
+
+			descriptionleft.appendChild(description);
+			selectionOption.appendChild(descriptionleft);
+
+			for (let i = 1; i< 6;i++){
+
+				const fullOption = document.createElement("DIV");
+				fullOption.className = "Option OnetoFive "+i;
+				const tickbox = document.createElement("INPUT");
+				tickbox.className ="tickbox OnetoFive";
+				tickbox.setAttribute("type","radio");
+				tickbox.setAttribute("value", i);
+				tickbox.setAttribute("id",i);
+				tickbox.setAttribute("name",index);
+				const description = document.createElement("LABEL");
+				description.className ="Label OnetoFive";
+				description.innerText = i;
+				description.setAttribute("for",i);
+
+
+				fullOption.appendChild(tickbox);
+				fullOption.appendChild(description);
+				selectionOption.appendChild(fullOption);
+
+			}
+
+			const descriptionright = document.createElement("DIV");
+			descriptionright.className = "Option Label";
+			const descriptionr =document.createElement("Label");
+			descriptionr.className = "mb-0"
+			descriptionr.innerText = "Zutreffend";
+
+			descriptionright.appendChild(descriptionr);
+			selectionOption.appendChild(descriptionright);
+
+
+			x.appendChild(selectionOption);
+
 
 
 
@@ -139,35 +196,35 @@
 
 		else if (value.type === "SingleChoice") {
 
-				x.className = "container bg-white border border-secondary rounded mt-4 SingleChoice";
-				x.setAttribute("id", index);
+			x.className = "container bg-white border border-secondary rounded mt-4 SingleChoice";
+			x.setAttribute("id", index);
 
-				const selectionOption = document.createElement("DIV");
-				selectionOption.className = "Options SingleChoice";
-
-
-				for (let i = 0; i< value.answers.length;i++){
-
-					const fullOption = document.createElement("DIV");
-					fullOption.className = "Option "+i;
-					const tickbox = document.createElement("INPUT");
-					tickbox.className ="tickbox";
-					tickbox.setAttribute("type","radio");
-					tickbox.setAttribute("value", value.answers[i]);
-					tickbox.setAttribute("id",value.answers[i]);
-					tickbox.setAttribute("name",index);
-					const description = document.createElement("LABEL");
-					description.innerText = value.answers[i];
-					description.setAttribute("for",value.answers[i]);
+			const selectionOption = document.createElement("DIV");
+			selectionOption.className = "Options SingleChoice";
 
 
-					fullOption.appendChild(tickbox);
-					fullOption.appendChild(description);
-					selectionOption.appendChild(fullOption);
+			for (let i = 0; i< value.answers.length;i++){
 
-				}
+				const fullOption = document.createElement("DIV");
+				fullOption.className = "Option "+i;
+				const tickbox = document.createElement("INPUT");
+				tickbox.className ="tickbox";
+				tickbox.setAttribute("type","radio");
+				tickbox.setAttribute("value", value.answers[i]);
+				tickbox.setAttribute("id",value.answers[i]);
+				tickbox.setAttribute("name",index);
+				const description = document.createElement("LABEL");
+				description.innerText = value.answers[i];
+				description.setAttribute("for",value.answers[i]);
 
-				x.appendChild(selectionOption);
+
+				fullOption.appendChild(tickbox);
+				fullOption.appendChild(description);
+				selectionOption.appendChild(fullOption);
+
+			}
+
+			x.appendChild(selectionOption);
 
 
 
@@ -205,7 +262,18 @@
 
 			}
 
+
+			const footer = document.createElement("DIV");
+			const hint = document.createElement("h6");
+			hint.className = "Hint Multiplechoice text-center";
+			hint.innerHTML = [[#{question.hint}]];
+
+			footer.appendChild(hint);
 			x.appendChild(selectionOption);
+			x.appendChild(footer);
+
+
+
 		}
 
 		document.getElementById("survey").appendChild(x);

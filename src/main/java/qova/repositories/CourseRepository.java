@@ -12,11 +12,11 @@ import org.springframework.data.repository.CrudRepository;
 @Repository
 public interface CourseRepository extends CrudRepository <Course, UUID> {
     
-    public Iterable<Course> findBycourseDateAfter(LocalDate date);
+    Iterable<Course> findByCourseDateAfter(LocalDate date);
 
-    public Iterable<Course> findBycourseDateBefore(LocalDate date);
+    Iterable<Course> findByCourseDateBefore(LocalDate date);
 
-    public Iterable<Course> findBycourseDateBetween(LocalDate date, LocalDate date2);
+    Iterable<Course> findByCourseDateBetween(LocalDate date, LocalDate date2);
 
 }
 

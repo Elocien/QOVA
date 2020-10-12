@@ -19,9 +19,10 @@
                     <div class="sticky">
                         <div class="btn-group-vertical float-lg-right border border-dark rounded mt-4 sticky" role="group" aria-label="First group">
                             <button type="button" class="btn btn-head btn-text-right" th:text="#{question.new}">NEW QUESTION</button>
-                            <button type="button" class="btn btn-list btn-text-right" onclick="addYesNoQuestion()"><span th:text="#{question.yes-no-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-list btn-text-right" onclick="addMultipleChoiceQuestion()"><span th:text="#{question.multiple-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-list btn-text-right" onclick="addSingleChoiceQuestion()"><span th:text="#{question.single-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                            <button type="button" class="btn btn-list btn-text-right" onclick="addYesNoQuestion()"><span th:text="#{question.yes-no-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                            <button type="button" class="btn btn-list btn-text-right" onclick="addOnetoFiveQuestion()"><span th:text="#{question.onetofive-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-list btn-text-right" onclick="addFreeTextQuestion()"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-head btn-text-right" th:text="#{question.edit}">OPTIONS</button>
                             <a type="button" class="btn btn-list btn-text-right" th:href="@{/course/details(id=${id})}" th:text="#{question.back}"></a>
@@ -115,6 +116,16 @@
             questionnaire.push(freetextQuestion);
             renderall();
 
+        }
+
+        function addOnetoFiveQuestion(){
+            saveInputs();
+            const onetofiveQuestion={
+                type: "OnetoFive",
+                question: "Question",
+            };
+            questionnaire.push(onetofiveQuestion);
+            renderall();
         }
 
         function getJson() {
@@ -268,6 +279,36 @@
 
             }
 
+            else if (value.type === "OnetoFive"){
+
+                //Create a html section for a YesNo-Question
+                x.className = "container bg-white border border-secondary rounded mt-4 OnetoFive";
+                x.setAttribute("id",index);
+
+                left.appendChild(createTitleDropdown(index,value.type));
+                right.appendChild(createButtonDelete(index));
+                right.appendChild(createButtonCopy(index));
+                if (index > 0) {
+                    right.appendChild(createButtonUp(index));
+                }
+                if (index+1 !== array.length && array.length >1){
+                    right.appendChild(createButtonDown(index));
+                }
+
+                //Textarea for the question input
+                const text_area = document.createElement("TEXTAREA");
+                text_area.className = "Textarea Question";
+                if (value.question === "Question"||value.question === ""){
+                    text_area.placeholder = "Question"
+                }
+                else {
+                    text_area.defaultValue = value.question;
+                }
+                text_area.setAttribute("id",index);
+                middle_col.appendChild(text_area);
+
+            }
+
             else if (value.type === "MultipleChoice"){
 
                 //Create a html section for a MultipleChoice-Question
@@ -315,7 +356,10 @@
             while (questionnaire.firstChild){
                 questionnaire.removeChild(questionnaire.lastChild);
             }
-
+            const toolbox = document.getElementsByClassName("tooltip fade");
+            if(toolbox.length===1) {
+                toolbox[0].remove();
+            }
         }
 
         function saveInputs() {
@@ -609,6 +653,9 @@
             else if(q_type == "FreeText"){
                 btn_dropdown.innerHTML = [[#{question.free-text-question}]];
             }
+            else if (q_type == "OnetoFive"){
+                btn_dropdown.innerHTML = [[#{question.onetofive-question}]];
+            }
             else{
                 btn_dropdown.innerHTML = [[#{question.yes-no-question}]];
             }
@@ -644,9 +691,17 @@
                 const btn_changetoSingleChoice = document.createElement("a");
                 btn_changetoSingleChoice.className = ("dropdown-item");
                 btn_changetoSingleChoice.innerHTML = [[#{question.single-choice}]];
-                btn_changetoSingleChoice.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 4 + ")");
+                btn_changetoSingleChoice.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 3 + ")");
                 dropdown_menu.appendChild(btn_changetoSingleChoice);
 
+            }
+
+            if (q_type !== "OnetoFive"){
+                const btn_changetoOnetoFive = document.createElement("a");
+                btn_changetoOnetoFive.className = ("dropdown-item");
+                btn_changetoOnetoFive.innerHTML = [[#{question.onetofive-question}]];
+                btn_changetoOnetoFive.setAttribute("onclick","changeQuestionTyp("+q_index+"," + 4 + ")");
+                dropdown_menu.appendChild(btn_changetoOnetoFive);
             }
 
             if (q_type !== "FreeText") {
@@ -681,7 +736,13 @@
                     delete questionnaire[index].answers;
                 }
             }
-            else if (questiontyp ===4){
+            else if (questiontyp===4){
+                questionnaire[index].type="OnetoFive";
+                if(questionnaire[index].answers){
+                    delete questionnaire[index].answers;
+                }
+            }
+            else if (questiontyp ===3){
                 questionnaire[index].type = "SingleChoice";
                 if (!questionnaire[index].answers){
                     questionnaire[index].answers=[];

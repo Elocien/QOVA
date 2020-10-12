@@ -1,26 +1,38 @@
 package qova.objects;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.OrderColumn;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.json.JSONObject;
+import org.json.JSONArray;
+
+import jdk.jfr.BooleanFlag;
 import qova.enums.CourseType;
 
 @Entity
 public class CourseInstance {
 
     // Id
-    private @Id @GeneratedValue(strategy = GenerationType.AUTO) Long id;
+    @Id
+    @GeneratedValue(generator = "UUID")
+    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+    @Column(name = "id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
+    private UUID id;
 
     // Either LECTURE, TUTORIAL, SEMINAR OR PRACTICAL
+    @Enumerated
     private CourseType courseType;
 
     // The Survey as JSON
@@ -45,11 +57,13 @@ public class CourseInstance {
     // Flag used to indicate wether the instance is active (E.g. The instance is of
     // type practical, but isn't set as being evaluated by the course owner;
     // therefore it is set as active = false)
+    @BooleanFlag
     private Boolean active;
 
     // Flag used to indicate that the survey has been edited an saved in some form
     // (This is primarilly used to allow surveys to be set without adding to the
     // default survey)
+    @BooleanFlag
     private Boolean surveyEditedFlag;
 
     // Needed for JPA purposes
@@ -91,7 +105,7 @@ public class CourseInstance {
      * is not set. The CourseInstance is created regardless, in case it must be used
      * in future
      * 
-     * @param courseType
+     * @param courseType The {@linkplain qova.enums.CourseType}
      */
     public CourseInstance(CourseType courseType) {
         this.courseType = courseType;
@@ -101,6 +115,10 @@ public class CourseInstance {
         this.instanceTitles = new ArrayList<>();
         this.active = false;
         this.surveyEditedFlag = false;
+    }
+
+    public UUID getId() {
+        return this.id;
     }
 
     public CourseType getCourseType() {
@@ -153,9 +171,9 @@ public class CourseInstance {
 
     public void setInactive() {
         this.active = false;
-        this.groupAmount = null;
-        this.instanceAmount = null;
-        this.instanceTitles = null;
+        this.groupAmount = 0;
+        this.instanceAmount = 0;
+        this.instanceTitles = new ArrayList<>();
     }
 
     public void setSurveEditedFlag() {
@@ -164,6 +182,45 @@ public class CourseInstance {
 
     public Boolean getSurveyEditedFlag() {
         return this.surveyEditedFlag;
+    }
+
+    public List<String> getOptionsForResponseAtPosition(Integer position) {
+
+        JSONArray jsonArray = new JSONArray(survey);
+        JSONObject jsonObject;
+        try {
+            jsonObject = jsonArray.getJSONObject(position);
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+
+        if (jsonObject.getString("type").equals("OnetoFive")) {
+            return new ArrayList<>(Arrays.asList("1", "2", "3", "4", "5"));
+        } else if (jsonObject.getString("type").equals("SingleChoice")) {
+            JSONArray answerOptions = jsonObject.getJSONArray("answers");
+
+            // Array of all possibilieties, passed to the constructor of the
+            // MultipleChoiceResponse
+            ArrayList<String> singleChoiceOptions = new ArrayList<>(answerOptions.length());
+
+            for (int j = 0; j < answerOptions.length(); j++) {
+                singleChoiceOptions.add(answerOptions.getString(j));
+            }
+
+            return singleChoiceOptions;
+        }
+
+        else {
+            return new ArrayList<>();
+        }
+    }
+
+    // We assume a JSONArray can be created without exception, as this is checked
+    // when a created survey is submitted
+    public String getQuestionTextForQuestionAtPosition(Integer position) {
+        JSONArray jsonArray = new JSONArray(survey);
+
+        return jsonArray.getJSONObject(position).getString("question");
     }
 
 }

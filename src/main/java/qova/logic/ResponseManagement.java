@@ -1,8 +1,7 @@
 package qova.logic;
 
-import java.io.IOException;
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -17,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import qova.enums.CourseType;
 import qova.enums.LocalizationOption;
 import qova.enums.ResponseType;
+import qova.objects.AbstractResponse;
 import qova.objects.BinaryResponse;
 import qova.objects.Course;
 import qova.objects.CourseInstance;
@@ -63,11 +63,11 @@ public class ResponseManagement {
         if (stringType.equals("LECTURE")) {
             type = CourseType.LECTURE;
         } else if (stringType.equals("TUTORIAL")) {
-            type = CourseType.LECTURE;
+            type = CourseType.TUTORIAL;
         } else if (stringType.equals("SEMINAR")) {
-            type = CourseType.LECTURE;
+            type = CourseType.SEMINAR;
         } else if (stringType.equals("PRACTICAL")) {
-            type = CourseType.LECTURE;
+            type = CourseType.PRACTICAL;
         } else
             type = null;
 
@@ -89,7 +89,7 @@ public class ResponseManagement {
     }
 
     // PDF Generation (ENGLISH)
-    public byte[] generatePDF_en(Course course, CourseType type, Integer groupNumber, Integer instanceNumber)
+    public byte[] generatePDFEnglish(Course course, CourseType type, Integer groupNumber, Integer instanceNumber)
             throws Exception {
 
         // retrieve the SurveyResponse object from repository
@@ -98,65 +98,34 @@ public class ResponseManagement {
 
         // Generate PDF
         PDFGenerator pdfGen = new PDFGenerator();
-        return pdfGen.createPdf(rsp.get(), findResponsesBySurveyResponse(rsp.get()), LocalizationOption.EN);
+        return pdfGen.createPdf(rsp.get(), LocalizationOption.EN);
     }
 
     /**
-     * This method retrieves all of the surveyResponses
+     * Generates a CSV file of out of the student responses compiled in the
+     * {@linkplain qova.objects.SurveyResponse}
      * 
-     * @param course
-     * @param type
-     * @param groupNumber
-     * @param instanceNumber
-     * @return
-     * @throws Exception
+     * @param listOfSurveyResponses A {@link java.util.List} of
+     *                              {@linkplain qova.objects.SurveyResponse}
+     * @return a ayte[] containing the CSV
+     * @throws Exception WriterException from the csvGen
      */
-    public byte[] generateCSV_en(Course course, CourseType type, String groupNumber, String instanceNumber)
-            throws Exception {
+    public byte[] generateCSVEnglish(List<SurveyResponse> listOfSurveyResponses) throws Exception {
 
-        // Initalise List of SurveyResponses to be passed to the CSV generator
-        List<SurveyResponse> listOfSurveyResponses = new ArrayList<>();
-
-        if (groupNumber.equals("all") && instanceNumber.equals("all")) {
-
-            findSurveyResponseByCourseAndCourseType(course, type).forEach(listOfSurveyResponses::add);
-
-        } else if (groupNumber.equals("all")) {
-            findSurveyResponseByCourseAndCourseTypeAndInstanceNumber(course, type, Integer.parseInt(instanceNumber))
-                    .forEach(listOfSurveyResponses::add);
-        } else if (instanceNumber.equals("all")) {
-            findSurveyResponseByCourseAndCourseTypeAndGroupNumber(course, type, Integer.parseInt(groupNumber))
-                    .forEach(listOfSurveyResponses::add);
-        } else {
-            Optional<SurveyResponse> s = findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course,
-                    type, Integer.parseInt(groupNumber), Integer.parseInt(instanceNumber));
-            if (s.isPresent()) {
-                listOfSurveyResponses.add(s.get());
-            }
-        }
-
-        // Create List containing lists of surveyObjects (BinaryResponse, TextResponse,
-        // etc.)
-        List<List<Object>> listOfResponseObjects = new ArrayList<>();
-
-        for (SurveyResponse r : listOfSurveyResponses) {
-            listOfResponseObjects.add(findResponsesBySurveyResponse(r));
-        }
-
-        if (listOfResponseObjects.isEmpty()) {
+        if (listOfSurveyResponses.isEmpty()) {
             return new byte[0];
         }
 
         // Generate PDF
         CSVGenerator csvGen = new CSVGenerator();
-        return csvGen.createCSV(course, listOfResponseObjects, LocalizationOption.EN);
+        return csvGen.createCSV(listOfSurveyResponses, LocalizationOption.EN);
     }
 
     /**
      * Verifies that the length of the submitted JSONArray does not exceed 100
      * elements, as the number of questions per survey is limited to 100;
      * 
-     * @param json {@link org.json.JSONArray}
+     * @param jsonArray A {@link org.json.JSONArray}
      * @return A boolean flag, which is handled in the controller
      */
     public Boolean verifyJsonArray(JSONArray jsonArray) {
@@ -182,83 +151,272 @@ public class ResponseManagement {
     }
 
     /**
-     * Used in the PostMapping of the SurveyEditor. When a survey is created, this
-     * method is used to serialise the {@linkplain SurveyResponse}s needed to
-     * persist students answers
+     * Verifies the response of the student. Also makes sure that all quesitons were
+     * answered
      * 
-     * @param jsonArray  json.org.JSONArray containing the JSON string representing
-     *                   the created survey
-     * @param course     {@linkplain Course}
-     * @param stringType {@linkplain CourseType} as a String, passed from the model
+     * @param studentResponseJson A {@link org.json.JSONArray}
+     * @param surveyAsString      The survey String that is saved in a
+     *                            {@linkplain qova.objects.CourseInstance}
+     * 
+     * @return A boolean flag, which is handled in the controller
+     */
+    public Boolean verifyStudentResponseJson(JSONArray studentResponseJson, String surveyAsString) {
+
+        try {
+            Integer surveyArrayLength = new JSONArray(surveyAsString).length();
+            if (studentResponseJson.length() == surveyArrayLength) {
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+
+        // TODO: Check for other malicious strings
+
+        return false;
+    }
+
+    /**
+     * Used in the finalisation process of a {@linkplain qova.objects.Course}. When
+     * a User finalises a Course, this method is used to serialise the
+     * {@linkplain SurveyResponse}s, as well as all
+     * {@linkplain qova.objects.AbstractResponse} needed to persist students
+     * answers.
+     * 
+     * @param jsonArray json.org.JSONArray containing the JSON string representing
+     *                  the created survey
+     * @param course    {@linkplain Course}
+     * @param type      {@linkplain CourseType} as a String, passed from the model
      */
     public void createSurveyResponse(JSONArray jsonArray, Course course, CourseType type) {
 
         // Resolve type and find correct instance of course (lecture, tutorial, etc.)
         CourseInstance courseInstance = course.getInstance(type);
 
+        int groupAmount = courseInstance.getGroupAmount();
+        int instanceAmount = courseInstance.getInstanceAmount();
+
+        List<List<AbstractResponse>> listOfResponses = generateResponseListFromJsonArray(jsonArray,
+                groupAmount * instanceAmount);
+
+        // The list conating all SurveyResponses
+        List<SurveyResponse> listOfSurveyResponses = new ArrayList<>();
+
+        // Used to iterate through the listOfResponses
+        int listposition = 0;
+
         // for each instance and group, create a SurveyResponse and persist it
-        for (int group = 1; group <= courseInstance.getGroupAmount(); group++) {
-            for (int instance = 1; instance <= courseInstance.getInstanceAmount(); instance++) {
+        for (int group = 1; group <= groupAmount; group++) {
+            for (int instance = 1; instance <= instanceAmount; instance++) {
 
-                SurveyResponse response = new SurveyResponse(course, type, instance, group);
-
-                // parse json to serialise response objects
-                for (int surveyPosition = 0; surveyPosition < jsonArray.length(); surveyPosition++) {
-                    JSONObject question = jsonArray.getJSONObject(surveyPosition);
-
-                    switch (question.getString("type")) {
-                        case "YesNo":
-                            binaryResponseRepository
-                                    .save(new BinaryResponse(response, question.getString("question"), surveyPosition));
-
-                            break;
-
-                        case "FreeText":
-                            textResponseRepository
-                                    .save(new TextResponse(response, question.getString("question"), surveyPosition));
-                            break;
-
-                        case "MultipleChoice":
-                            // Array of all possibilities
-                            JSONArray multipleChoiceAnswerOptions = question.getJSONArray("answers");
-
-                            // Array of all possibilieties, passed to the constructor of the
-                            // MultipleChoiceResponse
-                            ArrayList<String> multipleChoiceOptions = new ArrayList<>(
-                                    multipleChoiceAnswerOptions.length());
-
-                            for (int j = 0; j < multipleChoiceAnswerOptions.length(); j++) {
-                                multipleChoiceOptions.add(multipleChoiceAnswerOptions.getString(j));
-                            }
-
-                            multipleChoiceResponseRepository.save(new MultipleChoiceResponse(response,
-                                    question.getString("question"), surveyPosition, multipleChoiceOptions));
-                            break;
-
-                        case "SingleChoice":
-                            // Array of all possibilities
-                            JSONArray singleChoiceAnswerOptions = question.getJSONArray("answers");
-
-                            // Array of all possibilieties, passed to the constructor of the
-                            // MultipleChoiceResponse
-                            ArrayList<String> singleChoiceOptions = new ArrayList<>(singleChoiceAnswerOptions.length());
-
-                            for (int j = 0; j < singleChoiceAnswerOptions.length(); j++) {
-                                singleChoiceOptions.add(singleChoiceAnswerOptions.getString(j));
-                            }
-
-                            singleChoiceResponseRepository.save(new SingleChoiceResponse(response,
-                                    question.getString("question"), surveyPosition, singleChoiceOptions));
-                            break;
-
-                        default:
-                            break;
-                    }
-                }
+                SurveyResponse response = new SurveyResponse(course, type, instance, group,
+                        listOfResponses.get(listposition));
+                listposition++;
 
                 // save the new response
-                surveyResponseRepository.save(response);
+                listOfSurveyResponses.add(response);
             }
+        }
+
+        surveyResponseRepository.saveAll(listOfSurveyResponses);
+    }
+
+    /**
+     * The method parses the json generated by the questioneditor. The json
+     * represents the default survey, concatenated with the survey created by the
+     * course owner. This method takes care of serialising the Response Objects, as
+     * well as persisting them. It creates a list containing sublists of
+     * {@linkplain qova.objects.AbstractResponse}. Each sublist is then passed to a
+     * {@linkplain qova.objects.SurveyResponse}
+     * 
+     * @param jsonArray      An {@link org.json.JSONArray} containing the survey
+     *                       generated by the questioneditor
+     * @param numberOfCopies The field indicates how often the ResponseObject needs
+     *                       to be created and persisted. The number is a multiple
+     *                       of group and instance amount, because this is the
+     *                       amount of SurveyResponses, that must be created.
+     * @return A {@link java.util.List} of {@link java.util.List}'s, which contain
+     *         {@linkplain qova.objects.AbstractResponse}
+     */
+    public List<List<AbstractResponse>> generateResponseListFromJsonArray(JSONArray jsonArray, Integer numberOfCopies) {
+
+        List<List<AbstractResponse>> listOfResponses = new ArrayList<>();
+        for (int i = 0; i < numberOfCopies; i++) {
+            listOfResponses.add(new ArrayList<>());
+        }
+
+        // parse json to serialise response objects
+        for (int surveyPosition = 0; surveyPosition < jsonArray.length(); surveyPosition++) {
+
+            // The Json Object containing all of the data for the quesiton at the given
+            // position
+            JSONObject jsonObject = jsonArray.getJSONObject(surveyPosition);
+
+            // Variables used to set Attributes
+            Boolean defaultQuestionFlag;
+            Integer numberOfAnswerPossibilities;
+
+            switch (jsonObject.getString("type")) {
+                case "YesNo":
+
+                    // The values taken by the BinaryResponse
+                    try {
+                        defaultQuestionFlag = jsonObject.getBoolean("default");
+                    } catch (Exception e) {
+                        defaultQuestionFlag = false;
+                    }
+
+                    for (int sublistPosition = 0; sublistPosition < numberOfCopies; sublistPosition++) {
+                        BinaryResponse br = new BinaryResponse(surveyPosition, defaultQuestionFlag);
+                        binaryResponseRepository.save(br);
+                        listOfResponses.get(sublistPosition).add(br);
+                    }
+                    break;
+
+                case "FreeText":
+                    try {
+                        defaultQuestionFlag = jsonObject.getBoolean("default");
+                    } catch (Exception e) {
+                        defaultQuestionFlag = false;
+                    }
+
+                    for (int sublistPosition = 0; sublistPosition < numberOfCopies; sublistPosition++) {
+                        TextResponse tr = new TextResponse(surveyPosition, defaultQuestionFlag);
+                        textResponseRepository.save(tr);
+                        listOfResponses.get(sublistPosition).add(tr);
+                    }
+                    break;
+
+                case "MultipleChoice":
+                    // Array of all possibilities
+                    numberOfAnswerPossibilities = jsonObject.getJSONArray("answers").length();
+                    try {
+                        defaultQuestionFlag = jsonObject.getBoolean("default");
+                    } catch (Exception e) {
+                        defaultQuestionFlag = false;
+                    }
+
+                    for (int sublistPosition = 0; sublistPosition < numberOfCopies; sublistPosition++) {
+                        MultipleChoiceResponse mcr = new MultipleChoiceResponse(surveyPosition,
+                                numberOfAnswerPossibilities, defaultQuestionFlag);
+                        multipleChoiceResponseRepository.save(mcr);
+                        listOfResponses.get(sublistPosition).add(mcr);
+                    }
+                    break;
+
+                case "SingleChoice":
+                    // Array of all possibilities
+                    numberOfAnswerPossibilities = jsonObject.getJSONArray("answers").length();
+                    try {
+                        defaultQuestionFlag = jsonObject.getBoolean("default");
+                    } catch (Exception e) {
+                        defaultQuestionFlag = false;
+                    }
+
+                    for (int sublistPosition = 0; sublistPosition < numberOfCopies; sublistPosition++) {
+                        SingleChoiceResponse scr = new SingleChoiceResponse(surveyPosition, numberOfAnswerPossibilities,
+                                defaultQuestionFlag);
+                        singleChoiceResponseRepository.save(scr);
+                        listOfResponses.get(sublistPosition).add(scr);
+                    }
+                    break;
+
+                case "OnetoFive":
+                    // Array of all possibilities
+                    numberOfAnswerPossibilities = 5;
+                    try {
+                        defaultQuestionFlag = jsonObject.getBoolean("default");
+                    } catch (Exception e) {
+                        defaultQuestionFlag = false;
+                    }
+
+                    for (int sublistPosition = 0; sublistPosition < numberOfCopies; sublistPosition++) {
+                        SingleChoiceResponse scr = new SingleChoiceResponse(surveyPosition, numberOfAnswerPossibilities,
+                                defaultQuestionFlag);
+                        singleChoiceResponseRepository.save(scr);
+                        listOfResponses.get(sublistPosition).add(scr);
+                    }
+                    break;
+
+                default:
+                    break;
+            }
+        }
+        return listOfResponses;
+    }
+
+    public JSONArray generateSurveyResultsJson(CourseInstance courseInstance,
+            List<SurveyResponse> listOfSurveyResponses) {
+
+        // Die CourseInstance hat eine methode,
+        // getOptionsForResponseAtPosition(Integer position), welche dir die optionen
+        // (also z.b. "Die Vorlesung war gut", "Die Vorlesung war ok", "Die Vorlesung
+        // war schlecht") als List zurück gibt. Das brauchts du für die MultipleChoice
+        // und SingleChoiceResponse dinger, um die optionen darzustellen. Dazu hat jede
+        // AbstractResponse, die superclass von den BinaryResponse, TextResponse, etc.
+        // eine methode getQuestion(), welche dir die frage zu der response liefert.
+        // Beide methoden brauchen die position der frage in der survey, welche bei 0
+        // startet. Essentially musst du dir alle werte holen, zusammenrechnen, und dann
+        // in den JSONArray packen, um ihn dann im frontend zu bearbeiten.
+
+        JSONArray jsonArray = new JSONArray();
+        return jsonArray;
+    }
+
+    public List<SurveyResponse> findSurveyResponses(Course course, CourseType type, String groupNumber,
+            String instanceNumber) {
+
+        // Initalise List of SurveyResponses to be passed to the CSV generator
+        List<SurveyResponse> listOfSurveyResponses = new ArrayList<>();
+
+        if (groupNumber.equals("all") && instanceNumber.equals("all")) {
+
+            findSurveyResponseByCourseAndCourseType(course, type).forEach(listOfSurveyResponses::add);
+
+        } else if (groupNumber.equals("all")) {
+            findSurveyResponseByCourseAndCourseTypeAndInstanceNumber(course, type, Integer.parseInt(instanceNumber))
+                    .forEach(listOfSurveyResponses::add);
+        } else if (instanceNumber.equals("all")) {
+            findSurveyResponseByCourseAndCourseTypeAndGroupNumber(course, type, Integer.parseInt(groupNumber))
+                    .forEach(listOfSurveyResponses::add);
+        } else {
+            Optional<SurveyResponse> s = findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course,
+                    type, Integer.parseInt(groupNumber), Integer.parseInt(instanceNumber));
+            listOfSurveyResponses.add(s.get());
+        }
+
+        return listOfSurveyResponses;
+    }
+
+    public void submitStudentResponse(SurveyResponse surveyResponse, JSONArray studentResponseJson) {
+
+        Integer surveyPosition = 0;
+
+        JSONArray currentPositionArray = studentResponseJson.getJSONArray(surveyPosition);
+
+        for (AbstractResponse abstractResponse : surveyResponse.getListOfResponses()) {
+
+            if (abstractResponse instanceof qova.objects.BinaryResponse) {
+                if (currentPositionArray.getInt(0) == 0) {
+                    ((BinaryResponse) abstractResponse).incrementYes();
+                } else {
+                    ((BinaryResponse) abstractResponse).incrementNo();
+                }
+            }
+
+            if (abstractResponse instanceof qova.objects.TextResponse) {
+                ((TextResponse) abstractResponse).addTextSubmission(currentPositionArray.getString(0));
+            }
+
+            if (abstractResponse instanceof qova.objects.SingleChoiceResponse) {
+                ((SingleChoiceResponse) abstractResponse).incrementTotal(currentPositionArray.getInt(0));
+            }
+
+            if (abstractResponse instanceof qova.objects.MultipleChoiceResponse) {
+                ((MultipleChoiceResponse) abstractResponse).incrementTotals(currentPositionArray);
+            }
+
+            surveyPosition++;
         }
     }
 
@@ -325,211 +483,64 @@ public class ResponseManagement {
         return surveyResponseRepository.findByCourseAndCourseType(course, type);
     }
 
-    public List<Object> findResponsesBySurveyResponse(SurveyResponse surveyResponse) {
-
-        List<Object> listOfResponses = new ArrayList<>();
-
-        int surveylength = new JSONArray(
-                surveyResponse.getCourse().getInstance(surveyResponse.getCourseType()).getSurvey()).length();
-
-        for (int i = 0; i < surveylength; i++) {
-            listOfResponses.add("");
-        }
-
-        for (BinaryResponse br : binaryResponseRepository.findBySurveyResponse(surveyResponse)) {
-            listOfResponses.set(br.getSurveyPosition(), br);
-        }
-
-        for (TextResponse tr : textResponseRepository.findBySurveyResponse(surveyResponse)) {
-            listOfResponses.set(tr.getSurveyPosition(), tr);
-        }
-
-        for (SingleChoiceResponse scr : singleChoiceResponseRepository.findBySurveyResponse(surveyResponse)) {
-            listOfResponses.set(scr.getSurveyPosition(), scr);
-        }
-
-        for (MultipleChoiceResponse mcr : multipleChoiceResponseRepository.findBySurveyResponse(surveyResponse)) {
-            listOfResponses.set(mcr.getSurveyPosition(), mcr);
-        }
-
-        return listOfResponses;
-    }
-
-    // Test Method, remove in build
+    // TEST METHODS
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    //
+    // Test Methods, remove in build
     public void createTestResponses(Course course) {
 
-        var type = CourseType.TUTORIAL;
-        var instance = 1;
-        var group = 1;
+        String surveyJson = "[{\"type\":\"OnetoFive\",\"question\":\"Hat die Übung Wissen vermittelt, welches du dir nicht im Selbststudium hättest erarbeiten können?\"},{\"type\":\"OnetoFive\",\"question\":\"Hat der/die Leiter/in den aktiven Austausch mit den Studierenden gesucht?\"},{\"type\":\"OnetoFive\",\"question\":\"Waren die Anforderung dem Wissensstand der Studierenden angemessen?\"},{\"type\":\"OnetoFive\",\"question\":\"Konnte die Übung gezielt Schwerpunkte setzen und Struktur vermitteln?\"},{\"type\":\"OnetoFive\",\"question\":\"Konnte der/die Leiter/in dein Interesse an dem Thema wecken?\"},{\"type\":\"OnetoFive\",\"question\":\"Hat der/die Leiter/in die Möglichkeiten einer Übung gegenüber der Vorlesung ausgeschöpft?\"},{\"type\":\"OnetoFive\",\"question\":\"Online Lehre v.s. Präsenzveranstaltung\",\"answers\":[\"Die Übung war digital und soll digital bleiben.\",\"Die Übung war digital und wäre als Präsenzveranstaltung besser.\",\"Die Übung war eine Präsenzveranstaltung und soll eine bleiben.\",\"Die Übung war eine Präsenzveranstaltung und sollte digital werden.\"]},{\"type\":\"FreeText\",\"question\":\"An dieser Stelle würden wir uns über konstruktive Kritik, aber auch über Anregungen und Lob freuen!\"}]";
 
-        SurveyResponse response = new SurveyResponse(course, type, instance, group);
-        surveyResponseRepository.save(response);
+        createSurveyResponse(new JSONArray(surveyJson), course, CourseType.LECTURE);
 
-        BinaryResponse bnr = new BinaryResponse(response,
-                "Would you consider recommending the lecture to other students?", 0);
-        binaryResponseRepository.save(bnr);
-        for (int i = 0; i < 35; i++) {
-            bnr.incrementYes();
-        }
-        for (int i = 0; i < 15; i++) {
-            bnr.incrementNo();
-        }
+        Iterable<SurveyResponse> responses = findSurveyResponseByCourseAndCourseType(course, CourseType.LECTURE);
 
-        ArrayList<String> mcOptions = new ArrayList<>();
-        mcOptions.add("1");
-        mcOptions.add("2");
-        mcOptions.add("3");
-        mcOptions.add("4");
-        mcOptions.add("5");
+        List<Integer> Answers1 = new ArrayList<>();
+        Answers1.add(0);
+        Answers1.add(1);
+        Answers1.add(3);
+        JSONArray mcAnswers1 = new JSONArray(Answers1);
 
-        MultipleChoiceResponse mcr = new MultipleChoiceResponse(response,
-                "From 1 to 5, what would you rate the lecture?", 1, mcOptions);
-        multipleChoiceResponseRepository.save(mcr);
-
-        ArrayList<Integer> mcAnswers1 = new ArrayList<>();
-        mcAnswers1.add(0);
-        mcAnswers1.add(1);
-        mcAnswers1.add(3);
-
-        ArrayList<Integer> mcAnswers2 = new ArrayList<>();
-        mcAnswers2.add(1);
-        mcAnswers2.add(4);
-
-        ArrayList<Integer> mcAnswers3 = new ArrayList<>();
-        mcAnswers3.add(2);
-        mcAnswers3.add(4);
-
-        for (int i = 0; i < 25; i++) {
-            mcr.incrementTotals(mcAnswers1);
-        }
-        for (int i = 0; i < 15; i++) {
-            mcr.incrementTotals(mcAnswers2);
-        }
-        for (int i = 0; i < 10; i++) {
-            mcr.incrementTotals(mcAnswers3);
+        for (SurveyResponse resp : responses) {
+            for (int i = 0; i < 50; i++) {
+                String id = UUID.randomUUID().toString();
+                resp.addStundentIdToSubmissionListAndIncrementCounter(id);
+                List<AbstractResponse> listOfResponses = resp.getListOfResponses();
+                for (AbstractResponse ar : listOfResponses) {
+                    if (ar instanceof BinaryResponse){
+                        if(i % 3 == 0){
+                            ((BinaryResponse) ar).incrementNo();
+                        }
+                        else {
+                            ((BinaryResponse) ar).incrementYes();
+                        }
+                    }
+                    if (ar instanceof TextResponse){
+                        ((TextResponse) ar).addTextSubmission("This is a test Response");
+                    }
+                    if (ar instanceof SingleChoiceResponse){
+                        ((SingleChoiceResponse) ar).incrementTotal(i % 5);
+                    }
+                    if (ar instanceof MultipleChoiceResponse){
+                        ((MultipleChoiceResponse) ar).incrementTotals(mcAnswers1);
+                    }
+                }
+            }
         }
 
-        TextResponse txr = new TextResponse(response, "What is your opinion of the lecture, is it helpful?", 2);
-        textResponseRepository.save(txr);
-        for (int i = 0; i < 20; i++) {
-            txr.addTextSubmission("this is a bit of a test");
-        }
-        for (int i = 0; i < 10; i++) {
-            txr.addTextSubmission("this is a larger test to test the test");
-        }
-        for (int i = 0; i < 17; i++) {
-            txr.addTextSubmission("short test");
-        }
-        for (int i = 0; i < 3; i++) {
-            txr.addTextSubmission(
-                    "this is a very very very very very very very very very very very very very very very very very very very very large test");
-        }
-
-        List<String> listOfStudentIds = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
-            String id = UUID.randomUUID().toString();
-            response.addStundentIdToSubmissionListAndIncrementCounter(id);
-            listOfStudentIds.add(id);
-        }
     }
 
-    // Test Method, remove in build
-    public SurveyResponse TimCreateTestResponses(Course course) {
-
-        var type = CourseType.TUTORIAL;
-        var instance = 1;
-        var group = 1;
-
-        SurveyResponse response = new SurveyResponse(course, type, instance, group);
-
-        return response;
-    }
-
-    public List<Object> TimCreateTestListOfResponses(SurveyResponse response) {
-
-        BinaryResponse bnr = new BinaryResponse(response,
-                "Would you consider recommending the lecture to other students?", 0);
-        binaryResponseRepository.save(bnr);
-        for (int i = 0; i < 35; i++) {
-            bnr.incrementYes();
-        }
-        for (int i = 0; i < 15; i++) {
-            bnr.incrementNo();
-        }
-
-        ArrayList<String> mcOptions = new ArrayList<>();
-        mcOptions.add("1");
-        mcOptions.add("2");
-        mcOptions.add("3");
-        mcOptions.add("4");
-        mcOptions.add("5");
-
-        MultipleChoiceResponse mcr = new MultipleChoiceResponse(response,
-                "From 1 to 5, what would you rate the lecture?", 1, mcOptions);
-        multipleChoiceResponseRepository.save(mcr);
-
-        ArrayList<Integer> mcAnswers1 = new ArrayList<>();
-        mcAnswers1.add(0);
-        mcAnswers1.add(1);
-        mcAnswers1.add(3);
-
-        ArrayList<Integer> mcAnswers2 = new ArrayList<>();
-        mcAnswers2.add(1);
-        mcAnswers2.add(4);
-
-        ArrayList<Integer> mcAnswers3 = new ArrayList<>();
-        mcAnswers3.add(2);
-        mcAnswers3.add(4);
-
-        for (int i = 0; i < 25; i++) {
-            mcr.incrementTotals(mcAnswers1);
-        }
-        for (int i = 0; i < 15; i++) {
-            mcr.incrementTotals(mcAnswers2);
-        }
-        for (int i = 0; i < 10; i++) {
-            mcr.incrementTotals(mcAnswers3);
-        }
-
-        TextResponse txr = new TextResponse(response, "What is your opinion of the lecture, is it helpful?", 2);
-        textResponseRepository.save(txr);
-        for (int i = 0; i < 20; i++) {
-            txr.addTextSubmission("this is a bit of a test");
-        }
-        for (int i = 0; i < 10; i++) {
-            txr.addTextSubmission("this is a larger test to test the test");
-        }
-        for (int i = 0; i < 17; i++) {
-            txr.addTextSubmission("short test");
-        }
-        for (int i = 0; i < 3; i++) {
-            txr.addTextSubmission(
-                    "this is a very very very very very very very very very very very very very very very very very very very very large test");
-        }
-
-        List<String> listOfStudentIds = new ArrayList<>();
-        for (int i = 0; i < 50; i++) {
-            String id = UUID.randomUUID().toString();
-            response.addStundentIdToSubmissionListAndIncrementCounter(id);
-            listOfStudentIds.add(id);
-        }
-
-        List<Object> objects = new ArrayList<>();
-        objects.add(bnr);
-        objects.add(txr);
-        objects.add(mcr);
-
-        return objects;
-    }
-
-    public byte[] generatePDF_test() throws IOException, Exception {
-
-        // Add responses to arrayList
-        Iterable<SurveyResponse> rsp = surveyResponseRepository.findAll();
-
-        // Generate PDF
-        PDFGenerator pdfGen = new PDFGenerator();
-        return pdfGen.createPdf(rsp.iterator().next(), findResponsesBySurveyResponse(rsp.iterator().next()),
-                LocalizationOption.EN);
-    }
 }

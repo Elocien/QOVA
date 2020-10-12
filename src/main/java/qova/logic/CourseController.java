@@ -34,11 +34,6 @@ import qova.forms.SurveyForm;
 import qova.objects.Course;
 import qova.objects.CourseInstance;
 
-//TODO: Temporary Imports (can be removed later)
-//@Lucian please don't delete me just yet T_T
-import java.util.List;
-import java.util.Arrays;
-//END
 
 @Controller // This means that this class is a Controller
 public class CourseController {
@@ -70,16 +65,6 @@ public class CourseController {
     @GetMapping("/")
     public String welcome() {
         return "home";
-    }
-
-    @GetMapping("error")
-    public String error(Model model, @RequestParam(required = false) String code) {
-
-        // add error code to model
-        model.addAttribute("errorCode", code);
-
-        // return template
-        return "error";
     }
 
     // -------------------------------------------------------
@@ -356,16 +341,16 @@ public class CourseController {
 
             CourseType courseType = responseManagement.parseCourseType(type);
 
-            // if type is none of the correct values, then redirect to homepage
-            if (courseType == null) {
-                // TODO: redirect to error page with code 02
-                return "redirect:/";
-            }
-
             CourseInstance instance = course.get().getInstance(courseType);
 
             if (Boolean.FALSE.equals(instance.getSurveyEditedFlag())) {
                 courseManagement.setSurveyEditedFlagForCourseInstance(instance);
+            }
+
+            // if type is none of the correct values, then redirect to homepage
+            if (courseType == null) {
+                // TODO: redirect to error page with code 02
+                return "redirect:/";
             }
 
             else {
@@ -417,20 +402,45 @@ public class CourseController {
         Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()) {
 
+            CourseType courseType = responseManagement.parseCourseType(type);
+
+            CourseInstance instance = course.get().getInstance(courseType);
+
+            if (Boolean.FALSE.equals(instance.getSurveyEditedFlag())) {
+                courseManagement.setSurveyEditedFlagForCourseInstance(instance);
+            }
+
             // if type is none of the correct values, then redirect to homepage
-            if (responseManagement.parseCourseType(type) == null) {
+            if (courseType == null) {
                 // TODO: redirect to error page with code 02
                 return "redirect:/";
             }
 
             else {
+                // check if JSON is valid
+                try {
+                    new JSONArray(form.getQuestionnairejson());
+                } catch (Exception e) {
+                    return questioneditor(model, type, id);
+                }
+
+                // Create a JSON Array out of the response from the questioneditor
+                JSONArray survey = new JSONArray(form.getQuestionnairejson());
+
+                // parse JSON to check for correctness (length, special characters)
+                Boolean validSurvey = responseManagement.verifyJsonArray(survey);
+                if (Boolean.FALSE.equals(validSurvey)) {
+                    // TODO: redirect to error page with code 02
+                    return questioneditor(model, type, id);
+                }
+
                 // Sets the survey string for a given course (takes the default survey and
                 // conncatenates it with the create survey)
                 courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson());
             }
 
             // Part der anders ist als questioneditorSubmit
-            model.addAttribute("typeID", type);
+            model.addAttribute("typeID", responseManagement.parseCourseType(type));
             model.addAttribute("id", id);
 
             return "redirect:../course/previewsurvey?id=" + id + "&type=" + type;
@@ -507,16 +517,11 @@ public class CourseController {
         return new HttpEntity<byte[]>(qrcode, header);
     }
 
-    @GetMapping("/easterEgg/tim")
-    public String easterEgg() {
-        return "subject.html";
-    }
-
     // test method
     @GetMapping("/createC")
     public String createC() throws Exception {
-        courseManagement.TestCreateCourse();
-        return "home";
+        Course course = courseManagement.TestCreateCourse();
+        return "redirect:/course/details" + "?id=" + course.getId();
     }
 
     // test method
