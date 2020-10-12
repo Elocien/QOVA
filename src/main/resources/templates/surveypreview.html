@@ -282,6 +282,7 @@
 			hint.innerHTML = [[#{question.hint}]];
 
 			footer.appendChild(hint);
+			x.appendChild(selectionOption);
 			x.appendChild(footer);
 
 
@@ -293,40 +294,6 @@
 
 	}
 
-	$('#submitsurvey').submit(function () {
-
-		const surveyjson = [];
-
-
-		const  questions = document.getElementById("survey").getElementsByClassName("container bg-white border border-secondary rounded mt-4");
-		for (let i = 0; i<questions.length; i++ ){
-
-
-			const answer = [];
-			const type = questions[i].className;
-			console.log(type);
-
-			// Für FreeText Quesiton
-			if (questions[i].className == "container bg-white border border-secondary rounded mt-4 FreeText"){
-				answer.push(questions[i].getElementsByClassName("Options")[0].getElementsByClassName("Textarea")[0].value);
-			}
-
-			//Für alle anderen Typen
-			else {
-				const options = questions[i].getElementsByClassName("Options")[0].getElementsByClassName("Option");
-
-				for (let j = 0; j < options.length; j++) {
-					if (options[j].getElementsByClassName("tickbox")[0].checked) {
-						answer.push(j);
-					}
-				}
-
-			}
-			surveyjson.push(answer);
-		}
-		document.getElementById("surveyjson").value = JSON.stringify(surveyjson);
-		return true;
-	});
 
 
 
