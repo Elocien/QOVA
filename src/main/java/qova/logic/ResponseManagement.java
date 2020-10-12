@@ -508,6 +508,12 @@ public class ResponseManagement {
 
         Iterable<SurveyResponse> responses = findSurveyResponseByCourseAndCourseType(course, CourseType.LECTURE);
 
+        List<Integer> Answers1 = new ArrayList<>();
+        Answers1.add(0);
+        Answers1.add(1);
+        Answers1.add(3);
+        JSONArray mcAnswers1 = new JSONArray(Answers1);
+
         for (SurveyResponse resp : responses) {
             for (int i = 0; i < 50; i++) {
                 String id = UUID.randomUUID().toString();
@@ -515,16 +521,21 @@ public class ResponseManagement {
                 List<AbstractResponse> listOfResponses = resp.getListOfResponses();
                 for (AbstractResponse ar : listOfResponses) {
                     if (ar instanceof BinaryResponse){
-
+                        if(i % 3 == 0){
+                            ((BinaryResponse) ar).incrementNo();
+                        }
+                        else {
+                            ((BinaryResponse) ar).incrementYes();
+                        }
                     }
                     if (ar instanceof TextResponse){
-
+                        ((TextResponse) ar).addTextSubmission("This is a test Response");
                     }
                     if (ar instanceof SingleChoiceResponse){
-
+                        ((SingleChoiceResponse) ar).incrementTotal(i % 5);
                     }
                     if (ar instanceof MultipleChoiceResponse){
-
+                        ((MultipleChoiceResponse) ar).incrementTotals(mcAnswers1);
                     }
                 }
             }
