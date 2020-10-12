@@ -16,8 +16,6 @@ public class SingleChoiceResponse extends AbstractResponse {
     @ElementCollection
     private List<Integer> singleChoiceAnswers;
 
-    private Integer numberOfAnswerPossibilities;
-
     // Needed for JPA puposes
     @SuppressWarnings("unused")
     protected SingleChoiceResponse() {
@@ -26,7 +24,6 @@ public class SingleChoiceResponse extends AbstractResponse {
     public SingleChoiceResponse(Integer surveyPosition, Integer numberOfAnswerPossibilities,
             Boolean isDefaultQuestion) {
         super(surveyPosition, ResponseType.SINGLE_CHOICE, isDefaultQuestion);
-        this.numberOfAnswerPossibilities = numberOfAnswerPossibilities;
         this.singleChoiceAnswers = new ArrayList<>();
 
         for (int i = 0; i < numberOfAnswerPossibilities; i++) {
@@ -43,7 +40,7 @@ public class SingleChoiceResponse extends AbstractResponse {
     }
 
     public Integer getNumberOfAnswerPossibilites() {
-        return this.numberOfAnswerPossibilities;
+        return this.singleChoiceAnswers.size();
     }
 
 }
