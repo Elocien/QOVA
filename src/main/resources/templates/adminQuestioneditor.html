@@ -45,9 +45,34 @@
                             <button type="button" class="btn btn-list btn-text-right" onclick="addYesNoQuestion()"><span th:text="#{question.yes-no-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-list btn-text-right" onclick="addMultipleChoiceQuestion()"><span th:text="#{question.multiple-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-list btn-text-right" onclick="addSingleChoiceQuestion()"><span th:text="#{question.single-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
+<<<<<<< HEAD
+                            <button type="button" class="btn btn-list-last btn-text-right" onclick="addFreeTextQuestion()"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                        </div>
+
+                        <button class="btn btn-primary mt-2" th:text="#{question.submit}" data-toggle="modal" data-target="#defaultEditModal">SUBMIT</button>
+                        <div class="modal fade" id="defaultEditModal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                                <div class="modal-content text-center">
+                                    <div class="modal-body">
+                                        <p th:text="#{admin.defaultEditModalText1}">R U SURE?!</p>
+                                        <p th:text="#{admin.defaultEditModalText2}" class="font-weight-bold text-danger">RLY?!</p>
+                                    </div>
+                                    <div class="modal-footer text-center">
+                                        <div class="w-100"></div>
+                                        <form th:action="@{/admin/updateDefaultSurvey}" method="post" th:object="${form}" id="submitsurvey">
+                                            <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
+                                            <button class="btn btn-primary" type="submit" th:text="#{Yes}">YES</button>
+                                        </form>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                                        <div class="w-100"></div>
+                                    </div>
+                                </div>
+                            </div>
+=======
                             <button type="button" class="btn btn-list btn-text-right" onclick="addFreeTextQuestion()"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-head btn-text-right" th:text="#{question.options}">OPTIONS</button>
                             <button class="btn btn-list-last btn-text-right" th:text="#{question.submitChanges}" data-toggle="modal" data-target="#defaultEditModal">SUBMIT</button>
+>>>>>>> c7d316aa36c3eda4933ea225a1fad16fe81ee400
                         </div>
                         <div class="Json" id="json" th:text="${survey}"></div>
                     </div>

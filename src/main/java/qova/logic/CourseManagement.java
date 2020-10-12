@@ -240,14 +240,19 @@ public class CourseManagement {
 
     // Sets the relevant Survey in the course objects, based on the given surveyType
     public void setSurveyforType(Course course, String type, String survey) {
-        if (type.equals("LECTURE")) {
-            course.getLecture().setSurvey(survey);
-        } else if (type.equals("TUTORIAL")) {
-            course.getTutorial().setSurvey(survey);
-        } else if (type.equals("SEMINAR")) {
-            course.getSeminar().setSurvey(survey);
-        } else if (type.equals("PRACTICAL")) {
-            course.getPractical().setSurvey(survey);
+        switch (type) {
+            case "LECTURE":
+                course.getLecture().setSurvey(survey);
+                break;
+            case "TUTORIAL":
+                course.getTutorial().setSurvey(survey);
+                break;
+            case "SEMINAR":
+                course.getSeminar().setSurvey(survey);
+                break;
+            case "PRACTICAL":
+                course.getPractical().setSurvey(survey);
+                break;
         }
     }
 
@@ -272,8 +277,7 @@ public class CourseManagement {
     }
 
     public CourseInstance duplicateCourseInstance(CourseInstance oldInstance) {
-        List<String> newInstanceTitles = new ArrayList<>();
-        newInstanceTitles.addAll(oldInstance.getInstanceTitles());
+        List<String> newInstanceTitles = new ArrayList<>(oldInstance.getInstanceTitles());
         CourseInstance newInstance = new CourseInstance(oldInstance.getCourseType(), oldInstance.getGroupAmount(),
                 oldInstance.getInstanceAmount(), newInstanceTitles, oldInstance.isActive());
         courseInstancesRepo.save(newInstance);
@@ -356,43 +360,43 @@ public class CourseManagement {
         if (currentMonth < 4) {
 
             // previous semesters
-            semesters.add("SoSe " + String.valueOf(currentYear - 1));
+            semesters.add("SoSe " + (currentYear - 1));
 
             // current Semester
-            semesters.add("WiSe " + String.valueOf(currentYear - 1) + "/" + String.valueOf(currentYear));
+            semesters.add("WiSe " + (currentYear - 1) + "/" + (currentYear));
 
             // future semesters
-            semesters.add("SoSe " + String.valueOf(currentYear));
-            semesters.add("WiSe " + String.valueOf(currentYear) + "/" + String.valueOf(currentYear + 1));
-            semesters.add("SoSe " + String.valueOf(currentYear + 1));
+            semesters.add("SoSe " + (currentYear));
+            semesters.add("WiSe " + (currentYear) + "/" + (currentYear + 1));
+            semesters.add("SoSe " + (currentYear + 1));
         }
 
         // if winter semster and in year yy
         else if (currentMonth >= 10) {
             // previous semesters
-            semesters.add("SoSe " + String.valueOf(currentYear));
+            semesters.add("SoSe " + (currentYear));
 
             // current Semester
-            semesters.add("WiSe " + String.valueOf(currentYear) + "/" + String.valueOf(currentYear + 1));
+            semesters.add("WiSe " + (currentYear) + "/" + (currentYear + 1));
 
             // future semesters
-            semesters.add("SoSe " + String.valueOf(currentYear + 1));
-            semesters.add("WiSe " + String.valueOf(currentYear + 1) + "/" + String.valueOf(currentYear + 2));
-            semesters.add("SoSe " + String.valueOf(currentYear + 2));
+            semesters.add("SoSe " + (currentYear + 1));
+            semesters.add("WiSe " + (currentYear + 1) + "/" + (currentYear + 2));
+            semesters.add("SoSe " + (currentYear + 2));
         }
 
         // if summer semester
         else {
             // previous semesters
-            semesters.add("WiSe " + String.valueOf(currentYear - 1) + "/" + String.valueOf(currentYear));
+            semesters.add("WiSe " + (currentYear - 1) + "/" + (currentYear));
 
             // current Semester
-            semesters.add("SoSe " + String.valueOf(currentYear));
+            semesters.add("SoSe " + (currentYear));
 
             // future semesters
-            semesters.add("WiSe " + String.valueOf(currentYear) + "/" + String.valueOf(currentYear + 1));
-            semesters.add("SoSe " + String.valueOf(currentYear + 1));
-            semesters.add("WiSe " + String.valueOf(currentYear + 1) + "/" + String.valueOf(currentYear + 2));
+            semesters.add("WiSe " + (currentYear) + "/" + (currentYear + 1));
+            semesters.add("SoSe " + (currentYear + 1));
+            semesters.add("WiSe " + (currentYear + 1) + "/" + (currentYear + 2));
         }
 
         // return arraylist
@@ -417,7 +421,7 @@ public class CourseManagement {
 
             // else set year to 00000
             catch (NumberFormatException e) {
-                year = 0000;
+                year = 0;
             }
 
             // return date
@@ -438,7 +442,7 @@ public class CourseManagement {
 
             // else set year to 0000
             catch (NumberFormatException e) {
-                year = 0000;
+                year = 0;
             }
 
             // return Date
@@ -517,42 +521,33 @@ public class CourseManagement {
     public Course TestCreateCourse() {
         var name = "Rechnernetze";
 
-        List<String> lectureTitles = new ArrayList<>();
-        lectureTitles.addAll(
-                Arrays.asList("V - Einführung", "V - Bitübertragungsschicht", "V - Netztechnologien 1", "V - Netztechnologien 2",
-                        "V - Sicherungsschicht", "V - Vermittlungsschicht", "V - Transportschicht", "V - Netzwerkperformance",
-                        "V - Internetdienste", "V - Multimediakommunikation", "V - Mobile Computing", "V - Verteilte Systeme"));
+        List<String> lectureTitles = new ArrayList<>(Arrays.asList("V - Einführung", "V - Bitübertragungsschicht", "V - Netztechnologien 1", "V - Netztechnologien 2",
+                "V - Sicherungsschicht", "V - Vermittlungsschicht", "V - Transportschicht", "V - Netzwerkperformance",
+                "V - Internetdienste", "V - Multimediakommunikation", "V - Mobile Computing", "V - Verteilte Systeme"));
         var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles, true);
 
         courseInstancesRepo.save(lecture);
 
-        List<String> tutorialTitles = new ArrayList<>();
-        lectureTitles.addAll(
-                Arrays.asList("T - Einführung", "T - Bitübertragungsschicht", "T - Netztechnologien 1", "T - Netztechnologien 2",
-                        "T - Sicherungsschicht", "T - Vermittlungsschicht", "T - Transportschicht", "T - Netzwerkperformance",
-                        "T - Internetdienste", "T - Multimediakommunikation", "T - Mobile Computing", "T - Verteilte Systeme"));
+        List<String> tutorialTitles = new ArrayList<>(Arrays.asList("T - Einführung", "T - Bitübertragungsschicht", "T - Netztechnologien 1", "T - Netztechnologien 2",
+                "T - Sicherungsschicht", "T - Vermittlungsschicht", "T - Transportschicht", "T - Netzwerkperformance",
+                "T - Internetdienste", "T - Multimediakommunikation", "T - Mobile Computing", "T - Verteilte Systeme"));
         var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles, true);
         tutorial.setSurvey(
                 "[{\"type\":\"SingleChoice\",\"question\":\"Hat die Übung Wissen vermittelt, welches du dir nicht im Selbststudium hättest erarbeiten können?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in den aktiven Austausch mit den Studierenden gesucht?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Waren die Anforderung dem Wissensstand der Studierenden angemessen?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Konnte die Übung gezielt Schwerpunkte setzen und Struktur vermitteln?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Konnte der/die Leiter/in dein Interesse an dem Thema wecken?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in die Möglichkeiten einer Übung gegenüber der Vorlesung ausgeschöpft?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Online Lehre v.s. Präsenzveranstaltung\",\"answers\":[\"Die Übung war digital und soll digital bleiben.\",\"Die Übung war digital und wäre als Präsenzveranstaltung besser.\",\"Die Übung war eine Präsenzveranstaltung und soll eine bleiben.\",\"Die Übung war eine Präsenzveranstaltung und sollte digital werden.\"]}]");
 
         courseInstancesRepo.save(tutorial);
 
-        List<String> seminarTitles = new ArrayList<>();
-        lectureTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
+        List<String> seminarTitles = new ArrayList<>(Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
+                "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
+                "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
         var seminar = new CourseInstance(CourseType.SEMINAR, 8, 12, seminarTitles, true);
 
         courseInstancesRepo.save(seminar);
 
-        List<String> practicalTitles = new ArrayList<>();
-        lectureTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
+        List<String> practicalTitles = new ArrayList<>(Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
+                "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
+                "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
         var practical = new CourseInstance(CourseType.PRACTICAL, 8, 12, practicalTitles, true);
-
         courseInstancesRepo.save(practical);
 
         var semesterOfStudents = 4;

@@ -1,5 +1,6 @@
 package qova.logic;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -347,7 +348,7 @@ public class ResponseManagement {
 
     public JSONArray generateSurveyResultsJson(CourseInstance courseInstance,
             List<SurveyResponse> listOfSurveyResponses) {
-
+        //[{"type": "", "default": bool, "question": "", "options": [], "answers": []}, ...]}
         // Die CourseInstance hat eine methode,
         // getOptionsForResponseAtPosition(Integer position), welche dir die optionen
         // (also z.b. "Die Vorlesung war gut", "Die Vorlesung war ok", "Die Vorlesung
@@ -359,8 +360,9 @@ public class ResponseManagement {
         // startet. Essentially musst du dir alle werte holen, zusammenrechnen, und dann
         // in den JSONArray packen, um ihn dann im frontend zu bearbeiten.
 
-        JSONArray jsonArray = new JSONArray();
-        return jsonArray;
+        JSONArray json = new JSONArray();
+
+        return json;
     }
 
     public List<SurveyResponse> findSurveyResponses(Course course, CourseType type, String groupNumber,
