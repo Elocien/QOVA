@@ -77,10 +77,4 @@ public class AbstractResponse {
         return this.isDefaultQuestionFlag;
     }
 
-    public String getQuestion(SurveyResponse surveyResponse, Integer surveyPosition) {
-        return surveyResponse.getCourse().getInstance(surveyResponse.getCourseType())
-                .getQuestionTextForQuestionAtPosition(surveyPosition);
-
-    }
-
 }
