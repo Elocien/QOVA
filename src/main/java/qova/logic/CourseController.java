@@ -92,6 +92,48 @@ public class CourseController {
         if (course.isPresent()) {
             model.addAttribute("course", course.get());
 
+            // relevant for the surveyStatus
+            int x = 4;
+            boolean b = false;
+            if (course.get().getLectureExists() && course.get().getLecture().getSurveyEditedFlag()) {
+                x = x-1;
+                if (course.get().getLecture().titlesMissing()) {
+                    b = true;
+                }
+            }
+            else if (!course.get().getLectureExists()) {
+                x = x-1;
+            }
+            if (course.get().getTutorialExists() && course.get().getTutorial().getSurveyEditedFlag()) {
+                x = x-1;
+                if (course.get().getTutorial().titlesMissing()) {
+                    b = true;
+                }
+            }
+            else if (!course.get().getTutorialExists()) {
+                x = x-1;
+            }
+            if (course.get().getSeminarExists() && course.get().getSeminar().getSurveyEditedFlag()) {
+                x = x-1;
+                if (course.get().getSeminar().titlesMissing()) {
+                    b = true;
+                }
+            }
+            else if (!course.get().getSeminarExists()) {
+                x = x-1;
+            }
+            if (course.get().getPracticalExists() && course.get().getPractical().getSurveyEditedFlag()) {
+                x = x-1;
+                if (course.get().getPractical().titlesMissing()) {
+                    b = true;
+                }
+            }
+            else if (!course.get().getPracticalExists()) {
+                x = x-1;
+            }
+            model.addAttribute("surveysMissing", x);
+            model.addAttribute("titlesMissing", b);
+
             // QRCode URL (Redirects to a courses survey when scanned)
             String LectureSurveyUrl = "localhost:8080/surveySelect?type=LECTURE&id=" + course.get().getId();
             String TutorialSurveyUrl = "localhost:8080/surveySelect?type=TUTORIAL&id=" + course.get().getId();

@@ -91,8 +91,8 @@
                         <input id="name-input-hidden" type="hidden" th:value="${course.name}" th:name="name"></input>
 
                         <!--1st Table-->
-                        <div class="row form-group">
-                            <table class="table mb-4">
+                        <div class="row form-group mb-4">
+                            <table class="table">
                                 <tbody>
                                     <!--Faculty-->
                                     <tr>
@@ -125,22 +125,49 @@
                                         </td>
                                         <td></td>
                                     </tr>
-                                    <!--Status-->
-                                    <tr class="hide_me">
-                                        <th class="col-5" scope="row" th:text="#{course.status}">SEMESTER</th>
-                                        <td th:switch="${course.finalisedFlag}">
-                                            <a class="status-btn" th:case="false" type="submit" data-toggle="modal" data-target="#finalizeModal">
-                                                <span th:text="#{course.status.pending}">WIP</span>
-                                            </a>
-                                            <span th:case="true"><span class="text-success" th:text="#{course.status.finished}">DONE</span><span> </span><span class="text-success font-weight-light" th:text="#{course.status.finished2}">STUDENTS CAN NOW ANSWERE THE SURVEYS!</span></span>
-                                        </td>
-                                        <td></td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
 
                         <!--2nd Table-->
+                        <div class="row form-group hide-me mb-4">
+                            <div th:switch="${course.finalisedFlag}" class="col-12 p-0">
+                                <h5 class="font-weight-light d-block" th:text="#{course.status}">COURSE STATUS</h5>
+                                <p th:case="true" class="m-0" th:text="#{course.status.finalised}">STATUS DESCRIPTION</p>
+                                <th:block th:case="false">
+                                    <p th:text="#{course.status.description}">STATUS DESCRIPTION</p>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <th class="col-3" scope="row">Surveys:</th>
+                                                <td th:switch="${surveysMissing}">
+                                                    <p th:case="0" class="text-success m-0" th:text="#{course.status.finished}">FINISHED</p>
+                                                    <p th:case="*" class="text-warning m-0"><span th:text="${surveysMissing}">X</span><span> </span><span th:text="#{course.survey.missing}">MISSING</span></p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="col-3" scope="row">Instances:</th>
+                                                <td th:switch="${titlesMissing}">
+                                                    <p th:case="false" class="text-success m-0" th:text="#{course.status.finished}">FINISHED</p>
+                                                    <p th:case="true" class="text-danger m-0" th:text="#{course.names.missing}">NAMES MISSING</p>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="col-3" scope="row">Finalisation:</th>
+                                                <td>
+                                                    <a class="status-btn" type="submit" data-toggle="modal" data-target="#finalizeModal">
+                                                        <span th:text="#{course.status.pending}">WIP</span>
+                                                    </a>
+                                                </td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </th:block>
+                            </div>
+                        </div>
+
+                        <!--3rd Table-->
                         <div class="row form-group">
                             <table class="table mb-0">
                                 <thead>

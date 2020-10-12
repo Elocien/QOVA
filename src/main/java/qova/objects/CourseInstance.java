@@ -161,6 +161,19 @@ public class CourseInstance {
         this.instanceTitles = list;
     }
 
+    public Boolean titlesMissing() {
+        boolean b = false;
+        if (this.instanceAmount > 0) { 
+            Integer i = 0;
+            for (i = 0; i < this.instanceAmount; i++) {
+                if (this.instanceTitles.get(i).isEmpty()) {
+                    b = true;
+                }
+            }
+        }
+        return(b);
+    }
+
     public Boolean isActive() {
         return this.active;
     }
