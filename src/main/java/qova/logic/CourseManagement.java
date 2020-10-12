@@ -273,9 +273,7 @@ public class CourseManagement {
 
     public CourseInstance duplicateCourseInstance(CourseInstance oldInstance) {
         List<String> newInstanceTitles = new ArrayList<>();
-        for (String title : oldInstance.getInstanceTitles()) {
-            newInstanceTitles.add(title);
-        }
+        newInstanceTitles.addAll(oldInstance.getInstanceTitles());
         CourseInstance newInstance = new CourseInstance(oldInstance.getCourseType(), oldInstance.getGroupAmount(),
                 oldInstance.getInstanceAmount(), newInstanceTitles, oldInstance.isActive());
         courseInstancesRepo.save(newInstance);
@@ -291,9 +289,7 @@ public class CourseManagement {
     public void setCourseFinalised(UUID id) {
         Optional<Course> crs = findById(id);
 
-        if (crs.isPresent()) {
-            crs.get().setCourseAsFinalised();
-        }
+        crs.ifPresent(Course::setCourseAsFinalised);
     }
 
     /**

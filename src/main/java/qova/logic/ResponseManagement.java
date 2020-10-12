@@ -193,8 +193,8 @@ public class ResponseManagement {
         // Resolve type and find correct instance of course (lecture, tutorial, etc.)
         CourseInstance courseInstance = course.getInstance(type);
 
-        Integer groupAmount = courseInstance.getGroupAmount();
-        Integer instanceAmount = courseInstance.getInstanceAmount();
+        int groupAmount = courseInstance.getGroupAmount();
+        int instanceAmount = courseInstance.getInstanceAmount();
 
         List<List<AbstractResponse>> listOfResponses = generateResponseListFromJsonArray(jsonArray,
                 groupAmount * instanceAmount);
@@ -502,11 +502,17 @@ public class ResponseManagement {
     // Test Methods, remove in build
     public void createTestResponses(Course course) {
 
-        String surveyJson = "[{\"type\":\"SingleChoice\",\"question\":\"Hat die Vorlesung Wissen vermittelt, welches du dir nicht im Selbststudium hättest erarbeiten können?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Vorlesende den aktiven Austausch mit den Studierenden gesucht?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Waren die Anforderung dem Wissensstand der Studierenden angemessen?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Konnte die Vorlesung gezielt Schwerpunkte setzen und Struktur vermitteln?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Konnte der/die Vorlesende dein Interesse an dem Thema wecken?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Online Lehre v.s. Präsenzveranstaltung\",\"answers\":[\"Die Vorlesung war digital und soll digital bleiben.\",\"Die Vorlesung war digital und wäre als Präsenzveranstaltung besser.\",\"Die Vorlesung war eine Präsenzveranstaltung und soll eine bleiben.\",\"Die Vorlesung war eine Präsenzveranstaltung und sollte digital werden.\"],\"default\":\"true\"},{\"type\":\"FreeText\",\"question\":\"An dieser Stelle würden wir uns über konstruktive Kritik, aber auch über Anregungen und Lob freuen!\",\"default\":\"true\"}]";
+        String surveyJson = "[{\"type\":\"OnetoFive\",\"question\":\"Hat die Übung Wissen vermittelt, welches du dir nicht im Selbststudium hättest erarbeiten können?\"},{\"type\":\"OnetoFive\",\"question\":\"Hat der/die Leiter/in den aktiven Austausch mit den Studierenden gesucht?\"},{\"type\":\"OnetoFive\",\"question\":\"Waren die Anforderung dem Wissensstand der Studierenden angemessen?\"},{\"type\":\"OnetoFive\",\"question\":\"Konnte die Übung gezielt Schwerpunkte setzen und Struktur vermitteln?\"},{\"type\":\"OnetoFive\",\"question\":\"Konnte der/die Leiter/in dein Interesse an dem Thema wecken?\"},{\"type\":\"OnetoFive\",\"question\":\"Hat der/die Leiter/in die Möglichkeiten einer Übung gegenüber der Vorlesung ausgeschöpft?\"},{\"type\":\"OnetoFive\",\"question\":\"Online Lehre v.s. Präsenzveranstaltung\",\"answers\":[\"Die Übung war digital und soll digital bleiben.\",\"Die Übung war digital und wäre als Präsenzveranstaltung besser.\",\"Die Übung war eine Präsenzveranstaltung und soll eine bleiben.\",\"Die Übung war eine Präsenzveranstaltung und sollte digital werden.\"]},{\"type\":\"FreeText\",\"question\":\"An dieser Stelle würden wir uns über konstruktive Kritik, aber auch über Anregungen und Lob freuen!\"}]";
 
         createSurveyResponse(new JSONArray(surveyJson), course, CourseType.LECTURE);
 
         Iterable<SurveyResponse> responses = findSurveyResponseByCourseAndCourseType(course, CourseType.LECTURE);
+
+        List<Integer> Answers1 = new ArrayList<>();
+        Answers1.add(0);
+        Answers1.add(1);
+        Answers1.add(3);
+        JSONArray mcAnswers1 = new JSONArray(Answers1);
 
         for (SurveyResponse resp : responses) {
             for (int i = 0; i < 50; i++) {
@@ -514,7 +520,23 @@ public class ResponseManagement {
                 resp.addStundentIdToSubmissionListAndIncrementCounter(id);
                 List<AbstractResponse> listOfResponses = resp.getListOfResponses();
                 for (AbstractResponse ar : listOfResponses) {
-                    // Continue this later
+                    if (ar instanceof BinaryResponse){
+                        if(i % 3 == 0){
+                            ((BinaryResponse) ar).incrementNo();
+                        }
+                        else {
+                            ((BinaryResponse) ar).incrementYes();
+                        }
+                    }
+                    if (ar instanceof TextResponse){
+                        ((TextResponse) ar).addTextSubmission("This is a test Response");
+                    }
+                    if (ar instanceof SingleChoiceResponse){
+                        ((SingleChoiceResponse) ar).incrementTotal(i % 5);
+                    }
+                    if (ar instanceof MultipleChoiceResponse){
+                        ((MultipleChoiceResponse) ar).incrementTotals(mcAnswers1);
+                    }
                 }
             }
         }
