@@ -87,7 +87,7 @@ public class ResponseController {
         }
 
         // if course does not exist, redirect to global error page
-        return "error?code=" + courseNotFound;
+        return "error";
     }
 
     // ---------------------------------------------------------------------------
@@ -100,13 +100,13 @@ public class ResponseController {
         Optional<Course> crs = courseManagement.findById(id);
 
         // if anything is null or not an allowed value, redirect back
-        if (!crs.isPresent()) {
-            return "error?code=" + courseNotFound;
+        if (crs.isEmpty()) {
+            return "error";
         }
         // if type is not one of the defined values
         if (!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR"))
                 && !(type.equals("PRACTICAL"))) {
-            return "error?code=" + internalError;
+            return "error";
         }
 
         // TODO validate that parameters only contain valid charachters. E.g. a-zA-Z0-9
@@ -262,13 +262,12 @@ public class ResponseController {
             List<SurveyResponse> listOfSurveyResponses = responseManagement.findSurveyResponses(course, courseType,
                     group, instance);
 
-            JSONArray resultsJsonString = responseManagement.generateSurveyResultsJson(courseInstance,
-                    listOfSurveyResponses);
+            JSONArray resultsJsonString = responseManagement.generateSurveyResultsJson(listOfSurveyResponses);
 
             model.addAttribute("resultsJson", resultsJsonString);
 
         }
-        return "surveyResultsTest";
+        return "surveyResults";
     }
 
     /**
@@ -303,7 +302,7 @@ public class ResponseController {
         Optional<Course> crs = courseManagement.findById(id);
 
         // verify that course is present
-        if (!crs.isPresent()) {
+        if (crs.isEmpty()) {
             return null;
         }
 
@@ -338,7 +337,7 @@ public class ResponseController {
         Optional<Course> crs = courseManagement.findById(id);
 
         // verify that course is present
-        if (!crs.isPresent()) {
+        if (crs.isEmpty()) {
             return null;
         }
 
@@ -352,7 +351,7 @@ public class ResponseController {
         byte[] csv = responseManagement.generateCSVEnglish(
                 responseManagement.findSurveyResponses(crs.get(), courseType, groupNumber, instanceNumber));
 
-        if (csv == new byte[0]) {
+        if (csv.equals(new byte[0])) {
             return null;
         }
 
@@ -389,6 +388,28 @@ public class ResponseController {
         header.setContentLength(pdf.length);
 
         return new HttpEntity<>(pdf, header);
+    }
+
+    @GetMapping("resultsTest")
+    public String resultsTest(Model model){
+
+        // The Course object in an optional
+        Course course = courseManagement.findAll().iterator().next();
+
+        //CourseType
+        CourseType courseType = CourseType.TUTORIAL;
+
+        // Eine Liste aller SurveyResponses
+        List<SurveyResponse> listOfSurveyResponses = responseManagement.findSurveyResponses(course, courseType,
+                "all", "all");
+
+        JSONArray resultsJsonString = responseManagement.generateSurveyResultsJson(listOfSurveyResponses);
+
+        model.addAttribute("resultsJson", resultsJsonString);
+
+
+
+        return "surveyResults";
     }
 
 }

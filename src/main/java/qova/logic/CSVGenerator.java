@@ -52,7 +52,6 @@ public class CSVGenerator {
         ArrayList<String> header = new ArrayList<>();
 
         // Second Header
-        ArrayList<String> underHeader = new ArrayList<>();
 
         // CSV Header Initialisation (The options for all question types must be added
         // after)
@@ -64,7 +63,7 @@ public class CSVGenerator {
         }
 
         // Fill the underhead with blanks for the above header attributes
-        underHeader.addAll(Arrays.asList("", "", "", "", ""));
+        ArrayList<String> underHeader = new ArrayList<>(Arrays.asList("", "", "", "", ""));
 
         List<AbstractResponse> listOfResponsesForSurveyResponse = listOfSurveyResponses.get(0).getListOfResponses();
 
@@ -73,7 +72,7 @@ public class CSVGenerator {
 
             // Adds the question to the header, and a blank field to the underheader
             if (abstractResponse instanceof qova.objects.BinaryResponse) {
-                header.add(abstractResponse.getQuestion(surveyResponse, surveyPosition));
+                header.add(surveyResponse.getQuestionTextForQuestionAtPosition(surveyPosition));
                 header.add("");
                 underHeader.add("Total Yes");
                 underHeader.add("Total No");
@@ -90,8 +89,8 @@ public class CSVGenerator {
             // option itself to the underheader
 
             if (abstractResponse instanceof qova.objects.SingleChoiceResponse) {
-                header.add(abstractResponse.getQuestion(surveyResponse, surveyPosition));
-                List<String> singleChoiceOptions = courseInstance.getOptionsForResponseAtPosition(surveyPosition);
+                header.add(surveyResponse.getQuestionTextForQuestionAtPosition(surveyPosition));
+                List<String> singleChoiceOptions = surveyResponse.getOptionsForResponseAtPosition(surveyPosition);
                 underHeader.add(singleChoiceOptions.get(0));
                 for (int i = 1; i < singleChoiceOptions.size(); i++) {
                     header.add("-");
@@ -103,8 +102,8 @@ public class CSVGenerator {
             // for each multipleChoiceOption, a blank field is added to the header and the
             // option itself to the underheader
             if (abstractResponse instanceof qova.objects.MultipleChoiceResponse) {
-                header.add(abstractResponse.getQuestion(surveyResponse, surveyPosition));
-                List<String> multipleChoiceOptions = courseInstance.getOptionsForResponseAtPosition(surveyPosition);
+                header.add(surveyResponse.getQuestionTextForQuestionAtPosition(surveyPosition));
+                List<String> multipleChoiceOptions = surveyResponse.getOptionsForResponseAtPosition(surveyPosition);
                 underHeader.add(multipleChoiceOptions.get(0));
                 for (int i = 1; i < multipleChoiceOptions.size(); i++) {
                     header.add("-");
