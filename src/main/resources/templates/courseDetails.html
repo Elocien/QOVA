@@ -145,12 +145,12 @@
                                                     <p th:case="*" class="text-warning m-0"><span th:text="${surveysMissing}">X</span><span> </span><span th:text="#{course.survey.missing}">MISSING</span></p>
                                                 </td>
                                             </tr>
-                                            <tr>
+                                            <tr class="highlight_me">
                                                 <th class="col-3" scope="row" th:text="#{course.status.instances}">Instances:</th>
                                                 <td>
                                                     <a th:switch="${titlesMissing}" type="button" class="btn btn-link nounderline p-0" href="#" th:href="${'/course/instanceTitles?id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.editInstance}">
                                                         <th:block th:case="false">
-                                                            <p class="text-success m-0" th:text="#{course.status.finished}">FINISHED</p>
+                                                            <p class="text-success d-inline-block m-0 mr-2" th:text="#{course.status.finished}">FINISHED</p>
                                                             <i class="far fa-edit"></i>
                                                         </th:block>
                                                         <th:block th:case="true">
@@ -162,8 +162,11 @@
                                             </tr>
                                             <tr>
                                                 <th class="col-3" scope="row" th:text="#{course.status.finalisation}">Finalisation:</th>
-                                                <td>
-                                                    <a class="status-btn" type="submit" data-toggle="modal" data-target="#finalizeModal">
+                                                <td th:switch="${titlesMissing}">
+                                                    <a th:case="true" class="status-btn" onclick="highlight_missing()">
+                                                        <span th:text="#{course.status.pending}">WIP</span>
+                                                    </a>
+                                                    <a th:case="false" class="status-btn" type="submit" data-toggle="modal" data-target="#finalizeModal">
                                                         <span th:text="#{course.status.pending}">WIP</span>
                                                     </a>
                                                 </td>
@@ -425,6 +428,13 @@
         }
         target.style.display = "";
         document.getElementById("url-label").style.display = "";
+    }
+
+    function highlight_missing() {
+        var targets = document.getElementsByClassName("highlight_me");
+        for (let i = 0; i < targets.length; i++) {
+            targets[i].classList.add("highlight-border");
+        }
     }
 </script>
 </html>
