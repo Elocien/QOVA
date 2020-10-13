@@ -97,7 +97,7 @@ I read that somewhere ;) */
     margin: auto;
 }
 
-.Option.Label{
+.LabelOnetoFive{
     flex-direction: column-reverse;
     display: flex;
     margin-bottom: 1.2rem;
