@@ -39,7 +39,7 @@
                             <td class="col-3" th:text="${course.semesterOfStudents}">YEAR</td>
                             <td class="col-1"><a type="button" class="btn btn-tu btn-sm" th:text="#{course.details}" th:href="@{/course/details?id={id}(id=${course.id})}">MORE DETAILS</a></td>
                             <th:block th:switch="${course.finalisedFlag}">
-                                <td th:case="true" class="col-2"><a type="button" class="btn btn-tu btn-sm" th:text="#{course.survey}" th:href="@{/surveySelect?id={id}(id=${course.id})}">TO SURVEY</a></td>
+                                <td th:case="true" class="col-2"><a type="button" class="btn btn-tu btn-sm" th:text="#{course.survey}" th:href="@{/surveySelect(id=${course.id}, mode=results)}">TO SURVEY</a></td>
                                 <td th:case="false" class="col-2 text-danger" th:text="#{course.notFinal}">NOT FINALISED</td>
                             </th:block>
                         </tr>

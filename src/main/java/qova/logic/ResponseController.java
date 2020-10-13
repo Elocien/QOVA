@@ -57,7 +57,7 @@ public class ResponseController {
     // ---------------------------------------------------------------------------
 
     @GetMapping("surveySelect")
-    public String selectSurvey(Model model, SurveySelectForm form, @RequestParam UUID id, @RequestParam(required = false, defaultValue = "") String type) {
+    public String selectSurvey(Model model, SurveySelectForm form, @RequestParam String mode, @RequestParam UUID id, @RequestParam(required = false, defaultValue = "") String type) {
 
         // course name, course type, instance names, groupAmount
         Optional<Course> crs = courseManagement.findById(id);
@@ -66,6 +66,7 @@ public class ResponseController {
             model.addAttribute("courseName", crs.get().getName());
             model.addAttribute("id", crs.get().getId());
             model.addAttribute("form", form);
+            model.addAttribute("mode", mode);
 
             if (!type.equals("")) {
                 model.addAttribute("typeExists", true);
@@ -102,8 +103,7 @@ public class ResponseController {
 
     // Validation of entry of surveySelect page, and redirect to the actual survey
     @PostMapping("surveySelect")
-    public String selectSurveySubmission(Model model, @ModelAttribute("form") SurveySelectForm form,
-            @RequestParam String type, @RequestParam UUID id) {
+    public String selectSurveySubmission(Model model, @ModelAttribute("form") SurveySelectForm form, @RequestParam String mode, @RequestParam String type, @RequestParam UUID id) {
 
         Optional<Course> crs = courseManagement.findById(id);
 
@@ -112,16 +112,22 @@ public class ResponseController {
             return "error";
         }
         // if type is not one of the defined values
-        if (!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR"))
-                && !(type.equals("PRACTICAL"))) {
+        if (!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR")) && !(type.equals("PRACTICAL"))) {
             return "error";
         }
 
         // TODO validate that parameters only contain valid charachters. E.g. a-zA-Z0-9
 
         else {
-            return "redirect:/survey?id=" + id + "&type=" + type + "&instance=" + form.getInstance() + "&group="
-                    + form.getGroup();
+            if (mode.equals("participant")) {
+                return "redirect:/survey?id="+id+"&type="+type+"&instance="+form.getInstance()+"&group="+form.getGroup();
+            }
+            else if (mode.equals("results")) {
+                return "redirect:/survey?id="+id+"&type="+type+"&instance="+form.getInstance()+"&group="+form.getGroup();
+            }
+            else {
+                return "error";
+            }
         }
     }
 
@@ -240,7 +246,7 @@ public class ResponseController {
      * @return The surveyResults template, which shows the compiled results of the
      *         requested questionnaire
      */
-    @GetMapping("/surveyresults")
+    @GetMapping("/surveyResults")
     public String surveyResultsTest(Model model, @RequestParam String type, @RequestParam UUID id,
             @RequestParam String group, @RequestParam String instance) {
 
