@@ -153,6 +153,8 @@ public class ResponseController {
                 survey = adminManagement.concatenateDefaultSurveyToSurveyString(survey,
                         responseManagement.parseCourseType(type));
 
+                model.addAttribute("group", group);
+                model.addAttribute("instance", instance);
                 model.addAttribute("typeID", type);
                 model.addAttribute("id", id);
                 model.addAttribute("survey", survey);
