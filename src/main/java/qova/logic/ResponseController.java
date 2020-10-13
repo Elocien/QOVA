@@ -57,32 +57,40 @@ public class ResponseController {
     // ---------------------------------------------------------------------------
 
     @GetMapping("surveySelect")
-    public String selectSurvey(Model model, SurveySelectForm form, @RequestParam UUID id, @RequestParam String type) {
+    public String selectSurvey(Model model, SurveySelectForm form, @RequestParam UUID id, @RequestParam(required = false, defaultValue = "") String type) {
 
         // course name, course type, instance names, groupAmount
         Optional<Course> crs = courseManagement.findById(id);
         if (crs.isPresent()) {
+            model.addAttribute("course", crs.get());
             model.addAttribute("courseName", crs.get().getName());
-            model.addAttribute("courseType", type);
             model.addAttribute("id", crs.get().getId());
             model.addAttribute("form", form);
 
-            if (type.equals("LECTURE")) {
-                model.addAttribute("instanceTitles", crs.get().getLecture().getInstanceTitles());
-                model.addAttribute("groupAmount", crs.get().getLecture().getGroupAmount());
+            if (!type.equals("")) {
+                model.addAttribute("typeExists", true);
+                model.addAttribute("type", type);
+                if (type.equals("LECTURE")) {
+                    model.addAttribute("instanceTitles", crs.get().getLecture().getInstanceTitles());
+                    model.addAttribute("groupAmount", crs.get().getLecture().getGroupAmount());
+                }
+                if (type.equals("TUTORIAL")) {
+                    model.addAttribute("instanceTitles", crs.get().getTutorial().getInstanceTitles());
+                    model.addAttribute("groupAmount", crs.get().getTutorial().getGroupAmount());
+                }
+                if (type.equals("SEMINAR")) {
+                    model.addAttribute("instanceTitles", crs.get().getSeminar().getInstanceTitles());
+                    model.addAttribute("groupAmount", crs.get().getSeminar().getGroupAmount());
+                }
+                if (type.equals("PRACTICAL")) {
+                    model.addAttribute("instanceTitles", crs.get().getPractical().getInstanceTitles());
+                    model.addAttribute("groupAmount", crs.get().getPractical().getGroupAmount());
+                }
             }
-            if (type.equals("TUTORIAL")) {
-                model.addAttribute("instanceTitles", crs.get().getTutorial().getInstanceTitles());
-                model.addAttribute("groupAmount", crs.get().getTutorial().getGroupAmount());
+            else {
+                model.addAttribute("typeExists", false);
             }
-            if (type.equals("SEMINAR")) {
-                model.addAttribute("instanceTitles", crs.get().getSeminar().getInstanceTitles());
-                model.addAttribute("groupAmount", crs.get().getSeminar().getGroupAmount());
-            }
-            if (type.equals("PRACTICAL")) {
-                model.addAttribute("instanceTitles", crs.get().getPractical().getInstanceTitles());
-                model.addAttribute("groupAmount", crs.get().getPractical().getGroupAmount());
-            }
+
             return "surveySelect";
         }
 
@@ -115,18 +123,6 @@ public class ResponseController {
             return "redirect:/survey?id=" + id + "&type=" + type + "&instance=" + form.getInstance() + "&group="
                     + form.getGroup();
         }
-    }
-
-    @GetMapping("surveySelectType")
-    public String surveySelectType(Model model, @RequestParam UUID id) {
-        Optional<Course> crs = courseManagement.findById(id);
-        if (crs.isPresent()) {
-            model.addAttribute("course", crs.get());
-            return "surveySelectType";
-        }
-
-        // if course does not exist, redirect to global error page
-        return "error?code=" + courseNotFound;
     }
 
     // Get Survey from Server

@@ -42,6 +42,10 @@ input[type=number] {
   color: black !important;
   border-color: black;
 }
+.btn-tu-highlighted {
+  background-color: rgba(100, 100, 100, 0);
+  color: black !important;
+}
 .btn-delete {
   position: absolute;
   right: 1rem;
