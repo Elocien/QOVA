@@ -238,6 +238,9 @@ input[type="text"]:disabled::placeholder {
 .text-warning {
   color: orangered !important;
 }
+.highlight-border {
+  border: 3px solid red !important;
+}
 
 /*courseNew.html*/
 .form-col {
