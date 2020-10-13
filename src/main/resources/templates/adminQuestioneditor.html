@@ -32,19 +32,20 @@
                     </div>
                 </div>
             </div>
-            
+
             <h2 class="font-weight-bold text-center" th:text="#{admin.editorHeadline}">DEFAULT EDITOR</h2>
             <h5 class="font-weight-light text-center" th:text="#{admin.editorHeadlineWarning}">WARNING</h5>
-        
+
             <div class="row">
                 <!--Menu-->
                 <div class="col-lg-3 col-md-12 col-sm-12 text-center">
                     <div class="container sticky">
                         <div class="btn-group-vertical float-lg-right border border-dark rounded mt-4" role="group" aria-label="First group">
                             <button type="button" class="btn btn-head btn-text-right" th:text="#{question.new}">NEW QUESTION</button>
-                            <button type="button" class="btn btn-list btn-text-right" onclick="addYesNoQuestion()"><span th:text="#{question.yes-no-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-list btn-text-right" onclick="addMultipleChoiceQuestion()"><span th:text="#{question.multiple-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-list btn-text-right" onclick="addSingleChoiceQuestion()"><span th:text="#{question.single-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                            <button type="button" class="btn btn-list btn-text-right" onclick="addYesNoQuestion()"><span th:text="#{question.yes-no-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                            <button type="button" class="btn btn-list btn-text-right" onclick="addOnetoFiveQuestion()"><span th:text="#{question.onetofive-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-list btn-text-right" onclick="addFreeTextQuestion()"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                             <button type="button" class="btn btn-head btn-text-right" th:text="#{question.options}">OPTIONS</button>
                             <button class="btn btn-list-last btn-text-right" th:text="#{question.submitChanges}" data-toggle="modal" data-target="#defaultEditModal">SUBMIT</button>
@@ -59,11 +60,11 @@
 
         </div>
     </div>
-    
+
     <div th:replace="footer"></div>
 
     <script>
-        
+
         //auto resize for the textareas
         const line_height = convertRemToPixels(2);
         var tx = document.getElementsByTagName('textarea');
@@ -84,14 +85,15 @@
         function convertRemToPixels(rem) {
             return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
         }
-        
+
         const questionnaire = [];
 
         function addYesNoQuestion() {
             saveInputs();
             const yesnoQuestion = {
                 type: "YesNo",
-                question: "Question"
+                question: "Question",
+                default: true
             };
             questionnaire.push(yesnoQuestion);
             renderall();
@@ -102,6 +104,7 @@
             const multiplechoiceQuestion = {
                 type: "MultipleChoice",
                 question: "Question",
+                default: true,
                 answers: []
             };
             questionnaire.push(multiplechoiceQuestion);
@@ -114,9 +117,21 @@
             const singlechoiceQuestion = {
                 type: "SingleChoice",
                 question: "Question",
+                default: true,
                 answers: []
             };
             questionnaire.push(singlechoiceQuestion);
+            renderall();
+        }
+
+        function addOnetoFiveQuestion(){
+            saveInputs();
+            const onetofiveQuestion={
+                type: "OnetoFive",
+                question: "Question",
+                default: true
+            };
+            questionnaire.push(onetofiveQuestion);
             renderall();
         }
 
@@ -125,6 +140,7 @@
             const freetextQuestion={
                 type: "FreeText",
                 question: "Question",
+                default: true
             };
             questionnaire.push(freetextQuestion);
             renderall();
@@ -277,6 +293,36 @@
                 //New Answer Button
                 last_col.appendChild(createButtonnewAnswer(index));
                 x.appendChild(row3);
+
+            }
+
+            else if (value.type === "OnetoFive"){
+
+                //Create a html section for a YesNo-Question
+                x.className = "container bg-white border border-secondary rounded mt-4 OnetoFive";
+                x.setAttribute("id",index);
+
+                left.appendChild(createTitleDropdown(index,value.type));
+                right.appendChild(createButtonDelete(index));
+                right.appendChild(createButtonCopy(index));
+                if (index > 0) {
+                    right.appendChild(createButtonUp(index));
+                }
+                if (index+1 !== array.length && array.length >1){
+                    right.appendChild(createButtonDown(index));
+                }
+
+                //Textarea for the question input
+                const text_area = document.createElement("TEXTAREA");
+                text_area.className = "Textarea Question";
+                if (value.question === "Question"||value.question === ""){
+                    text_area.placeholder = "Question"
+                }
+                else {
+                    text_area.defaultValue = value.question;
+                }
+                text_area.setAttribute("id",index);
+                middle_col.appendChild(text_area);
 
             }
 
@@ -482,11 +528,11 @@
             for ( let i =0;i<answers.length;i++){
                 const answeroption = document.createElement("DIV");
                 answeroption.className= ("Answer Option");
-                
+
                 const answer_icon = document.createElement("i");
                 answer_icon.className = "answer-icon far fa-circle align-top mt-2";
                 answeroption.appendChild(answer_icon);
-                
+
                 const x2 =document.createElement("TEXTAREA");
                 x2.className = ("Textarea Answers");
                 if (answers[i]==="Answer"|| answers[i]===""){
@@ -581,7 +627,7 @@
             const dropdown_menu = document.createElement("DIV");
             dropdown_menu.setAttribute("id","dropdown-menu");
             dropdown_menu.className=("dropdown-menu");
-            
+
             if (q_type !== "YesNo") {
 
                 const btn_changetoYesNO = document.createElement("a");

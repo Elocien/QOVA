@@ -78,7 +78,8 @@
             saveInputs();
             const yesnoQuestion = {
                 type: "YesNo",
-                question: "Question"
+                question: "Question",
+                default: false
             };
             questionnaire.push(yesnoQuestion);
             renderall();
@@ -89,6 +90,7 @@
             const multiplechoiceQuestion = {
                 type: "MultipleChoice",
                 question: "Question",
+                default: false,
                 answers: []
             };
             questionnaire.push(multiplechoiceQuestion);
@@ -101,6 +103,7 @@
             const singlechoiceQuestion = {
                 type: "SingleChoice",
                 question: "Question",
+                default: false,
                 answers: []
             };
             questionnaire.push(singlechoiceQuestion);
@@ -112,6 +115,7 @@
             const freetextQuestion={
                 type: "FreeText",
                 question: "Question",
+                default: false
             };
             questionnaire.push(freetextQuestion);
             renderall();
@@ -123,6 +127,7 @@
             const onetofiveQuestion={
                 type: "OnetoFive",
                 question: "Question",
+                default: false
             };
             questionnaire.push(onetofiveQuestion);
             renderall();
