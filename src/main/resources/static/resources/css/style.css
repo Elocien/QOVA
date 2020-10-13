@@ -53,7 +53,11 @@ input[type=number] {
 }
 
 .text-light-grey {
-  color: rgb(200, 200, 200)
+  color: rgb(200, 200, 200);
+}
+
+.text-danger {
+  color: rgb(255, 0, 0) !important;
 }
 
 /*footer.html*/
@@ -231,6 +235,9 @@ input[type="text"]:disabled::placeholder {
 .url-input {
   margin-left: 0.6rem;
 }
+.text-warning {
+  color: orangered !important;
+}
 
 /*courseNew.html*/
 .form-col {
@@ -281,21 +288,22 @@ input[type="text"]:disabled::placeholder {
   transition: 0.5s;
 }
 .status-btn {
-  border: 1px solid red;
-  background-color: white;
+  background-color: red;
+  border: 1px solid white;
+  border-radius: 5px;
+  overflow: hidden;
+  padding: 0.4rem;
 }
 .status-btn:hover {
   cursor: pointer;
-  border-color: black;
-  transition: 0.8s;
+  border-color: red;
+  background: white;
 }
 .status-btn > span {
-  color: red;
-  padding: 0.2rem;
+  color: white;
 }
 .status-btn:hover > span {
-  color: black;
-  transition: 0.8s;
+  color: red;
 }
 
 .btn-center {

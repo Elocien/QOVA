@@ -186,7 +186,7 @@ public class PDFGenerator {
                 // Add Corresponding question to questionList
                 Paragraph questionpara = new Paragraph();
                 questionpara.setTextAlignment(TextAlignment.CENTER);
-                questionpara.add(new Text(txr.getQuestion(response, i)).addStyle(header_2));
+                questionpara.add(new Text(response.getQuestionTextForQuestionAtPosition(i)).addStyle(header_2));
                 TableQuestionList.add(questionpara);
 
                 // Create Table
@@ -212,7 +212,7 @@ public class PDFGenerator {
                 // Create new Paragraph for Question
                 Paragraph questionpara = new Paragraph();
                 questionpara.setTextAlignment(TextAlignment.CENTER);
-                questionpara.add(new Text(bnr.getQuestion(response, i)).addStyle(header_2));
+                questionpara.add(new Text(response.getQuestionTextForQuestionAtPosition(i)).addStyle(header_2));
                 ParagraphList.add(questionpara);
 
                 // Create new Paragraph for Results
@@ -232,15 +232,15 @@ public class PDFGenerator {
 
                 // Find total number of
                 para.add(totalResponses);
-                para.add(new Text(String.valueOf(tot) + "\n").setFont(bold));
+                para.add(new Text((tot) + "\n").setFont(bold));
 
                 // Calculate and set Yes Percentage
                 para.add(totalYes);
-                para.add(new Text(String.valueOf(yesPercentString) + "\n").setFont(bold));
+                para.add(new Text((yesPercentString) + "\n").setFont(bold));
 
                 // Calculate and set No Percentage
                 para.add(totalNo);
-                para.add(new Text(String.valueOf(noPercentString) + "\n").setFont(bold));
+                para.add(new Text((noPercentString) + "\n").setFont(bold));
 
                 ParagraphList.add(para);
             }
@@ -347,7 +347,7 @@ public class PDFGenerator {
         Integer responsePossibilities = mcr.getNumberOfAnswerPossibilites();
 
         // ArrayList containing all column titles
-        List<String> columnTitles = surveyResponse.getCourseInstance()
+        List<String> columnTitles = surveyResponse
                 .getOptionsForResponseAtPosition(mcr.getSurveyPosition());
 
         // DIFFERENT FROM columnTITLES!!!
@@ -364,7 +364,7 @@ public class PDFGenerator {
         }
 
         // Chart Configuration
-        JFreeChart chart = ChartFactory.createBarChart(mcr.getQuestion(surveyResponse, mcr.getSurveyPosition()),
+        JFreeChart chart = ChartFactory.createBarChart(surveyResponse.getQuestionTextForQuestionAtPosition(mcr.getSurveyPosition()),
                 // Title of Bargraph = Question in Survey
                 responseOptions, // x-axis heading
                 total, // y-axis heading
@@ -402,7 +402,7 @@ public class PDFGenerator {
         Integer responsePossibilities = scr.getNumberOfAnswerPossibilites();
 
         // ArrayList containing all column titles
-        List<String> columnTitles = surveyResponse.getCourseInstance()
+        List<String> columnTitles = surveyResponse
                 .getOptionsForResponseAtPosition(scr.getSurveyPosition());
 
         // DIFFERENT FROM columnTITLES!!!
@@ -419,7 +419,7 @@ public class PDFGenerator {
         }
 
         // Chart Configuration
-        JFreeChart chart = ChartFactory.createBarChart(scr.getQuestion(surveyResponse, scr.getSurveyPosition()),
+        JFreeChart chart = ChartFactory.createBarChart(surveyResponse.getQuestionTextForQuestionAtPosition(scr.getSurveyPosition()),
                 responseOptions, // x-axis heading
                 total, // y-axis heading
                 dataSet, // dataset

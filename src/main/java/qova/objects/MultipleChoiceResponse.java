@@ -17,8 +17,6 @@ public class MultipleChoiceResponse extends AbstractResponse {
     @ElementCollection
     private List<Integer> multipleChoiceAnswers;
 
-    private Integer numberOfAnswerPossibilities;
-
     // Needed for JPA puposes
     @SuppressWarnings("unused")
     protected MultipleChoiceResponse() {
@@ -27,7 +25,6 @@ public class MultipleChoiceResponse extends AbstractResponse {
     public MultipleChoiceResponse(Integer surveyPosition, Integer numberOfAnswerPossibilities,
             Boolean isDefaultQuestion) {
         super(surveyPosition, ResponseType.MULTIPLE_CHOICE, isDefaultQuestion);
-        this.numberOfAnswerPossibilities = numberOfAnswerPossibilities;
         this.multipleChoiceAnswers = new ArrayList<>();
         for (int i = 0; i < numberOfAnswerPossibilities; i++) {
             multipleChoiceAnswers.add(0);
@@ -46,7 +43,7 @@ public class MultipleChoiceResponse extends AbstractResponse {
     }
 
     public Integer getNumberOfAnswerPossibilites() {
-        return this.numberOfAnswerPossibilities;
+        return this.multipleChoiceAnswers.size();
     }
 
 }

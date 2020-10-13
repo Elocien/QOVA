@@ -161,6 +161,19 @@ public class CourseInstance {
         this.instanceTitles = list;
     }
 
+    public Boolean titlesMissing() {
+        boolean b = false;
+        if (this.instanceAmount > 0) { 
+            Integer i = 0;
+            for (i = 0; i < this.instanceAmount; i++) {
+                if (this.instanceTitles.get(i).isEmpty()) {
+                    b = true;
+                }
+            }
+        }
+        return(b);
+    }
+
     public Boolean isActive() {
         return this.active;
     }
@@ -184,43 +197,8 @@ public class CourseInstance {
         return this.surveyEditedFlag;
     }
 
-    public List<String> getOptionsForResponseAtPosition(Integer position) {
 
-        JSONArray jsonArray = new JSONArray(survey);
-        JSONObject jsonObject;
-        try {
-            jsonObject = jsonArray.getJSONObject(position);
-        } catch (Exception e) {
-            return new ArrayList<>();
-        }
 
-        if (jsonObject.getString("type").equals("OnetoFive")) {
-            return new ArrayList<>(Arrays.asList("1", "2", "3", "4", "5"));
-        } else if (jsonObject.getString("type").equals("SingleChoice")) {
-            JSONArray answerOptions = jsonObject.getJSONArray("answers");
 
-            // Array of all possibilieties, passed to the constructor of the
-            // MultipleChoiceResponse
-            ArrayList<String> singleChoiceOptions = new ArrayList<>(answerOptions.length());
-
-            for (int j = 0; j < answerOptions.length(); j++) {
-                singleChoiceOptions.add(answerOptions.getString(j));
-            }
-
-            return singleChoiceOptions;
-        }
-
-        else {
-            return new ArrayList<>();
-        }
-    }
-
-    // We assume a JSONArray can be created without exception, as this is checked
-    // when a created survey is submitted
-    public String getQuestionTextForQuestionAtPosition(Integer position) {
-        JSONArray jsonArray = new JSONArray(survey);
-
-        return jsonArray.getJSONObject(position).getString("question");
-    }
 
 }

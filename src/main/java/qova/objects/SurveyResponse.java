@@ -1,16 +1,13 @@
 package qova.objects;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import qova.enums.CourseType;
 
 @Entity
@@ -114,6 +111,48 @@ public class SurveyResponse {
 
     public List<AbstractResponse> getListOfResponses() {
         return this.listOfResponses;
+    }
+
+    //Survey related fields
+
+
+    // We assume a JSONArray can be created without exception, as this is checked
+    // when a created survey is submitted
+    public String getQuestionTextForQuestionAtPosition(Integer position) {
+        JSONArray jsonArray = new JSONArray(getCourseInstance().getSurvey());
+
+        return jsonArray.getJSONObject(position).getString("question");
+    }
+
+    public List<String> getOptionsForResponseAtPosition(Integer position) {
+
+        JSONArray jsonArray = new JSONArray(getCourseInstance().getSurvey());
+        JSONObject jsonObject;
+        try {
+            jsonObject = jsonArray.getJSONObject(position);
+        } catch (Exception e) {
+            return new ArrayList<>();
+        }
+
+        if (jsonObject.getString("type").equals("OnetoFive")) {
+            return new ArrayList<>(Arrays.asList("1", "2", "3", "4", "5"));
+        } else if (jsonObject.getString("type").equals("SingleChoice")) {
+            JSONArray answerOptions = jsonObject.getJSONArray("answers");
+
+            // Array of all possibilieties, passed to the constructor of the
+            // MultipleChoiceResponse
+            ArrayList<String> singleChoiceOptions = new ArrayList<>(answerOptions.length());
+
+            for (int j = 0; j < answerOptions.length(); j++) {
+                singleChoiceOptions.add(answerOptions.getString(j));
+            }
+
+            return singleChoiceOptions;
+        }
+
+        else {
+            return new ArrayList<>();
+        }
     }
 
 }
