@@ -10,9 +10,9 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>qova</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.1-SNAPSHOT</version>
 	<name>qova</name>
-	<description>Demo project for Spring Boot</description>
+	<description>A QR-Code based Evaluation System</description>
 
 	<properties>
 		<java.version>11</java.version>
