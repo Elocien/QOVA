@@ -6,7 +6,9 @@ import qova.objects.SingleChoiceResponse;
 
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.UUID;
+
 @Repository
-public interface SingleChoiceResponseRepository extends CrudRepository<SingleChoiceResponse, Long> {
+public interface SingleChoiceResponseRepository extends CrudRepository<SingleChoiceResponse, UUID> {
 
 }

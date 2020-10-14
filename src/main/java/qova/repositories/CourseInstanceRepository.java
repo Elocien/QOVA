@@ -6,7 +6,9 @@ import qova.objects.CourseInstance;
 
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.UUID;
+
 @Repository
-public interface CourseInstanceRepository extends CrudRepository <CourseInstance, Long> {
+public interface CourseInstanceRepository extends CrudRepository <CourseInstance, UUID> {
     
 }
