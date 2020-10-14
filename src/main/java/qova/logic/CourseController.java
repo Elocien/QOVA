@@ -35,7 +35,7 @@ import qova.objects.Course;
 import qova.objects.CourseInstance;
 
 
-@Controller // This means that this class is a Controller
+@Controller
 public class CourseController {
 
     @Autowired
