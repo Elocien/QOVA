@@ -1,14 +1,15 @@
 package qova.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.header.Header;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestAttribute;
 import org.springframework.web.bind.annotation.ResponseBody;
-import qova.logic.CourseManagement;
 
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Controller
@@ -23,10 +24,13 @@ public class UserController {
 
     @GetMapping("/secure")
     @ResponseBody
-    public String authenticate(HttpServletRequest request){
-        String unscopedAffiliation = request.getHeader("AJP_unscoped-affiliation");
+    public List<String> authenticate(HttpServletRequest request, Header header){
+        List<String> listOfAttempts = new ArrayList<>();
+        listOfAttempts.add("AJP_attr: " + request.getHeader("AJP_unscoped-affiliation"));
+        listOfAttempts.add((String) "attr: " + request.getAttribute("unscoped-affiliation"));
+        listOfAttempts.addAll(header.getValues());
 
 
-        return unscopedAffiliation;
+        return listOfAttempts;
     }
 }

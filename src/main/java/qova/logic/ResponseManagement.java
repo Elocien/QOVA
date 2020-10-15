@@ -571,7 +571,7 @@ public class ResponseManagement {
      * @return an {@linkplain Optional} of an {@linkplain SurveyResponse} with the
      * given id
      */
-    public Optional<SurveyResponse> findSurveyResponseById(long id) {
+    public Optional<SurveyResponse> findSurveyResponseById(UUID id) {
         return surveyResponseRepository.findById(id);
     }
 
