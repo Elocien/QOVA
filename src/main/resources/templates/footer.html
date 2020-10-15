@@ -1,9 +1,15 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
-<footer th:fragment="footer" class="page-footer font-small text-light">
-    <div class="footer-copyright text-center mt-3">
-        <p>© 2020 <span><a href="https://tu-dresden.de/med/mf/carl/zentrum/team">QOVA Team</a> | <span><a href="#">Legal Information</a></span> | <span><a href="#">Help & Support</a></span></p>
+<footer th:fragment="footer" class="page-footer font-small text-light align-content-center">
+    <div class="col-12 text-center">
+        <div class="row justify-content-center">
+            <p class="m-3">Contact: <span><a class="footer-link" href="#" th:href="@{/error}">Help & Support</a></span></p>
+            <p class="m-3">Impressum: <span><a class="footer-link" href="https://tu-dresden.de/impressum">TU Impressum</a>*</span></p>
+            <a class="m-3 footer-link" href="#">Legal Information</a>
+        </div>
+        <p class="font-weight-light disclaimer">* Technischer Betreiber: <a class="footer-link" href="http://s.website/">Referat IT Herr Kugel</a></p>
+        <p class="m-3 disclaimer">© 2020 <span><a class="footer-link" href="https://tu-dresden.de/med/mf/carl/zentrum/team">QOVA Team</a><span</p>
     </div>
 </footer>
 </body>

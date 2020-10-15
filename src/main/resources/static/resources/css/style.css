@@ -15,7 +15,7 @@ body {
   height: 100%;
   position: relative;
   margin: 0;
-  padding-bottom: 56px;
+  padding-bottom: 8rem;
   overflow-x: hidden;
 }
 .bg-light {
@@ -69,8 +69,17 @@ footer {
   position: absolute;
   bottom: 0;
   width: 100%;
-  height: 4rem !important;
-  background-color: var(--tu_blue);
+  height: 8rem;
+  background-color: rgb(50, 50, 50);
+}
+.footer-link {
+  color: rgb(140, 200, 255);
+}
+.footer-link:hover {
+  color: white;
+}
+.disclaimer {
+  font-size: 0.8rem;
 }
 
 /*navbar.html*/
