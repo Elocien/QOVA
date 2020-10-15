@@ -27,11 +27,6 @@
     <div id="resource-container" style="display: none;">
         <!--Question Template-->
         <div class="container result-container with-bars mt-3">
-            <div class="row justify-content-between">
-                <div class="col-auto">
-                    <h5 class="question-type mt-2 mb-2"></h5>
-                </div>
-            </div>
             <div class="row align-items-center justify-content-between mt-2 mb-2">
                 <div class="col-auto">
                     <h5 class="question-type m-0"></h5>
@@ -87,10 +82,8 @@
             var answers = [];
             var answer = response_list[i];
             var type = answer["type"];
-            console.log(answer)
             if (type == "text") {
                 for (let j = 0; j < answer["answers"].length; ++j) {
-                    console.log(j);
                     answers.push(create_answere(type, answer["answers"][j], 0));
                 }
             }
@@ -112,7 +105,7 @@
                 question_template.getElementsByClassName("default-question")[0].innerHTML = "("+txt+")";
             }
             else {
-                delete_element(question_template.getElementsByClassName("default-question").innerHTML);
+                delete_element(question_template.getElementsByClassName("default-question")[0]);
             }
 
             document.getElementById("results").appendChild(question_template);
@@ -125,15 +118,10 @@
             question.getElementsByClassName("answere-column")[0].appendChild(answers[i]);
         }
         if (type == "text") {
-            question.classList.remove("with-bars");
             question.getElementsByClassName("answere-column")[0].classList.add("collapse");
             question.getElementsByClassName("answere-column")[0].id = "free-text-collapse-"+free_text_count;
             question.getElementsByClassName("collapse-btn")[0].href = "#free-text-collapse-"+free_text_count;
             free_text_count += 1;
-            delete_element(question.getElementsByClassName("question-type")[1]);
-        }
-        else {
-            delete_element(question.getElementsByClassName("row justify-content-between")[0]);
         }
         question.getElementsByClassName("question-type")[0].innerHTML = text;
         return question;

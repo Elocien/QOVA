@@ -406,7 +406,7 @@ public class ResponseController {
         JSONObject question = new JSONObject();
 
         question.put("type", "text");
-        question.put("default", true);
+        question.put("default", false);
         question.put("question", "Is the earth flat?");
 
         ArrayList<String> options = new ArrayList<String>();
