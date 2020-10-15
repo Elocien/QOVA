@@ -551,3 +551,8 @@ select {
 .dialog-option:hover {
   text-decoration: none;
 }
+
+.default-question {
+  font-size: 0.8rem;
+  color: rgb(80, 80, 80);
+}

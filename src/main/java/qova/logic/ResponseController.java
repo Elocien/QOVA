@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +28,9 @@ import qova.objects.AbstractResponse;
 import qova.objects.Course;
 import qova.objects.CourseInstance;
 import qova.objects.SurveyResponse;
+
+//Temporary Import
+import java.util.ArrayList;
 
 @Controller // This means that this class is a Controller
 public class ResponseController {
@@ -247,7 +251,7 @@ public class ResponseController {
      *         requested questionnaire
      */
     @GetMapping("/surveyResults")
-    public String surveyResultsTest(Model model, @RequestParam String type, @RequestParam UUID id,
+    public String surveyResults(Model model, @RequestParam String type, @RequestParam UUID id,
             @RequestParam String group, @RequestParam String instance) {
 
         // The Course object in an optional
@@ -397,21 +401,27 @@ public class ResponseController {
     @GetMapping("resultsTest")
     public String resultsTest(Model model){
 
-        // The Course object in an optional
-        Course course = courseManagement.findAll().iterator().next();
+        //[{"type": "", "default": bool, "question": "", "options": [], "answers": []}, ...]}
+        JSONArray results = new JSONArray();
+        JSONObject question = new JSONObject();
 
-        //CourseType
-        CourseType courseType = CourseType.TUTORIAL;
+        question.put("type", "text");
+        question.put("default", true);
+        question.put("question", "Is the earth flat?");
 
-        // Eine Liste aller SurveyResponses
-        List<SurveyResponse> listOfSurveyResponses = responseManagement.findSurveyResponses(course, courseType,
-                "all", "all");
+        ArrayList<String> options = new ArrayList<String>();
+        options.add("A"); options.add("B"); options.add("C");
+        question.put("answers", options);
 
-        JSONArray resultsJsonString = responseManagement.generateSurveyResultsJson(listOfSurveyResponses);
+        /*
+        ArrayList<Double> answers = new ArrayList<Double>();
+        answers.add(0.5); answers.add(0.5); answers.add(0.2);
+        question.put("answers", answers);
+        */
 
-        model.addAttribute("resultsJson", resultsJsonString);
+        results.put(0, question);
 
-
+        model.addAttribute("resultsJson", results.toString());
 
         return "surveyResults";
     }
