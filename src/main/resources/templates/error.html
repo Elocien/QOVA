@@ -10,22 +10,19 @@
         
         <!--Headline-->
         <div class="col-12 text-center justify-content-center">
-            <h2 class="font-weight-bold huge-headline" th:text="|#{error} ${code}|">ERROR X</h2>
-            <h5 class="font-weight-light" th:text="#{__error.description.+${code}__}">ERROR DESCRIPTION</h5>
-            <div class="mail-container">
-                <h5 th:text="#{error.description}">DESCRIPTION</h5>
-                <div class="row justify-content-center">
-                    <div class="fake-tip text-right d-inline-block">
-                        <h5 class="mail-content border-0" th:text="|#{error.mail}:|">E-Mail:</h5>
-                        <h5 class="mail-content border-0" th:text="|#{error.subject}:|">Subject:</h5>
-                        <h5 class="mail-content border-0" th:text="|#{error.content}:|">Content:</h5>
-                    </div>
-                    <div class="fake-mail d-inline-block">
-                        <h5 class="new-message mb-0" th:text="#{error.new}"></h5>
-                        <h5 class="mail-content"><a href="mailto:carl-service@tu-dresden.de">carl-service@tu-dresden.de</a></h5>
-                        <h5 class="mail-content">QOVA</h5>
-                        <h5 class="mail-content" th:text="#{error.content.text}"></h5>
-                    </div>
+            <h2 class="font-weight-bold huge-headline" th:text="#{error}">ERROR X</h2>
+            <h5 class="mb-4" th:text="#{error.description}">DESCRIPTION</h5>
+            <div class="row justify-content-center">
+                <div class="col-auto text-right fake-tip">
+                    <h5 class="mail-content border-0" th:text="|#{error.mail}:|">E-Mail:</h5>
+                    <h5 class="mail-content border-0" th:text="|#{error.subject}:|">Subject:</h5>
+                    <h5 class="mail-content border-0" th:text="|#{error.content}:|">Content:</h5>
+                </div>
+                <div class="col-lg-6 col-md-8 col-sm-10 p-0 fake-mail">
+                    <h5 class="new-message mb-0" th:text="#{error.new}"></h5>
+                    <h5 class="mail-content"><a href="mailto:carl-service@tu-dresden.de">carl-service@tu-dresden.de</a></h5>
+                    <h5 class="mail-content">QOVA</h5>
+                    <h5 class="mail-content" th:text="#{error.content.text}"></h5>
                 </div>
             </div>
             <!--Bug Meme-->
