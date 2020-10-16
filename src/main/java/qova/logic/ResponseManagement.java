@@ -47,9 +47,9 @@ public class ResponseManagement {
 
     @Autowired
     public ResponseManagement(SurveyResponseRepository surveyResponseRepository,
-                              BinaryResponseRepository binaryResponseRepository, TextResponseRepository textResponseRepository,
-                              SingleChoiceResponseRepository singleChoiceResponseRepository,
-                              MultipleChoiceResponseRepository multipleChoiceResponseRepository) {
+            BinaryResponseRepository binaryResponseRepository, TextResponseRepository textResponseRepository,
+            SingleChoiceResponseRepository singleChoiceResponseRepository,
+            MultipleChoiceResponseRepository multipleChoiceResponseRepository) {
         this.surveyResponseRepository = Objects.requireNonNull(surveyResponseRepository);
         this.binaryResponseRepository = Objects.requireNonNull(binaryResponseRepository);
         this.textResponseRepository = Objects.requireNonNull(textResponseRepository);
@@ -243,7 +243,7 @@ public class ResponseManagement {
      *                       of group and instance amount, because this is the
      *                       amount of SurveyResponses, that must be created.
      * @return A {@link java.util.List} of {@link java.util.List}'s, which contain
-     * {@linkplain qova.objects.AbstractResponse}
+     *         {@linkplain qova.objects.AbstractResponse}
      */
     public List<List<AbstractResponse>> generateResponseListFromJsonArray(JSONArray jsonArray, Integer numberOfCopies) {
 
@@ -354,17 +354,18 @@ public class ResponseManagement {
 
     public JSONArray generateSurveyResultsJson(List<SurveyResponse> listOfSurveyResponses) {
 
-        //JSON Structure
-        //[{"type": "", "default": bool, "question": "", "options": [], "answers": []}, ...]}
+        // JSON Structure
+        // [{"type": "", "default": bool, "question": "", "options": [], "answers": []},
+        // ...]}
 
-        // A SurveyResponse object. All surveyResponses have the same survey and the same ListOfResponses, because they belong to the same CourseInstance
+        // A SurveyResponse object. All surveyResponses have the same survey and the
+        // same ListOfResponses, because they belong to the same CourseInstance
         SurveyResponse response = listOfSurveyResponses.get(0);
-
 
         // Generate the resultsArray Structure
         JSONArray resultsArray = generateJsonResultsArray(response);
 
-        System.out.println(resultsArray);
+        System.out.println("This is the resultsarray" + resultsArray);
 
         // Reset survey position iterator
         int surveyPosition = 0;
@@ -386,11 +387,9 @@ public class ResponseManagement {
                     // Get the JSONArray containing the yes- and noTotals, and increment the values
                     JSONArray binaryAnswersArray = jsonObject.getJSONArray("answers");
 
-                    binaryAnswersArray.put(0, binaryAnswersArray.getInt(0)
-                            + ((BinaryResponse) ar).getYesTotal());
+                    binaryAnswersArray.put(0, binaryAnswersArray.getInt(0) + ((BinaryResponse) ar).getYesTotal());
 
-                    binaryAnswersArray.put(1, binaryAnswersArray.getInt(1)
-                            + ((BinaryResponse) ar).getNoTotal());
+                    binaryAnswersArray.put(1, binaryAnswersArray.getInt(1) + ((BinaryResponse) ar).getNoTotal());
 
                     jsonObject.put("answers", binaryAnswersArray);
 
@@ -400,7 +399,7 @@ public class ResponseManagement {
                     TextResponse tr = (TextResponse) ar;
 
                     // Get the JSONArray containing user text answers
-                    for(String userTextAnswer : tr.getResponses()){
+                    for (String userTextAnswer : tr.getResponses()) {
                         jsonObject.accumulate("answers", userTextAnswer);
                     }
                 }
@@ -414,10 +413,10 @@ public class ResponseManagement {
                     // The List of user
                     List<Integer> singleChoiceAnswers = scr.getSingleChoiceAnswers();
 
-                    for(int i = 0; i < scr.getNumberOfAnswerPossibilites(); i++){
-                        try{
-                            singleChoiceAnswersArray.put(i, singleChoiceAnswersArray.getInt(i)
-                                    + singleChoiceAnswers.get(i));
+                    for (int i = 0; i < scr.getNumberOfAnswerPossibilites(); i++) {
+                        try {
+                            singleChoiceAnswersArray.put(i,
+                                    singleChoiceAnswersArray.getInt(i) + singleChoiceAnswers.get(i));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -434,10 +433,10 @@ public class ResponseManagement {
                     // The List of user
                     List<Integer> multipleChoiceAnswersChoiceAnswers = mcr.getMultipleChoiceAnswers();
 
-                    for(int i = 0; i < mcr.getNumberOfAnswerPossibilites(); i++){
-                        try{
-                            multipleChoiceAnswersArray.put(i, multipleChoiceAnswersArray.getInt(i)
-                                    + multipleChoiceAnswersChoiceAnswers.get(i));
+                    for (int i = 0; i < mcr.getNumberOfAnswerPossibilites(); i++) {
+                        try {
+                            multipleChoiceAnswersArray.put(i,
+                                    multipleChoiceAnswersArray.getInt(i) + multipleChoiceAnswersChoiceAnswers.get(i));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -452,12 +451,12 @@ public class ResponseManagement {
 
     private JSONArray generateJsonResultsArray(SurveyResponse response) {
 
-        //Initialise Array
+        // Initialise Array
         JSONArray resultsArray = new JSONArray();
 
         int surveyPosition = 0;
 
-        //Generate JSON Objects for populating
+        // Generate JSON Objects for populating
         for (AbstractResponse abstractResponse : response.getListOfResponses()) {
             JSONObject jsonResponseObject = new JSONObject();
             jsonResponseObject.append("default", abstractResponse.getIsDefaultQuestion());
@@ -477,11 +476,12 @@ public class ResponseManagement {
             }
 
             if (abstractResponse instanceof SingleChoiceResponse) {
-                //The single choice response
+                // The single choice response
                 SingleChoiceResponse scr = (SingleChoiceResponse) abstractResponse;
 
                 jsonResponseObject.append("type", "singleChoice");
-                JSONArray singleChoiceOptionsArray = new JSONArray(response.getOptionsForResponseAtPosition(surveyPosition));
+                JSONArray singleChoiceOptionsArray = new JSONArray(
+                        response.getOptionsForResponseAtPosition(surveyPosition));
                 jsonResponseObject.append("options", singleChoiceOptionsArray);
                 List<Integer> listOfAnswers = new ArrayList<>();
                 for (int i = 0; i < scr.getNumberOfAnswerPossibilites(); i++) {
@@ -491,11 +491,12 @@ public class ResponseManagement {
             }
 
             if (abstractResponse instanceof MultipleChoiceResponse) {
-                //The multiple choice response
+                // The multiple choice response
                 MultipleChoiceResponse mcr = (MultipleChoiceResponse) abstractResponse;
 
                 jsonResponseObject.append("type", "multipleChoice");
-                JSONArray multipleChoiceOptionsArray = new JSONArray(response.getOptionsForResponseAtPosition(surveyPosition));
+                JSONArray multipleChoiceOptionsArray = new JSONArray(
+                        response.getOptionsForResponseAtPosition(surveyPosition));
                 jsonResponseObject.append("options", multipleChoiceOptionsArray);
                 List<Integer> listOfAnswers = new ArrayList<>();
                 for (int i = 0; i < mcr.getNumberOfAnswerPossibilites(); i++) {
@@ -512,7 +513,7 @@ public class ResponseManagement {
     }
 
     public List<SurveyResponse> findSurveyResponses(Course course, CourseType type, String groupNumber,
-                                                    String instanceNumber) {
+            String instanceNumber) {
 
         // Initalise List of SurveyResponses to be passed to the CSV generator
         List<SurveyResponse> listOfSurveyResponses = new ArrayList<>();
@@ -540,12 +541,11 @@ public class ResponseManagement {
 
         for (int surveyPosition = 0; surveyPosition < surveyResponse.getListOfResponses().size(); surveyPosition++) {
 
-            //The current abstractResponse
+            // The current abstractResponse
             AbstractResponse abstractResponse = surveyResponse.getListOfResponses().get(surveyPosition);
 
-            //The current JSONArray
+            // The current JSONArray
             JSONArray currentPositionArray = studentResponseJson.getJSONArray(surveyPosition);
-
 
             if (abstractResponse instanceof qova.objects.BinaryResponse) {
                 if (currentPositionArray.getInt(0) == 0) {
@@ -572,7 +572,7 @@ public class ResponseManagement {
     /**
      * @param id the response id
      * @return an {@linkplain Optional} of an {@linkplain SurveyResponse} with the
-     * given id
+     *         given id
      */
     public Optional<SurveyResponse> findSurveyResponseById(long id) {
         return surveyResponseRepository.findById(id);
@@ -600,7 +600,7 @@ public class ResponseManagement {
      * @return an Iterable containing all Responses that fit criteria
      */
     public Iterable<SurveyResponse> findSurveyResponseByCourseAndCourseTypeAndGroupNumber(Course course,
-                                                                                          CourseType type, Integer groupNumber) {
+            CourseType type, Integer groupNumber) {
         return surveyResponseRepository.findByCourseAndCourseTypeAndGroupNumber(course, type, groupNumber);
     }
 
@@ -611,7 +611,7 @@ public class ResponseManagement {
      * @return an Iterable containing all Responses that fit criteria
      */
     public Iterable<SurveyResponse> findSurveyResponseByCourseAndCourseTypeAndInstanceNumber(Course course,
-                                                                                             CourseType type, Integer instanceNumber) {
+            CourseType type, Integer instanceNumber) {
         return surveyResponseRepository.findByCourseAndCourseTypeAndInstanceNumber(course, type, instanceNumber);
     }
 
