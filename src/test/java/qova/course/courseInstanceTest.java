@@ -8,7 +8,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import org.mockito.Mockito;
 import qova.AbstractIntegrationTest;
+import qova.admin.DefaultSurvey;
 import qova.enums.CourseType;
 import qova.objects.CourseInstance;
 
@@ -16,6 +18,8 @@ public class courseInstanceTest extends AbstractIntegrationTest {
 
     @Test
     public void courseInstanceConstructorTest() {
+
+        DefaultSurvey defaultSurvey = Mockito.mock(DefaultSurvey.class);
 
         var courseType = CourseType.SEMINAR;
         var groupAmount = 10;
@@ -29,7 +33,7 @@ public class courseInstanceTest extends AbstractIntegrationTest {
                         "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
 
         CourseInstance courseInstance = new CourseInstance(courseType, groupAmount, instanceAmount, instanceTitles,
-                active);
+                active, defaultSurvey);
 
         assertEquals(courseType, courseInstance.getCourseType());
         assertEquals("[]", courseInstance.getSurvey());
@@ -38,5 +42,6 @@ public class courseInstanceTest extends AbstractIntegrationTest {
         assertEquals(active, courseInstance.isActive());
         assertEquals(instanceTitles, courseInstance.getInstanceTitles());
         assertEquals(false, courseInstance.getSurveyEditedFlag());
+        assertEquals(defaultSurvey, courseInstance.getDefaultSurvey());
     }
 }

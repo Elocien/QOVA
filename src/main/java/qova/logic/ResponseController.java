@@ -223,6 +223,9 @@ public class ResponseController {
             if (survRsp.isPresent()) {
                 SurveyResponse surveyResponse = survRsp.get();
 
+                //Increments Submission Counter
+                surveyResponse.addStundentIdToSubmissionListAndIncrementCounter("test_id");
+
                 // The manager method that increments & sets the correct values
                 responseManagement.submitStudentResponse(surveyResponse, studentResponseJson);
 
@@ -402,27 +405,41 @@ public class ResponseController {
     @GetMapping("resultsTest")
     public String resultsTest(Model model){
 
-        //[{"type": "", "default": bool, "question": "", "options": [], "answers": []}, ...]}
-        JSONArray results = new JSONArray();
-        JSONObject question = new JSONObject();
+//        //[{"type": "", "default": bool, "question": "", "options": [], "answers": []}, ...]}
+//        JSONArray results = new JSONArray();
+//        JSONObject question = new JSONObject();
+//
+//        question.put("type", "text");
+//        question.put("default", false);
+//        question.put("question", "Is the earth flat?");
+//
+//        ArrayList<String> options = new ArrayList<String>();
+//        options.add("A"); options.add("B"); options.add("C");
+//        question.put("answers", options);
+//
+//        /*
+//        ArrayList<Double> answers = new ArrayList<Double>();
+//        answers.add(0.5); answers.add(0.5); answers.add(0.2);
+//        question.put("answers", answers);
+//        */
+//
+//        results.put(0, question);
 
-        question.put("type", "text");
-        question.put("default", false);
-        question.put("question", "Is the earth flat?");
+        Course course = courseManagement.findAll().iterator().next();
 
-        ArrayList<String> options = new ArrayList<String>();
-        options.add("A"); options.add("B"); options.add("C");
-        question.put("answers", options);
+        CourseType courseType = CourseType.TUTORIAL;
 
-        /*
-        ArrayList<Double> answers = new ArrayList<Double>();
-        answers.add(0.5); answers.add(0.5); answers.add(0.2);
-        question.put("answers", answers);
-        */
+        var group = "2";
+        var instance = "2";
 
-        results.put(0, question);
+        // Eine Liste aller SurveyResponses
+        List<SurveyResponse> listOfSurveyResponses = responseManagement.findSurveyResponses(course, courseType,
+                group, instance);
 
-        model.addAttribute("resultsJson", results.toString());
+        JSONArray resultsJsonString = responseManagement.generateSurveyResultsJson(listOfSurveyResponses);
+
+
+        model.addAttribute("resultsJson", resultsJsonString);
 
         return "surveyResults";
     }
