@@ -282,7 +282,6 @@
 	}
 
 	$('#submitsurvey').submit(function (e) {
-		debugger;
 		const surveyjson = [];
 
 
@@ -316,7 +315,9 @@
 			surveyjson.push(answer);
 		}
 		//Check ob für Jede Frage Antowrt abgegeben
+		debugger;
 		document.getElementById("surveyjson").value = JSON.stringify(surveyjson);
+		console.log(surveyjson);
 		return true;
 	});
 
