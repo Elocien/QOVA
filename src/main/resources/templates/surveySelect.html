@@ -29,14 +29,14 @@
                     <h5 th:text="#{instance}">INSTANCE</h5>
                     <input id="hiddenType" th:value="${type}" type="hidden">
                     <select id="instance" class="custom-select form-control" th:field="*{instance}">
-                        <option class="dropdown-item" value="all" th:text="#{all}">ALL</option>
+                        <option th:if="${mode == 'results'}" class="dropdown-item" value="all" th:text="#{all}">ALL</option>
                         <option class="dropdown-item" th:each="title, stats : ${instanceTitles}" th:text="${title}" th:value="${stats.index}">INSTANCE</option>
                     </select>
                     <th:block th:switch="${type == 'LECTURE'}">
                         <div th:case="false">
                             <h5 class="mt-3" th:text="#{group}">GROUP</h5>
                             <select id="group" class="custom-select form-control" th:field="*{group}">
-                                <option class="dropdown-item" value="all" th:text="#{all}">ALL</option>
+                                <option th:if="${mode == 'results'}" class="dropdown-item" value="all" th:text="#{all}">ALL</option>
                                 <option class="dropdown-item" th:each="n : ${#numbers.sequence(1, groupAmount)}" th:text="|#{group} ${n}|" th:value="${n}">GROUP</option>
                             </select>
                         </div>
