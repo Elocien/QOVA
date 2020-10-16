@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -24,13 +25,13 @@ public class UserController {
 
     @GetMapping("/secure")
     @ResponseBody
-    public List<String> authenticate(HttpServletRequest request, Header header){
+    public List<String> authenticate(HttpServletRequest request, Header header) {
         List<String> listOfAttempts = new ArrayList<>();
         listOfAttempts.add("AJP_attr: " + request.getHeader("AJP_unscoped-affiliation"));
-        listOfAttempts.add((String) "attr: " + request.getAttribute("unscoped-affiliation"));
+        listOfAttempts.add("attr: " + request.getAttribute("unscoped-affiliation"));
         listOfAttempts.addAll(header.getValues());
-
 
         return listOfAttempts;
     }
+
 }
