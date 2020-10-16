@@ -18,7 +18,7 @@
 				<div id="survey"></div>
 				<div id="submit" class="submit">
 					<form th:action="@{/survey?type={type}&id={id}&group={group}&instance={instance}(type=${typeID}, id=${id}, group=${group}, instance=${instance})}" method="post" th:object="${form}" id="submitsurvey">
-						<input type="text" name="questionnaireJson" id="questionnaireJson" class="input"></input>
+						<input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
 						<button class="btn btn-primary mt-2 center btn-tu" type="submit" th:text="#{question.submit}">SUBMIT</button>
 					</form>
 				</div>
@@ -316,7 +316,8 @@
 			surveyjson.push(answer);
 		}
 		//Check ob für Jede Frage Antowrt abgegeben
-		document.getElementById("questionnaireJson").value = JSON.stringify(surveyjson);
+		debugger;
+		document.getElementById("questionnairejson").value = JSON.stringify(surveyjson);
 		console.log(surveyjson);
 		return true;
 	});
