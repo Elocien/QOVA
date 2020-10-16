@@ -8,9 +8,8 @@ body {
   --tu_blue_light: rgb(0, 74, 174);
   --tu_blue_highlight: rgb(230, 230, 255);
   --fancy_grey: darkslategrey;
-  background-image: url(../images/qovaBackgroundSquare.png);
-  background-size: 100% auto;
-  background-repeat: no-repeat;
+  background-image: url(../images/seamless-bg.jpg);
+  background-repeat: auto;
   background-color: rgb(200, 200, 200);
   min-height: 100vh;
   height: 100%;
