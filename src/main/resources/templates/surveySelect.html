@@ -30,7 +30,7 @@
                     <input id="hiddenType" th:value="${type}" type="hidden">
                     <select id="instance" class="custom-select form-control" th:field="*{instance}">
                         <option th:if="${mode == 'results'}" class="dropdown-item" value="all" th:text="#{all}">ALL</option>
-                        <option class="dropdown-item" th:each="title, stats : ${instanceTitles}" th:text="${title}" th:value="${stats.index}">INSTANCE</option>
+                        <option class="dropdown-item" th:each="title, stats : ${instanceTitles}" th:text="${title}" th:value="${stats.index+1}">INSTANCE</option>
                     </select>
                     <th:block th:switch="${type == 'LECTURE'}">
                         <div th:case="false">
