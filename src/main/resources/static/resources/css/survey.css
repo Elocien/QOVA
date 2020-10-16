@@ -91,6 +91,11 @@ I read that somewhere ;) */
     display: flex;
 }
 
+
+.Option{
+    display: flex;
+}
+
 .Option.OnetoFive{
     flex-direction: column-reverse;
     display: flex;
