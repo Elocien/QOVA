@@ -127,7 +127,7 @@ public class ResponseController {
                 return "redirect:/survey?id="+id+"&type="+type+"&instance="+form.getInstance()+"&group="+form.getGroup();
             }
             else if (mode.equals("results")) {
-                return "redirect:/surveyResults?id="+id+"&type="+type+"&instance="+form.getInstance()+"&group="+form.getGroup();
+                return "redirect:/survey?id="+id+"&type="+type+"&instance="+form.getInstance()+"&group="+form.getGroup();
             }
             else {
                 return "error";
