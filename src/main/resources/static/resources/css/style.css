@@ -22,6 +22,8 @@ body {
 }
 .main {
   flex: 1 0 auto;
+  margin-bottom: auto;
+  min-height: 100%;
 }
 
 /*Removes arrows from number input fields*/
