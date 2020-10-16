@@ -2,7 +2,9 @@ package qova.course;
 
 import org.junit.jupiter.api.Test;
 
+import org.mockito.Mockito;
 import qova.AbstractIntegrationTest;
+import qova.admin.DefaultSurvey;
 import qova.enums.CourseFaculty;
 import qova.enums.CourseType;
 import qova.objects.Course;
@@ -19,25 +21,15 @@ public class courseTest extends AbstractIntegrationTest {
 
     @Test
     public void courseConstructorTest() throws Exception {
+
+        DefaultSurvey defaultSurvey = Mockito.mock(DefaultSurvey.class);
+
         var name = "Rechnernetze";
 
-        List<String> lectureTitles = new ArrayList<>();
-        lectureTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles, true);
-
-        List<String> tutorialTitles = new ArrayList<>();
-        tutorialTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles, true);
-
-        CourseInstance seminar = new CourseInstance(CourseType.SEMINAR);
-
-        CourseInstance practical = new CourseInstance(CourseType.PRACTICAL);
+        CourseInstance lecture = Mockito.mock(CourseInstance.class);
+        CourseInstance tutorial = Mockito.mock(CourseInstance.class);
+        CourseInstance seminar = Mockito.mock(CourseInstance.class);
+        CourseInstance practical = Mockito.mock(CourseInstance.class);
 
         var semesterOfStudents = 4;
         var faculty = CourseFaculty.COMPUTER_SCIENCE;

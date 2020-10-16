@@ -5,20 +5,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.persistence.OrderColumn;
+import javax.persistence.*;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.json.JSONObject;
 import org.json.JSONArray;
 
 import jdk.jfr.BooleanFlag;
+import qova.admin.DefaultSurvey;
 import qova.enums.CourseType;
 
 @Entity
@@ -66,6 +60,9 @@ public class CourseInstance {
     @BooleanFlag
     private Boolean surveyEditedFlag;
 
+    @ManyToOne
+    private DefaultSurvey defaultSurvey;
+
     // Needed for JPA purposes
     @SuppressWarnings("unused")
     protected CourseInstance() {
@@ -86,9 +83,12 @@ public class CourseInstance {
      * 
      * @param active         Flag used to determine wether results can be submitted
      *                       for this courseInstance
+     *
+     * @param defaultSurvey  A reference to {@linkplain qova.admin.DefaultSurvey}, in
+     *                       order to obtain the defaultSurveyJson String
      */
     public CourseInstance(CourseType courseType, Integer groupAmount, Integer instanceAmount,
-            List<String> instanceTitles, Boolean active) {
+            List<String> instanceTitles, Boolean active, DefaultSurvey defaultSurvey) {
 
         this.courseType = courseType;
         this.survey = "[]";
@@ -97,6 +97,7 @@ public class CourseInstance {
         this.instanceTitles = instanceTitles;
         this.active = active;
         this.surveyEditedFlag = false;
+        this.defaultSurvey = defaultSurvey;
     }
 
     /**
@@ -197,7 +198,9 @@ public class CourseInstance {
         return this.surveyEditedFlag;
     }
 
-
+    public DefaultSurvey getDefaultSurvey(){
+        return this.defaultSurvey;
+    }
 
 
 

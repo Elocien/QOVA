@@ -44,6 +44,7 @@ public class SurveyResponse {
 
     @ElementCollection
     @OneToMany
+    @OrderColumn
     private List<AbstractResponse> listOfResponses;
 
     // Needed for JPA puposes
@@ -119,7 +120,15 @@ public class SurveyResponse {
     // We assume a JSONArray can be created without exception, as this is checked
     // when a created survey is submitted
     public String getQuestionTextForQuestionAtPosition(Integer position) {
-        JSONArray jsonArray = new JSONArray(getCourseInstance().getSurvey());
+
+        System.out.println(position);
+
+        //Get the default Survey
+        String defaultSurvey = getCourseInstance().getDefaultSurvey().getDefaultSurveyJson();
+
+        //Concatenate the default survey to the customised one
+        JSONArray jsonArray = new JSONArray(defaultSurvey.substring(0, defaultSurvey.length() - 1)
+                + "," + getCourseInstance().getSurvey().substring(1));
 
         return jsonArray.getJSONObject(position).getString("question");
     }

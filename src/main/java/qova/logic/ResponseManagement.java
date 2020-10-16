@@ -360,8 +360,11 @@ public class ResponseManagement {
         // A SurveyResponse object. All surveyResponses have the same survey and the same ListOfResponses, because they belong to the same CourseInstance
         SurveyResponse response = listOfSurveyResponses.get(0);
 
+
         // Generate the resultsArray Structure
         JSONArray resultsArray = generateJsonResultsArray(response);
+
+        System.out.println(resultsArray);
 
         // Reset survey position iterator
         int surveyPosition = 0;
@@ -443,7 +446,6 @@ public class ResponseManagement {
                 }
             }
         }
-
 
         return resultsArray;
     }
@@ -536,11 +538,14 @@ public class ResponseManagement {
 
     public void submitStudentResponse(SurveyResponse surveyResponse, JSONArray studentResponseJson) {
 
-        int surveyPosition = 0;
+        for (int surveyPosition = 0; surveyPosition < surveyResponse.getListOfResponses().size(); surveyPosition++) {
 
-        JSONArray currentPositionArray = studentResponseJson.getJSONArray(surveyPosition);
+            //The current abstractResponse
+            AbstractResponse abstractResponse = surveyResponse.getListOfResponses().get(surveyPosition);
 
-        for (AbstractResponse abstractResponse : surveyResponse.getListOfResponses()) {
+            //The current JSONArray
+            JSONArray currentPositionArray = studentResponseJson.getJSONArray(surveyPosition);
+
 
             if (abstractResponse instanceof qova.objects.BinaryResponse) {
                 if (currentPositionArray.getInt(0) == 0) {
@@ -561,8 +566,6 @@ public class ResponseManagement {
             if (abstractResponse instanceof qova.objects.MultipleChoiceResponse) {
                 ((MultipleChoiceResponse) abstractResponse).incrementTotals(currentPositionArray);
             }
-
-            surveyPosition++;
         }
     }
 
