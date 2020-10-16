@@ -120,8 +120,6 @@ public class SurveyResponse {
     // when a created survey is submitted
     public String getQuestionTextForQuestionAtPosition(Integer position) {
 
-        System.out.println("position" + position);
-
         // Get the default Survey
         String defaultSurvey = getCourseInstance().getDefaultSurvey().getDefaultSurveyJson();
 
