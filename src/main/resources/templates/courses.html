@@ -5,14 +5,14 @@
     <title th:text="#{title.courseBrowser}">TITLE</title>
 </head>
 
-<body class="bg-light"></body>
+<body></body>
 
 <div th:include="navbar"></div>
 
 <div class="main container" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
 
     <div class="row text-center">
-        <div class="col-lg-12 mt-4">
+        <div class="col-lg-12">
 
             <h2 class="font-weight-bold" th:text="#{navbar.course}">COURSE MANAGEMENT</h2>
             <h5 class="font-weight-light" th:text="#{course.description}">COURSE DESCRIPTION</h5>
