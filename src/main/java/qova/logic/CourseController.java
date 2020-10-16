@@ -368,7 +368,7 @@ public class CourseController {
             @RequestParam String type, @RequestParam(required = false) UUID id) {
 
         // Form empty -> Redirect to details again
-        if (form.getQuestionnairejson().length() == 0) {
+        if (form.getQuestionnaireJson().length() == 0) {
             return "redirect:../course/details" + "?id=" + id; // TODO: Redirects back course at the moment, think about
                                                                // where this should go
         }
@@ -394,13 +394,13 @@ public class CourseController {
             else {
                 // check if JSON is valid
                 try {
-                    new JSONArray(form.getQuestionnairejson());
+                    new JSONArray(form.getQuestionnaireJson());
                 } catch (Exception e) {
                     return questioneditor(model, type, id);
                 }
 
                 // Create a JSON Array out of the response from the questioneditor
-                JSONArray survey = new JSONArray(form.getQuestionnairejson());
+                JSONArray survey = new JSONArray(form.getQuestionnaireJson());
 
                 // parse JSON to check for correctness (length, special characters)
                 Boolean validSurvey = responseManagement.verifyJsonArray(survey);
@@ -411,7 +411,7 @@ public class CourseController {
 
                 // Sets the survey string for a given course (takes the default survey and
                 // conncatenates it with the create survey)
-                courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson());
+                courseManagement.setSurveyforType(course.get(), type, form.getQuestionnaireJson());
             }
 
             // Redirect back to CourseDetails page
@@ -431,7 +431,7 @@ public class CourseController {
             @RequestParam(required = false) UUID id) {
 
         // Form empty -> Redirect to details again
-        if (form.getQuestionnairejson().length() == 0) {
+        if (form.getQuestionnaireJson().length() == 0) {
             return "redirect:../course/details" + "?id=" + id; // TODO: Redirects back course at the moment, think about
                                                                // where this should go
         }
@@ -457,13 +457,13 @@ public class CourseController {
             else {
                 // check if JSON is valid
                 try {
-                    new JSONArray(form.getQuestionnairejson());
+                    new JSONArray(form.getQuestionnaireJson());
                 } catch (Exception e) {
                     return questioneditor(model, type, id);
                 }
 
                 // Create a JSON Array out of the response from the questioneditor
-                JSONArray survey = new JSONArray(form.getQuestionnairejson());
+                JSONArray survey = new JSONArray(form.getQuestionnaireJson());
 
                 // parse JSON to check for correctness (length, special characters)
                 Boolean validSurvey = responseManagement.verifyJsonArray(survey);
@@ -474,7 +474,7 @@ public class CourseController {
 
                 // Sets the survey string for a given course (takes the default survey and
                 // conncatenates it with the create survey)
-                courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson());
+                courseManagement.setSurveyforType(course.get(), type, form.getQuestionnaireJson());
             }
 
             // Part der anders ist als questioneditorSubmit

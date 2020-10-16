@@ -45,7 +45,7 @@ public class AdminManagement {
 
     // Submission of new default survey
     public void updateDefaultSurvey(SurveyForm form, CourseType type) {
-        getDefaultSurveyObject(type).setDefaultSurveyJson(form.getQuestionnairejson());
+        getDefaultSurveyObject(type).setDefaultSurveyJson(form.getQuestionnaireJson());
     }
 
 }
