@@ -114,21 +114,18 @@ public class SurveyResponse {
         return this.listOfResponses;
     }
 
-    //Survey related fields
-
+    // Survey related fields
 
     // We assume a JSONArray can be created without exception, as this is checked
     // when a created survey is submitted
     public String getQuestionTextForQuestionAtPosition(Integer position) {
 
-        System.out.println(position);
-
-        //Get the default Survey
+        // Get the default Survey
         String defaultSurvey = getCourseInstance().getDefaultSurvey().getDefaultSurveyJson();
 
-        //Concatenate the default survey to the customised one
-        JSONArray jsonArray = new JSONArray(defaultSurvey.substring(0, defaultSurvey.length() - 1)
-                + "," + getCourseInstance().getSurvey().substring(1));
+        // Concatenate the default survey to the customised one
+        JSONArray jsonArray = new JSONArray(defaultSurvey.substring(0, defaultSurvey.length() - 1) + ","
+                + getCourseInstance().getSurvey().substring(1));
 
         return jsonArray.getJSONObject(position).getString("question");
     }
