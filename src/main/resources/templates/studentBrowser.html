@@ -20,8 +20,8 @@
             <div class="clWrapper" th:each="faculty : ${#lists.sort(faculties)}">
                 <div style="position: relative; height: 3rem;"><a class="clButton" onclick="return expand(this)"><span class="clHeader" th:text="#{'course.faculty.' + ${faculty}}"></span></a></div>
                 <div class="clCollapse" style="display: none;">
-                    <div class="clInner" th:each="course : ${courseList}" th:if="${course.faculty == faculty}">
-                        <a th:if="${course.finalisedFlag}" class="clSurvey font-weight-light" th:text="${course.name}" th:href="@{/surveySelect(id=${course.id}, mode=results)}"></a>
+                    <div class="clInner" th:each="course : ${courseList}" th:if="${course.faculty == faculty and course.finalisedFlag}">
+                        <a class="clSurvey font-weight-light" th:text="${course.name}" th:href="@{/surveySelect(id=${course.id}, mode=results)}"></a>
                     </div>
                 </div>
             </div>
