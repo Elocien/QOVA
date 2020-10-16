@@ -199,7 +199,7 @@ public class ResponseController {
 
         // get JSON Response
         try {
-            studentResponseJson = new JSONArray(form.getQuestionnairejson());
+            studentResponseJson = new JSONArray(form.getQuestionnaireJson());
         } catch (Exception e) {
             return "error?code=" + internalError;
         }

@@ -4,13 +4,13 @@ package qova.forms;
 
 public class SurveyForm {
     
-    private String questionnairejson;
+    private String questionnaireJson;
 
     public SurveyForm(String questionnairejson){
-        this.questionnairejson = questionnairejson;
+        this.questionnaireJson = questionnairejson;
     }
 
-    public String getQuestionnairejson() {
-        return questionnairejson;
+    public String getQuestionnaireJson() {
+        return questionnaireJson;
     }
 }
