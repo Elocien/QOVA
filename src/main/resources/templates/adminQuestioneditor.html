@@ -22,7 +22,7 @@
                         </div>
                         <div class="modal-footer text-center">
                             <div class="w-100"></div>
-                            <form th:action="@{/admin/updateDefaultSurvey}" method="post" th:object="${form}" id="submitsurvey">
+                            <form th:action="@{/admin/updateDefaultSurvey?type=__${type}__}" method="post" th:object="${form}" id="submitsurvey">
                                 <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
                                 <button class="btn btn-primary mt-2" type="submit" th:text="#{Yes}">YES</button>
                             </form>

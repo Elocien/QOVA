@@ -27,15 +27,17 @@
     <div id="resource-container" style="display: none;">
         <!--Question Template-->
         <div class="container result-container with-bars mt-3">
-            <div class="row justify-content-between">
+            <div class="row align-items-center justify-content-between mt-2 mb-2">
                 <div class="col-auto">
-                    <h5 class="question-type mt-2 mb-2"></h5>
+                    <h5 class="question-type m-0"></h5>
                 </div>
-                <div class="col-1">
+                <div class="default-question col-2 text-right">
+                    <p class="m-0"></p>
+                </div>
+                <div class="col-1 text-only">
                     <a class="collapse-btn" data-toggle="collapse" href="#" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fas fa-plus right collapse-icon"></i></a>
                 </div>
             </div>
-            <h5 class="question-type mt-2 mb-2"></h5>
             <div class="col answere-column p-0 mt-4 mb-2"></h5>
         </div>
         <!--Answere Template-->
@@ -74,32 +76,38 @@
     }
 
     function create_visuals() {
-        const response_list = /*[[${responseList}]]*/ "responses";
-        for (let i = 0; i < response_list.userResponses.length; ++i) {
+        var response_list = /*[[${resultsJson}]]*/ "responses";
+        response_list = JSON.parse(response_list);
+        for (let i = 0; i < response_list.length; ++i) {
             var answers = [];
-            var answer = response_list.userResponses[i];
+            var answer = response_list[i];
             var type = answer["type"];
-            if (type == "TEXT_RESPONSE") {
-                for (let j = 0; j < answer.responses.length; ++j) {
-                    answers.push(create_answere(type, answer.responses[j], 0));
+            if (type == "text") {
+                for (let j = 0; j < answer["answers"].length; ++j) {
+                    answers.push(create_answere(type, answer["answers"][j], 0));
                 }
             }
-            else if (type == "MULTIPLE_CHOICE") {
-                for (let j = 0; j < answer["multipleChoiceOptions"].length; ++j) {
-                    answers.push(create_answere(type, answer["multipleChoiceOptions"][j], answer["multipleChoiceAnswers"][j]*0.01));
+            else {
+                for (let j = 0; j < answer["options"].length; ++j) {
+                    answers.push(create_answere(type, answer["options"][j], answer["answers"][j]));
                 }
             }
-            else if (type == "SINGLE_CHOICE") {
-                for (let j = 0; j < answer["singleChoiceOptions"].length; ++j) {
-                    answers.push(create_answere(type, answer["singleChoiceOptions"][j], answer["singleChoiceAnswers"][j]*0.01));
-                }
-            }
-            else if (type == "BINARY_ANSWER") {
-                var total_answers = answer["yesTotal"]+answer["noTotal"];
-                answers.push(create_answere(type, "Yes", answer["yesTotal"]/total_answers));
-                answers.push(create_answere(type, "No", answer["noTotal"]/total_answers));
-            }
+
             var question_template = create_question(type, answer["question"], answers);
+            if (type != "text") {
+                var delete_us = question_template.getElementsByClassName("text-only");
+                for (let j = 0; j < delete_us.length; ++j) {
+                    delete_element(delete_us[j]);
+                }
+            }
+            if (answer["default"]) {
+                var txt = /*[[#{default}]]*/"default";
+                question_template.getElementsByClassName("default-question")[0].innerHTML = "("+txt+")";
+            }
+            else {
+                delete_element(question_template.getElementsByClassName("default-question")[0]);
+            }
+
             document.getElementById("results").appendChild(question_template);
         }
     }
@@ -109,22 +117,17 @@
         for (let i = 0; i < answers.length; ++i) {
             question.getElementsByClassName("answere-column")[0].appendChild(answers[i]);
         }
-        if (type == "TEXT_RESPONSE") {
-            question.classList.remove("with-bars");
+        if (type == "text") {
             question.getElementsByClassName("answere-column")[0].classList.add("collapse");
             question.getElementsByClassName("answere-column")[0].id = "free-text-collapse-"+free_text_count;
             question.getElementsByClassName("collapse-btn")[0].href = "#free-text-collapse-"+free_text_count;
             free_text_count += 1;
-            delete_element(question.getElementsByClassName("question-type")[1]);
-        }
-        else {
-            delete_element(question.getElementsByClassName("row justify-content-between")[0]);
         }
         question.getElementsByClassName("question-type")[0].innerHTML = text;
         return question;
     }
     function create_answere(type, text, value) {
-        if (type == "TEXT_RESPONSE") {
+        if (type == "text") {
             var answere = resources.getElementsByClassName("result-text")[0].cloneNode(true);
             answere.innerHTML = text; answere.classList.add("result-free-text"); answere.classList.remove("result-text");
         }

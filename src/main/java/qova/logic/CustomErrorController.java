@@ -9,9 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class CustomErrorController implements ErrorController {
     @RequestMapping("/error")
-    public String handleError(Model model, @RequestParam(required = false) String code) {
+    public String handleError(Model model) {
         // add error code to model
-        model.addAttribute("code", code);
         return "error";
     }
 
