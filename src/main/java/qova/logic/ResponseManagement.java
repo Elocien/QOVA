@@ -352,11 +352,26 @@ public class ResponseManagement {
         return listOfResponses;
     }
 
+    /**
+     * This function takes a list containing the surveyResponses selected by a user, and generates
+     * the {@linkplain org.json.JSONArray} containing the compiled results. The JSON is of the following structure:
+     * <br>
+     * <br>
+     * <h2>JSON Structure</h2>
+     * <br>
+     * [{"type": STRING, "default": bool, "question": STRING, "options": [STRING, STRING, ...], "answers": [STRING, STRING]}
+     * <br>
+     * <br>
+     * It makes use of {@link #generateJsonResultsArray(SurveyResponse)} to generate the Structure of the array, and then populates it
+     * with the results. After population, the array is then iterated through, and the answers array is replaced by decimal values, to indicate percentages
+     *
+     *
+     * @param listOfSurveyResponses A list of {@linkplain qova.objects.SurveyResponse}'s, which is compiled based on which results
+     *                              the user has selected to see
+     * @return A {@linkplain JSONArray} containing the students compiled responses
+     */
     public JSONArray generateSurveyResultsJson(List<SurveyResponse> listOfSurveyResponses) {
 
-        // JSON Structure
-        // [{"type": "", "default": bool, "question": "", "options": [], "answers": []},
-        // ...]}
 
         // A SurveyResponse object. All surveyResponses have the same survey and the
         // same ListOfResponses, because they belong to the same CourseInstance
@@ -365,16 +380,13 @@ public class ResponseManagement {
         // Generate the resultsArray Structure
         JSONArray resultsArray = generateJsonResultsArray(response);
 
-        System.out.println("This is the resultsarray" + resultsArray);
-
-        // Reset survey position iterator
-        int surveyPosition = 0;
-
         // Iterate through an populate JSON Objects with data
         for (SurveyResponse surveyResponse : listOfSurveyResponses) {
 
             // Iterate through all abstract response, for the current SurveyResponse
-            for (AbstractResponse ar : listOfSurveyResponses.get(surveyPosition).getListOfResponses()) {
+            for (int surveyPosition = 0; surveyPosition < surveyResponse.getListOfResponses().size(); surveyPosition++) {
+
+                AbstractResponse ar = surveyResponse.getListOfResponses().get(surveyPosition);
 
                 // JSONObject of the current AbstractResponse
                 JSONObject jsonObject = resultsArray.getJSONObject(surveyPosition);
@@ -416,7 +428,7 @@ public class ResponseManagement {
                     for (int i = 0; i < scr.getNumberOfAnswerPossibilites(); i++) {
                         try {
                             singleChoiceAnswersArray.put(i,
-                                    singleChoiceAnswersArray.getInt(i) + singleChoiceAnswers.get(i));
+                                    (singleChoiceAnswersArray.getInt(i) + singleChoiceAnswers.get(i)));
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -446,6 +458,8 @@ public class ResponseManagement {
             }
         }
 
+
+
         return resultsArray;
     }
 
@@ -465,44 +479,46 @@ public class ResponseManagement {
             if (abstractResponse instanceof BinaryResponse) {
                 jsonResponseObject.append("type", "binary");
                 JSONArray binaryOptionsArray = new JSONArray(new ArrayList<>(Arrays.asList("yesTotal", "noTotal")));
-                jsonResponseObject.append("options", binaryOptionsArray);
-                jsonResponseObject.append("answers", new JSONArray(Arrays.asList(0, 0)));
+                jsonResponseObject.put("options", binaryOptionsArray);
+                jsonResponseObject.put("answers", new JSONArray(Arrays.asList(0, 0)));
             }
 
             if (abstractResponse instanceof TextResponse) {
-                jsonResponseObject.append("type", "text");
-                jsonResponseObject.append("options", new JSONArray());
-                jsonResponseObject.append("answers", new JSONArray());
+                jsonResponseObject.put("type", "text");
+                jsonResponseObject.put("options", new JSONArray());
+                jsonResponseObject.put("answers", new JSONArray());
             }
 
             if (abstractResponse instanceof SingleChoiceResponse) {
                 // The single choice response
                 SingleChoiceResponse scr = (SingleChoiceResponse) abstractResponse;
 
-                jsonResponseObject.append("type", "singleChoice");
+                jsonResponseObject.put("type", "singleChoice");
                 JSONArray singleChoiceOptionsArray = new JSONArray(
                         response.getOptionsForResponseAtPosition(surveyPosition));
-                jsonResponseObject.append("options", singleChoiceOptionsArray);
-                List<Integer> listOfAnswers = new ArrayList<>();
+                jsonResponseObject.put("options", singleChoiceOptionsArray);
+                JSONArray answersArray = new JSONArray();
                 for (int i = 0; i < scr.getNumberOfAnswerPossibilites(); i++) {
-                    listOfAnswers.add(0);
+                    answersArray.put(i, 0);
                 }
-                jsonResponseObject.append("answers", new JSONArray(listOfAnswers));
+
+                jsonResponseObject.put("answers", answersArray);
             }
 
             if (abstractResponse instanceof MultipleChoiceResponse) {
                 // The multiple choice response
                 MultipleChoiceResponse mcr = (MultipleChoiceResponse) abstractResponse;
 
-                jsonResponseObject.append("type", "multipleChoice");
+                jsonResponseObject.put("type", "multipleChoice");
                 JSONArray multipleChoiceOptionsArray = new JSONArray(
                         response.getOptionsForResponseAtPosition(surveyPosition));
-                jsonResponseObject.append("options", multipleChoiceOptionsArray);
-                List<Integer> listOfAnswers = new ArrayList<>();
+                jsonResponseObject.put("options", multipleChoiceOptionsArray);
+                JSONArray answersArray = new JSONArray();
                 for (int i = 0; i < mcr.getNumberOfAnswerPossibilites(); i++) {
-                    listOfAnswers.add(0);
+                    answersArray.put(i, 0);
                 }
-                jsonResponseObject.append("answers", new JSONArray(listOfAnswers));
+
+                jsonResponseObject.put("answers", answersArray);
             }
 
             resultsArray.put(surveyPosition, jsonResponseObject);

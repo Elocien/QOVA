@@ -390,9 +390,16 @@ public class ResponseController {
 
         Course crs = courseManagement.findAll().iterator().next();
 
+        var group = "2";
+        var instance = "2";
+
+        // Eine Liste aller SurveyResponses
+        List<SurveyResponse> listOfSurveyResponses = responseManagement.findSurveyResponses(crs, CourseType.TUTORIAL, group,
+                instance);
+
         // Generate PDF
         byte[] pdf = responseManagement
-                .generateCSVEnglish(responseManagement.findSurveyResponses(crs, CourseType.TUTORIAL, "1", "all"));
+                .generateCSVEnglish(listOfSurveyResponses);
 
         // Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();

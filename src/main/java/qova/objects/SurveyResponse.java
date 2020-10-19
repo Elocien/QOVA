@@ -120,19 +120,21 @@ public class SurveyResponse {
     // when a created survey is submitted
     public String getQuestionTextForQuestionAtPosition(Integer position) {
 
-        // Get the default Survey
-        String defaultSurvey = getCourseInstance().getDefaultSurvey().getDefaultSurveyJson();
-
         // Concatenate the default survey to the customised one
-        JSONArray jsonArray = new JSONArray(defaultSurvey.substring(0, defaultSurvey.length() - 1) + ","
-                + getCourseInstance().getSurvey().substring(1));
+        JSONArray jsonArray = new JSONArray(conactenateSurveytoDefault());
 
         return jsonArray.getJSONObject(position).getString("question");
     }
 
+    /**
+     * Returns a {@link List} of response options (i.e. the options a user is able to pick from, for a given singleChoice question).
+     *
+     * @param position The position of the response, in the survey (starting from 0, as represented in the surveyArray)
+     * @return A List of options
+     */
     public List<String> getOptionsForResponseAtPosition(Integer position) {
 
-        JSONArray jsonArray = new JSONArray(getCourseInstance().getSurvey());
+        JSONArray jsonArray = new JSONArray(conactenateSurveytoDefault());
         JSONObject jsonObject;
         try {
             jsonObject = jsonArray.getJSONObject(position);
@@ -159,6 +161,17 @@ public class SurveyResponse {
         else {
             return new ArrayList<>();
         }
+    }
+
+    private String conactenateSurveytoDefault(){
+        // Get the default Survey
+        String defaultSurvey = getCourseInstance().getDefaultSurvey().getDefaultSurveyJson();
+
+        // Concatenate the default survey to the customised one
+        String concatenatedSurvey = defaultSurvey.substring(0, defaultSurvey.length() - 1) + ","
+                + getCourseInstance().getSurvey().substring(1);
+
+        return concatenatedSurvey;
     }
 
 }
