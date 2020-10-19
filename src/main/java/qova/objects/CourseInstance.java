@@ -80,22 +80,18 @@ public class CourseInstance {
      *                       specific courseInstance
      * @param instanceTitles The titles for each instance of a {@linkplain Course},
      *                       in the form of a String
-     * 
-     * @param active         Flag used to determine wether results can be submitted
-     *                       for this courseInstance
-     *
      * @param defaultSurvey  A reference to {@linkplain qova.admin.DefaultSurvey}, in
      *                       order to obtain the defaultSurveyJson String
      */
     public CourseInstance(CourseType courseType, Integer groupAmount, Integer instanceAmount,
-            List<String> instanceTitles, Boolean active, DefaultSurvey defaultSurvey) {
+            List<String> instanceTitles, DefaultSurvey defaultSurvey) {
 
         this.courseType = courseType;
         this.survey = "[]";
         this.groupAmount = groupAmount;
         this.instanceAmount = instanceAmount;
         this.instanceTitles = instanceTitles;
-        this.active = active;
+        this.active = true;
         this.surveyEditedFlag = false;
         this.defaultSurvey = defaultSurvey;
     }
@@ -107,8 +103,10 @@ public class CourseInstance {
      * in future
      * 
      * @param courseType The {@linkplain qova.enums.CourseType}
+     * @param defaultSurvey  A reference to {@linkplain qova.admin.DefaultSurvey}, in
+     *      *                       order to obtain the defaultSurveyJson String
      */
-    public CourseInstance(CourseType courseType) {
+    public CourseInstance(CourseType courseType, DefaultSurvey defaultSurvey) {
         this.courseType = courseType;
         this.survey = "[]";
         this.groupAmount = 0;
@@ -116,6 +114,7 @@ public class CourseInstance {
         this.instanceTitles = new ArrayList<>();
         this.active = false;
         this.surveyEditedFlag = false;
+        this.defaultSurvey = defaultSurvey;
     }
 
     public UUID getId() {
@@ -162,19 +161,6 @@ public class CourseInstance {
         this.instanceTitles = list;
     }
 
-    public Boolean titlesMissing() {
-        boolean b = false;
-        if (this.instanceAmount > 0) { 
-            Integer i = 0;
-            for (i = 0; i < this.instanceAmount; i++) {
-                if (this.instanceTitles.get(i).isEmpty()) {
-                    b = true;
-                }
-            }
-        }
-        return(b);
-    }
-
     public Boolean isActive() {
         return this.active;
     }
@@ -202,6 +188,13 @@ public class CourseInstance {
         return this.defaultSurvey;
     }
 
-
+    public Boolean titlesMissing() {
+        if (this.instanceAmount > instanceTitles.size()){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
 }

@@ -108,7 +108,7 @@ public class CourseManagement {
 
                 // Create the courseInstance
                 CourseInstance instance = new CourseInstance(courseType, groupAmount,
-                        form.getInstanceAmount(courseType), instanceTitles, true, defaultSurveyMap.get(courseType));
+                        form.getInstanceAmount(courseType), instanceTitles, defaultSurveyMap.get(courseType));
 
                 // save to database
                 courseInstancesRepo.save(instance);
@@ -116,7 +116,7 @@ public class CourseManagement {
                 // Add CourseInstance to map
                 courseInstances.put(courseType, instance);
             } else {
-                CourseInstance instance = new CourseInstance(courseType);
+                CourseInstance instance = new CourseInstance(courseType, defaultSurveyMap.get(courseType));
                 courseInstancesRepo.save(instance);
                 courseInstances.put(courseType, instance);
             }
@@ -280,7 +280,7 @@ public class CourseManagement {
     public CourseInstance duplicateCourseInstance(CourseInstance oldInstance) {
         List<String> newInstanceTitles = new ArrayList<>(oldInstance.getInstanceTitles());
         CourseInstance newInstance = new CourseInstance(oldInstance.getCourseType(), oldInstance.getGroupAmount(),
-                oldInstance.getInstanceAmount(), newInstanceTitles, oldInstance.isActive(), oldInstance.getDefaultSurvey());
+                oldInstance.getInstanceAmount(), newInstanceTitles, oldInstance.getDefaultSurvey());
         courseInstancesRepo.save(newInstance);
         return newInstance;
     }
@@ -525,14 +525,14 @@ public class CourseManagement {
         List<String> lectureTitles = new ArrayList<>(Arrays.asList("V - Einführung", "V - Bitübertragungsschicht", "V - Netztechnologien 1", "V - Netztechnologien 2",
                 "V - Sicherungsschicht", "V - Vermittlungsschicht", "V - Transportschicht", "V - Netzwerkperformance",
                 "V - Internetdienste", "V - Multimediakommunikation", "V - Mobile Computing", "V - Verteilte Systeme"));
-        var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles, true, defaultSurveyMap.get(CourseType.PRACTICAL));
+        var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles, defaultSurveyMap.get(CourseType.PRACTICAL));
 
         courseInstancesRepo.save(lecture);
 
         List<String> tutorialTitles = new ArrayList<>(Arrays.asList("T - Einführung", "T - Bitübertragungsschicht", "T - Netztechnologien 1", "T - Netztechnologien 2",
                 "T - Sicherungsschicht", "T - Vermittlungsschicht", "T - Transportschicht", "T - Netzwerkperformance",
                 "T - Internetdienste", "T - Multimediakommunikation", "T - Mobile Computing", "T - Verteilte Systeme"));
-        var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles, true, defaultSurveyMap.get(CourseType.PRACTICAL));
+        var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles, defaultSurveyMap.get(CourseType.PRACTICAL));
         tutorial.setSurvey(
                 "[{\"type\":\"SingleChoice\",\"question\":\"Hat die Übung Wissen vermittelt, welches du dir nicht im Selbststudium hättest erarbeiten können?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in den aktiven Austausch mit den Studierenden gesucht?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Waren die Anforderung dem Wissensstand der Studierenden angemessen?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Konnte die Übung gezielt Schwerpunkte setzen und Struktur vermitteln?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Konnte der/die Leiter/in dein Interesse an dem Thema wecken?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in die Möglichkeiten einer Übung gegenüber der Vorlesung ausgeschöpft?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Online Lehre v.s. Präsenzveranstaltung\",\"answers\":[\"Die Übung war digital und soll digital bleiben.\",\"Die Übung war digital und wäre als Präsenzveranstaltung besser.\",\"Die Übung war eine Präsenzveranstaltung und soll eine bleiben.\",\"Die Übung war eine Präsenzveranstaltung und sollte digital werden.\"]}]");
 
@@ -541,14 +541,14 @@ public class CourseManagement {
         List<String> seminarTitles = new ArrayList<>(Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
                 "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
                 "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var seminar = new CourseInstance(CourseType.SEMINAR, 8, 12, seminarTitles, true, defaultSurveyMap.get(CourseType.PRACTICAL));
+        var seminar = new CourseInstance(CourseType.SEMINAR, 8, 12, seminarTitles, defaultSurveyMap.get(CourseType.PRACTICAL));
 
         courseInstancesRepo.save(seminar);
 
         List<String> practicalTitles = new ArrayList<>(Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
                 "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
                 "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var practical = new CourseInstance(CourseType.PRACTICAL, 8, 12, practicalTitles, true, defaultSurveyMap.get(CourseType.PRACTICAL));
+        var practical = new CourseInstance(CourseType.PRACTICAL, 8, 12, practicalTitles, defaultSurveyMap.get(CourseType.PRACTICAL));
         courseInstancesRepo.save(practical);
 
         var semesterOfStudents = 4;

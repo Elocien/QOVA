@@ -20,16 +20,30 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class courseTest extends AbstractIntegrationTest {
 
     @Test
-    public void courseConstructorTest() throws Exception {
+    public void courseConstructorTest() {
 
         DefaultSurvey defaultSurvey = Mockito.mock(DefaultSurvey.class);
 
         var name = "Rechnernetze";
 
-        CourseInstance lecture = Mockito.mock(CourseInstance.class);
-        CourseInstance tutorial = Mockito.mock(CourseInstance.class);
-        CourseInstance seminar = Mockito.mock(CourseInstance.class);
-        CourseInstance practical = Mockito.mock(CourseInstance.class);
+        var groupAmount = 10;
+        var instanceAmount = 12;
+        var active = true;
+
+        List<String> instanceTitles = new ArrayList<>(Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
+                "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
+                "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
+
+        CourseInstance lecture = new CourseInstance(CourseType.LECTURE, groupAmount, instanceAmount, instanceTitles,
+                defaultSurvey);
+
+        CourseInstance tutorial = new CourseInstance(CourseType.TUTORIAL, groupAmount, instanceAmount, instanceTitles,
+                defaultSurvey);
+
+        CourseInstance seminar = new CourseInstance(CourseType.SEMINAR, defaultSurvey);
+
+        CourseInstance practical = new CourseInstance(CourseType.PRACTICAL, defaultSurvey);
+
 
         var semesterOfStudents = 4;
         var faculty = CourseFaculty.COMPUTER_SCIENCE;
