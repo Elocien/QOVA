@@ -10,7 +10,7 @@ public class SurveyForm {
         this.questionnairejson = questionnairejson;
     }
 
-    public String getQuestionnairejson() {
-        return questionnairejson;
+    public String getQuestionnaireJson() {
+        return this.questionnairejson;
     }
 }

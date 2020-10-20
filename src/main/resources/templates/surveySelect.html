@@ -7,11 +7,11 @@
 <body>
 <div th:include="navbar"></div>
 
-<div class="container">
+<div class="main container">
     <div class="col-12 justify-content-center">
 
         <!--Headline-->
-        <div class="col-12 text-center mt-4">
+        <div class="col-12 text-center">
             <h2 class="font-weight-bold" th:text="|#{student.select.header} ${courseName}|">COURSE BROWSER</h2>
             <h5 class="font-weight-light" th:text="#{student.select.description}">DESCRIPTION</h5>
         </div>
@@ -29,14 +29,14 @@
                     <h5 th:text="#{instance}">INSTANCE</h5>
                     <input id="hiddenType" th:value="${type}" type="hidden">
                     <select id="instance" class="custom-select form-control" th:field="*{instance}">
-                        <option class="dropdown-item" value="all" th:text="#{all}">ALL</option>
-                        <option class="dropdown-item" th:each="title, stats : ${instanceTitles}" th:text="${title}" th:value="${stats.index}">INSTANCE</option>
+                        <option th:if="${mode == 'results'}" class="dropdown-item" value="all" th:text="#{all}">ALL</option>
+                        <option class="dropdown-item" th:each="title, stats : ${instanceTitles}" th:text="${title}" th:value="${stats.index+1}">INSTANCE</option>
                     </select>
                     <th:block th:switch="${type == 'LECTURE'}">
                         <div th:case="false">
                             <h5 class="mt-3" th:text="#{group}">GROUP</h5>
                             <select id="group" class="custom-select form-control" th:field="*{group}">
-                                <option class="dropdown-item" value="all" th:text="#{all}">ALL</option>
+                                <option th:if="${mode == 'results'}" class="dropdown-item" value="all" th:text="#{all}">ALL</option>
                                 <option class="dropdown-item" th:each="n : ${#numbers.sequence(1, groupAmount)}" th:text="|#{group} ${n}|" th:value="${n}">GROUP</option>
                             </select>
                         </div>

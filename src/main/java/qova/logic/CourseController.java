@@ -1,11 +1,7 @@
 package qova.logic;
 
 import java.io.IOException;
-import java.util.Base64;
-import java.util.Objects;
-
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -26,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import qova.admin.AdminManagement;
+import qova.admin.DefaultSurvey;
 import qova.enums.CourseType;
 import qova.forms.CourseForm;
 import qova.forms.DuplicateCourseForm;
@@ -200,8 +197,14 @@ public class CourseController {
             return createCourse(model, form);
         }
 
+        // Get DefaultSurvey to reference in CourseInstance
+        EnumMap<CourseType, DefaultSurvey> defaultSurveyMap = new EnumMap<>(CourseType.class);
+        for(CourseType courseType : CourseType.values()){
+            defaultSurveyMap.put(courseType, adminManagement.getDefaultSurveyObject(courseType));
+        }
+
         // Management Method returns String of new Course
-        UUID id = courseManagement.createCourseReturnId(form);
+        UUID id = courseManagement.createCourseAndCourseInstanceAndReturnCourseId(form, defaultSurveyMap);
 
         // Redirect to SurveyEditor to start creating survey
         return "redirect:../course/instanceTitles?id=" + id;
@@ -292,9 +295,7 @@ public class CourseController {
         Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()) {
             for (CourseType courseType : CourseType.values()) {
-                // Create a JSON Array out of the response from the questioneditor and the
-                // default survey
-                // --Custom Survey-- --CourseType--
+
                 String completeSurvey = adminManagement.concatenateDefaultSurveyToSurveyString(
                         courseManagement.getSurveyforType(id, courseType), courseType);
 
@@ -368,7 +369,7 @@ public class CourseController {
             @RequestParam String type, @RequestParam(required = false) UUID id) {
 
         // Form empty -> Redirect to details again
-        if (form.getQuestionnairejson().length() == 0) {
+        if (form.getQuestionnaireJson().length() == 0) {
             return "redirect:../course/details" + "?id=" + id; // TODO: Redirects back course at the moment, think about
                                                                // where this should go
         }
@@ -394,13 +395,13 @@ public class CourseController {
             else {
                 // check if JSON is valid
                 try {
-                    new JSONArray(form.getQuestionnairejson());
+                    new JSONArray(form.getQuestionnaireJson());
                 } catch (Exception e) {
                     return questioneditor(model, type, id);
                 }
 
                 // Create a JSON Array out of the response from the questioneditor
-                JSONArray survey = new JSONArray(form.getQuestionnairejson());
+                JSONArray survey = new JSONArray(form.getQuestionnaireJson());
 
                 // parse JSON to check for correctness (length, special characters)
                 Boolean validSurvey = responseManagement.verifyJsonArray(survey);
@@ -411,7 +412,7 @@ public class CourseController {
 
                 // Sets the survey string for a given course (takes the default survey and
                 // conncatenates it with the create survey)
-                courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson());
+                courseManagement.setSurveyforType(course.get(), type, form.getQuestionnaireJson());
             }
 
             // Redirect back to CourseDetails page
@@ -431,7 +432,7 @@ public class CourseController {
             @RequestParam(required = false) UUID id) {
 
         // Form empty -> Redirect to details again
-        if (form.getQuestionnairejson().length() == 0) {
+        if (form.getQuestionnaireJson().length() == 0) {
             return "redirect:../course/details" + "?id=" + id; // TODO: Redirects back course at the moment, think about
                                                                // where this should go
         }
@@ -457,13 +458,13 @@ public class CourseController {
             else {
                 // check if JSON is valid
                 try {
-                    new JSONArray(form.getQuestionnairejson());
+                    new JSONArray(form.getQuestionnaireJson());
                 } catch (Exception e) {
                     return questioneditor(model, type, id);
                 }
 
                 // Create a JSON Array out of the response from the questioneditor
-                JSONArray survey = new JSONArray(form.getQuestionnairejson());
+                JSONArray survey = new JSONArray(form.getQuestionnaireJson());
 
                 // parse JSON to check for correctness (length, special characters)
                 Boolean validSurvey = responseManagement.verifyJsonArray(survey);
@@ -474,7 +475,7 @@ public class CourseController {
 
                 // Sets the survey string for a given course (takes the default survey and
                 // conncatenates it with the create survey)
-                courseManagement.setSurveyforType(course.get(), type, form.getQuestionnairejson());
+                courseManagement.setSurveyforType(course.get(), type, form.getQuestionnaireJson());
             }
 
             // Part der anders ist als questioneditorSubmit
@@ -558,7 +559,13 @@ public class CourseController {
     // test method
     @GetMapping("/createC")
     public String createC() throws Exception {
-        Course course = courseManagement.TestCreateCourse();
+
+        EnumMap<CourseType, DefaultSurvey> defaultSurveyMap = new EnumMap<>(CourseType.class);
+        for(CourseType courseType : CourseType.values()){
+            defaultSurveyMap.put(courseType, adminManagement.getDefaultSurveyObject(courseType));
+        }
+
+        Course course = courseManagement.TestCreateCourse(defaultSurveyMap);
         return "redirect:/course/details" + "?id=" + course.getId();
     }
 

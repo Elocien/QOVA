@@ -1,25 +1,30 @@
 /*general*/
-html {
+html, body {
   min-height: 100vh;
+  height: 100%;
 }
 body {
   --tu_blue: rgb(0, 37, 87);
   --tu_blue_light: rgb(0, 74, 174);
   --tu_blue_highlight: rgb(230, 230, 255);
   --fancy_grey: darkslategrey;
-  background-color: #d0d1da;
-  background-image: url(../images/qovaBackgroundSquare.png);
+  background-image: url(../images/qovaBackgroundSquare.png), linear-gradient(90deg, rgba(208,209,218,1) 50%, rgba(211,211,220,1) 100%);
   background-size: 100% auto;
   background-repeat: no-repeat;
   min-height: 100vh;
   height: 100%;
   position: relative;
   margin: 0;
-  padding-bottom: 56px;
+  padding-bottom: 8rem;
   overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
 }
-.bg-light {
-  background-color: #d0d1da;
+.main {
+  flex: 1 0 auto;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  min-height: 100%;
 }
 
 /*Removes arrows from number input fields*/
@@ -66,11 +71,21 @@ input[type=number] {
 
 /*footer.html*/
 footer {
-  position: absolute;
-  bottom: 0;
   width: 100%;
-  height: 4rem !important;
-  background-color: var(--tu_blue);
+  height: auto;
+  bottom: 0;
+  margin-top: auto;
+  background-color: rgb(50, 50, 50);
+  flex-shrink: 0;
+}
+.footer-link {
+  color: rgb(140, 200, 255);
+}
+.footer-link:hover {
+  color: white;
+}
+.disclaimer {
+  font-size: 0.8rem;
 }
 
 /*navbar.html*/
@@ -350,6 +365,8 @@ select {
   -moz-appearance:none;
 }
 
+
+/*surveyResults.html*/
 .result-container {
   border: solid 1px grey;
   border-radius: 3px;
@@ -383,14 +400,15 @@ select {
   border-top: 0;
 }
 .collapse-btn {
-  position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;
   text-decoration: none;
   color: black;
 }
 .collapse-icon {
-  padding-top: 0.5rem;
-  padding-right: 15px;
   font-size: 1.2rem;
+}
+.default-question {
+  font-size: 0.8rem;
+  color: rgb(80, 80, 80);
 }
 
 .bar-0 {

@@ -6,11 +6,11 @@
     <title th:text="#{title.details}">TITLE</title>
 </head>
 
-<body class="bg-light">
+<body>
     <div th:include="navbar"></div>
-    <div class="col-lg-12 mb-4">
+    <div class="main col-lg-12">
 
-        <div class="mb-4 mt-4" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
+        <div class="mb-4" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
             <h2 class="font-weight-bold text-center mb-4 mt-4 hide_me" th:text="${course.name}">COURSE NAME</h2>
             <input id="name-input" type="text" class="input-group headline-edit show_me" style="display: none;" th:placeholder="${course.name}" th:value="${course.name}"></input>
         </div>

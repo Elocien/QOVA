@@ -39,13 +39,13 @@ public class AdminManagement {
     }
 
     // Get the DefaultSurvey Object from the repo
-    private DefaultSurvey getDefaultSurveyObject(CourseType type) {
+    public DefaultSurvey getDefaultSurveyObject(CourseType type) {
         return repo.findDefaultSurveyForType(type);
     }
 
     // Submission of new default survey
     public void updateDefaultSurvey(SurveyForm form, CourseType type) {
-        getDefaultSurveyObject(type).setDefaultSurveyJson(form.getQuestionnairejson());
+        getDefaultSurveyObject(type).setDefaultSurveyJson(form.getQuestionnaireJson());
     }
 
 }

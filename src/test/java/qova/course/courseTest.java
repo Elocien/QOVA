@@ -2,7 +2,9 @@ package qova.course;
 
 import org.junit.jupiter.api.Test;
 
+import org.mockito.Mockito;
 import qova.AbstractIntegrationTest;
+import qova.admin.DefaultSurvey;
 import qova.enums.CourseFaculty;
 import qova.enums.CourseType;
 import qova.objects.Course;
@@ -18,26 +20,30 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class courseTest extends AbstractIntegrationTest {
 
     @Test
-    public void courseConstructorTest() throws Exception {
+    public void courseConstructorTest() {
+
+        DefaultSurvey defaultSurvey = Mockito.mock(DefaultSurvey.class);
+
         var name = "Rechnernetze";
 
-        List<String> lectureTitles = new ArrayList<>();
-        lectureTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles, true);
+        var groupAmount = 10;
+        var instanceAmount = 12;
+        var active = true;
 
-        List<String> tutorialTitles = new ArrayList<>();
-        tutorialTitles.addAll(
-                Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                        "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                        "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles, true);
+        List<String> instanceTitles = new ArrayList<>(Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
+                "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
+                "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
 
-        CourseInstance seminar = new CourseInstance(CourseType.SEMINAR);
+        CourseInstance lecture = new CourseInstance(CourseType.LECTURE, groupAmount, instanceAmount, instanceTitles,
+                defaultSurvey);
 
-        CourseInstance practical = new CourseInstance(CourseType.PRACTICAL);
+        CourseInstance tutorial = new CourseInstance(CourseType.TUTORIAL, groupAmount, instanceAmount, instanceTitles,
+                defaultSurvey);
+
+        CourseInstance seminar = new CourseInstance(CourseType.SEMINAR, defaultSurvey);
+
+        CourseInstance practical = new CourseInstance(CourseType.PRACTICAL, defaultSurvey);
+
 
         var semesterOfStudents = 4;
         var faculty = CourseFaculty.COMPUTER_SCIENCE;

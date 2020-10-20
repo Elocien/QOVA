@@ -8,6 +8,7 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -27,6 +28,9 @@ import qova.objects.AbstractResponse;
 import qova.objects.Course;
 import qova.objects.CourseInstance;
 import qova.objects.SurveyResponse;
+
+//Temporary Import
+import java.util.ArrayList;
 
 @Controller // This means that this class is a Controller
 public class ResponseController {
@@ -57,7 +61,8 @@ public class ResponseController {
     // ---------------------------------------------------------------------------
 
     @GetMapping("surveySelect")
-    public String selectSurvey(Model model, SurveySelectForm form, @RequestParam String mode, @RequestParam UUID id, @RequestParam(required = false, defaultValue = "") String type) {
+    public String selectSurvey(Model model, SurveySelectForm form, @RequestParam String mode, @RequestParam UUID id,
+            @RequestParam(required = false, defaultValue = "") String type) {
 
         // course name, course type, instance names, groupAmount
         Optional<Course> crs = courseManagement.findById(id);
@@ -87,8 +92,7 @@ public class ResponseController {
                     model.addAttribute("instanceTitles", crs.get().getPractical().getInstanceTitles());
                     model.addAttribute("groupAmount", crs.get().getPractical().getGroupAmount());
                 }
-            }
-            else {
+            } else {
                 model.addAttribute("typeExists", false);
             }
 
@@ -103,7 +107,8 @@ public class ResponseController {
 
     // Validation of entry of surveySelect page, and redirect to the actual survey
     @PostMapping("surveySelect")
-    public String selectSurveySubmission(Model model, @ModelAttribute("form") SurveySelectForm form, @RequestParam String mode, @RequestParam String type, @RequestParam UUID id) {
+    public String selectSurveySubmission(Model model, @ModelAttribute("form") SurveySelectForm form,
+            @RequestParam String mode, @RequestParam String type, @RequestParam UUID id) {
 
         Optional<Course> crs = courseManagement.findById(id);
 
@@ -112,7 +117,8 @@ public class ResponseController {
             return "error";
         }
         // if type is not one of the defined values
-        if (!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR")) && !(type.equals("PRACTICAL"))) {
+        if (!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR"))
+                && !(type.equals("PRACTICAL"))) {
             return "error";
         }
 
@@ -120,12 +126,12 @@ public class ResponseController {
 
         else {
             if (mode.equals("participant")) {
-                return "redirect:/survey?id="+id+"&type="+type+"&instance="+form.getInstance()+"&group="+form.getGroup();
-            }
-            else if (mode.equals("results")) {
-                return "redirect:/survey?id="+id+"&type="+type+"&instance="+form.getInstance()+"&group="+form.getGroup();
-            }
-            else {
+                return "redirect:/survey?id=" + id + "&type=" + type + "&instance=" + form.getInstance() + "&group="
+                        + form.getGroup();
+            } else if (mode.equals("results")) {
+                return "redirect:/surveyResults?id=" + id + "&type=" + type + "&instance=" + form.getInstance() + "&group="
+                        + form.getGroup();
+            } else {
                 return "error";
             }
         }
@@ -195,7 +201,7 @@ public class ResponseController {
 
         // get JSON Response
         try {
-            studentResponseJson = new JSONArray(form.getQuestionnairejson());
+            studentResponseJson = new JSONArray(form.getQuestionnaireJson());
         } catch (Exception e) {
             return "error?code=" + internalError;
         }
@@ -217,6 +223,9 @@ public class ResponseController {
 
             if (survRsp.isPresent()) {
                 SurveyResponse surveyResponse = survRsp.get();
+
+                // Increments Submission Counter
+                surveyResponse.addStundentIdToSubmissionListAndIncrementCounter("test_id");
 
                 // The manager method that increments & sets the correct values
                 responseManagement.submitStudentResponse(surveyResponse, studentResponseJson);
@@ -247,7 +256,7 @@ public class ResponseController {
      *         requested questionnaire
      */
     @GetMapping("/surveyResults")
-    public String surveyResultsTest(Model model, @RequestParam String type, @RequestParam UUID id,
+    public String surveyResults(Model model, @RequestParam String type, @RequestParam UUID id,
             @RequestParam String group, @RequestParam String instance) {
 
         // The Course object in an optional
@@ -381,9 +390,16 @@ public class ResponseController {
 
         Course crs = courseManagement.findAll().iterator().next();
 
+        var group = "2";
+        var instance = "2";
+
+        // Eine Liste aller SurveyResponses
+        List<SurveyResponse> listOfSurveyResponses = responseManagement.findSurveyResponses(crs, CourseType.TUTORIAL, group,
+                instance);
+
         // Generate PDF
         byte[] pdf = responseManagement
-                .generateCSVEnglish(responseManagement.findSurveyResponses(crs, CourseType.TUTORIAL, "1", "all"));
+                .generateCSVEnglish(listOfSurveyResponses);
 
         // Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();
@@ -395,23 +411,43 @@ public class ResponseController {
     }
 
     @GetMapping("resultsTest")
-    public String resultsTest(Model model){
+    public String resultsTest(Model model) {
 
-        // The Course object in an optional
+        // //[{"type": "", "default": bool, "question": "", "options": [], "answers":
+        // []}, ...]}
+        // JSONArray results = new JSONArray();
+        // JSONObject question = new JSONObject();
+        //
+        // question.put("type", "text");
+        // question.put("default", false);
+        // question.put("question", "Is the earth flat?");
+        //
+        // ArrayList<String> options = new ArrayList<String>();
+        // options.add("A"); options.add("B"); options.add("C");
+        // question.put("answers", options);
+        //
+        // /*
+        // ArrayList<Double> answers = new ArrayList<Double>();
+        // answers.add(0.5); answers.add(0.5); answers.add(0.2);
+        // question.put("answers", answers);
+        // */
+        //
+        // results.put(0, question);
+
         Course course = courseManagement.findAll().iterator().next();
 
-        //CourseType
         CourseType courseType = CourseType.TUTORIAL;
 
+        var group = "2";
+        var instance = "2";
+
         // Eine Liste aller SurveyResponses
-        List<SurveyResponse> listOfSurveyResponses = responseManagement.findSurveyResponses(course, courseType,
-                "all", "all");
+        List<SurveyResponse> listOfSurveyResponses = responseManagement.findSurveyResponses(course, courseType, group,
+                instance);
 
         JSONArray resultsJsonString = responseManagement.generateSurveyResultsJson(listOfSurveyResponses);
 
         model.addAttribute("resultsJson", resultsJsonString);
-
-
 
         return "surveyResults";
     }
