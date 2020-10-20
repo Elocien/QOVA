@@ -1,6 +1,7 @@
 package qova.users;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.header.Header;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,15 +24,16 @@ public class UserController {
         this.userManagement = Objects.requireNonNull(userManagement);
     }
 
-    @GetMapping("/secure")
+    @GetMapping("/secure/principal")
     @ResponseBody
-    public List<String> authenticate(HttpServletRequest request, Header header) {
-        List<String> listOfAttempts = new ArrayList<>();
-        listOfAttempts.add("AJP_attr: " + request.getHeader("AJP_unscoped-affiliation"));
-        listOfAttempts.add("attr: " + request.getAttribute("unscoped-affiliation"));
-        listOfAttempts.addAll(header.getValues());
+    public String currentUserPrincipal(Authentication authentication) {
+        return authentication.getPrincipal().toString();
+    }
 
-        return listOfAttempts;
+    @GetMapping("/secure/credentials")
+    @ResponseBody
+    public String currentUserCedentials(Authentication authentication) {
+        return authentication.getCredentials().toString();
     }
 
 }
