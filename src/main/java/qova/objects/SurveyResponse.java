@@ -39,8 +39,7 @@ public class SurveyResponse {
 
     // The ID's of all of the people that have submitted to this survey
     @ElementCollection
-    @MapKeyColumn
-    private Map<String, Date> listOfStudentsThatSubmitted;
+    private List<String> listOfStudentsThatSubmitted;
 
     @ElementCollection
     @OneToMany
@@ -60,7 +59,7 @@ public class SurveyResponse {
         this.instanceNumber = instanceNumber;
         this.groupNumber = groupNumber;
         this.numberOfSubmissions = 0;
-        this.listOfStudentsThatSubmitted = new HashMap<>();
+        this.listOfStudentsThatSubmitted = new ArrayList<>();
         this.listOfResponses = listOfResponses;
     }
 
@@ -88,17 +87,12 @@ public class SurveyResponse {
         return this.instanceNumber;
     }
 
-    public Map<String, Date> getListOfStudentsAndDatesWithSubmissions() {
+    public List<String> getListOfStudentsAndDatesWithSubmissions() {
         return this.listOfStudentsThatSubmitted;
     }
 
     public List<String> getListOfStudentsThatSubmitted() {
-        List<String> listOfStudentIds = new ArrayList<>();
-        for (Map.Entry<String, Date> entry : listOfStudentsThatSubmitted.entrySet()) {
-            listOfStudentIds.add(entry.getKey());
-        }
-
-        return listOfStudentIds;
+        return this.listOfStudentsThatSubmitted;
     }
 
     public Integer getNumberOfSubmissions() {
@@ -106,7 +100,7 @@ public class SurveyResponse {
     }
 
     public void addStundentIdToSubmissionListAndIncrementCounter(String id) {
-        this.listOfStudentsThatSubmitted.put(id, new Date());
+        this.listOfStudentsThatSubmitted.add(id);
         this.numberOfSubmissions++;
     }
 
@@ -168,10 +162,9 @@ public class SurveyResponse {
         String defaultSurvey = getCourseInstance().getDefaultSurvey().getDefaultSurveyJson();
 
         // Concatenate the default survey to the customised one
-        String concatenatedSurvey = defaultSurvey.substring(0, defaultSurvey.length() - 1) + ","
-                + getCourseInstance().getSurvey().substring(1);
 
-        return concatenatedSurvey;
+        return defaultSurvey.substring(0, defaultSurvey.length() - 1) + ","
+                + getCourseInstance().getSurvey().substring(1);
     }
 
 }
