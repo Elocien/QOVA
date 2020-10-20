@@ -25,7 +25,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      * The custom defined implementation of {@linkplain UserDetailsService}
      */
     @Autowired
-    private UserDetailsService userDetailsService;
+    private qova.users.UserDetailsService userDetailsService;
 
 
     /**
@@ -60,7 +60,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public PreAuthenticatedAuthenticationProvider customAuthenticationProvider(){
 
         AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> wrapper =
-                new UserDetailsByNameServiceWrapper<>(userDetailsService);
+                new UserDetailsByNameServiceWrapper<PreAuthenticatedAuthenticationToken>(userDetailsService);
 
         PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider = new PreAuthenticatedAuthenticationProvider();
         preAuthenticatedAuthenticationProvider.setPreAuthenticatedUserDetailsService(wrapper);

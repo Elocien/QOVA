@@ -8,8 +8,8 @@
 		<version>2.2.2.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>qova</artifactId>
+	<groupId>med.tu-dresden.de</groupId>
+	<artifactId>qova-userTest</artifactId>
 	<version>0.1.1-SNAPSHOT</version>
 	<name>qova</name>
 	<description>A QR-Code based Evaluation System</description>

@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Component
 public class UserDetailsService implements
-        AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> {
+        AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken>, org.springframework.security.core.userdetails.UserDetailsService {
 
     @Autowired
     UserRepository userRepository;
@@ -69,5 +69,10 @@ public class UserDetailsService implements
         } else {
             return UserRole.VISITOR;
         }
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        return null;
     }
 }
