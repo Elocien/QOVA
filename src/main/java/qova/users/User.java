@@ -1,13 +1,12 @@
 package qova.users;
 
 import org.hibernate.annotations.GenericGenerator;
-import qova.enums.UserRoles;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -22,9 +21,9 @@ public class User {
     // The Id given by Shibboleth
     private final String ajpPersistentId;
 
-    private final UserRoles userRole;
+    private final UserRole userRole;
 
-    public User(String ajpPersistentId, UserRoles userRole) {
+    public User(String ajpPersistentId, UserRole userRole) {
         this.ajpPersistentId = ajpPersistentId;
         this.userRole = userRole;
     }
@@ -37,7 +36,11 @@ public class User {
         return ajpPersistentId;
     }
 
-    public UserRoles getUserRole() {
+    public UserRole getUserRole() {
         return this.userRole;
+    }
+
+    public UserDetails toCurrentUserDetails() {
+        return CurrentUserDetails.create(this);
     }
 }
