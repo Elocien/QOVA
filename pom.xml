@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>med.tu-dresden.de</groupId>
-	<artifactId>qova-userTest</artifactId>
+	<artifactId>qova</artifactId>
 	<version>0.1.1-SNAPSHOT</version>
 	<name>qova</name>
 	<description>A QR-Code based Evaluation System</description>
