@@ -39,11 +39,11 @@ public class SurveyResponse {
 
     // The ID's of all of the people that have submitted to this survey
     @ElementCollection
-    @MapKeyColumn
-    private Map<String, Date> listOfStudentsThatSubmitted;
+    private List<String> listOfStudentsThatSubmitted;
 
     @ElementCollection
     @OneToMany
+    @OrderColumn
     private List<AbstractResponse> listOfResponses;
 
     // Needed for JPA puposes
@@ -59,7 +59,7 @@ public class SurveyResponse {
         this.instanceNumber = instanceNumber;
         this.groupNumber = groupNumber;
         this.numberOfSubmissions = 0;
-        this.listOfStudentsThatSubmitted = new HashMap<>();
+        this.listOfStudentsThatSubmitted = new ArrayList<>();
         this.listOfResponses = listOfResponses;
     }
 
@@ -87,17 +87,12 @@ public class SurveyResponse {
         return this.instanceNumber;
     }
 
-    public Map<String, Date> getListOfStudentsAndDatesWithSubmissions() {
+    public List<String> getListOfStudentsAndDatesWithSubmissions() {
         return this.listOfStudentsThatSubmitted;
     }
 
     public List<String> getListOfStudentsThatSubmitted() {
-        List<String> listOfStudentIds = new ArrayList<>();
-        for (Map.Entry<String, Date> entry : listOfStudentsThatSubmitted.entrySet()) {
-            listOfStudentIds.add(entry.getKey());
-        }
-
-        return listOfStudentIds;
+        return this.listOfStudentsThatSubmitted;
     }
 
     public Integer getNumberOfSubmissions() {
@@ -105,7 +100,7 @@ public class SurveyResponse {
     }
 
     public void addStundentIdToSubmissionListAndIncrementCounter(String id) {
-        this.listOfStudentsThatSubmitted.put(id, new Date());
+        this.listOfStudentsThatSubmitted.add(id);
         this.numberOfSubmissions++;
     }
 
@@ -113,20 +108,27 @@ public class SurveyResponse {
         return this.listOfResponses;
     }
 
-    //Survey related fields
-
+    // Survey related fields
 
     // We assume a JSONArray can be created without exception, as this is checked
     // when a created survey is submitted
     public String getQuestionTextForQuestionAtPosition(Integer position) {
-        JSONArray jsonArray = new JSONArray(getCourseInstance().getSurvey());
+
+        // Concatenate the default survey to the customised one
+        JSONArray jsonArray = new JSONArray(conactenateSurveytoDefault());
 
         return jsonArray.getJSONObject(position).getString("question");
     }
 
+    /**
+     * Returns a {@link List} of response options (i.e. the options a user is able to pick from, for a given singleChoice question).
+     *
+     * @param position The position of the response, in the survey (starting from 0, as represented in the surveyArray)
+     * @return A List of options
+     */
     public List<String> getOptionsForResponseAtPosition(Integer position) {
 
-        JSONArray jsonArray = new JSONArray(getCourseInstance().getSurvey());
+        JSONArray jsonArray = new JSONArray(conactenateSurveytoDefault());
         JSONObject jsonObject;
         try {
             jsonObject = jsonArray.getJSONObject(position);
@@ -153,6 +155,16 @@ public class SurveyResponse {
         else {
             return new ArrayList<>();
         }
+    }
+
+    private String conactenateSurveytoDefault(){
+        // Get the default Survey
+        String defaultSurvey = getCourseInstance().getDefaultSurvey().getDefaultSurveyJson();
+
+        // Concatenate the default survey to the customised one
+
+        return defaultSurvey.substring(0, defaultSurvey.length() - 1) + ","
+                + getCourseInstance().getSurvey().substring(1);
     }
 
 }

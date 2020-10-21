@@ -3,6 +3,7 @@ package qova.logic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import qova.admin.DefaultSurvey;
 import qova.enums.CourseFaculty;
 import qova.enums.CourseType;
 import qova.forms.CourseForm;
@@ -55,7 +56,7 @@ public class CourseManagement {
     }
 
     // Create Course and get Id from new course
-    public UUID createCourseReturnId(CourseForm form) {
+    public UUID createCourseAndCourseInstanceAndReturnCourseId(CourseForm form, EnumMap<CourseType, DefaultSurvey> defaultSurveyMap ) {
         Objects.requireNonNull(form);
 
         // Form attributes
@@ -66,7 +67,7 @@ public class CourseManagement {
         var semesterString = form.getSemesterString();
 
         // create CourseInstances
-        Map<CourseType, CourseInstance> courseInstances = createCourseInstances(form);
+        Map<CourseType, CourseInstance> courseInstances = createCourseInstances(form, defaultSurveyMap);
 
         Course crs = new Course(name, courseInstances.get(CourseType.LECTURE), courseInstances.get(CourseType.TUTORIAL),
                 courseInstances.get(CourseType.SEMINAR), courseInstances.get(CourseType.PRACTICAL), semesterOfStudents,
@@ -78,7 +79,7 @@ public class CourseManagement {
 
     // Method for createing CourseInstances
 
-    private Map<CourseType, CourseInstance> createCourseInstances(CourseForm form) {
+    private Map<CourseType, CourseInstance> createCourseInstances(CourseForm form, EnumMap<CourseType, DefaultSurvey> defaultSurveyMap) {
 
         // Map containing CourseInstances, with CourseType as key
         EnumMap<CourseType, CourseInstance> courseInstances = new EnumMap<>(CourseType.class);
@@ -106,8 +107,8 @@ public class CourseManagement {
                 }
 
                 // Create the courseInstance
-                CourseInstance instance = new CourseInstance(CourseType.LECTURE, groupAmount,
-                        form.getInstanceAmount(courseType), instanceTitles, true);
+                CourseInstance instance = new CourseInstance(courseType, groupAmount,
+                        form.getInstanceAmount(courseType), instanceTitles, defaultSurveyMap.get(courseType));
 
                 // save to database
                 courseInstancesRepo.save(instance);
@@ -115,7 +116,7 @@ public class CourseManagement {
                 // Add CourseInstance to map
                 courseInstances.put(courseType, instance);
             } else {
-                CourseInstance instance = new CourseInstance(courseType);
+                CourseInstance instance = new CourseInstance(courseType, defaultSurveyMap.get(courseType));
                 courseInstancesRepo.save(instance);
                 courseInstances.put(courseType, instance);
             }
@@ -279,7 +280,7 @@ public class CourseManagement {
     public CourseInstance duplicateCourseInstance(CourseInstance oldInstance) {
         List<String> newInstanceTitles = new ArrayList<>(oldInstance.getInstanceTitles());
         CourseInstance newInstance = new CourseInstance(oldInstance.getCourseType(), oldInstance.getGroupAmount(),
-                oldInstance.getInstanceAmount(), newInstanceTitles, oldInstance.isActive());
+                oldInstance.getInstanceAmount(), newInstanceTitles, oldInstance.getDefaultSurvey());
         courseInstancesRepo.save(newInstance);
         return newInstance;
     }
@@ -518,20 +519,20 @@ public class CourseManagement {
     // TODO: Remove Before Production
 
     // Test Method, remove in final build
-    public Course TestCreateCourse() {
+    public Course TestCreateCourse(EnumMap<CourseType, DefaultSurvey> defaultSurveyMap) {
         var name = "Rechnernetze";
 
         List<String> lectureTitles = new ArrayList<>(Arrays.asList("V - Einführung", "V - Bitübertragungsschicht", "V - Netztechnologien 1", "V - Netztechnologien 2",
                 "V - Sicherungsschicht", "V - Vermittlungsschicht", "V - Transportschicht", "V - Netzwerkperformance",
                 "V - Internetdienste", "V - Multimediakommunikation", "V - Mobile Computing", "V - Verteilte Systeme"));
-        var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles, true);
+        var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles, defaultSurveyMap.get(CourseType.PRACTICAL));
 
         courseInstancesRepo.save(lecture);
 
         List<String> tutorialTitles = new ArrayList<>(Arrays.asList("T - Einführung", "T - Bitübertragungsschicht", "T - Netztechnologien 1", "T - Netztechnologien 2",
                 "T - Sicherungsschicht", "T - Vermittlungsschicht", "T - Transportschicht", "T - Netzwerkperformance",
                 "T - Internetdienste", "T - Multimediakommunikation", "T - Mobile Computing", "T - Verteilte Systeme"));
-        var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles, true);
+        var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles, defaultSurveyMap.get(CourseType.PRACTICAL));
         tutorial.setSurvey(
                 "[{\"type\":\"SingleChoice\",\"question\":\"Hat die Übung Wissen vermittelt, welches du dir nicht im Selbststudium hättest erarbeiten können?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in den aktiven Austausch mit den Studierenden gesucht?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Waren die Anforderung dem Wissensstand der Studierenden angemessen?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Konnte die Übung gezielt Schwerpunkte setzen und Struktur vermitteln?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Konnte der/die Leiter/in dein Interesse an dem Thema wecken?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in die Möglichkeiten einer Übung gegenüber der Vorlesung ausgeschöpft?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Online Lehre v.s. Präsenzveranstaltung\",\"answers\":[\"Die Übung war digital und soll digital bleiben.\",\"Die Übung war digital und wäre als Präsenzveranstaltung besser.\",\"Die Übung war eine Präsenzveranstaltung und soll eine bleiben.\",\"Die Übung war eine Präsenzveranstaltung und sollte digital werden.\"]}]");
 
@@ -540,14 +541,14 @@ public class CourseManagement {
         List<String> seminarTitles = new ArrayList<>(Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
                 "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
                 "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var seminar = new CourseInstance(CourseType.SEMINAR, 8, 12, seminarTitles, true);
+        var seminar = new CourseInstance(CourseType.SEMINAR, 8, 12, seminarTitles, defaultSurveyMap.get(CourseType.PRACTICAL));
 
         courseInstancesRepo.save(seminar);
 
         List<String> practicalTitles = new ArrayList<>(Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
                 "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
                 "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var practical = new CourseInstance(CourseType.PRACTICAL, 8, 12, practicalTitles, true);
+        var practical = new CourseInstance(CourseType.PRACTICAL, 8, 12, practicalTitles, defaultSurveyMap.get(CourseType.PRACTICAL));
         courseInstancesRepo.save(practical);
 
         var semesterOfStudents = 4;

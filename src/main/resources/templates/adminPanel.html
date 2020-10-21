@@ -3,25 +3,25 @@
 <head>
     <title th:text="#{title.adminPanel}">TITLE</title>
 </head>
-<body class="bg-light">
-    <div th:include="navbar"></div>
+<body>
+<div th:include="navbar"></div>
 
-    <div class="row text-center">
-        <div class="col-lg-12">
+<div class="main row text-center">
+    <div class="col-lg-12">
 
-            <!--Headline-->
-            <div class="col-12 text-center mt-4">
-                <h2 class="font-weight-bold" th:text="#{admin.headline}">ADMIN PANEL</h2>
-                <h5 class="font-weight-light" th:text="#{admin.description}">DEFAULT SURVEYS CAN BE EDITED HERE.</h5>
-            </div>
-
-            <div th:with="type_list = ${ {'LECTURE', 'TUTORIAL', 'SEMINAR' ,'PRACTICAL'} }">
-                <a type="button" class="btn btn-tu m-2" th:each="type: ${type_list}" th:href="@{/admin/updateDefaultSurvey?type=__${type}__}" th:text="#{admin.survey__${type}__}">CHANGE DEFAULT SURVEY</a>
-            </div>
-
+        <!--Headline-->
+        <div class="col-12 text-center mt-4">
+            <h2 class="font-weight-bold" th:text="#{admin.headline}">ADMIN PANEL</h2>
+            <h5 class="font-weight-light" th:text="#{admin.description}">DEFAULT SURVEYS CAN BE EDITED HERE.</h5>
         </div>
-    </div>
 
-    <div th:replace="footer"></div>
+        <div th:with="type_list = ${ {'LECTURE', 'TUTORIAL', 'SEMINAR' ,'PRACTICAL'} }">
+            <a type="button" class="btn btn-tu m-2" th:each="type: ${type_list}" th:href="@{/admin/updateDefaultSurvey?type=__${type}__}" th:text="#{admin.survey__${type}__}">CHANGE DEFAULT SURVEY</a>
+        </div>
+
+    </div>
+</div>
+
+<div th:replace="footer"></div>
 </body>
 </html>

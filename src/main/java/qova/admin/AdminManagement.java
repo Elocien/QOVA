@@ -39,7 +39,7 @@ public class AdminManagement {
     }
 
     // Get the DefaultSurvey Object from the repo
-    private DefaultSurvey getDefaultSurveyObject(CourseType type) {
+    public DefaultSurvey getDefaultSurveyObject(CourseType type) {
         return repo.findDefaultSurveyForType(type);
     }
 

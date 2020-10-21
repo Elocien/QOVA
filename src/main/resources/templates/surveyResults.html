@@ -1,19 +1,23 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
-<head>	
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.1.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.1/html2pdf.bundle.js"></script>
+
     <title th:text="#{title.surveyResults}">TITLE</title>
 </head>
-<body class="bg-light"></body>
+<body></body>
 
     <div th:include="navbar"></div>
 
-    <div class="container mb-4">
+    <div class="main container">
         <div class="row justify-content-center">
 
             <!--Headline-->
-            <div class="col-12 text-center mt-4">
+            <div class="col-12 text-center">
                 <h2 class="font-weight-bold">SURVEY RESULTS</h2>
                 <h5 class="font-weight-light">YOU CAN CHECK OUT THE RESULTS OF A SURVEY HERE!</h5>
+                <a class="btn btn-primary btn-tu mt-4 mb-4" onclick="download_pdf()">DOWNLOAD RESULTS AS PDF</a>
             </div>
 
             <div class="col-12" id="results"></div>
@@ -49,8 +53,6 @@
             </div>
         </div>
     </div>
-    
-    <div th:replace="footer"></div>
 
 </body>
 
@@ -95,10 +97,7 @@
 
             var question_template = create_question(type, answer["question"], answers);
             if (type != "text") {
-                var delete_us = question_template.getElementsByClassName("text-only");
-                for (let j = 0; j < delete_us.length; ++j) {
-                    delete_element(delete_us[j]);
-                }
+                delete_multiple_elements(question_template.getElementsByClassName("text-only"));
             }
             if (answer["default"]) {
                 var txt = /*[[#{default}]]*/"default";
@@ -142,7 +141,34 @@
     function delete_element(element) {
         element.parentNode.removeChild(element);
     }
+    function delete_multiple_elements(list_of_elements) {
+        for (let i = 0; i < list_of_elements.length; i++) {
+            delete_element(list_of_elements[i]);
+        }
+    }
 
+    function download_pdf() {
+        var results = document.getElementById("results").cloneNode(true);
+        var opt = {
+            margin:       0,
+            filename:     'surveyResults.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 5 },
+            jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
+        };
+
+        //Only used if type=text:
+        var buttons = results.getElementsByTagName("a");
+        console.log(buttons);
+        delete_multiple_elements(buttons);
+        var collapsed = results.getElementsByClassName("collapse");
+        console.log(collapsed);
+        for (let i = 0; i < collapsed.length; i++) {
+            collapsed[i].classList.remove("collapse");
+        }
+
+        html2pdf(results, opt).save();
+    }
 </script>
 
 </html>

@@ -1,11 +1,7 @@
 package qova.logic;
 
 import java.io.IOException;
-import java.util.Base64;
-import java.util.Objects;
-
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
@@ -26,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import qova.admin.AdminManagement;
+import qova.admin.DefaultSurvey;
 import qova.enums.CourseType;
 import qova.forms.CourseForm;
 import qova.forms.DuplicateCourseForm;
@@ -200,8 +197,14 @@ public class CourseController {
             return createCourse(model, form);
         }
 
+        // Get DefaultSurvey to reference in CourseInstance
+        EnumMap<CourseType, DefaultSurvey> defaultSurveyMap = new EnumMap<>(CourseType.class);
+        for(CourseType courseType : CourseType.values()){
+            defaultSurveyMap.put(courseType, adminManagement.getDefaultSurveyObject(courseType));
+        }
+
         // Management Method returns String of new Course
-        UUID id = courseManagement.createCourseReturnId(form);
+        UUID id = courseManagement.createCourseAndCourseInstanceAndReturnCourseId(form, defaultSurveyMap);
 
         // Redirect to SurveyEditor to start creating survey
         return "redirect:../course/instanceTitles?id=" + id;
@@ -292,9 +295,7 @@ public class CourseController {
         Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()) {
             for (CourseType courseType : CourseType.values()) {
-                // Create a JSON Array out of the response from the questioneditor and the
-                // default survey
-                // --Custom Survey-- --CourseType--
+
                 String completeSurvey = adminManagement.concatenateDefaultSurveyToSurveyString(
                         courseManagement.getSurveyforType(id, courseType), courseType);
 
@@ -558,7 +559,13 @@ public class CourseController {
     // test method
     @GetMapping("/createC")
     public String createC() throws Exception {
-        Course course = courseManagement.TestCreateCourse();
+
+        EnumMap<CourseType, DefaultSurvey> defaultSurveyMap = new EnumMap<>(CourseType.class);
+        for(CourseType courseType : CourseType.values()){
+            defaultSurveyMap.put(courseType, adminManagement.getDefaultSurveyObject(courseType));
+        }
+
+        Course course = courseManagement.TestCreateCourse(defaultSurveyMap);
         return "redirect:/course/details" + "?id=" + course.getId();
     }
 

@@ -5,7 +5,7 @@
 </head>
 <body>
 <div th:include="navbar"></div>
-<div class="container-fluid mt-4 mb-4">
+<div class="main container-fluid">
     <div class="row justify-content-center">
         
         <!--Headline-->
@@ -18,7 +18,7 @@
                     <h5 class="mail-content border-0" th:text="|#{error.subject}:|">Subject:</h5>
                     <h5 class="mail-content border-0" th:text="|#{error.content}:|">Content:</h5>
                 </div>
-                <div class="col-lg-6 col-md-8 col-sm-10 p-0 fake-mail">
+                <div class="col-6 col-md-8 col-sm-8 p-0 fake-mail">
                     <h5 class="new-message mb-0" th:text="#{error.new}"></h5>
                     <h5 class="mail-content"><a href="mailto:carl-service@tu-dresden.de">carl-service@tu-dresden.de</a></h5>
                     <h5 class="mail-content">QOVA</h5>
@@ -26,18 +26,20 @@
                 </div>
             </div>
             <!--Bug Meme-->
-            <div class="row bug-container">
-                <div class="col-6">
-                    <img class="img-fluid bug-image float-right" th:src="@{/resources/images/big-nasty-bug.png}" src="../static/resources/images/big-nasty-bug.png" alt="BUG"/>
-                </div>
-                <div class="col-5 offset-1 text-left d-flex align-items-center">
-                    <div class="col-12">
-                        <div class="container dialog-window float-left">
-                            <h5 class="font-weight-bold">You encountered a big nasty bug. What do you do?</h5>
-                            <a class="dialog-option" href="#" th:href="@{/}"><h5>> Kill it with fire.</h5></a>
-                            <a class="dialog-option" href="#" th:href="@{/}"><h5>> Smash it with a hammer.</h5></a>
-                            <a class="dialog-option" href="#" th:href="@{/}"><h5>> Use some bug spray on it.</h5></a>
-                            <a class="dialog-option" href="#" th:href="@{/}"><h5>> Run away like a real grown-up.</h5></a>
+            <div class="d-none d-xl-block">
+                <div class="row bug-container">
+                    <div class="col-6">
+                        <img class="img-fluid bug-image float-right" th:src="@{/resources/images/big-nasty-bug.png}" src="../static/resources/images/big-nasty-bug.png" alt="BUG"/>
+                    </div>
+                    <div class="col-5 offset-1 text-left d-flex align-items-center">
+                        <div class="col-12">
+                            <div class="container dialog-window float-left">
+                                <h5 class="font-weight-bold">You encountered a big nasty bug. What do you do?</h5>
+                                <a class="dialog-option" href="#" th:href="@{/}"><h5>> Kill it with fire.</h5></a>
+                                <a class="dialog-option" href="#" th:href="@{/}"><h5>> Smash it with a hammer.</h5></a>
+                                <a class="dialog-option" href="#" th:href="@{/}"><h5>> Use some bug spray on it.</h5></a>
+                                <a class="dialog-option" href="#" th:href="@{/}"><h5>> Run away like a real grown-up.</h5></a>
+                            </div>
                         </div>
                     </div>
                 </div>
