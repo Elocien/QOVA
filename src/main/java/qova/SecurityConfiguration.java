@@ -60,7 +60,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public PreAuthenticatedAuthenticationProvider customAuthenticationProvider(){
 
         AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> wrapper =
-                new UserDetailsByNameServiceWrapper<PreAuthenticatedAuthenticationToken>(userDetailsService);
+                new UserDetailsByNameServiceWrapper<>(userDetailsService);
 
         PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider = new PreAuthenticatedAuthenticationProvider();
         preAuthenticatedAuthenticationProvider.setPreAuthenticatedUserDetailsService(wrapper);

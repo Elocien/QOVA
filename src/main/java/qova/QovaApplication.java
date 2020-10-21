@@ -70,6 +70,7 @@ public class QovaApplication implements WebMvcConfigurer {
 				ajpConnector.setSecure(false);
 				ajpConnector.setAllowTrace(false);
 				ajpConnector.setScheme("https");
+				ajpConnector.setAttribute("tomcatAuthentication", remoteAuthentication);
 				ajpConnector.setAttribute("packetSize", 65536);
 				tomcat.addAdditionalTomcatConnectors(ajpConnector);
 			}
