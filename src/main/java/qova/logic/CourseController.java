@@ -370,8 +370,7 @@ public class CourseController {
 
         // Form empty -> Redirect to details again
         if (form.getQuestionnaireJson().length() == 0) {
-            return "redirect:../course/details" + "?id=" + id; // TODO: Redirects back course at the moment, think about
-                                                               // where this should go
+            return "redirect:../course/details" + "?id=" + id;
         }
 
         // fetch course
@@ -380,16 +379,15 @@ public class CourseController {
 
             CourseType courseType = responseManagement.parseCourseType(type);
 
+            // if type is none of the correct values, then redirect to error page
+            if (courseType == null) {
+                return "error";
+            }
+
             CourseInstance instance = course.get().getInstance(courseType);
 
             if (Boolean.FALSE.equals(instance.getSurveyEditedFlag())) {
                 courseManagement.setSurveyEditedFlagForCourseInstance(instance);
-            }
-
-            // if type is none of the correct values, then redirect to homepage
-            if (courseType == null) {
-                // TODO: redirect to error page with code 02
-                return "redirect:/";
             }
 
             else {
@@ -406,7 +404,6 @@ public class CourseController {
                 // parse JSON to check for correctness (length, special characters)
                 Boolean validSurvey = responseManagement.verifyJsonArray(survey);
                 if (Boolean.FALSE.equals(validSurvey)) {
-                    // TODO: redirect to error page with code 02
                     return questioneditor(model, type, id);
                 }
 
@@ -418,23 +415,65 @@ public class CourseController {
             // Redirect back to CourseDetails page
             return "redirect:../course/details" + "?id=" + id;
         } else {
-            // TODO: need more feedback here for the user. Change this!
-            return "error?code=" + courseNotFound;
+            return "error";
         }
     }
 
     // ---------------------------------------------------------------------------
 
-    // Die Ganze Methode ist Same wie questioneditorSubmit nur der Return ist auf
-    // die Preview Html
+    /**
+     * The GetMapping to preview a survey created in the SurveyEditor
+     *
+     * @param model The {@linkplain Model}
+     * @param type The {@linkplain CourseType}
+     * @param id The id of the {@linkplain Course}
+     * @return The surveyPreview template
+     */
+    @GetMapping("course/previewsurvey")
+    public String questioneditorpreviewget(Model model, @RequestParam String type,
+                                           @RequestParam(required = false) UUID id) {
+
+        // fetch course
+        Optional<Course> course = courseManagement.findById(id);
+        if (course.isPresent()) {
+
+            // if type is none of the correct values, then redirect to homepage
+            if (responseManagement.parseCourseType(type) == null) {
+                return "error";
+            }
+
+            model.addAttribute("typeID", type);
+            model.addAttribute("id", id);
+            model.addAttribute("survey",
+                    courseManagement.getSurveyforType(id, responseManagement.parseCourseType(type)));
+            model.addAttribute("defaultSurvey",
+                    adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
+            model.addAttribute("coursename", course.get().getName());
+
+            return "surveypreview";
+        } else {
+            return "error";
+        }
+    }
+
+    /**
+     * The PostMapping for the surveyPreview. This functions the same as
+     * {@linkplain CourseController#questioneditorSubmit(Model, SurveyForm, String, UUID)}. It sets the survey string
+     * as well as the surveyEdited flag.
+     *
+     * @param model The {@linkplain Model}
+     * @param type The {@linkplain CourseType}
+     * @param id The id of the {@linkplain Course}
+     * @param form {@linkplain SurveyForm} containing the surveyJson from the submission
+     * @return The surveyPreview template
+     */
     @PostMapping("course/previewsurvey")
     public String questioneditorpreview(Model model, SurveyForm form, @RequestParam String type,
             @RequestParam(required = false) UUID id) {
 
         // Form empty -> Redirect to details again
         if (form.getQuestionnaireJson().length() == 0) {
-            return "redirect:../course/details" + "?id=" + id; // TODO: Redirects back course at the moment, think about
-                                                               // where this should go
+            return "redirect:../course/details" + "?id=" + id;
         }
 
         // fetch course
@@ -443,16 +482,16 @@ public class CourseController {
 
             CourseType courseType = responseManagement.parseCourseType(type);
 
-            CourseInstance instance = course.get().getInstance(courseType);
-
-            if (Boolean.FALSE.equals(instance.getSurveyEditedFlag())) {
-                courseManagement.setSurveyEditedFlagForCourseInstance(instance);
-            }
-
             // if type is none of the correct values, then redirect to homepage
             if (courseType == null) {
-                // TODO: redirect to error page with code 02
-                return "redirect:/";
+                return "error";
+            }
+
+            CourseInstance instance = course.get().getInstance(courseType);
+
+            //
+            if (Boolean.FALSE.equals(instance.getSurveyEditedFlag())) {
+                courseManagement.setSurveyEditedFlagForCourseInstance(instance);
             }
 
             else {
@@ -489,35 +528,6 @@ public class CourseController {
         }
     }
 
-    // SUrveyPreview als getrequest
-    @GetMapping("course/previewsurvey")
-    public String questioneditorpreviewget(Model model, @RequestParam String type,
-            @RequestParam(required = false) UUID id) {
-
-        // fetch course
-        Optional<Course> course = courseManagement.findById(id);
-        if (course.isPresent()) {
-
-            // if type is none of the correct values, then redirect to homepage
-            if (responseManagement.parseCourseType(type) == null) {
-                // TODO: redirect to error page with code 02
-                return "redirect:/";
-            }
-
-            model.addAttribute("typeID", type);
-            model.addAttribute("id", id);
-            model.addAttribute("survey",
-                    courseManagement.getSurveyforType(id, responseManagement.parseCourseType(type)));
-            model.addAttribute("defaultSurvey",
-                    adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
-            model.addAttribute("coursename", course.get().getName());
-
-            return "surveypreview";
-        } else {
-            // TODO: need more feedback here for the user. Change this!
-            return "error?code=" + courseNotFound;
-        }
-    }
 
     /**
      * This method takes id and CourseType as parameters, and returns a qrcode with
@@ -556,23 +566,8 @@ public class CourseController {
         return new HttpEntity<byte[]>(qrcode, header);
     }
 
-    // test method
-    @GetMapping("/createC")
-    public String createC() throws Exception {
 
-        EnumMap<CourseType, DefaultSurvey> defaultSurveyMap = new EnumMap<>(CourseType.class);
-        for(CourseType courseType : CourseType.values()){
-            defaultSurveyMap.put(courseType, adminManagement.getDefaultSurveyObject(courseType));
-        }
 
-        Course course = courseManagement.TestCreateCourse(defaultSurveyMap);
-        return "redirect:/course/details" + "?id=" + course.getId();
-    }
 
-    // test method
-    @GetMapping("/jsTest")
-    public String JsTest() {
-        return "survey";
-    }
 
 }

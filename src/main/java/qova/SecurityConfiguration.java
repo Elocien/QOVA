@@ -74,8 +74,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/admin/**").authenticated()     //any pages containing this url are only accessible through authentication
-                .anyRequest().permitAll();
+                .antMatchers("/admin/**").hasAnyRole("ROLE_ADMIN")    //any pages containing this url are only accessible through authentication
+                .antMatchers("/course/**").hasAnyRole("ROLE_STAFF");
+
 
         http.addFilter(shibAuthentication());
     }

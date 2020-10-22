@@ -171,6 +171,9 @@ public class ResponseManagement {
 
         try {
             int surveyArrayLength = new JSONArray(surveyAsString).length();
+
+            //Check that the length of the JSON sent matches the length of the survey, as for each survey question, one answer
+            //must be sent.
             if (studentResponseJson.length() == surveyArrayLength) {
                 return true;
             }

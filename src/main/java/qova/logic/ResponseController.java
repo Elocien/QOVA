@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.ui.Model;
@@ -53,8 +54,6 @@ public class ResponseController {
     }
 
     // Error codes
-    int courseNotFound = 1;
-    int internalError = 2;
 
     // Mapping to which one is redirected to by the QRCode. This is where students
     // enter which group and which topic they are handing their response in for
@@ -67,33 +66,25 @@ public class ResponseController {
         // course name, course type, instance names, groupAmount
         Optional<Course> crs = courseManagement.findById(id);
         if (crs.isPresent()) {
-            model.addAttribute("course", crs.get());
-            model.addAttribute("courseName", crs.get().getName());
-            model.addAttribute("id", crs.get().getId());
+
+            Course course = crs.get();
+
+            model.addAttribute("course", course);
+            model.addAttribute("courseName", course.getName());
+            model.addAttribute("id", course.getId());
             model.addAttribute("form", form);
             model.addAttribute("mode", mode);
 
-            if (!type.equals("")) {
+            //Get the CourseType
+            CourseType courseType = responseManagement.parseCourseType(type);
+            //
+            if (courseType == null) {
+                model.addAttribute("typeExists", false);
+            } else {
                 model.addAttribute("typeExists", true);
                 model.addAttribute("type", type);
-                if (type.equals("LECTURE")) {
-                    model.addAttribute("instanceTitles", crs.get().getLecture().getInstanceTitles());
-                    model.addAttribute("groupAmount", crs.get().getLecture().getGroupAmount());
-                }
-                if (type.equals("TUTORIAL")) {
-                    model.addAttribute("instanceTitles", crs.get().getTutorial().getInstanceTitles());
-                    model.addAttribute("groupAmount", crs.get().getTutorial().getGroupAmount());
-                }
-                if (type.equals("SEMINAR")) {
-                    model.addAttribute("instanceTitles", crs.get().getSeminar().getInstanceTitles());
-                    model.addAttribute("groupAmount", crs.get().getSeminar().getGroupAmount());
-                }
-                if (type.equals("PRACTICAL")) {
-                    model.addAttribute("instanceTitles", crs.get().getPractical().getInstanceTitles());
-                    model.addAttribute("groupAmount", crs.get().getPractical().getGroupAmount());
-                }
-            } else {
-                model.addAttribute("typeExists", false);
+                model.addAttribute("instanceTitles", course.getInstance(courseType).getInstanceTitles());
+                model.addAttribute("groupAmount", course.getInstance(courseType).getGroupAmount());
             }
 
             return "surveySelect";
@@ -117,8 +108,7 @@ public class ResponseController {
             return "error";
         }
         // if type is not one of the defined values
-        if (!(type.equals("LECTURE")) && !(type.equals("TUTORIAL")) && !(type.equals("SEMINAR"))
-                && !(type.equals("PRACTICAL"))) {
+        if (responseManagement.parseCourseType(type) == null) {
             return "error";
         }
 
@@ -144,11 +134,12 @@ public class ResponseController {
     @GetMapping("survey")
     public String surveyView(Model model, @RequestParam(required = false) UUID id,
             @RequestParam(required = false) String type, @RequestParam(required = false) String group,
-            @RequestParam(required = false) String instance) {
+            @RequestParam(required = false) String instance, Authentication authentication) {
 
-        // redirect
+
+            // redirect
         if (id == null || type == null || group == null || instance == null) {
-            return "error?code=" + courseNotFound;
+            return "error";
         }
 
         // fetch course and go to details if present
@@ -178,7 +169,7 @@ public class ResponseController {
 
         // If condition not met, redirect to home
         else {
-            return "error?code=" + courseNotFound;
+            return "error";
         }
     }
 
@@ -187,11 +178,14 @@ public class ResponseController {
     @PostMapping("/survey")
     public String recieveResponseJSON(Model model, SurveyForm form, @RequestParam(required = false) UUID id,
             @RequestParam(required = false) String type, @RequestParam(required = false) String group,
-            @RequestParam(required = false) String instance) {
+            @RequestParam(required = false) String instance, Authentication authentication) {
 
         if (id == null || type == null || group == null || instance == null) {
-            return "error?code=" + courseNotFound;
+            return "error";
         }
+
+        // Get the StudentId, through the authentication object
+        String studentId = authentication.getPrincipal().toString();
 
         // Get the CourseType
         CourseType courseType = responseManagement.parseCourseType(type);
@@ -203,7 +197,7 @@ public class ResponseController {
         try {
             studentResponseJson = new JSONArray(form.getQuestionnaireJson());
         } catch (Exception e) {
-            return "error?code=" + internalError;
+            return "error";
         }
 
         // fetch course
@@ -214,6 +208,7 @@ public class ResponseController {
 
             Course course = crs.get();
 
+            // Verify that the sent JSON is not malicious
             responseManagement.verifyStudentResponseJson(studentResponseJson,
                     course.getInstance(courseType).getSurvey());
 
@@ -224,8 +219,15 @@ public class ResponseController {
             if (survRsp.isPresent()) {
                 SurveyResponse surveyResponse = survRsp.get();
 
+                // Redirect the user to SurveyReject, because they have already completed a survey
+                if (surveyResponse.getListOfStudentsThatSubmitted().contains(studentId)){
+                    model.addAttribute("id", id);
+                    model.addAttribute("courseType", type);
+                    return "surveyReject";
+                }
+
                 // Increments Submission Counter
-                surveyResponse.addStundentIdToSubmissionListAndIncrementCounter("test_id");
+                surveyResponse.addStundentIdToSubmissionListAndIncrementCounter(studentId);
 
                 // The manager method that increments & sets the correct values
                 responseManagement.submitStudentResponse(surveyResponse, studentResponseJson);
