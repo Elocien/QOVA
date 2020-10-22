@@ -31,10 +31,10 @@
                         </tr>
                     </tbody>
                 </table>
-                <h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{surveyResults.NoS}: |">NUMBER OF SUBMISSIONS: </span><span th:text="${numberOfSubmissions}"></span></h5>
-                <a class="btn btn-primary btn-tu mt-4 mb-4 noPDF" th:text="#{surveyResults.downloadButton}" onclick="download_pdf()">DOWNLOAD RESULTS AS PDF</a>
+                <h5 class="font-weight-light pb-4 m-0"><span class="font-weight-normal" th:text="|#{surveyResults.NoS}: |">NUMBER OF SUBMISSIONS: </span><span th:text="${numberOfSubmissions}"></span></h5>
+                <a class="btn btn-primary btn-tu noPDF" th:text="#{surveyResults.downloadButton}" onclick="download_pdf()">DOWNLOAD RESULTS AS PDF</a>
                 <!--Survey Results-->
-                <div class="col-12" id="results"></div>
+                <div class="col-12 mt-4" id="results"></div>
             </div>
 
         </div>
@@ -48,7 +48,7 @@
                 <div class="col-auto">
                     <h5 class="question-type m-0"></h5>
                 </div>
-                <div class="default-question col-2 text-right">
+                <div class="default-question col-2 col-sm-4 col-xs-4 text-right">
                     <p class="m-0"></p>
                 </div>
                 <div class="col-1 text-only noPDF">
@@ -175,9 +175,9 @@
     }
 
     function download_pdf() {
-        var results = document.getElementById("pdf");
+        var results = document.getElementById("pdf").cloneNode(true);
         var opt = {
-            margin:       0,
+            margin:       10,
             filename:     'surveyResults.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 5 },
