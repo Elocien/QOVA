@@ -278,6 +278,10 @@ public class ResponseController {
             JSONArray resultsJsonString = responseManagement.generateSurveyResultsJson(listOfSurveyResponses);
 
             model.addAttribute("resultsJson", resultsJsonString);
+            model.addAttribute("courseName", course.getName());
+            model.addAttribute("courseType", courseType);
+            model.addAttribute("semester", course.getCourseDate());
+            model.addAttribute("numberOfSubmissions", "1935"); //TODO: @Lucian hab kp welche methode mir den richtigen Wert hier für zurück gibt.
 
         }
         return "surveyResults";
@@ -413,27 +417,6 @@ public class ResponseController {
     @GetMapping("resultsTest")
     public String resultsTest(Model model) {
 
-        // //[{"type": "", "default": bool, "question": "", "options": [], "answers":
-        // []}, ...]}
-        // JSONArray results = new JSONArray();
-        // JSONObject question = new JSONObject();
-        //
-        // question.put("type", "text");
-        // question.put("default", false);
-        // question.put("question", "Is the earth flat?");
-        //
-        // ArrayList<String> options = new ArrayList<String>();
-        // options.add("A"); options.add("B"); options.add("C");
-        // question.put("answers", options);
-        //
-        // /*
-        // ArrayList<Double> answers = new ArrayList<Double>();
-        // answers.add(0.5); answers.add(0.5); answers.add(0.2);
-        // question.put("answers", answers);
-        // */
-        //
-        // results.put(0, question);
-
         Course course = courseManagement.findAll().iterator().next();
 
         CourseType courseType = CourseType.TUTORIAL;
@@ -448,8 +431,42 @@ public class ResponseController {
         JSONArray resultsJsonString = responseManagement.generateSurveyResultsJson(listOfSurveyResponses);
 
         model.addAttribute("resultsJson", resultsJsonString);
+        model.addAttribute("courseName", "Cheese 4 G's");
+        model.addAttribute("courseType", "SEMINAR");
+        model.addAttribute("semester", "WiSe 2020");
+        model.addAttribute("numberOfSubmissions", "1935");
 
         return "surveyResults";
     }
+
+    /*@GetMapping("resultsTest")
+    public String resultsTest(Model model){
+
+        //[{"type": "", "default": bool, "question": "", "options": [], "answers": []}, ...]}
+        JSONArray results = new JSONArray();
+        JSONObject question = new JSONObject();
+
+        question.put("type", "text");
+        question.put("default", true);
+        question.put("question", "Is the earth flat?");
+
+        ArrayList<String> options = new ArrayList<String>();
+        options.add("A"); options.add("B"); options.add("C");
+        question.put("answers", options);
+
+        ArrayList<Double> answers = new ArrayList<Double>();
+        answers.add(0.5); answers.add(0.5); answers.add(0.2);
+
+        results.put(0, question);
+        results.put(1, question);
+
+        model.addAttribute("resultsJson", results.toString());
+        model.addAttribute("courseName", "Cheese 4 G's");
+        model.addAttribute("courseType", "SEMINAR");
+        model.addAttribute("semester", "WiSe 2020");
+        model.addAttribute("numberOfSubmissions", "1935");
+
+        return "surveyResults";
+    }*/
 
 }
