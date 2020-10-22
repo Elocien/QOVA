@@ -50,8 +50,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Bean
     protected RequestHeaderAuthenticationFilter shibAuthentication() throws Exception {
         RequestHeaderAuthenticationFilter requestHeaderAuthenticationFilter = new RequestHeaderAuthenticationFilter();
-        requestHeaderAuthenticationFilter.setPrincipalRequestHeader("AJP_persistent-id");
-        requestHeaderAuthenticationFilter.setCredentialsRequestHeader("AJP_affiliation");
+        requestHeaderAuthenticationFilter.setPrincipalRequestHeader("persistent-id");
+        requestHeaderAuthenticationFilter.setCredentialsRequestHeader("affiliation");
         requestHeaderAuthenticationFilter.setAuthenticationManager(authenticationManagerBean());
         return  requestHeaderAuthenticationFilter;
     }
@@ -75,7 +75,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/admin/**").hasAnyRole("ROLE_ADMIN")    //any pages containing this url are only accessible through authentication
-                .antMatchers("/course/**").hasAnyRole("ROLE_STAFF");
+                .antMatchers("/course/**").hasAnyRole("ROLE_STAFF")
+                .anyRequest().permitAll();
 
 
         http.addFilter(shibAuthentication());
