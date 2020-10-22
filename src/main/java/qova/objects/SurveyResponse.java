@@ -34,8 +34,6 @@ public class SurveyResponse {
     // The instance number of the SurveyResponse
     private Integer instanceNumber;
 
-    // Tracks the number of times stundents submitted
-    private Integer numberOfSubmissions;
 
     // The ID's of all of the people that have submitted to this survey
     @ElementCollection
@@ -51,14 +49,27 @@ public class SurveyResponse {
     protected SurveyResponse() {
     }
 
-    // Constructor
+    /**
+     * A {@linkplain SurveyResponse} represents the data that is collected for unique paring of group and instance, for a
+     * given {@linkplain Course}. E.g. If a course has 4 groups and 3 instances, then there are 12 {@linkplain SurveyResponse}'s,
+     * one for each unique pairing. A SurveyResponse tracks who submitted to the surveyResponse
+     *
+     * @param course The {@linkplain Course} the SurveyResponse is associated to
+     * @param type The {@linkplain CourseType}
+     * @param instanceNumber The instance number of this particular SurveyResults Object. Used for retrieval in the repository,
+     *                       as well as submission to the responses from {@link #listOfResponses}
+     * @param groupNumber The group number of this particular SurveyResults Object. Used for retrieval in the repository,
+     *      *                       as well as submission to the responses from {@link #listOfResponses}
+     * @param listOfResponses A list of {@linkplain AbstractResponse}'s, which belong to this SurveyResponse. When a user submits,
+     *                        the SurveyResponse is found using the {@linkplain Course} and group and instance numbers. Then the
+     *                        {{@link #listOfResponses}} is iterated through and the according values incremented. 
+     */
     public SurveyResponse(Course course, CourseType type, Integer instanceNumber, Integer groupNumber,
             List<AbstractResponse> listOfResponses) {
         this.course = course;
         this.courseType = type;
         this.instanceNumber = instanceNumber;
         this.groupNumber = groupNumber;
-        this.numberOfSubmissions = 0;
         this.listOfStudentsThatSubmitted = new ArrayList<>();
         this.listOfResponses = listOfResponses;
     }
@@ -87,21 +98,16 @@ public class SurveyResponse {
         return this.instanceNumber;
     }
 
-    public List<String> getListOfStudentsAndDatesWithSubmissions() {
-        return this.listOfStudentsThatSubmitted;
-    }
-
     public List<String> getListOfStudentsThatSubmitted() {
         return this.listOfStudentsThatSubmitted;
     }
 
     public Integer getNumberOfSubmissions() {
-        return this.numberOfSubmissions;
+        return this.listOfStudentsThatSubmitted.size();
     }
 
     public void addStundentIdToSubmissionListAndIncrementCounter(String id) {
         this.listOfStudentsThatSubmitted.add(id);
-        this.numberOfSubmissions++;
     }
 
     public List<AbstractResponse> getListOfResponses() {
