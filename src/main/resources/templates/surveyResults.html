@@ -32,7 +32,7 @@
                     </tbody>
                 </table>
                 <h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{surveyResults.NoS}: |">NUMBER OF SUBMISSIONS: </span><span th:text="${numberOfSubmissions}"></span></h5>
-                <a class="btn btn-primary btn-tu mt-4 mb-4" th:text="#{surveyResults.downloadButton}" onclick="download_pdf()">DOWNLOAD RESULTS AS PDF</a>
+                <a class="btn btn-primary btn-tu mt-4 mb-4 noPDF" th:text="#{surveyResults.downloadButton}" onclick="download_pdf()">DOWNLOAD RESULTS AS PDF</a>
                 <!--Survey Results-->
                 <div class="col-12" id="results"></div>
             </div>
@@ -51,7 +51,7 @@
                 <div class="default-question col-2 text-right">
                     <p class="m-0"></p>
                 </div>
-                <div class="col-1 text-only">
+                <div class="col-1 text-only noPDF">
                     <a class="collapse-btn" data-toggle="collapse" href="#" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fas fa-plus right collapse-icon"></i></a>
                 </div>
             </div>
@@ -110,7 +110,7 @@
                 }
             }
 
-            var question_template = create_question(type, answer["question"], answers);
+            var question_template = create_question(type, answer["question"], answers, i);
             if (type != "text") {
                 delete_multiple_elements(question_template.getElementsByClassName("text-only"));
             }
@@ -125,8 +125,9 @@
             document.getElementById("results").appendChild(question_template);
         }
     }
-    function create_question(type, text, answers) {
+    function create_question(type, text, answers, number) {
         var question = resources.getElementsByClassName("result-container")[0].cloneNode(true);
+        question.id = "question-"+number;
         delete_element(question.getElementsByClassName("answere-template")[0]);
         for (let i = 0; i < answers.length; ++i) {
             question.getElementsByClassName("answere-column")[0].appendChild(answers[i]);
@@ -153,17 +154,28 @@
         }
         return answere;
     }
+
     function delete_element(element) {
-        element.parentNode.removeChild(element);
+        try {
+            element.parentNode.removeChild(element);
+        }
+        catch(e) {
+            console.log(e);
+        }
     }
     function delete_multiple_elements(list_of_elements) {
-        for (let i = 0; i < list_of_elements.length; i++) {
-            delete_element(list_of_elements[i]);
+        const x = list_of_elements.length;
+        console.log(x+" elements will be deleted.");
+        for (let d = 0; d < x; d++) {
+            console.log(d);
+            console.log(list_of_elements[d]);
+            delete_element(list_of_elements[d]);
+            console.log(d);
         }
     }
 
     function download_pdf() {
-        var results = document.getElementById("pdf").cloneNode(true);
+        var results = document.getElementById("pdf");
         var opt = {
             margin:       0,
             filename:     'surveyResults.pdf',
@@ -172,14 +184,15 @@
             jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
         };
 
+        var trash = results.getElementsByClassName("noPDF");
+        for (let i = 0; i < trash.length; i++) {
+            trash[i].style.display = "none";
+        }
+
         //Only used if type=text:
-        var buttons = results.getElementsByTagName("a");
-        console.log(buttons);
-        delete_multiple_elements(buttons);
         var collapsed = results.getElementsByClassName("collapse");
-        console.log(collapsed);
         for (let i = 0; i < collapsed.length; i++) {
-            collapsed[i].classList.remove("collapse");
+            collapsed[i].classList.add("show");
         }
 
         html2pdf(results, opt).save();
