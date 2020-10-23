@@ -13,14 +13,14 @@
             <h2 class="font-weight-bold huge-headline" th:text="#{error}">ERROR X</h2>
             <h5 class="mb-4" th:text="#{error.description}">DESCRIPTION</h5>
             <div class="row justify-content-center">
-                <div class="col-auto text-right fake-tip">
+                <div class="col-auto text-right pl-0 fake-tip">
                     <h5 class="mail-content border-0" th:text="|#{error.mail}:|">E-Mail:</h5>
                     <h5 class="mail-content border-0" th:text="|#{error.subject}:|">Subject:</h5>
                     <h5 class="mail-content border-0" th:text="|#{error.content}:|">Content:</h5>
                 </div>
                 <div class="col-6 col-md-8 col-sm-8 p-0 fake-mail">
                     <h5 class="new-message mb-0" th:text="#{error.new}"></h5>
-                    <h5 class="mail-content"><a href="mailto:carl-service@tu-dresden.de">carl-service@tu-dresden.de</a></h5>
+                    <h5 class="mail-content mail-adress-parent"><a class="mail-adress" href="mailto:carl-service@tu-dresden.de">carl-service@tu-dresden.de</a></h5>
                     <h5 class="mail-content">QOVA</h5>
                     <h5 class="mail-content" th:text="#{error.content.text}"></h5>
                 </div>

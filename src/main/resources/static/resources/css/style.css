@@ -539,6 +539,13 @@ select {
 .mail-content:last-of-type {
   border-bottom: none;
 }
+.mail-adress {
+  white-space: nowrap;
+  text-overflow: clip;
+}
+.mail-adress-parent {
+  overflow: hidden;
+}
 .huge-headline {
   font-size: 6rem;
 }
