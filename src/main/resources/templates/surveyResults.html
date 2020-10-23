@@ -79,6 +79,7 @@
     });
     const resources = document.getElementById("resource-container");
     var free_text_count = 0;
+    var NoS = /*[[${numberOfSubmissions}]]*/ 100;
 
     function bar_color(question_list) {
         for (let i = 0; i < question_list.length; ++i) {
@@ -101,12 +102,13 @@
             var type = answer["type"];
             if (type == "text") {
                 for (let j = 0; j < answer["answers"].length; ++j) {
-                    answers.push(create_answere(type, answer["answers"][j], 0));
+                    answers.push(create_answere(type, answer["answers"][j], 0, 0));
                 }
             }
             else {
                 for (let j = 0; j < answer["options"].length; ++j) {
-                    answers.push(create_answere(type, answer["options"][j], answer["answers"][j]));
+                    var rel_value = answer["answers"][j]/NoS;
+                    answers.push(create_answere(type, answer["options"][j], rel_value, answer["answers"][j]));
                 }
             }
 
@@ -141,16 +143,22 @@
         question.getElementsByClassName("question-type")[0].innerHTML = text;
         return question;
     }
-    function create_answere(type, text, value) {
+    function create_answere(type, text, rel_value, abs_value) {
         if (type == "text") {
             var answere = resources.getElementsByClassName("result-text")[0].cloneNode(true);
             answere.innerHTML = text; answere.classList.add("result-free-text"); answere.classList.remove("result-text");
         }
         else {
             var answere = resources.getElementsByClassName("answere-template")[0].cloneNode(true);
+            //Text that descripes the picked option by a participant
             answere.getElementsByClassName("result-text")[0].innerHTML = text;
-            answere.getElementsByClassName("result-percent")[0].innerHTML = Math.round(value*10000)/100+"%";
-            bar_fix(answere.getElementsByClassName("result-bar")[0], value);
+            //Relative voting result
+            var vote_text = answere.getElementsByClassName("result-percent")[0];
+            vote_text.innerHTML = Math.round(rel_value*10000)/100+"%";
+            //Absolute voting result
+            var span = document.createElement("span"); span.innerHTML = " ("+abs_value+")"; span.classList.add("text-secondary");
+            vote_text.appendChild(span);
+            bar_fix(answere.getElementsByClassName("result-bar")[0], rel_value);
         }
         return answere;
     }
