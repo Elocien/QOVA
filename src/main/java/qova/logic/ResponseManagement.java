@@ -183,6 +183,14 @@ public class ResponseManagement {
         return false;
     }
 
+    public Integer getTotalResponses(List<SurveyResponse> listOfSurveyResponses){
+        Integer totalNumberOfResponses = 0;
+        for (SurveyResponse surveyResponse : listOfSurveyResponses){
+            totalNumberOfResponses += surveyResponse.getNumberOfSubmissions();
+        }
+        return totalNumberOfResponses;
+    }
+
     /**
      * Used in the finalisation process of a {@linkplain qova.objects.Course}. When
      * a User finalises a Course, this method is used to serialise the

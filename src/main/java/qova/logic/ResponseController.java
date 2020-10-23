@@ -277,11 +277,13 @@ public class ResponseController {
 
             JSONArray resultsJsonString = responseManagement.generateSurveyResultsJson(listOfSurveyResponses);
 
+            Integer totalNumberOfSubmissions = responseManagement.getTotalResponses(listOfSurveyResponses);
+
             model.addAttribute("resultsJson", resultsJsonString);
             model.addAttribute("courseName", course.getName());
             model.addAttribute("courseType", courseType);
             model.addAttribute("semester", course.getCourseDate());
-            model.addAttribute("numberOfSubmissions", "1935"); //TODO: @Lucian hab kp welche methode mir den richtigen Wert hier für zurück gibt.
+            model.addAttribute("numberOfSubmissions", totalNumberOfSubmissions);
 
         }
         return "surveyResults";
