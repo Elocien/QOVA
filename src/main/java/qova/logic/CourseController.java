@@ -131,11 +131,14 @@ public class CourseController {
             model.addAttribute("surveysMissing", x);
             model.addAttribute("titlesMissing", b);
 
+            //
+            String domainName = "qova.med.tu-dresden.de";
+
             // QRCode URL (Redirects to a courses survey when scanned)
-            String LectureSurveyUrl = "localhost:8080/surveySelect?type=LECTURE&id=" + course.get().getId()+"&mode=participant";
-            String TutorialSurveyUrl = "localhost:8080/surveySelect?type=TUTORIAL&id=" + course.get().getId()+"&mode=participant";
-            String SeminarSurveyUrl = "localhost:8080/surveySelect?type=SEMINAR&id=" + course.get().getId()+"&mode=participant";
-            String PracticalSurveyUrl = "localhost:8080/surveySelect?type=PRACTICAL&id=" + course.get().getId()+"&mode=participant";
+            String LectureSurveyUrl = domainName + "/surveySelect?type=LECTURE&id=" + course.get().getId()+"&mode=participant";
+            String TutorialSurveyUrl = domainName +  "/surveySelect?type=TUTORIAL&id=" + course.get().getId()+"&mode=participant";
+            String SeminarSurveyUrl = domainName + "/surveySelect?type=SEMINAR&id=" + course.get().getId()+"&mode=participant";
+            String PracticalSurveyUrl = domainName + "/surveySelect?type=PRACTICAL&id=" + course.get().getId()+"&mode=participant";
 
             model.addAttribute("lectureLink", LectureSurveyUrl);
             model.addAttribute("tutorialLink", TutorialSurveyUrl);
