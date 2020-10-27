@@ -131,7 +131,7 @@ public class CourseController {
             model.addAttribute("surveysMissing", x);
             model.addAttribute("titlesMissing", b);
 
-            //
+            //The DomainName
             String domainName = "qova.med.tu-dresden.de";
 
             // QRCode URL (Redirects to a courses survey when scanned)
@@ -371,15 +371,13 @@ public class CourseController {
     public String questioneditorSubmit(Model model, @Valid @ModelAttribute("form") SurveyForm form,
             @RequestParam String type, @RequestParam(required = false) UUID id) {
 
-        // Form empty -> Redirect to details again
-        if (form.getQuestionnaireJson().length() == 0) {
-            return "redirect:../course/details" + "?id=" + id; // TODO: Redirects back course at the moment, think about
-                                                               // where this should go
-        }
-
         // fetch course
         Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()) {
+
+            if ( Boolean.TRUE.equals(course.get().getFinalisedFlag())){
+                return "redirect:/course/details" + "?id=" + id;
+            }
 
             CourseType courseType = responseManagement.parseCourseType(type);
 
@@ -388,6 +386,7 @@ public class CourseController {
             if (Boolean.FALSE.equals(instance.getSurveyEditedFlag())) {
                 courseManagement.setSurveyEditedFlagForCourseInstance(instance);
             }
+
 
             // if type is none of the correct values, then redirect to homepage
             if (courseType == null) {
