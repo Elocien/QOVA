@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -68,9 +69,11 @@ public class CourseController {
 
     // Shows a table containing all courses
     @GetMapping("courses")
-    public String courses(Model model) {
+    public String courses(Model model, Authentication authentication) {
 
-        model.addAttribute("courseList", courseManagement.findAll());
+        String userId = authentication.getPrincipal().toString();
+
+        model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
         return "courses";
     }
 
@@ -191,7 +194,7 @@ public class CourseController {
     // Validation of Created course
     @PostMapping("course/new")
     public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
-            BindingResult result) {
+                                         BindingResult result, Authentication authentication) {
 
         if (result.hasErrors()) {
             return createCourse(model, form);
@@ -203,8 +206,14 @@ public class CourseController {
             defaultSurveyMap.put(courseType, adminManagement.getDefaultSurveyObject(courseType));
         }
 
+        String userId = authentication.getPrincipal().toString();
+
+        if(userId.isEmpty()){
+            return "redirect:/";
+        }
+
         // Management Method returns String of new Course
-        UUID id = courseManagement.createCourseAndCourseInstanceAndReturnCourseId(form, defaultSurveyMap);
+        UUID id = courseManagement.createCourseAndCourseInstanceAndReturnCourseId(userId, form, defaultSurveyMap);
 
         // Redirect to SurveyEditor to start creating survey
         return "redirect:../course/instanceTitles?id=" + id;

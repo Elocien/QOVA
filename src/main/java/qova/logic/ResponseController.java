@@ -270,9 +270,6 @@ public class ResponseController {
             // The actual Course Object
             Course course = crs.get();
 
-            // The courseInstance Object
-            CourseInstance courseInstance = course.getInstance(courseType);
-
             // Eine Liste aller SurveyResponses
             List<SurveyResponse> listOfSurveyResponses = responseManagement.findSurveyResponses(course, courseType,
                     group, instance);

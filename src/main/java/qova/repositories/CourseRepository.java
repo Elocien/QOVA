@@ -16,7 +16,9 @@ public interface CourseRepository extends CrudRepository <Course, UUID> {
 
     Iterable<Course> findByCourseDateBefore(LocalDate date);
 
-    Iterable<Course> findByCourseDateBetween(LocalDate date, LocalDate date2);
+    Iterable<Course> findByCourseDateBetween(LocalDate start, LocalDate end);
+
+    Iterable<Course> findByOwnerId(String id);
 
 }
 

@@ -23,8 +23,6 @@ import qova.enums.CourseType;
 //meaning either the lecture, tutorial, seminar or practical
 //auf deutsch:       Vorlesung, übung , seminar oder praktika
 
-//
-
 @Entity
 public class Course {
 
@@ -33,6 +31,9 @@ public class Course {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     @Column(name = "id", updatable = false, nullable = false, columnDefinition = "BINARY(16)")
     private UUID id;
+
+    // The user Id of the owner.
+    private String ownerId;
 
     // Name of the course
     private String name;
@@ -71,9 +72,10 @@ public class Course {
     }
 
     /**
-     * Instance of a Course (meaning a Subject [DE Lehrveranstaltung])
+     * Instance of a Course (meaning a Subject [DE Lehrveranstaltung]).
      * 
      * @param name               Name of the course
+     * @param ownerId            The ajpPersistentId of the {@linkplain qova.users.User} who created the Course
      * @param lecture            CourseInstance with courseType LECTURE
      * @param tutorial           CourseInstance with courseType SEMINAR
      * @param seminar            CourseInstance with courseType TUTORIAL
@@ -89,10 +91,11 @@ public class Course {
      *                           takes place. This field is primarily used for
      *                           sorting purposes
      */
-    public Course(String name, CourseInstance lecture, CourseInstance tutorial, CourseInstance seminar,
+    public Course(String name, String ownerId, CourseInstance lecture, CourseInstance tutorial, CourseInstance seminar,
             CourseInstance practical, Integer semesterOfStudents, CourseFaculty faculty, String semesterString,
             LocalDate courseDate) {
         this.name = name;
+        this.ownerId = ownerId;
         this.lecture = lecture;
         this.seminar = seminar;
         this.tutorial = tutorial;
@@ -110,6 +113,10 @@ public class Course {
 
     public String getName() {
         return this.name;
+    }
+
+    public String getOwnerId(){
+        return this.ownerId;
     }
 
     public void setName(String name) {
@@ -148,6 +155,12 @@ public class Course {
         return this.practical;
     }
 
+    /**
+     * Returns the {@linkplain CourseInstance} of the given {@linkplain CourseType} for this course.
+     *
+     * @param type The {@linkplain CourseType}.
+     * @return The {@linkplain CourseInstance} of the given {@linkplain CourseType}.
+     */
     public CourseInstance getInstance(CourseType type) {
         switch (type) {
             case LECTURE:
@@ -163,6 +176,15 @@ public class Course {
         }
     }
 
+    /**
+     * Returns a {@link Boolean} which indicates whether the user has decided to use the given Instance.
+     * For example, a user may want to receive feedback for the Lecture and the Tutorial, but does not run a Practical or
+     * Seminar for that given course. He will then create the course, and this method will return true for the
+     * {@linkplain CourseType}'s Lecture and Tutorial, but false for Seminar and Practical
+     *
+     * @param type The {@linkplain CourseType}.
+     * @return A {@link Boolean} depending on the isActive flag of the {@linkplain CourseInstance}
+     */
     public Boolean getInstanceExists(CourseType type) {
         switch (type) {
             case LECTURE:

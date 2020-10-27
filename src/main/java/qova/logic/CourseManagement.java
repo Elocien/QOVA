@@ -56,7 +56,7 @@ public class CourseManagement {
     }
 
     // Create Course and get Id from new course
-    public UUID createCourseAndCourseInstanceAndReturnCourseId(CourseForm form, EnumMap<CourseType, DefaultSurvey> defaultSurveyMap ) {
+    public UUID createCourseAndCourseInstanceAndReturnCourseId(String userId, CourseForm form, EnumMap<CourseType, DefaultSurvey> defaultSurveyMap) {
         Objects.requireNonNull(form);
 
         // Form attributes
@@ -69,7 +69,7 @@ public class CourseManagement {
         // create CourseInstances
         Map<CourseType, CourseInstance> courseInstances = createCourseInstances(form, defaultSurveyMap);
 
-        Course crs = new Course(name, courseInstances.get(CourseType.LECTURE), courseInstances.get(CourseType.TUTORIAL),
+        Course crs = new Course(name, userId,courseInstances.get(CourseType.LECTURE), courseInstances.get(CourseType.TUTORIAL),
                 courseInstances.get(CourseType.SEMINAR), courseInstances.get(CourseType.PRACTICAL), semesterOfStudents,
                 faculty, semesterString, courseDate);
         coursesRepo.save(crs);
@@ -264,7 +264,7 @@ public class CourseManagement {
 
             Course oldCourse = crs.get();
 
-            Course newCourse = new Course(oldCourse.getName(), duplicateCourseInstance(oldCourse.getLecture()),
+            Course newCourse = new Course(oldCourse.getName(), oldCourse.getOwnerId(),duplicateCourseInstance(oldCourse.getLecture()),
                     duplicateCourseInstance(oldCourse.getTutorial()), duplicateCourseInstance(oldCourse.getSeminar()),
                     duplicateCourseInstance(oldCourse.getPractical()), oldCourse.getSemesterOfStudents(),
                     oldCourse.getFaculty(), semesterString, parseSemesterString(semesterString));
@@ -456,6 +456,8 @@ public class CourseManagement {
     }
 
     /**
+     * Find a {@linkplain Course} with the given Id
+     *
      * @param id the Course id
      * @return an {@linkplain Optional} of a {@linkplain Course} with the given id
      */
@@ -464,13 +466,19 @@ public class CourseManagement {
     }
 
     /**
+     * Retrieves all {@linkplain Course}s from the repository
+     *
      * @return an {@linkplain Iterable} of a {@linkplain Course} with the given id
      */
     public Iterable<Course> findAll() {
         return coursesRepo.findAll();
     }
 
-    // delete course
+    /**
+     * Deletes a {@linkplain Course} with the given Id
+     *
+     * @param id The Id of the Course
+     */
     public void deleteCourse(UUID id) {
         Optional<Course> crs = findById(id);
         if (crs.isPresent()) {
@@ -480,6 +488,17 @@ public class CourseManagement {
         }
         coursesRepo.deleteById(id);
     }
+
+    /**
+     * Finds all {@linkplain Course}s based on the ownerId field
+     *
+     * @param id the Course id
+     * @return an {@linkplain Optional} of a {@linkplain Course} with the given id
+     */
+    public Iterable<Course> findByOwnerid(String id) {
+        return coursesRepo.findByOwnerId(id);
+    }
+
 
     /**
      * Delete {@linkplain qova.objects.CourseInstance}s for a given
@@ -514,6 +533,8 @@ public class CourseManagement {
         // delete the surveyresponses
         surveyResponseRepository.deleteAll(surveyResponses);
     }
+
+
 
     // Test Methods
     // TODO: Remove Before Production
@@ -556,7 +577,7 @@ public class CourseManagement {
         var courseDate = LocalDate.of(2020, 10, 4);
         var semesterString = "SoSe 2020";
 
-        Course course = new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty, semesterString, courseDate);
+        Course course = new Course(name, "asdnoisdfnjodsijdoasindoiasjd",lecture, tutorial, seminar, practical, semesterOfStudents, faculty, semesterString, courseDate);
         coursesRepo.save(course);
         return course;
     }
