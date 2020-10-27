@@ -125,10 +125,6 @@ public class CourseInstance {
         return this.courseType;
     }
 
-    public void setCourseType(CourseType type) {
-        this.courseType = type;
-    }
-
     public String getSurvey() {
         return this.survey;
     }
@@ -189,12 +185,7 @@ public class CourseInstance {
     }
 
     public Boolean titlesMissing() {
-        if (this.instanceAmount > instanceTitles.size()){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return this.instanceAmount > instanceTitles.size();
     }
 
 }
