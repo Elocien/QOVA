@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,7 +34,7 @@ import qova.objects.Course;
 import qova.objects.CourseInstance;
 
 
-@Controller // This means that this class is a Controller
+@Controller
 public class CourseController {
 
     @Autowired
@@ -54,7 +56,6 @@ public class CourseController {
 
     // Error codes
     int courseNotFound = 1;
-    int internalError = 2;
 
     // General Pages (relevant domain wide)
     // -------------------------------------------------------
@@ -68,13 +69,17 @@ public class CourseController {
 
     // Shows a table containing all courses
     @GetMapping("courses")
-    public String courses(Model model) {
+    @PreAuthorize("hasRole('STAFF')")
+    public String courses(Model model, Authentication authentication) {
 
-        model.addAttribute("courseList", courseManagement.findAll());
+        String userId = authentication.getPrincipal().toString();
+
+        model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
         return "courses";
     }
 
     // Shows the details for a specific course
+    @PreAuthorize("hasRole('STAFF')")
     @GetMapping("course/details")
     public String courseDetails(Model model, DuplicateCourseForm duplicateForm, CourseForm form,
             @RequestParam(required = false) UUID id) throws Exception {
@@ -85,60 +90,26 @@ public class CourseController {
         model.addAttribute("duplicateForm", duplicateForm);
 
         // fetch course and go to details if present
-        Optional<Course> course = courseManagement.findById(id);
-        if (course.isPresent()) {
-            model.addAttribute("course", course.get());
+        Optional<Course> crs = courseManagement.findById(id);
+        if (crs.isPresent()) {
+            Course course = crs.get();
 
-            // relevant for the surveyStatus
-            int x = 4;
-            boolean b = false;
-            if (course.get().getLectureExists() && course.get().getLecture().getSurveyEditedFlag()) {
-                x = x-1;
-                if (course.get().getLecture().titlesMissing()) {
-                    b = true;
-                }
-            }
-            else if (!course.get().getLectureExists()) {
-                x = x-1;
-            }
-            if (course.get().getTutorialExists() && course.get().getTutorial().getSurveyEditedFlag()) {
-                x = x-1;
-                if (course.get().getTutorial().titlesMissing()) {
-                    b = true;
-                }
-            }
-            else if (!course.get().getTutorialExists()) {
-                x = x-1;
-            }
-            if (course.get().getSeminarExists() && course.get().getSeminar().getSurveyEditedFlag()) {
-                x = x-1;
-                if (course.get().getSeminar().titlesMissing()) {
-                    b = true;
-                }
-            }
-            else if (!course.get().getSeminarExists()) {
-                x = x-1;
-            }
-            if (course.get().getPracticalExists() && course.get().getPractical().getSurveyEditedFlag()) {
-                x = x-1;
-                if (course.get().getPractical().titlesMissing()) {
-                    b = true;
-                }
-            }
-            else if (!course.get().getPracticalExists()) {
-                x = x-1;
-            }
-            model.addAttribute("surveysMissing", x);
-            model.addAttribute("titlesMissing", b);
+            model.addAttribute("course", course);
+
+            //Used for status flags
+            model.addAttribute("surveysMissing", courseManagement.getNumberOfSurveysMissing(course));
+            model.addAttribute("titlesMissing", courseManagement.getNumberOfInstanceTitlesMissing(course));
 
             //The DomainName
             String domainName = "qova.med.tu-dresden.de";
 
             // QRCode URL (Redirects to a courses survey when scanned)
+
             String LectureSurveyUrl = domainName + "/surveySelect?type=LECTURE&id=" + course.get().getId()+"&mode=participant";
             String TutorialSurveyUrl = domainName +  "/surveySelect?type=TUTORIAL&id=" + course.get().getId()+"&mode=participant";
             String SeminarSurveyUrl = domainName + "/surveySelect?type=SEMINAR&id=" + course.get().getId()+"&mode=participant";
             String PracticalSurveyUrl = domainName + "/surveySelect?type=PRACTICAL&id=" + course.get().getId()+"&mode=participant";
+
 
             model.addAttribute("lectureLink", LectureSurveyUrl);
             model.addAttribute("tutorialLink", TutorialSurveyUrl);
@@ -160,6 +131,7 @@ public class CourseController {
     // Edit Course Validation (when course is updated, check wether the fields are
     // all appropriately set e.g. NotNull)
     @PostMapping("course/edit")
+    @PreAuthorize("hasRole('STAFF')")
     public String editCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
             BindingResult result, DuplicateCourseForm duplcateCourseForm, @RequestParam UUID id) throws Exception {
 
@@ -182,6 +154,7 @@ public class CourseController {
 
     // Create Course
     @GetMapping("course/new")
+    @PreAuthorize("hasRole('STAFF')")
     public String createCourse(Model model, CourseForm form) {
 
         model.addAttribute("form", form);
@@ -193,8 +166,9 @@ public class CourseController {
 
     // Validation of Created course
     @PostMapping("course/new")
+    @PreAuthorize("hasRole('STAFF')")
     public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
-            BindingResult result) {
+                                         BindingResult result, Authentication authentication) {
 
         if (result.hasErrors()) {
             return createCourse(model, form);
@@ -206,8 +180,14 @@ public class CourseController {
             defaultSurveyMap.put(courseType, adminManagement.getDefaultSurveyObject(courseType));
         }
 
+        String userId = authentication.getPrincipal().toString();
+
+        if(userId.isEmpty()){
+            return "redirect:/";
+        }
+
         // Management Method returns String of new Course
-        UUID id = courseManagement.createCourseAndCourseInstanceAndReturnCourseId(form, defaultSurveyMap);
+        UUID id = courseManagement.createCourseAndCourseInstanceAndReturnCourseId(userId, form, defaultSurveyMap);
 
         // Redirect to SurveyEditor to start creating survey
         return "redirect:../course/instanceTitles?id=" + id;
@@ -215,6 +195,7 @@ public class CourseController {
 
     // Create Course
     @GetMapping("course/instanceTitles")
+    @PreAuthorize("hasRole('STAFF')")
     public String createCourseSetInstanceTitles(Model model, @ModelAttribute("form") InstanceTitleForm form,
             @RequestParam UUID id) {
 
@@ -264,6 +245,7 @@ public class CourseController {
 
     // Validation of Created course
     @PostMapping("course/instanceTitles")
+    @PreAuthorize("hasRole('STAFF')")
     public String createCourseSetInstanceTitlesValidation(Model model, InstanceTitleForm form, @RequestParam UUID id,
             BindingResult result) {
 
@@ -276,12 +258,14 @@ public class CourseController {
 
     // Delete Course and its CourseInstances
     @GetMapping("course/delete")
+    @PreAuthorize("hasRole('STAFF')")
     public String deleteCourse(@RequestParam UUID id) {
         courseManagement.deleteCourse(id);
         return "redirect:../courses";
     }
 
     @PostMapping("course/duplicate")
+    @PreAuthorize("hasRole('STAFF')")
     public String duplicateCourseWithNewSemester(@ModelAttribute("duplicateForm") DuplicateCourseForm form,
             @RequestParam UUID id) {
 
@@ -291,6 +275,7 @@ public class CourseController {
     }
 
     @GetMapping("course/finalise")
+    @PreAuthorize("hasRole('STAFF')")
     public String finaliseCourse(@RequestParam UUID id) {
 
         courseManagement.setCourseFinalised(id);
@@ -324,13 +309,14 @@ public class CourseController {
 
     /**
      * Mapping for surveyeditor HTML (called from CourseDetails Page!)
-     * 
+     *
      * @param model {@link org.springframework.ui.Model}
      * @param type  {@linkplain qova.enums.CourseType} in String form
      * @param id    Id of the Course
      * @return questioneditor.html template
      */
     @GetMapping("course/surveyeditor")
+    @PreAuthorize("hasRole('STAFF')")
     public String questioneditor(Model model, @RequestParam String type, @RequestParam(required = false) UUID id) {
 
 
@@ -366,7 +352,7 @@ public class CourseController {
      * exceed 100 questions) and special characters. If the
      * {@linkplain qova.objects.CourseInstance} hasn't had a survey set before, then
      * the flag is set for that given {@linkplain qova.objects.CourseInstance}
-     * 
+     *
      * @param model The {@linkplain org.springframework.ui.Model}
      * @param form  {@linkplain SurveyForm} which contains the JSON passed by the
      *              surveyeditor
@@ -376,6 +362,7 @@ public class CourseController {
      *         courseDetails template
      */
     @PostMapping("course/surveyeditor")
+    @PreAuthorize("hasRole('STAFF')")
     public String questioneditorSubmit(Model model, @Valid @ModelAttribute("form") SurveyForm form,
             @RequestParam String type, @RequestParam(required = false) UUID id) {
 
@@ -389,10 +376,10 @@ public class CourseController {
 
             CourseType courseType = responseManagement.parseCourseType(type);
 
-            // if type is none of the correct values, then redirect to homepage
+
+            // if type is none of the correct values, then redirect to error page
             if (courseType == null) {
-                // TODO: redirect to error page with code 02
-                return "redirect:/";
+                return "error";
             }
 
             CourseInstance instance = course.get().getInstance(courseType);
@@ -400,8 +387,6 @@ public class CourseController {
             if (Boolean.FALSE.equals(instance.getSurveyEditedFlag())) {
                 courseManagement.setSurveyEditedFlagForCourseInstance(instance);
             }
-
-
 
             else {
                 // check if JSON is valid
@@ -417,7 +402,6 @@ public class CourseController {
                 // parse JSON to check for correctness (length, special characters)
                 Boolean validSurvey = responseManagement.verifyJsonArray(survey);
                 if (Boolean.FALSE.equals(validSurvey)) {
-                    // TODO: redirect to error page with code 02
                     return questioneditor(model, type, id);
                 }
 
@@ -429,16 +413,61 @@ public class CourseController {
             // Redirect back to CourseDetails page
             return "redirect:../course/details" + "?id=" + id;
         } else {
-            // TODO: need more feedback here for the user. Change this!
-            return "error?code=" + courseNotFound;
+            return "error";
         }
     }
 
     // ---------------------------------------------------------------------------
 
-    // Die Ganze Methode ist Same wie questioneditorSubmit nur der Return ist auf
-    // die Preview Html
+    /**
+     * The GetMapping to preview a survey created in the SurveyEditor
+     *
+     * @param model The {@linkplain Model}
+     * @param type The {@linkplain CourseType}
+     * @param id The id of the {@linkplain Course}
+     * @return The surveyPreview template
+     */
+    @GetMapping("course/previewsurvey")
+    @PreAuthorize("hasRole('STAFF')")
+    public String questioneditorpreviewget(Model model, @RequestParam String type,
+                                           @RequestParam(required = false) UUID id) {
+
+        // fetch course
+        Optional<Course> course = courseManagement.findById(id);
+        if (course.isPresent()) {
+
+            // if type is none of the correct values, then redirect to homepage
+            if (responseManagement.parseCourseType(type) == null) {
+                return "error";
+            }
+
+            model.addAttribute("typeID", type);
+            model.addAttribute("id", id);
+            model.addAttribute("survey",
+                    courseManagement.getSurveyforType(id, responseManagement.parseCourseType(type)));
+            model.addAttribute("defaultSurvey",
+                    adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
+            model.addAttribute("coursename", course.get().getName());
+
+            return "surveypreview";
+        } else {
+            return "error";
+        }
+    }
+
+    /**
+     * The PostMapping for the surveyPreview. This functions the same as
+     * {@linkplain CourseController#questioneditorSubmit(Model, SurveyForm, String, UUID)}. It sets the survey string
+     * as well as the surveyEdited flag.
+     *
+     * @param model The {@linkplain Model}
+     * @param type The {@linkplain CourseType}
+     * @param id The id of the {@linkplain Course}
+     * @param form {@linkplain SurveyForm} containing the surveyJson from the submission
+     * @return The surveyPreview template
+     */
     @PostMapping("course/previewsurvey")
+    @PreAuthorize("hasRole('STAFF')")
     public String questioneditorpreview(Model model, SurveyForm form, @RequestParam String type,
             @RequestParam(required = false) UUID id) {
 
@@ -455,17 +484,17 @@ public class CourseController {
 
             // if type is none of the correct values, then redirect to homepage
             if (courseType == null) {
-                // TODO: redirect to error page with code 02
-                return "redirect:/";
+
+                return "error";
             }
 
             CourseInstance instance = course.get().getInstance(courseType);
 
+            //
             if (Boolean.FALSE.equals(instance.getSurveyEditedFlag())) {
                 courseManagement.setSurveyEditedFlagForCourseInstance(instance);
             }
-
-
+          
             else {
                 // check if JSON is valid
                 try {
@@ -500,40 +529,11 @@ public class CourseController {
         }
     }
 
-    // SUrveyPreview als getrequest
-    @GetMapping("course/previewsurvey")
-    public String questioneditorpreviewget(Model model, @RequestParam String type,
-            @RequestParam(required = false) UUID id) {
-
-        // fetch course
-        Optional<Course> course = courseManagement.findById(id);
-        if (course.isPresent()) {
-
-            // if type is none of the correct values, then redirect to homepage
-            if (responseManagement.parseCourseType(type) == null) {
-                // TODO: redirect to error page with code 02
-                return "redirect:/";
-            }
-
-            model.addAttribute("typeID", type);
-            model.addAttribute("id", id);
-            model.addAttribute("survey",
-                    courseManagement.getSurveyforType(id, responseManagement.parseCourseType(type)));
-            model.addAttribute("defaultSurvey",
-                    adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
-            model.addAttribute("coursename", course.get().getName());
-
-            return "surveypreview";
-        } else {
-            // TODO: need more feedback here for the user. Change this!
-            return "error?code=" + courseNotFound;
-        }
-    }
 
     /**
      * This method takes id and CourseType as parameters, and returns a qrcode with
      * the given string that is assembled below
-     * 
+     *
      * @param response {@link javax.servlet.http.HttpServletResponse}
      * @param type     {@linkplain qova.enums.CourseType}
      * @param id       Id of the {@linkplain Course}
@@ -566,24 +566,4 @@ public class CourseController {
 
         return new HttpEntity<>(qrcode, header);
     }
-
-    // test method
-    @GetMapping("/createC")
-    public String createC()  {
-
-        EnumMap<CourseType, DefaultSurvey> defaultSurveyMap = new EnumMap<>(CourseType.class);
-        for(CourseType courseType : CourseType.values()){
-            defaultSurveyMap.put(courseType, adminManagement.getDefaultSurveyObject(courseType));
-        }
-
-        Course course = courseManagement.TestCreateCourse(defaultSurveyMap);
-        return "redirect:/course/details" + "?id=" + course.getId();
-    }
-
-    // test method
-    @GetMapping("/jsTest")
-    public String JsTest() {
-        return "survey";
-    }
-
 }

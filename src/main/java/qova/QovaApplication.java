@@ -21,6 +21,9 @@ public class QovaApplication implements WebMvcConfigurer {
 		SpringApplication.run(QovaApplication.class, args);
 	}
 
+	//Locale setter
+	//-----------------------------------------
+
 	@Bean
 	public LocaleResolver localeResolver() {
 		return new SessionLocaleResolver();
@@ -37,6 +40,48 @@ public class QovaApplication implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry interceptorRegistry) {
 		interceptorRegistry.addInterceptor(localeChangeInterceptor());
 	}
+	//-----------------------------------------
+
+
+
+	//Tomcat Config
+	//-----------------------------------------
+	@Configuration
+	@Data
+	public class TomcatConfiguration {
+
+		@Value("${tomcat.ajp.port}")
+		int ajpPort;
+
+		@Value("${tomcat.ajp.remoteauthentication}")
+		String remoteAuthentication;
+
+		@Value("${tomcat.ajp.enabled}")
+		boolean tomcatAjpEnabled;
+
+		@Bean
+		public TomcatServletWebServerFactory servletContainer() {
+
+			TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
+			if (tomcatAjpEnabled)
+			{
+				Connector ajpConnector = new Connector("AJP/1.3");
+				ajpConnector.setPort(ajpPort);
+				ajpConnector.setSecure(false);
+				ajpConnector.setAllowTrace(false);
+				ajpConnector.setScheme("https");
+				ajpConnector.setAttribute("tomcatAuthentication", remoteAuthentication);
+				ajpConnector.setAttribute("packetSize", 65536);
+				tomcat.addAdditionalTomcatConnectors(ajpConnector);
+			}
+
+			return tomcat;
+		}
+
+	}
+
+
+
 
 	//Tomcat Config
 	//-----------------------------------------

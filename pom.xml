@@ -8,7 +8,7 @@
 		<version>2.2.2.RELEASE</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
+	<groupId>med.tu-dresden.de</groupId>
 	<artifactId>qova</artifactId>
 	<version>0.1.1-SNAPSHOT</version>
 	<name>qova</name>
