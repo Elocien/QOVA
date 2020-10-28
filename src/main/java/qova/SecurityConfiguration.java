@@ -72,13 +72,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .addFilter(shibAuthentication())
                 .authorizeRequests()
                 .antMatchers("/course/**").hasRole("STAFF")
-                .antMatchers("/").permitAll();
-
-
-
-        http.addFilter(shibAuthentication());
+                .and().logout();
     }
 
 
