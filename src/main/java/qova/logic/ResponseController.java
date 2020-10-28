@@ -268,9 +268,6 @@ public class ResponseController {
             // The actual Course Object
             Course course = crs.get();
 
-            // The courseInstance Object
-            CourseInstance courseInstance = course.getInstance(courseType);
-
             // Eine Liste aller SurveyResponses
             List<SurveyResponse> listOfSurveyResponses = responseManagement.findSurveyResponses(course, courseType,
                     group, instance);
@@ -279,7 +276,7 @@ public class ResponseController {
 
             Integer totalNumberOfSubmissions = responseManagement.getTotalResponses(listOfSurveyResponses);
 
-            model.addAttribute("resultsJson", resultsJsonString);
+            model.addAttribute("resultsJson", resultsJsonString.toString());
             model.addAttribute("courseName", course.getName());
             model.addAttribute("courseType", courseType);
             model.addAttribute("semester", course.getCourseDate());
