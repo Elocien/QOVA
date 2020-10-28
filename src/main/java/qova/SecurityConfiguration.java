@@ -38,23 +38,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(customAuthenticationProvider());
     }
 
-
-    /**
-     * The {@linkplain org.springframework.security.web.authentication.AuthenticationFilter} which takes the Shibboleth
-     * AJP headers
-     *
-     * @return The custom {@linkplain RequestHeaderAuthenticationFilter}
-     * @throws Exception From the {@linkplain org.springframework.security.authentication.AuthenticationManager}
-     */
-    @Bean
-    protected RequestHeaderAuthenticationFilter shibAuthentication() throws Exception {
-        RequestHeaderAuthenticationFilter requestHeaderAuthenticationFilter = new RequestHeaderAuthenticationFilter();
-        requestHeaderAuthenticationFilter.setPrincipalRequestHeader("persistent-id");
-        requestHeaderAuthenticationFilter.setCredentialsRequestHeader("affiliation");
-        requestHeaderAuthenticationFilter.setAuthenticationManager(authenticationManagerBean());
-        return  requestHeaderAuthenticationFilter;
-    }
-
     @Bean
     public PreAuthenticatedAuthenticationProvider customAuthenticationProvider(){
 
@@ -68,11 +51,29 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
 
+    /**
+     * The {@linkplain org.springframework.security.web.authentication.AuthenticationFilter} which takes the Shibboleth
+     * AJP headers
+     *
+     * @return The custom {@linkplain RequestHeaderAuthenticationFilter}
+     * @throws Exception From the {@linkplain org.springframework.security.authentication.AuthenticationManager}
+     */
+    @Bean
+    protected RequestHeaderAuthenticationFilter shibAuthenticationFilter() throws Exception {
+        RequestHeaderAuthenticationFilter requestHeaderAuthenticationFilter = new RequestHeaderAuthenticationFilter();
+        requestHeaderAuthenticationFilter.setPrincipalRequestHeader("persistent-id");
+        requestHeaderAuthenticationFilter.setCredentialsRequestHeader("affiliation");
+        requestHeaderAuthenticationFilter.setAuthenticationManager(authenticationManagerBean());
+        return  requestHeaderAuthenticationFilter;
+    }
+
+
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .addFilter(shibAuthentication())
+                .addFilter(shibAuthenticationFilter())
                 .authorizeRequests()
                 .antMatchers("/course/**").hasRole("STAFF")
                 .and().logout();
