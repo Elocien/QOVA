@@ -76,7 +76,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilter(shibAuthenticationFilter())
                 .authorizeRequests()
                 .antMatchers("/course/**").hasRole("STAFF")
-                .and().logout();
+                .anyRequest().permitAll()
+                .and().logout().logoutSuccessUrl("home");
     }
 
 

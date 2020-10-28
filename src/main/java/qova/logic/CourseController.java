@@ -69,7 +69,7 @@ public class CourseController {
 
     // Shows a table containing all courses
     @GetMapping("courses")
-    @PreAuthorize("hasRole('ROLE_STAFF')")
+    @PreAuthorize("hasRole('STAFF')")
     public String courses(Model model, Authentication authentication) {
 
         String userId = authentication.getPrincipal().toString();
@@ -79,7 +79,7 @@ public class CourseController {
     }
 
     // Shows the details for a specific course
-    @PreAuthorize("hasRole('ROLE_STAFF')")
+    @PreAuthorize("hasRole('STAFF')")
     @GetMapping("course/details")
     public String courseDetails(Model model, DuplicateCourseForm duplicateForm, CourseForm form,
             @RequestParam(required = false) UUID id) throws Exception {
@@ -126,6 +126,7 @@ public class CourseController {
     // Edit Course Validation (when course is updated, check wether the fields are
     // all appropriately set e.g. NotNull)
     @PostMapping("course/edit")
+    @PreAuthorize("hasRole('STAFF')")
     public String editCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
             BindingResult result, DuplicateCourseForm duplcateCourseForm, @RequestParam UUID id) throws Exception {
 
@@ -148,6 +149,7 @@ public class CourseController {
 
     // Create Course
     @GetMapping("course/new")
+    @PreAuthorize("hasRole('STAFF')")
     public String createCourse(Model model, CourseForm form) {
 
         model.addAttribute("form", form);
@@ -159,6 +161,7 @@ public class CourseController {
 
     // Validation of Created course
     @PostMapping("course/new")
+    @PreAuthorize("hasRole('STAFF')")
     public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
                                          BindingResult result, Authentication authentication) {
 
@@ -187,6 +190,7 @@ public class CourseController {
 
     // Create Course
     @GetMapping("course/instanceTitles")
+    @PreAuthorize("hasRole('STAFF')")
     public String createCourseSetInstanceTitles(Model model, @ModelAttribute("form") InstanceTitleForm form,
             @RequestParam UUID id) {
 
@@ -236,6 +240,7 @@ public class CourseController {
 
     // Validation of Created course
     @PostMapping("course/instanceTitles")
+    @PreAuthorize("hasRole('STAFF')")
     public String createCourseSetInstanceTitlesValidation(Model model, InstanceTitleForm form, @RequestParam UUID id,
             BindingResult result) {
 
@@ -248,12 +253,14 @@ public class CourseController {
 
     // Delete Course and its CourseInstances
     @GetMapping("course/delete")
+    @PreAuthorize("hasRole('STAFF')")
     public String deleteCourse(@RequestParam UUID id) {
         courseManagement.deleteCourse(id);
         return "redirect:../courses";
     }
 
     @PostMapping("course/duplicate")
+    @PreAuthorize("hasRole('STAFF')")
     public String duplicateCourseWithNewSemester(@ModelAttribute("duplicateForm") DuplicateCourseForm form,
             @RequestParam UUID id) {
 
@@ -263,6 +270,7 @@ public class CourseController {
     }
 
     @GetMapping("course/finalise")
+    @PreAuthorize("hasRole('STAFF')")
     public String finaliseCourse(@RequestParam UUID id) {
 
         courseManagement.setCourseFinalised(id);
@@ -303,6 +311,7 @@ public class CourseController {
      * @return questioneditor.html template
      */
     @GetMapping("course/surveyeditor")
+    @PreAuthorize("hasRole('STAFF')")
     public String questioneditor(Model model, @RequestParam String type, @RequestParam(required = false) UUID id) {
 
         // Give model the following attributes, which are used to submit the survey, via
@@ -340,6 +349,7 @@ public class CourseController {
      *         courseDetails template
      */
     @PostMapping("course/surveyeditor")
+    @PreAuthorize("hasRole('STAFF')")
     public String questioneditorSubmit(Model model, @Valid @ModelAttribute("form") SurveyForm form,
             @RequestParam String type, @RequestParam(required = false) UUID id) {
 
@@ -405,6 +415,7 @@ public class CourseController {
      * @return The surveyPreview template
      */
     @GetMapping("course/previewsurvey")
+    @PreAuthorize("hasRole('STAFF')")
     public String questioneditorpreviewget(Model model, @RequestParam String type,
                                            @RequestParam(required = false) UUID id) {
 
@@ -443,6 +454,7 @@ public class CourseController {
      * @return The surveyPreview template
      */
     @PostMapping("course/previewsurvey")
+    @PreAuthorize("hasRole('STAFF')")
     public String questioneditorpreview(Model model, SurveyForm form, @RequestParam String type,
             @RequestParam(required = false) UUID id) {
 

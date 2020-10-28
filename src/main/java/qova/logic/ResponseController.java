@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -60,6 +61,7 @@ public class ResponseController {
     // ---------------------------------------------------------------------------
 
     @GetMapping("surveySelect")
+    @PreAuthorize("hasAnyRole('STAFF','STUDENT')")
     public String selectSurvey(Model model, SurveySelectForm form, @RequestParam String mode, @RequestParam UUID id,
             @RequestParam(required = false, defaultValue = "") String type) {
 
@@ -98,8 +100,9 @@ public class ResponseController {
 
     // Validation of entry of surveySelect page, and redirect to the actual survey
     @PostMapping("surveySelect")
+    @PreAuthorize("hasAnyRole('STAFF','STUDENT')")
     public String selectSurveySubmission(Model model, @ModelAttribute("form") SurveySelectForm form,
-            @RequestParam String mode, @RequestParam String type, @RequestParam UUID id) {
+            @RequestParam String mode, @RequestParam String type, @RequestParam UUID id, Authentication authentication) {
 
         Optional<Course> crs = courseManagement.findById(id);
 
@@ -115,6 +118,7 @@ public class ResponseController {
         // TODO validate that parameters only contain valid charachters. E.g. a-zA-Z0-9
 
         else {
+
             if (mode.equals("participant")) {
                 return "redirect:/survey?id=" + id + "&type=" + type + "&instance=" + form.getInstance() + "&group="
                         + form.getGroup();
