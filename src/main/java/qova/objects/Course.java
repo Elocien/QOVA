@@ -23,6 +23,9 @@ import qova.enums.CourseType;
 //meaning either the lecture, tutorial, seminar or practical
 //auf deutsch:       Vorlesung, übung , seminar oder praktika
 
+/**
+ * This object is an Instance of a Subject, for a given semester.
+ */
 @Entity
 public class Course {
 

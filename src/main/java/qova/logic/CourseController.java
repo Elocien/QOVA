@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -55,7 +56,6 @@ public class CourseController {
 
     // Error codes
     int courseNotFound = 1;
-    int internalError = 2;
 
     // General Pages (relevant domain wide)
     // -------------------------------------------------------
@@ -69,6 +69,7 @@ public class CourseController {
 
     // Shows a table containing all courses
     @GetMapping("courses")
+    @PreAuthorize("hasRole('ROLE_STAFF')")
     public String courses(Model model, Authentication authentication) {
 
         String userId = authentication.getPrincipal().toString();
@@ -78,6 +79,7 @@ public class CourseController {
     }
 
     // Shows the details for a specific course
+    @PreAuthorize("hasRole('ROLE_STAFF')")
     @GetMapping("course/details")
     public String courseDetails(Model model, DuplicateCourseForm duplicateForm, CourseForm form,
             @RequestParam(required = false) UUID id) throws Exception {
@@ -88,57 +90,21 @@ public class CourseController {
         model.addAttribute("duplicateForm", duplicateForm);
 
         // fetch course and go to details if present
-        Optional<Course> course = courseManagement.findById(id);
-        if (course.isPresent()) {
-            model.addAttribute("course", course.get());
+        Optional<Course> crs = courseManagement.findById(id);
+        if (crs.isPresent()) {
+            Course course = crs.get();
 
-            // relevant for the surveyStatus
-            int x = 4;
-            boolean b = false;
-            if (course.get().getLectureExists() && course.get().getLecture().getSurveyEditedFlag()) {
-                x = x-1;
-                if (course.get().getLecture().titlesMissing()) {
-                    b = true;
-                }
-            }
-            else if (!course.get().getLectureExists()) {
-                x = x-1;
-            }
-            if (course.get().getTutorialExists() && course.get().getTutorial().getSurveyEditedFlag()) {
-                x = x-1;
-                if (course.get().getTutorial().titlesMissing()) {
-                    b = true;
-                }
-            }
-            else if (!course.get().getTutorialExists()) {
-                x = x-1;
-            }
-            if (course.get().getSeminarExists() && course.get().getSeminar().getSurveyEditedFlag()) {
-                x = x-1;
-                if (course.get().getSeminar().titlesMissing()) {
-                    b = true;
-                }
-            }
-            else if (!course.get().getSeminarExists()) {
-                x = x-1;
-            }
-            if (course.get().getPracticalExists() && course.get().getPractical().getSurveyEditedFlag()) {
-                x = x-1;
-                if (course.get().getPractical().titlesMissing()) {
-                    b = true;
-                }
-            }
-            else if (!course.get().getPracticalExists()) {
-                x = x-1;
-            }
-            model.addAttribute("surveysMissing", x);
-            model.addAttribute("titlesMissing", b);
+            model.addAttribute("course", course);
+
+            //Used for status flags
+            model.addAttribute("surveysMissing", courseManagement.getNumberOfSurveysMissing(course));
+            model.addAttribute("titlesMissing", courseManagement.getNumberOfInstanceTitlesMissing(course));
 
             // QRCode URL (Redirects to a courses survey when scanned)
-            String LectureSurveyUrl = "localhost:8080/surveySelect?type=LECTURE&id=" + course.get().getId()+"&mode=participant";
-            String TutorialSurveyUrl = "localhost:8080/surveySelect?type=TUTORIAL&id=" + course.get().getId()+"&mode=participant";
-            String SeminarSurveyUrl = "localhost:8080/surveySelect?type=SEMINAR&id=" + course.get().getId()+"&mode=participant";
-            String PracticalSurveyUrl = "localhost:8080/surveySelect?type=PRACTICAL&id=" + course.get().getId()+"&mode=participant";
+            String LectureSurveyUrl = "localhost:8080/surveySelect?type=LECTURE&id=" + course.getId()+"&mode=participant";
+            String TutorialSurveyUrl = "localhost:8080/surveySelect?type=TUTORIAL&id=" + course.getId()+"&mode=participant";
+            String SeminarSurveyUrl = "localhost:8080/surveySelect?type=SEMINAR&id=" + course.getId()+"&mode=participant";
+            String PracticalSurveyUrl = "localhost:8080/surveySelect?type=PRACTICAL&id=" + course.getId()+"&mode=participant";
 
             model.addAttribute("lectureLink", LectureSurveyUrl);
             model.addAttribute("tutorialLink", TutorialSurveyUrl);
@@ -153,7 +119,7 @@ public class CourseController {
 
             return "courseDetails";
         } else {
-            return "error?code=" + courseNotFound;
+            return "redirect:/error?code=" + courseNotFound;
         }
     }
 
@@ -330,7 +296,7 @@ public class CourseController {
 
     /**
      * Mapping for surveyeditor HTML (called from CourseDetails Page!)
-     * 
+     *
      * @param model {@link org.springframework.ui.Model}
      * @param type  {@linkplain qova.enums.CourseType} in String form
      * @param id    Id of the Course
@@ -364,7 +330,7 @@ public class CourseController {
      * exceed 100 questions) and special characters. If the
      * {@linkplain qova.objects.CourseInstance} hasn't had a survey set before, then
      * the flag is set for that given {@linkplain qova.objects.CourseInstance}
-     * 
+     *
      * @param model The {@linkplain org.springframework.ui.Model}
      * @param form  {@linkplain SurveyForm} which contains the JSON passed by the
      *              surveyeditor
@@ -541,7 +507,7 @@ public class CourseController {
     /**
      * This method takes id and CourseType as parameters, and returns a qrcode with
      * the given string that is assembled below
-     * 
+     *
      * @param response {@link javax.servlet.http.HttpServletResponse}
      * @param type     {@linkplain qova.enums.CourseType}
      * @param id       Id of the {@linkplain Course}
@@ -574,9 +540,5 @@ public class CourseController {
 
         return new HttpEntity<byte[]>(qrcode, header);
     }
-
-
-
-
 
 }

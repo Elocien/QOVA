@@ -47,7 +47,7 @@ public class CourseManagement {
 
     @Autowired
     public CourseManagement(CourseRepository coursesRepo, CourseInstanceRepository courseInstancesRepo,
-            SurveyResponseRepository surveyResponseRepository, AbstractResponseRepository abstractResponseRepository) {
+                            SurveyResponseRepository surveyResponseRepository, AbstractResponseRepository abstractResponseRepository) {
 
         this.surveyResponseRepository = Objects.requireNonNull(surveyResponseRepository);
         this.abstractResponseRepository = Objects.requireNonNull(abstractResponseRepository);
@@ -69,7 +69,7 @@ public class CourseManagement {
         // create CourseInstances
         Map<CourseType, CourseInstance> courseInstances = createCourseInstances(form, defaultSurveyMap);
 
-        Course crs = new Course(name, userId,courseInstances.get(CourseType.LECTURE), courseInstances.get(CourseType.TUTORIAL),
+        Course crs = new Course(name, userId, courseInstances.get(CourseType.LECTURE), courseInstances.get(CourseType.TUTORIAL),
                 courseInstances.get(CourseType.SEMINAR), courseInstances.get(CourseType.PRACTICAL), semesterOfStudents,
                 faculty, semesterString, courseDate);
         coursesRepo.save(crs);
@@ -257,6 +257,13 @@ public class CourseManagement {
         }
     }
 
+    /**
+     * Duplicates a {@linkplain Course}, only differing from the individual in the given <b>Semester</b>
+     *
+     * @param id The id of the original {@linkplain Course}
+     * @param semesterString The new Semester set by the course owner, in the form of a String
+     * @return A new Course and all of its instances
+     */
     public Course duplicateCourse(UUID id, String semesterString) {
 
         Optional<Course> crs = findById(id);
@@ -264,7 +271,7 @@ public class CourseManagement {
 
             Course oldCourse = crs.get();
 
-            Course newCourse = new Course(oldCourse.getName(), oldCourse.getOwnerId(),duplicateCourseInstance(oldCourse.getLecture()),
+            Course newCourse = new Course(oldCourse.getName(), oldCourse.getOwnerId(), duplicateCourseInstance(oldCourse.getLecture()),
                     duplicateCourseInstance(oldCourse.getTutorial()), duplicateCourseInstance(oldCourse.getSeminar()),
                     duplicateCourseInstance(oldCourse.getPractical()), oldCourse.getSemesterOfStudents(),
                     oldCourse.getFaculty(), semesterString, parseSemesterString(semesterString));
@@ -285,10 +292,30 @@ public class CourseManagement {
         return newInstance;
     }
 
+
+    public Integer getNumberOfSurveysMissing(Course course){
+        int numberOfSurveyMissing = 0;
+        for (CourseType courseType : CourseType.values()){
+            if (course.getInstanceExists(courseType) && !course.getInstance(courseType).getSurveyEditedFlag()) {
+                numberOfSurveyMissing ++;
+            }
+        }
+        return numberOfSurveyMissing;
+    }
+
+    public Boolean getNumberOfInstanceTitlesMissing(Course course){
+        for (CourseType courseType : CourseType.values()){
+            if (course.getInstance(courseType).titlesMissing()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * Used to set the finalisedFalg attribute of a
      * {@linkplain qova.objects.Course}.
-     * 
+     *
      * @param id the {@link java.util.UUID} of the {@linkplain qova.objects.Course}
      */
     public void setCourseFinalised(UUID id) {
@@ -300,7 +327,7 @@ public class CourseManagement {
     /**
      * Used to set the surveyEditedFlag attribute of a
      * {@linkplain qova.objects.CourseInstance}.
-     * 
+     *
      * @param courseInstance The {@linkplain qova.objects.CourseInstance} for which
      *                       the flag is to be set
      */
@@ -310,7 +337,7 @@ public class CourseManagement {
 
     /**
      * QR-Code Generator
-     * 
+     *
      * @param text Takes a string as input (in our case a url)
      * @return A byte[] with the image of the QRCode
      * @throws WriterException thrown by QRCode generator
@@ -333,13 +360,14 @@ public class CourseManagement {
 
     // Generates a set amount of semesters which are added to the model, to pick
     // from as course creation dates.
+
     /**
      * Function used to populate a drop down menu in course creation UI. Fills a
      * list with (x) future semesters and (y) previous semsters, as well as the
      * current semester. {@linkplain Course} only has a LocalDate attribute, so
      * parseSemesterString method in controller converts this string back to a date,
      * which is used for finding courses by date
-     * 
+     *
      * @return ArrayList with strings of type: "SoSe xxxx" or "WiSe xxxx/yyyy"
      */
     public List<String> findSemesters() {
@@ -448,9 +476,7 @@ public class CourseManagement {
 
             // return Date
             return LocalDate.of(year, 10, 1);
-        }
-
-        else { // TODO: what to do when wrong date is entered?
+        } else { 
             return LocalDate.of(0, 1, 1);
         }
     }
@@ -503,7 +529,7 @@ public class CourseManagement {
     /**
      * Delete {@linkplain qova.objects.CourseInstance}s for a given
      * {@linkplain qova.objects.Course} Object
-     * 
+     *
      * @param course {@linkplain qova.objects.Course}
      */
     public void deleteCourseInstancesForCourse(Course course) {
@@ -518,7 +544,7 @@ public class CourseManagement {
      * {@linkplain qova.objects.TextResponse},
      * {@linkplain qova.objects.SingleChoiceResponse},
      * {@linkplain qova.objects.MultipleChoiceResponse}
-     * 
+     *
      * @param course {@linkplain qova.objects.Course}
      */
     public void deleteSurveyResponseAndAsscoiatedResponses(Course course) {
@@ -532,54 +558,6 @@ public class CourseManagement {
 
         // delete the surveyresponses
         surveyResponseRepository.deleteAll(surveyResponses);
-    }
-
-
-
-    // Test Methods
-    // TODO: Remove Before Production
-
-    // Test Method, remove in final build
-    public Course TestCreateCourse(EnumMap<CourseType, DefaultSurvey> defaultSurveyMap) {
-        var name = "Rechnernetze";
-
-        List<String> lectureTitles = new ArrayList<>(Arrays.asList("V - Einführung", "V - Bitübertragungsschicht", "V - Netztechnologien 1", "V - Netztechnologien 2",
-                "V - Sicherungsschicht", "V - Vermittlungsschicht", "V - Transportschicht", "V - Netzwerkperformance",
-                "V - Internetdienste", "V - Multimediakommunikation", "V - Mobile Computing", "V - Verteilte Systeme"));
-        var lecture = new CourseInstance(CourseType.LECTURE, 1, 12, lectureTitles, defaultSurveyMap.get(CourseType.PRACTICAL));
-
-        courseInstancesRepo.save(lecture);
-
-        List<String> tutorialTitles = new ArrayList<>(Arrays.asList("T - Einführung", "T - Bitübertragungsschicht", "T - Netztechnologien 1", "T - Netztechnologien 2",
-                "T - Sicherungsschicht", "T - Vermittlungsschicht", "T - Transportschicht", "T - Netzwerkperformance",
-                "T - Internetdienste", "T - Multimediakommunikation", "T - Mobile Computing", "T - Verteilte Systeme"));
-        var tutorial = new CourseInstance(CourseType.TUTORIAL, 8, 12, tutorialTitles, defaultSurveyMap.get(CourseType.PRACTICAL));
-        tutorial.setSurvey(
-                "[{\"type\":\"SingleChoice\",\"question\":\"Hat die Übung Wissen vermittelt, welches du dir nicht im Selbststudium hättest erarbeiten können?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in den aktiven Austausch mit den Studierenden gesucht?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Waren die Anforderung dem Wissensstand der Studierenden angemessen?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Konnte die Übung gezielt Schwerpunkte setzen und Struktur vermitteln?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Konnte der/die Leiter/in dein Interesse an dem Thema wecken?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in die Möglichkeiten einer Übung gegenüber der Vorlesung ausgeschöpft?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"]},{\"type\":\"SingleChoice\",\"question\":\"Online Lehre v.s. Präsenzveranstaltung\",\"answers\":[\"Die Übung war digital und soll digital bleiben.\",\"Die Übung war digital und wäre als Präsenzveranstaltung besser.\",\"Die Übung war eine Präsenzveranstaltung und soll eine bleiben.\",\"Die Übung war eine Präsenzveranstaltung und sollte digital werden.\"]}]");
-
-        courseInstancesRepo.save(tutorial);
-
-        List<String> seminarTitles = new ArrayList<>(Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var seminar = new CourseInstance(CourseType.SEMINAR, 8, 12, seminarTitles, defaultSurveyMap.get(CourseType.PRACTICAL));
-
-        courseInstancesRepo.save(seminar);
-
-        List<String> practicalTitles = new ArrayList<>(Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
-                "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
-                "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
-        var practical = new CourseInstance(CourseType.PRACTICAL, 8, 12, practicalTitles, defaultSurveyMap.get(CourseType.PRACTICAL));
-        courseInstancesRepo.save(practical);
-
-        var semesterOfStudents = 4;
-        var faculty = CourseFaculty.COMPUTER_SCIENCE;
-        var courseDate = LocalDate.of(2020, 10, 4);
-        var semesterString = "SoSe 2020";
-
-        Course course = new Course(name, "asdnoisdfnjodsijdoasindoiasjd",lecture, tutorial, seminar, practical, semesterOfStudents, faculty, semesterString, courseDate);
-        coursesRepo.save(course);
-        return course;
     }
 
 }

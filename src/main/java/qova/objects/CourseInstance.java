@@ -189,12 +189,7 @@ public class CourseInstance {
     }
 
     public Boolean titlesMissing() {
-        if (this.instanceAmount > instanceTitles.size()){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return this.instanceAmount > instanceTitles.size();
     }
 
 }

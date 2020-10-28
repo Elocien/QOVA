@@ -9,6 +9,7 @@ import qova.enums.CourseFaculty;
 import qova.enums.CourseType;
 import qova.objects.Course;
 import qova.objects.CourseInstance;
+import qova.users.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ public class courseTest extends AbstractIntegrationTest {
     public void courseConstructorTest() {
 
         DefaultSurvey defaultSurvey = Mockito.mock(DefaultSurvey.class);
+        User owner = Mockito.mock(User.class);
 
         var name = "Rechnernetze";
 
@@ -50,7 +52,7 @@ public class courseTest extends AbstractIntegrationTest {
         var courseDate = LocalDate.of(2020, 10, 4);
         var semesterString = "SoSe 2020";
 
-        Course crs = new Course(name, lecture, tutorial, seminar, practical, semesterOfStudents, faculty,
+        Course crs = new Course(name, owner.getAjpPersistentId(), lecture, tutorial, seminar, practical, semesterOfStudents, faculty,
                 semesterString, courseDate);
 
         assertEquals(name, crs.getName());
