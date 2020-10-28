@@ -125,10 +125,6 @@ public class CourseInstance {
         return this.courseType;
     }
 
-    public void setCourseType(CourseType type) {
-        this.courseType = type;
-    }
-
     public String getSurvey() {
         return this.survey;
     }

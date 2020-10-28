@@ -205,6 +205,7 @@
                 //Textarea for the question input
                 const text_area = document.createElement("TEXTAREA");
                 text_area.className = "Textarea Question";
+                text_area.setAttribute("maxlength",1024);
                 if (value.question === "Question"||value.question === ""){
                     text_area.placeholder = "Question"
                 }
@@ -235,6 +236,7 @@
                 //Textarea for the question input
                 const text_area = document.createElement("TEXTAREA");
                 text_area.className = "Textarea Question";
+                text_area.setAttribute("maxlength",1024);
                 text_area.setAttribute("id",index);
                 if (value.question === "Question"||value.question === ""){
                     text_area.placeholder = "Question"
@@ -265,6 +267,7 @@
                 //Textarea for the question input
                 const text_area = document.createElement("TEXTAREA");
                 text_area.className = "Textarea Question";
+                text_area.setAttribute("maxlength",1024);
                 text_area.setAttribute("id",index);
                 if (value.question === "Question"||value.question === ""){
                     text_area.placeholder = "Question"
@@ -303,6 +306,7 @@
                 //Textarea for the question input
                 const text_area = document.createElement("TEXTAREA");
                 text_area.className = "Textarea Question";
+                text_area.setAttribute("maxlength",1024);
                 if (value.question === "Question"||value.question === ""){
                     text_area.placeholder = "Question"
                 }
@@ -333,6 +337,7 @@
                 //Textarea for the question input
                 const text_area = document.createElement("TEXTAREA");
                 text_area.className = "Textarea Question";
+                text_area.setAttribute("maxlength",1024);
                 text_area.setAttribute("id",index);
                 if (value.question === "Question"||value.question === "") {
                     text_area.placeholder = "Question"
@@ -559,6 +564,7 @@
                 
                 const x2 =document.createElement("TEXTAREA");
                 x2.className = ("Textarea Answers");
+                x2.setAttribute("maxlength",1024);
                 if (answers[i]==="Answer"|| answers[i]===""){
                     x2.placeholder = "Answer";
                 }
@@ -635,6 +641,7 @@
             renderall();
 
         }
+
 
         //Bootsrapped
         function createTitleDropdown(q_index, q_type) {

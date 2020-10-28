@@ -100,11 +100,16 @@ public class CourseController {
             model.addAttribute("surveysMissing", courseManagement.getNumberOfSurveysMissing(course));
             model.addAttribute("titlesMissing", courseManagement.getNumberOfInstanceTitlesMissing(course));
 
+            //The DomainName
+            String domainName = "qova.med.tu-dresden.de";
+
             // QRCode URL (Redirects to a courses survey when scanned)
-            String LectureSurveyUrl = "localhost:8080/surveySelect?type=LECTURE&id=" + course.getId()+"&mode=participant";
-            String TutorialSurveyUrl = "localhost:8080/surveySelect?type=TUTORIAL&id=" + course.getId()+"&mode=participant";
-            String SeminarSurveyUrl = "localhost:8080/surveySelect?type=SEMINAR&id=" + course.getId()+"&mode=participant";
-            String PracticalSurveyUrl = "localhost:8080/surveySelect?type=PRACTICAL&id=" + course.getId()+"&mode=participant";
+
+            String LectureSurveyUrl = domainName + "/surveySelect?type=LECTURE&id=" + course.get().getId()+"&mode=participant";
+            String TutorialSurveyUrl = domainName +  "/surveySelect?type=TUTORIAL&id=" + course.get().getId()+"&mode=participant";
+            String SeminarSurveyUrl = domainName + "/surveySelect?type=SEMINAR&id=" + course.get().getId()+"&mode=participant";
+            String PracticalSurveyUrl = domainName + "/surveySelect?type=PRACTICAL&id=" + course.get().getId()+"&mode=participant";
+
 
             model.addAttribute("lectureLink", LectureSurveyUrl);
             model.addAttribute("tutorialLink", TutorialSurveyUrl);
@@ -119,7 +124,7 @@ public class CourseController {
 
             return "courseDetails";
         } else {
-            return "redirect:/error?code=" + courseNotFound;
+            return "error";
         }
     }
 
@@ -140,7 +145,7 @@ public class CourseController {
                 return courseDetails(model, duplcateCourseForm, form, id);
             }
             courseManagement.updateCourseDetails(id, form);
-            return "redirect:../course/details?id=" + id;
+            return "redirect:/course/details?id=" + id;
         }
 
         return "redirect:/";
@@ -314,23 +319,31 @@ public class CourseController {
     @PreAuthorize("hasRole('STAFF')")
     public String questioneditor(Model model, @RequestParam String type, @RequestParam(required = false) UUID id) {
 
-        // Give model the following attributes, which are used to submit the survey, via
-        // the post method
-        model.addAttribute("typeID", type);
-        model.addAttribute("id", id);
-
-        // Gives the survey JSON to the model, so the current survey can be assembled
-        // and added to
-        model.addAttribute("survey", courseManagement.getSurveyforType(id, responseManagement.parseCourseType(type)));
-
-        // Default survey JSON, which is sent to the server
-        model.addAttribute("defaultSurvey", adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
 
         // give course name to model, to show as title
         Optional<Course> course = courseManagement.findById(id);
-        model.addAttribute("coursename", course.get().getName());
+        if (course.isPresent()) {
+            model.addAttribute("coursename", course.get().getName());
 
-        return "questioneditor";
+            // Give model the following attributes, which are used to submit the survey, via
+            // the post method
+            model.addAttribute("typeID", type);
+            model.addAttribute("id", id);
+
+            // Gives the survey JSON to the model, so the current survey can be assembled
+            // and added to
+            model.addAttribute("survey", courseManagement.getSurveyforType(id, responseManagement.parseCourseType(type)));
+
+            // Default survey JSON, which is sent to the server
+            model.addAttribute("defaultSurvey", adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
+
+
+            return "questioneditor";
+        }
+        else{
+            return "redirect:/";
+        }
+
     }
 
     /**
@@ -353,16 +366,16 @@ public class CourseController {
     public String questioneditorSubmit(Model model, @Valid @ModelAttribute("form") SurveyForm form,
             @RequestParam String type, @RequestParam(required = false) UUID id) {
 
-        // Form empty -> Redirect to details again
-        if (form.getQuestionnaireJson().length() == 0) {
-            return "redirect:../course/details" + "?id=" + id;
-        }
-
         // fetch course
         Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()) {
 
+            if ( Boolean.TRUE.equals(course.get().getFinalisedFlag())){
+                return "redirect:/course/details" + "?id=" + id;
+            }
+
             CourseType courseType = responseManagement.parseCourseType(type);
+
 
             // if type is none of the correct values, then redirect to error page
             if (courseType == null) {
@@ -458,19 +471,20 @@ public class CourseController {
     public String questioneditorpreview(Model model, SurveyForm form, @RequestParam String type,
             @RequestParam(required = false) UUID id) {
 
-        // Form empty -> Redirect to details again
-        if (form.getQuestionnaireJson().length() == 0) {
-            return "redirect:../course/details" + "?id=" + id;
-        }
-
         // fetch course
         Optional<Course> course = courseManagement.findById(id);
         if (course.isPresent()) {
+
+            //If the Course is finalised, then it is unable to be edited
+            if ( Boolean.TRUE.equals(course.get().getFinalisedFlag())){
+                return "redirect:/course/details" + "?id=" + id;
+            }
 
             CourseType courseType = responseManagement.parseCourseType(type);
 
             // if type is none of the correct values, then redirect to homepage
             if (courseType == null) {
+
                 return "error";
             }
 
@@ -480,7 +494,7 @@ public class CourseController {
             if (Boolean.FALSE.equals(instance.getSurveyEditedFlag())) {
                 courseManagement.setSurveyEditedFlagForCourseInstance(instance);
             }
-
+          
             else {
                 // check if JSON is valid
                 try {
@@ -550,7 +564,6 @@ public class CourseController {
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
         header.setContentLength(qrcode.length);
 
-        return new HttpEntity<byte[]>(qrcode, header);
+        return new HttpEntity<>(qrcode, header);
     }
-
 }

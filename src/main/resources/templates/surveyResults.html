@@ -1,6 +1,9 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
-<head>	
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.1.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.1/html2pdf.bundle.js"></script>
+
     <title th:text="#{title.surveyResults}">TITLE</title>
 </head>
 <body></body>
@@ -12,44 +15,59 @@
 
             <!--Headline-->
             <div class="col-12 text-center">
-                <h2 class="font-weight-bold">SURVEY RESULTS</h2>
-                <h5 class="font-weight-light">YOU CAN CHECK OUT THE RESULTS OF A SURVEY HERE!</h5>
+                <h2 class="font-weight-bold" th:text="#{surveyResults.headline}">SURVEY RESULTS</h2>
+                <h5 class="font-weight-light" th:text="#{surveyResults.description}">YOU CAN CHECK OUT THE RESULTS OF A SURVEY HERE!</h5>
             </div>
 
-            <div class="col-12" id="results"></div>
+            <!--Everything after this will be turned into the PDF-->
+            <div class="col-12 text-center" id="pdf">
+                <div id="meta">
+                    <table class="table table-borderless m-0">
+                        <tbody>
+                            <tr>
+                                <th class="border-0" scope="row"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{new.courseName}: |">COURSE NAME: </span><span th:text="${courseName}"></span></h5></th>
+                                <th class="border-0"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{type}: |">TYPE: </span><span th:text="#{|editor.${courseType}|}"></span></h5></th>
+                                <th class="border-0"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{course.courseDate}: |">SEMESTER: </span><span th:text="${semester}"></span></h5></th>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h5 class="font-weight-light pb-4 m-0"><span class="font-weight-normal" th:text="|#{surveyResults.NoS}: |">NUMBER OF SUBMISSIONS: </span><span th:text="${numberOfSubmissions}"></span></h5>
+                    <a class="btn btn-primary btn-tu noPDF" th:text="#{surveyResults.downloadButton}" onclick="download_pdf()">DOWNLOAD RESULTS AS PDF</a>
+                </div>
+                <!--Survey Results-->
+                <div class="col-12 mt-4" id="results"></div>
+            </div>
 
         </div>
     </div>
-
-    <div th:include="footer"></div>
 
     <!--Resources-->
     <div id="resource-container" style="display: none;">
         <!--Question Template-->
         <div class="container result-container with-bars mt-3">
             <div class="row align-items-center justify-content-between mt-2 mb-2">
-                <div class="col-auto">
+                <div class="col-8 text-left">
                     <h5 class="question-type m-0"></h5>
                 </div>
-                <div class="default-question col-2 text-right">
+                <div class="col-3 default-question text-right">
                     <p class="m-0"></p>
                 </div>
-                <div class="col-1 text-only">
+                <div class="col-1 text-only noPDF">
                     <a class="collapse-btn" data-toggle="collapse" href="#" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fas fa-plus right collapse-icon"></i></a>
                 </div>
             </div>
-            <div class="col answere-column p-0 mt-4 mb-2"></h5>
-        </div>
-        <!--Answere Template-->
-        <div class="answere-template">
-            <p class="result-text mb-0 mt-2"></p>
-            <div class="d-flex flex-row">
-                <div class="result-bar"></div>
-                <div class="result-percent ml-2"></div>
+            <div class="col answere-column p-0 mt-4 mb-2"></div>
+            <!--Answere Template-->
+            <div class="answere-template">
+                <p class="result-text mb-0 mt-2 text-left"></p>
+                <div class="d-flex flex-row">
+                    <div class="result-bar"></div>
+                    <div class="result-percent ml-2"></div>
+                </div>
             </div>
         </div>
     </div>
-    
+
     <div th:replace="footer"></div>
 
 </body>
@@ -62,6 +80,7 @@
     });
     const resources = document.getElementById("resource-container");
     var free_text_count = 0;
+    var NoS = /*[[${numberOfSubmissions}]]*/ 100;
 
     function bar_color(question_list) {
         for (let i = 0; i < question_list.length; ++i) {
@@ -72,7 +91,7 @@
         }
     }
     function bar_fix(bar_element, bar_value) {
-        bar_element.style.width = Math.round(bar_value*90)+"%";
+        bar_element.style.width = Math.round(bar_value*80)+"%";
     }
 
     function create_visuals() {
@@ -84,21 +103,19 @@
             var type = answer["type"];
             if (type == "text") {
                 for (let j = 0; j < answer["answers"].length; ++j) {
-                    answers.push(create_answere(type, answer["answers"][j], 0));
+                    answers.push(create_answere(type, answer["answers"][j], 0, 0));
                 }
             }
             else {
                 for (let j = 0; j < answer["options"].length; ++j) {
-                    answers.push(create_answere(type, answer["options"][j], answer["answers"][j]));
+                    var rel_value = answer["answers"][j]/NoS;
+                    answers.push(create_answere(type, answer["options"][j], rel_value, answer["answers"][j]));
                 }
             }
 
-            var question_template = create_question(type, answer["question"], answers);
+            var question_template = create_question(type, answer["question"], answers, i);
             if (type != "text") {
-                var delete_us = question_template.getElementsByClassName("text-only");
-                for (let j = 0; j < delete_us.length; ++j) {
-                    delete_element(delete_us[j]);
-                }
+                delete_multiple_elements(question_template.getElementsByClassName("text-only"));
             }
             if (answer["default"]) {
                 var txt = /*[[#{default}]]*/"default";
@@ -108,11 +125,13 @@
                 delete_element(question_template.getElementsByClassName("default-question")[0]);
             }
 
+            //prevents breaking of the pdf (overflow of containers over page borders)
             document.getElementById("results").appendChild(question_template);
         }
     }
-    function create_question(type, text, answers) {
+    function create_question(type, text, answers, number) {
         var question = resources.getElementsByClassName("result-container")[0].cloneNode(true);
+        question.id = "question-"+number;
         delete_element(question.getElementsByClassName("answere-template")[0]);
         for (let i = 0; i < answers.length; ++i) {
             question.getElementsByClassName("answere-column")[0].appendChild(answers[i]);
@@ -126,23 +145,65 @@
         question.getElementsByClassName("question-type")[0].innerHTML = text;
         return question;
     }
-    function create_answere(type, text, value) {
+    function create_answere(type, text, rel_value, abs_value) {
         if (type == "text") {
             var answere = resources.getElementsByClassName("result-text")[0].cloneNode(true);
             answere.innerHTML = text; answere.classList.add("result-free-text"); answere.classList.remove("result-text");
         }
         else {
             var answere = resources.getElementsByClassName("answere-template")[0].cloneNode(true);
+            //Text that descripes the picked option by a participant
             answere.getElementsByClassName("result-text")[0].innerHTML = text;
-            answere.getElementsByClassName("result-percent")[0].innerHTML = Math.round(value*10000)/100+"%";
-            bar_fix(answere.getElementsByClassName("result-bar")[0], value);
+            //Relative voting result
+            var vote_text = answere.getElementsByClassName("result-percent")[0];
+            vote_text.innerHTML = Math.round(rel_value*10000)/100+"%";
+            //Absolute voting result
+            var span = document.createElement("span"); span.innerHTML = " ("+abs_value+")"; span.classList.add("text-secondary");
+            vote_text.appendChild(span);
+            bar_fix(answere.getElementsByClassName("result-bar")[0], rel_value);
         }
         return answere;
     }
+
     function delete_element(element) {
-        element.parentNode.removeChild(element);
+        try {
+            element.parentNode.removeChild(element);
+        }
+        catch(e) {
+            console.log(e);
+        }
+    }
+    function delete_multiple_elements(list_of_elements) {
+        const x = list_of_elements.length;
+        console.log(x+" elements will be deleted.");
+        for (let d = 0; d < x; d++) {
+            delete_element(list_of_elements[d]);
+        }
     }
 
+    function download_pdf() {
+        var results = document.getElementById("pdf").cloneNode(true);
+        var opt = {
+            margin:       10,
+            filename:     'surveyResults.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 5 },
+            jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
+        };
+
+        var trash = results.getElementsByClassName("noPDF");
+        for (let i = 0; i < trash.length; i++) {
+            trash[i].style.display = "none";
+        }
+
+        //Only used if type=text:
+        var collapsed = results.getElementsByClassName("collapse");
+        for (let i = 0; i < collapsed.length; i++) {
+            collapsed[i].classList.add("show");
+        }
+
+        html2pdf(results, opt).save();
+    }
 </script>
 
 </html>

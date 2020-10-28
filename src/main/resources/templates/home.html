@@ -10,7 +10,7 @@
 	<!--Banner-->
 	<div class="row justify-content-center align-items-center p-0 pt-5 pb-5">
 		<!--Logo-->
-		<div class="col-lg-6 col-md-6 col-sm-12">
+		<div class="col-12">
 			<div class="row">
 				<div class="col-6">
 					<img class="logo-home float-right" th:src="@{/resources/images/qova_logo_text.png}" src="../static/resources/images/qova_logo_text.png" alt="Logo"/>
@@ -21,27 +21,6 @@
 						<li>Online</li>
 						<li>Evaluation</li>
 					</ul>
-				</div>
-			</div>
-		</div>
-		<!--Login-Window-->
-		<div class="col-xl-3 col-lg-6 col-md-6 col-sm-12 mt-sm-5">
-			<div class="card">
-				<div class="card-header">
-					<h3 th:text="#{home.login}">TITLE</h3>
-				</div>
-				<div class="card-body">
-						<form class="form" method="post" th:action="@{/login}">
-						<div class="form-group">
-							<label for="username" th:text="#{home.email}">MAIL</label>
-							<input id="username" name="username" type="text" class="form-control" required />
-						</div>
-						<div class="form-group">
-							<label for="password" th:text="#{home.password}">PASSWORD</label>
-							<input id="password" name="password" type="password" class="form-control" required />
-						</div>
-						<button type="submit" class="btn btn-primary btn-tu btn-lg float-right" th:text="#{home.login}">LOGIN</button>
-					</form>
 				</div>
 			</div>
 		</div>
