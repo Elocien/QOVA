@@ -21,18 +21,19 @@
 
             <!--Everything after this will be turned into the PDF-->
             <div class="col-12 text-center" id="pdf">
-                <!--Meta-->
-                <table class="table table-borderless m-0">
-                    <tbody>
-                        <tr>
-                            <th class="border-0" scope="row"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{new.courseName}: |">COURSE NAME: </span><span th:text="${courseName}"></span></h5></th>
-                            <th class="border-0"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{type}: |">TYPE: </span><span th:text="#{|editor.${courseType}|}"></span></h5></th>
-                            <th class="border-0"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{course.courseDate}: |">SEMESTER: </span><span th:text="${semester}"></span></h5></th>
-                        </tr>
-                    </tbody>
-                </table>
-                <h5 class="font-weight-light pb-4 m-0"><span class="font-weight-normal" th:text="|#{surveyResults.NoS}: |">NUMBER OF SUBMISSIONS: </span><span th:text="${numberOfSubmissions}"></span></h5>
-                <a class="btn btn-primary btn-tu noPDF" th:text="#{surveyResults.downloadButton}" onclick="download_pdf()">DOWNLOAD RESULTS AS PDF</a>
+                <div id="meta">
+                    <table class="table table-borderless m-0">
+                        <tbody>
+                            <tr>
+                                <th class="border-0" scope="row"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{new.courseName}: |">COURSE NAME: </span><span th:text="${courseName}"></span></h5></th>
+                                <th class="border-0"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{type}: |">TYPE: </span><span th:text="#{|editor.${courseType}|}"></span></h5></th>
+                                <th class="border-0"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{course.courseDate}: |">SEMESTER: </span><span th:text="${semester}"></span></h5></th>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <h5 class="font-weight-light pb-4 m-0"><span class="font-weight-normal" th:text="|#{surveyResults.NoS}: |">NUMBER OF SUBMISSIONS: </span><span th:text="${numberOfSubmissions}"></span></h5>
+                    <a class="btn btn-primary btn-tu noPDF" th:text="#{surveyResults.downloadButton}" onclick="download_pdf()">DOWNLOAD RESULTS AS PDF</a>
+                </div>
                 <!--Survey Results-->
                 <div class="col-12 mt-4" id="results"></div>
             </div>
@@ -45,10 +46,10 @@
         <!--Question Template-->
         <div class="container result-container with-bars mt-3">
             <div class="row align-items-center justify-content-between mt-2 mb-2">
-                <div class="col-auto">
+                <div class="col-8 text-left">
                     <h5 class="question-type m-0"></h5>
                 </div>
-                <div class="default-question col-2 col-sm-4 col-xs-4 text-right">
+                <div class="col-3 default-question text-right">
                     <p class="m-0"></p>
                 </div>
                 <div class="col-1 text-only noPDF">
@@ -90,7 +91,7 @@
         }
     }
     function bar_fix(bar_element, bar_value) {
-        bar_element.style.width = Math.round(bar_value*90)+"%";
+        bar_element.style.width = Math.round(bar_value*80)+"%";
     }
 
     function create_visuals() {
@@ -124,6 +125,7 @@
                 delete_element(question_template.getElementsByClassName("default-question")[0]);
             }
 
+            //prevents breaking of the pdf (overflow of containers over page borders)
             document.getElementById("results").appendChild(question_template);
         }
     }
@@ -175,10 +177,7 @@
         const x = list_of_elements.length;
         console.log(x+" elements will be deleted.");
         for (let d = 0; d < x; d++) {
-            console.log(d);
-            console.log(list_of_elements[d]);
             delete_element(list_of_elements[d]);
-            console.log(d);
         }
     }
 
