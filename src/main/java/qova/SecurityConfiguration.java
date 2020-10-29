@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
+import qova.users.CustomRequestAuthenticationFilter;
 
 
 @Configuration
@@ -59,10 +60,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      * @throws Exception From the {@linkplain org.springframework.security.authentication.AuthenticationManager}
      */
     @Bean
-    protected RequestHeaderAuthenticationFilter shibAuthenticationFilter() throws Exception {
-        RequestHeaderAuthenticationFilter requestHeaderAuthenticationFilter = new RequestHeaderAuthenticationFilter();
-        requestHeaderAuthenticationFilter.setPrincipalRequestHeader("persistent-id");
-        requestHeaderAuthenticationFilter.setCredentialsRequestHeader("affiliation");
+    protected CustomRequestAuthenticationFilter shibAuthenticationFilter() throws Exception {
+        CustomRequestAuthenticationFilter requestHeaderAuthenticationFilter = new CustomRequestAuthenticationFilter();
         requestHeaderAuthenticationFilter.setAuthenticationManager(authenticationManagerBean());
         return  requestHeaderAuthenticationFilter;
     }
@@ -77,7 +76,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/course/**").hasRole("STAFF")
                 .anyRequest().permitAll()
-                .and().logout().logoutSuccessUrl("home");
+                .and().logout().logoutSuccessUrl("/");
     }
 
 
