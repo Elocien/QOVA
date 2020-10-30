@@ -19,9 +19,17 @@ public class User {
     private UUID id;
 
     // The Id given by Shibboleth
-    private final String ajpPersistentId;
+    private String ajpPersistentId;
 
-    private final UserRole userRole;
+    private UserRole userRole;
+
+    /**
+     * Needed for JPA purposes
+     */
+    @SuppressWarnings("unused")
+    protected User() {
+    }
+
 
     public User(String ajpPersistentId, UserRole userRole) {
         this.ajpPersistentId = ajpPersistentId;
