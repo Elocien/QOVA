@@ -7,13 +7,12 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
-import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.*;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
 import qova.users.CustomRequestAuthenticationFilter;
+import qova.users.UserRepository;
 
 
 @Configuration
@@ -24,8 +23,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     /**
      * The custom defined implementation of {@linkplain UserDetailsService}
      */
-    @Autowired
-    private qova.users.UserDetailsService userDetailsService;
+    private final qova.users.UserDetailsService userDetailsService;
+    private final UserRepository userRepository;
+
+    public SecurityConfiguration(qova.users.UserDetailsService userDetailsService, UserRepository userRepository) {
+        this.userRepository = userRepository;
+        this.userDetailsService = userDetailsService;
+    }
 
 
     /**
@@ -43,7 +47,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     public PreAuthenticatedAuthenticationProvider customAuthenticationProvider(){
 
         AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> wrapper =
-                new UserDetailsByNameServiceWrapper<>(userDetailsService);
+                new qova.users.UserDetailsService(userRepository);
 
         PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider = new PreAuthenticatedAuthenticationProvider();
         preAuthenticatedAuthenticationProvider.setPreAuthenticatedUserDetailsService(wrapper);

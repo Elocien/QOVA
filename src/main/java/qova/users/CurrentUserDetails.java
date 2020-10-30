@@ -10,9 +10,9 @@ import java.util.List;
 
 public class CurrentUserDetails implements UserDetails {
 
-    private String ROLE_PREFIX = "ROLE_";
-    private String ajpPersistentId;
-    private UserRole userRole;
+    private final String ROLE_PREFIX = "ROLE_";
+    private final String ajpPersistentId;
+    private final UserRole userRole;
 
 
     public CurrentUserDetails(String ajpPersistentId, UserRole userRole){
@@ -38,7 +38,7 @@ public class CurrentUserDetails implements UserDetails {
 
     @Override
     public String getUsername() {
-        return null;
+        return this.ajpPersistentId;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package qova.users;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.AuthenticationUserDetailsService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,10 +12,14 @@ import java.util.Optional;
 
 @Component
 public class UserDetailsService implements
-        AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken>, org.springframework.security.core.userdetails.UserDetailsService {
+        AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken>{
 
-    @Autowired
+    final
     UserRepository userRepository;
+
+    public UserDetailsService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
 
     @Override
     public UserDetails loadUserDetails(PreAuthenticatedAuthenticationToken preAuthenticatedAuthenticationToken) throws UsernameNotFoundException {
@@ -69,10 +72,5 @@ public class UserDetailsService implements
         } else {
             return UserRole.VISITOR;
         }
-    }
-
-    @Override
-    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        return null;
     }
 }
