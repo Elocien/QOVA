@@ -373,7 +373,7 @@ public class ResponseManagement {
      * [{"type": STRING, "default": bool, "question": STRING, "options": [STRING, STRING, ...], "answers": [STRING, STRING]}
      * <br>
      * <br>
-     * It makes use of {@link #generateJsonResultsArray(SurveyResponse)} to generate the Structure of the array, and then populates it
+     * It makes use of {@link #generateJsonResultsArrayStructure(SurveyResponse)} (SurveyResponse)} to generate the Structure of the array, and then populates it
      * with the results. After population, the array is then iterated through, and the answers array is replaced by decimal values, to indicate percentages
      *
      *
@@ -381,7 +381,7 @@ public class ResponseManagement {
      *                              the user has selected to see
      * @return A {@linkplain JSONArray} containing the students compiled responses
      */
-    public JSONArray generateSurveyResultsJson(List<SurveyResponse> listOfSurveyResponses) {
+    public JSONArray generateSurveyResultsJsonArray(List<SurveyResponse> listOfSurveyResponses, boolean userIsStudent) {
 
 
         // A SurveyResponse object. All surveyResponses have the same survey and the
@@ -389,7 +389,7 @@ public class ResponseManagement {
         SurveyResponse response = listOfSurveyResponses.get(0);
 
         // Generate the resultsArray Structure
-        JSONArray resultsArray = generateJsonResultsArray(response);
+        JSONArray resultsArray = generateJsonResultsArrayStructure(response);
 
         // Iterate through an populate JSON Objects with data
         for (SurveyResponse surveyResponse : listOfSurveyResponses) {
@@ -466,12 +466,27 @@ public class ResponseManagement {
             }
         }
 
+        //If the user is a student, remove all text responses
+        if (userIsStudent){
+            for (int pos = 0; pos < resultsArray.length(); pos++){
+                JSONObject currentJsonObject = resultsArray.getJSONObject(pos);
+                if (currentJsonObject.getString("type").equals("text")){
+                    resultsArray.remove(pos);
+                }
+            }
+        }
+
 
 
         return resultsArray;
     }
 
-    private JSONArray generateJsonResultsArray(SurveyResponse response) {
+    /**
+     * Generates the {@linkplain JSONArray} structure, which is then populated with results by {@linkplain ResponseManagement#generateSurveyResultsJsonArray(List, boolean)} (List)}.
+     * @param response A given {@linkplain SurveyResponse}
+     * @return The JSONArray structure
+     */
+    private JSONArray generateJsonResultsArrayStructure(SurveyResponse response) {
 
         // Initialise Array
         JSONArray resultsArray = new JSONArray();

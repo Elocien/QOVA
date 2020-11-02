@@ -264,12 +264,14 @@ public class ResponseController {
     public String surveyResults(Model model, @RequestParam String type, @RequestParam UUID id,
             @RequestParam String group, @RequestParam String instance, @AuthenticationPrincipal CurrentUserDetails userDetails) {
 
-        String Role;
+        boolean userIsStudent;
 
-        if (userDetails.getAuthorities().iterator().next().getAuthority().equals("ROLE_STUDENT")){
-            Role = "ROLE_STUDENT";
+        if (userDetails.getAuthorities().iterator().next().getAuthority().equals("ROLE_STAFF")){
+            userIsStudent = false;
         }
-
+        else {
+            userIsStudent = true;
+        }
 
         // The Course object in an optional
         Optional<Course> crs = courseManagement.findById(id);
@@ -284,7 +286,7 @@ public class ResponseController {
             List<SurveyResponse> listOfSurveyResponses = responseManagement.findSurveyResponses(course, courseType,
                     group, instance);
 
-            JSONArray resultsJsonString = responseManagement.generateSurveyResultsJson(listOfSurveyResponses);
+            JSONArray resultsJsonString = responseManagement.generateSurveyResultsJsonArray(listOfSurveyResponses, userIsStudent);
 
             Integer totalNumberOfSubmissions = responseManagement.getTotalResponses(listOfSurveyResponses);
 
