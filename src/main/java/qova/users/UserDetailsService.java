@@ -42,7 +42,7 @@ public class UserDetailsService implements
         } else {
 
             //Retrieve User role
-            UserRole userRole = getUserRoleFromCredentials(preAuthenticatedAuthenticationToken.getCredentials().toString());
+            String userRole = getUserRoleFromCredentials(preAuthenticatedAuthenticationToken.getCredentials().toString());
 
             //Create new user
             User newUser = new User(persistentId, userRole);
@@ -61,16 +61,16 @@ public class UserDetailsService implements
      *
      *
      * @param credentials The Credentials field from the {@linkplain PreAuthenticatedAuthenticationToken}
-     * @return The {@linkplain UserRole} extracted from the {@linkplain PreAuthenticatedAuthenticationToken} Credentials
+     * @return The userRole extracted from the {@linkplain PreAuthenticatedAuthenticationToken} Credentials
      */
-    private UserRole getUserRoleFromCredentials(String credentials) {
+    private String getUserRoleFromCredentials(String credentials) {
         List<String> roles = Arrays.asList(credentials.split(";"));
         if (roles.contains("staff@tu-dresden.de") || roles.contains("employee@tu-dresden.de") || roles.contains("faculty@tu-dresden.de") || roles.contains("affiliate@tu-dresden.de")) {
-            return UserRole.STAFF;
+            return "STAFF";
         } else if (roles.contains("student@tu-dresden.de") || roles.contains("member@tu-dresden.de") || roles.contains("alum@tu-dresden.de")) {
-            return UserRole.STUDENT;
+            return "STUDENT";
         } else {
-            return UserRole.VISITOR;
+            return "VISITOR";
         }
     }
 }

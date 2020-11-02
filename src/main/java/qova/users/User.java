@@ -21,7 +21,7 @@ public class User {
     // The Id given by Shibboleth
     private String ajpPersistentId;
 
-    private UserRole userRole;
+    private String userRole;
 
     /**
      * Needed for JPA purposes
@@ -31,7 +31,7 @@ public class User {
     }
 
 
-    public User(String ajpPersistentId, UserRole userRole) {
+    public User(String ajpPersistentId, String userRole) {
         this.ajpPersistentId = ajpPersistentId;
         this.userRole = userRole;
     }
@@ -44,7 +44,7 @@ public class User {
         return ajpPersistentId;
     }
 
-    public UserRole getUserRole() {
+    public String getUserRole() {
         return this.userRole;
     }
 

@@ -12,10 +12,10 @@ public class CurrentUserDetails implements UserDetails {
 
     private final String ROLE_PREFIX = "ROLE_";
     private final String ajpPersistentId;
-    private final UserRole userRole;
+    private final String userRole;
 
 
-    public CurrentUserDetails(String ajpPersistentId, UserRole userRole){
+    public CurrentUserDetails(String ajpPersistentId, String userRole){
         this.ajpPersistentId = ajpPersistentId;
         this.userRole = userRole;
     }
@@ -27,7 +27,7 @@ public class CurrentUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> list = new ArrayList<>();
-        list.add(new SimpleGrantedAuthority(ROLE_PREFIX + userRole));
+        list.add(new SimpleGrantedAuthority(ROLE_PREFIX + userRole.toString()));
         return list;
     }
 
