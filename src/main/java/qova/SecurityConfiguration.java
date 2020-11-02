@@ -23,12 +23,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     /**
      * The custom defined implementation of {@linkplain UserDetailsService}
      */
-    private final qova.users.UserDetailsService userDetailsService;
     private final UserRepository userRepository;
 
-    public SecurityConfiguration(qova.users.UserDetailsService userDetailsService, UserRepository userRepository) {
+    public SecurityConfiguration(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.userDetailsService = userDetailsService;
     }
 
 
