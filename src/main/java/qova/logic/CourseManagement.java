@@ -66,9 +66,10 @@ public class CourseManagement {
         var courseDate = parseSemesterString(form.getSemesterString());
         var semesterString = form.getSemesterString();
 
-        // create CourseInstances
+        // Create CourseInstances
         Map<CourseType, CourseInstance> courseInstances = createCourseInstances(form, defaultSurveyMap);
 
+        // Create the Course
         Course crs = new Course(name, userId, courseInstances.get(CourseType.LECTURE), courseInstances.get(CourseType.TUTORIAL),
                 courseInstances.get(CourseType.SEMINAR), courseInstances.get(CourseType.PRACTICAL), semesterOfStudents,
                 faculty, semesterString, courseDate);

@@ -1,20 +1,16 @@
 package qova.logic;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import javax.servlet.http.HttpServletResponse;
 
 import org.json.JSONArray;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.ui.Model;
@@ -26,13 +22,12 @@ import qova.admin.AdminManagement;
 import qova.enums.CourseType;
 import qova.forms.SurveyForm;
 import qova.forms.SurveySelectForm;
-import qova.objects.AbstractResponse;
 import qova.objects.Course;
-import qova.objects.CourseInstance;
 import qova.objects.SurveyResponse;
+import qova.users.CurrentUserDetails;
 
 //Temporary Import
-import java.util.ArrayList;
+
 
 @Controller // This means that this class is a Controller
 public class ResponseController {
@@ -102,7 +97,7 @@ public class ResponseController {
     @PostMapping("surveySelect")
     @PreAuthorize("hasAnyRole('STAFF','STUDENT')")
     public String selectSurveySubmission(Model model, @ModelAttribute("form") SurveySelectForm form,
-            @RequestParam String mode, @RequestParam String type, @RequestParam UUID id, Authentication authentication) {
+            @RequestParam String mode, @RequestParam String type, @RequestParam UUID id) {
 
         Optional<Course> crs = courseManagement.findById(id);
 
@@ -138,7 +133,7 @@ public class ResponseController {
     @GetMapping("survey")
     public String surveyView(Model model, @RequestParam(required = false) UUID id,
             @RequestParam(required = false) String type, @RequestParam(required = false) String group,
-            @RequestParam(required = false) String instance, Authentication authentication) {
+            @RequestParam(required = false) String instance) {
 
 
             // redirect
@@ -182,14 +177,14 @@ public class ResponseController {
     @PostMapping("/survey")
     public String recieveResponseJSON(Model model, SurveyForm form, @RequestParam(required = false) UUID id,
             @RequestParam(required = false) String type, @RequestParam(required = false) String group,
-            @RequestParam(required = false) String instance, Authentication authentication) {
+            @RequestParam(required = false) String instance,  @AuthenticationPrincipal CurrentUserDetails userDetails) {
 
         if (id == null || type == null || group == null || instance == null) {
             return "error";
         }
 
         // Get the StudentId, through the authentication object
-        String studentId = authentication.getPrincipal().toString();
+        String studentId = userDetails.getUsername();
 
         // Get the CourseType
         CourseType courseType = responseManagement.parseCourseType(type);
@@ -253,17 +248,18 @@ public class ResponseController {
     /**
      * Used to retrieve the results for a given questionnaire.
      * 
-     * @param model    {@link org.springframework.ui.Model}
-     * @param type     {@linkplain qova.enums.CourseType}
-     * @param id       The Id of the {@linkplain qova.objects.Course}
-     * @param group    The groupNumber of the {@linkplain qova.objects.Course}
-     * @param instance The instanceNumber of the {@linkplain qova.objects.Course}
+     * @param model         {@link org.springframework.ui.Model}
+     * @param type          {@linkplain qova.enums.CourseType}
+     * @param id            The Id of the {@linkplain qova.objects.Course}
+     * @param group         The groupNumber of the {@linkplain qova.objects.Course}
+     * @param instance      The instanceNumber of the {@linkplain qova.objects.Course}
+     * @param userDetails   {@linkplain CurrentUserDetails} used to retrieve the users Authorities
      * @return The surveyResults template, which shows the compiled results of the
      *         requested questionnaire
      */
     @GetMapping("/surveyResults")
     public String surveyResults(Model model, @RequestParam String type, @RequestParam UUID id,
-            @RequestParam String group, @RequestParam String instance) {
+            @RequestParam String group, @RequestParam String instance, @AuthenticationPrincipal CurrentUserDetails userDetails) {
 
         // The Course object in an optional
         Optional<Course> crs = courseManagement.findById(id);
@@ -373,7 +369,7 @@ public class ResponseController {
         byte[] csv = responseManagement.generateCSVEnglish(
                 responseManagement.findSurveyResponses(crs.get(), courseType, groupNumber, instanceNumber));
 
-        if (csv.equals(new byte[0])) {
+        if ( Arrays.equals(csv, new byte[0])) {
             return null;
         }
 

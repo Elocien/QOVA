@@ -14,7 +14,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,6 +32,7 @@ import qova.forms.InstanceTitleForm;
 import qova.forms.SurveyForm;
 import qova.objects.Course;
 import qova.objects.CourseInstance;
+import qova.users.CurrentUserDetails;
 
 
 @Controller
@@ -70,9 +71,9 @@ public class CourseController {
     // Shows a table containing all courses
     @GetMapping("courses")
     @PreAuthorize("hasRole('STAFF')")
-    public String courses(Model model, Authentication authentication) {
+    public String courses(Model model, @AuthenticationPrincipal CurrentUserDetails userDetails) {
 
-        String userId = authentication.getPrincipal().toString();
+        String userId = userDetails.getUsername();
 
         model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
         return "courses";
@@ -168,7 +169,7 @@ public class CourseController {
     @PostMapping("course/new")
     @PreAuthorize("hasRole('STAFF')")
     public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
-                                         BindingResult result, Authentication authentication) {
+                                         BindingResult result,  @AuthenticationPrincipal CurrentUserDetails userDetails) {
 
         if (result.hasErrors()) {
             return createCourse(model, form);
@@ -180,7 +181,7 @@ public class CourseController {
             defaultSurveyMap.put(courseType, adminManagement.getDefaultSurveyObject(courseType));
         }
 
-        String userId = authentication.getPrincipal().toString();
+        String userId = userDetails.getUsername();
 
         if(userId.isEmpty()){
             return "redirect:/";
