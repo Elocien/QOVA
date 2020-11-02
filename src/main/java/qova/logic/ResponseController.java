@@ -56,7 +56,7 @@ public class ResponseController {
     // ---------------------------------------------------------------------------
 
     @GetMapping("surveySelect")
-    @PreAuthorize("hasAnyRole('STAFF','STUDENT')")
+    @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String selectSurvey(Model model, SurveySelectForm form, @RequestParam String mode, @RequestParam UUID id,
             @RequestParam(required = false, defaultValue = "") String type) {
 
@@ -95,7 +95,7 @@ public class ResponseController {
 
     // Validation of entry of surveySelect page, and redirect to the actual survey
     @PostMapping("surveySelect")
-    @PreAuthorize("hasAnyRole('STAFF','STUDENT')")
+    @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String selectSurveySubmission(Model model, @ModelAttribute("form") SurveySelectForm form,
             @RequestParam String mode, @RequestParam String type, @RequestParam UUID id) {
 
@@ -131,6 +131,7 @@ public class ResponseController {
 
     // Mapping for Survey HTML
     @GetMapping("survey")
+    @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String surveyView(Model model, @RequestParam(required = false) UUID id,
             @RequestParam(required = false) String type, @RequestParam(required = false) String group,
             @RequestParam(required = false) String instance) {
@@ -175,6 +176,7 @@ public class ResponseController {
     // PostMapping to submit survey and serialize results
     // ---------------------------------------------------------------------------
     @PostMapping("/survey")
+    @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String recieveResponseJSON(Model model, SurveyForm form, @RequestParam(required = false) UUID id,
             @RequestParam(required = false) String type, @RequestParam(required = false) String group,
             @RequestParam(required = false) String instance,  @AuthenticationPrincipal CurrentUserDetails userDetails) {
@@ -258,8 +260,16 @@ public class ResponseController {
      *         requested questionnaire
      */
     @GetMapping("/surveyResults")
+    @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String surveyResults(Model model, @RequestParam String type, @RequestParam UUID id,
             @RequestParam String group, @RequestParam String instance, @AuthenticationPrincipal CurrentUserDetails userDetails) {
+
+        String Role;
+
+        if (userDetails.getAuthorities().iterator().next().getAuthority().equals("ROLE_STUDENT")){
+            Role = "ROLE_STUDENT";
+        }
+
 
         // The Course object in an optional
         Optional<Course> crs = courseManagement.findById(id);
@@ -296,6 +306,7 @@ public class ResponseController {
      * @return studentBrowser template
      */
     @GetMapping("studentBrowser")
+    @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String studentBrowser(Model model) {
         model.addAttribute("courseList", courseManagement.findAll());
 
@@ -310,6 +321,7 @@ public class ResponseController {
 
     // PDF Generation
     @GetMapping("/generatePDF")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public HttpEntity<byte[]> generatePdf(@RequestParam UUID id, @RequestParam String type,
             @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
             throws Exception {
@@ -345,6 +357,7 @@ public class ResponseController {
 
     // CSV Generation
     @GetMapping("/generateCSV")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public HttpEntity<byte[]> generateCsv(@RequestParam UUID id, @RequestParam String type,
             @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
             throws Exception {
@@ -381,93 +394,4 @@ public class ResponseController {
 
         return new HttpEntity<>(csv, header);
     }
-
-    // test method
-    @GetMapping("/createR")
-    public String createR() {
-        responseManagement.createTestResponses(courseManagement.findAll().iterator().next());
-        return "home";
-    }
-
-    // CSV Generation
-    @GetMapping("csv")
-    public HttpEntity<byte[]> csvtest(HttpServletResponse response) throws Exception {
-
-        Course crs = courseManagement.findAll().iterator().next();
-
-        var group = "2";
-        var instance = "2";
-
-        // Eine Liste aller SurveyResponses
-        List<SurveyResponse> listOfSurveyResponses = responseManagement.findSurveyResponses(crs, CourseType.TUTORIAL, group,
-                instance);
-
-        // Generate PDF
-        byte[] pdf = responseManagement
-                .generateCSVEnglish(listOfSurveyResponses);
-
-        // Set HTTP headers and return HttpEntity
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_PDF);
-        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + "csvTest.csv");
-        header.setContentLength(pdf.length);
-
-        return new HttpEntity<>(pdf, header);
-    }
-
-    @GetMapping("resultsTest")
-    public String resultsTest(Model model) {
-
-        Course course = courseManagement.findAll().iterator().next();
-
-        CourseType courseType = CourseType.TUTORIAL;
-
-        var group = "2";
-        var instance = "2";
-
-        // Eine Liste aller SurveyResponses
-        List<SurveyResponse> listOfSurveyResponses = responseManagement.findSurveyResponses(course, courseType, group,
-                instance);
-
-        JSONArray resultsJsonString = responseManagement.generateSurveyResultsJson(listOfSurveyResponses);
-
-        model.addAttribute("resultsJson", resultsJsonString);
-        model.addAttribute("courseName", "Cheese 4 G's");
-        model.addAttribute("courseType", "SEMINAR");
-        model.addAttribute("semester", "WiSe 2020");
-        model.addAttribute("numberOfSubmissions", "1935");
-
-        return "surveyResults";
-    }
-
-    /*@GetMapping("resultsTest")
-    public String resultsTest(Model model){
-
-        //[{"type": "", "default": bool, "question": "", "options": [], "answers": []}, ...]}
-        JSONArray results = new JSONArray();
-        JSONObject question = new JSONObject();
-
-        question.put("type", "text");
-        question.put("default", true);
-        question.put("question", "Is the earth flat?");
-
-        ArrayList<String> options = new ArrayList<String>();
-        options.add("A"); options.add("B"); options.add("C");
-        question.put("answers", options);
-
-        ArrayList<Double> answers = new ArrayList<Double>();
-        answers.add(0.5); answers.add(0.5); answers.add(0.2);
-
-        results.put(0, question);
-        results.put(1, question);
-
-        model.addAttribute("resultsJson", results.toString());
-        model.addAttribute("courseName", "Cheese 4 G's");
-        model.addAttribute("courseType", "SEMINAR");
-        model.addAttribute("semester", "WiSe 2020");
-        model.addAttribute("numberOfSubmissions", "1935");
-
-        return "surveyResults";
-    }*/
-
 }

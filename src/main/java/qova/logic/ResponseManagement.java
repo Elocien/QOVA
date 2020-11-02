@@ -404,9 +404,6 @@ public class ResponseManagement {
 
                 if (ar instanceof BinaryResponse) {
 
-                    // Get the BinaryResponse
-                    BinaryResponse br = (BinaryResponse) ar;
-
                     // Get the JSONArray containing the yes- and noTotals, and increment the values
                     JSONArray binaryAnswersArray = jsonObject.getJSONArray("answers");
 
