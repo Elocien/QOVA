@@ -13,10 +13,6 @@ public class MiscController {
     public String welcome() {
         return "home";
     }
-    @GetMapping("/home")
-    public String home() {
-        return "home";
-    }
 
     @GetMapping("/home")
     public String home() {
