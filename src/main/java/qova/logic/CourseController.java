@@ -58,16 +58,6 @@ public class CourseController {
     // Error codes
     int courseNotFound = 1;
 
-    // General Pages (relevant domain wide)
-    // -------------------------------------------------------
-
-    @GetMapping("/")
-    public String welcome() {
-        return "home";
-    }
-
-    // -------------------------------------------------------
-
     // Shows a table containing all courses
     @GetMapping("courses")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
