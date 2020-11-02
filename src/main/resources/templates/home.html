@@ -20,7 +20,7 @@
 						<li>QR-Code based</li>
 						<li>Online</li>
 						<li>Evaluation</li>
-						<th:block th:if="authorities.iterator().next().getAuthority().equals('ROLE_STUDENT')">
+						<th:block th:if="${authorities.iterator().next().getAuthority().equals('ROLE_STUDENT')}">
 							<li th:text="${authorities.iterator().next().getAuthority().equals('ROLE_STUDENT')}"></li>
 						</th:block>
 					</ul>
