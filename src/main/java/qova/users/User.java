@@ -23,6 +23,8 @@ public class User {
 
     private String userRole;
 
+    private Boolean hasAcceptedUserPolicyFlag;
+
     /**
      * Needed for JPA purposes
      */
@@ -34,6 +36,7 @@ public class User {
     public User(String ajpPersistentId, String userRole) {
         this.ajpPersistentId = ajpPersistentId;
         this.userRole = userRole;
+        this.hasAcceptedUserPolicyFlag = false;
     }
 
     public UUID getId() {
@@ -50,5 +53,9 @@ public class User {
 
     public UserDetails toCurrentUserDetails() {
         return CurrentUserDetails.create(this);
+    }
+
+    public void setHasAcceptedUserPolicyFlag(){
+        this.hasAcceptedUserPolicyFlag = true;
     }
 }
