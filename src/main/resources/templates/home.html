@@ -17,9 +17,12 @@
 				</div>
 				<div class="col-6 d-flex align-items-center">
 					<ul class="fancy_text font-weight-light list-unstyled">
-						<li th:text="${authorities.toArray()}">QR-Code based</li>
+						<li>QR-Code based</li>
 						<li>Online</li>
 						<li>Evaluation</li>
+						<th:block th:with="roles = ${authorities.toArray()}">
+							<li th:each="${roles}" th:text="${roles}"></li>
+						</th:block>
 					</ul>
 				</div>
 			</div>
