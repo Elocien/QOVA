@@ -32,7 +32,7 @@ public class AdminController {
     //Default-Survey methods
     //---------------------------------------------------------------------------
 
-    @GetMapping("/admin")
+    @GetMapping("/admin/home")
     public String adminLogin() {
         return "adminPanel";
     }

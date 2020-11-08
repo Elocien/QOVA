@@ -379,6 +379,8 @@ public class ResponseManagement {
      *
      * @param listOfSurveyResponses A list of {@linkplain qova.objects.SurveyResponse}'s, which is compiled based on which results
      *                              the user has selected to see
+     * @param userIsStudent         Indicates whether the user retrieving the results is a student or not. If the user is of ROLE_STUDENT,
+     *                              all text responses are removed from the results string, as only ROLE_STAFF are able to view these.
      * @return A {@linkplain JSONArray} containing the students compiled responses
      */
     public JSONArray generateSurveyResultsJsonArray(List<SurveyResponse> listOfSurveyResponses, boolean userIsStudent) {
