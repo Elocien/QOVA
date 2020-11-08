@@ -10,9 +10,8 @@
 
         <!--Headline-->
         <div class="col-12 text-center justify-content-center">
-            <h5 class="font-weight-light" th:text="#{reject.description}">CHECKOUT DESCRIPTION</h5>
-            <br>
-            <a th:href="@{/survey/select(id=${id}, type=${type}, mode=${mode})}" class="btn btn-primary btn-tu"><i class="far fa-edit mr-2"></i><span th:text="#{reject.surveySelectButton}"></span></a><!--TODO: CONTROLLER UNFINISHED-->
+            <h5 class="font-weight-light mb-4" th:text="#{reject.description}">CHECKOUT DESCRIPTION</h5>
+            <a th:href="@{/survey/select(id=${id}, type=${type}, mode=${mode})}" class="btn btn-primary btn-tu"><i class="far fa-edit mr-2"></i><span th:text="#{reject.surveySelectButton}"></span></a><!--TODO: CONTROLLER-->
         </div>
 
     </div>

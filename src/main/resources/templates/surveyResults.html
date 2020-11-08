@@ -32,8 +32,10 @@
                         </tbody>
                     </table>
                     <h5 class="font-weight-light pb-4 m-0"><span class="font-weight-normal" th:text="|#{surveyResults.NoS}: |">NUMBER OF SUBMISSIONS: </span><span th:text="${numberOfSubmissions}"></span></h5>
-                    <a th:href="@{survey/results/generateCSV(id=${id}, type=${type}, mode=${mode})}">DOWNLOAD CSV</a> <!--TODO: FINISH THE BUTTON-->
-                    <a class="btn btn-primary btn-tu noPDF" th:text="#{surveyResults.downloadButton}" onclick="download_pdf()">DOWNLOAD RESULTS AS PDF</a>
+                    <div class="col-12 noPDF">
+                        <a class="btn btn-primary btn-tu mb-2" th:href="@{survey/results/generateCSV(id=${id}, type=${type}, groupNumber=${group}, instanceNumber=${instance})}" th:text="#{surveyResults.downloadCSV}">DOWNLOAD CSV</a>
+                        <a class="btn btn-primary btn-tu" th:text="#{surveyResults.downloadButton}" onclick="download_pdf()">DOWNLOAD RESULTS AS PDF</a>
+                    </div>
                 </div>
                 <!--Survey Results-->
                 <div class="col-12 mt-4" id="results"></div>

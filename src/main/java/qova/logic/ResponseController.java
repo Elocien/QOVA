@@ -273,6 +273,9 @@ public class ResponseController {
             userIsStudent = true;
         }
 
+        model.addAttribute("instance", instance);
+        model.addAttribute("group", group);
+
         // The Course object in an optional
         Optional<Course> crs = courseManagement.findById(id);
         if (crs.isPresent()) {
