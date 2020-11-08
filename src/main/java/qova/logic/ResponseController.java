@@ -12,11 +12,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import qova.admin.AdminManagement;
 import qova.enums.CourseType;
@@ -224,7 +221,7 @@ public class ResponseController {
                 if (surveyResponse.getListOfStudentsThatSubmitted().contains(studentId)){
                     model.addAttribute("id", id);
                     model.addAttribute("courseType", type);
-                    return "surveyReject";
+                    return "redirect"
                 }
 
                 // Increments Submission Counter
@@ -322,6 +319,15 @@ public class ResponseController {
     public String surveyCheckout(Model model) {
 
         return "surveyCheckout";
+    }
+
+    @GetMapping("/survey/reject")
+    public String surveyReject(Model model, @RequestParam String type, @RequestParam UUID id) {
+        model.addAttribute("mode", "participant");
+        model.addAttribute("type", type);
+        model.addAttribute("id", id);
+
+        return "surveyReject";
     }
 
     // PDF Generation
