@@ -16,12 +16,12 @@
             <h5 class="font-weight-light" th:text="#{student.select.description}">DESCRIPTION</h5>
         </div>
 
-        <form th:action="@{surveySelect(id=${id}, type=${type}, mode=${mode})}" th:object="${form}" method="post">
+        <form th:action="@{survey/select(id=${id}, type=${type}, mode=${mode})}" th:object="${form}" method="post">
             <div class="col-12 mt-4">
                 <!--Step 1-->
                 <div th:if="${mode == 'results'}" class="row justify-content-center text-center mb-4" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
                     <th:block th:each="courseType: ${type_list}" th:with="translation = ${#strings.toUpperCase(courseType)}" th:if="${__'course.'+${courseType}+'.surveyEditedFlag'__}">
-                        <a th:id="${translation}" type="button" class="btn btn-tu m-2" th:text="#{'admin.select'+${translation}}" th:href="@{/surveySelect(id=${id}, type=${translation}, mode=${mode})}"></a>
+                        <a th:id="${translation}" type="button" class="btn btn-tu m-2" th:text="#{'admin.select'+${translation}}" th:href="@{/survey/select(id=${id}, type=${translation}, mode=${mode})}"></a>
                     </th:block>
                 </div>
                 <!--Step 2-->

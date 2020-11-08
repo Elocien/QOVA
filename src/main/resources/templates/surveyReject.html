@@ -12,7 +12,7 @@
         <div class="col-12 text-center justify-content-center">
             <h5 class="font-weight-light" th:text="#{reject.description}">CHECKOUT DESCRIPTION</h5>
             <br>
-            <a th:href="@{/surveySelect?type={type}&id={id}(type=${courseType}, id=${id})}" class="btn btn-primary btn-tu"><i class="far fa-edit mr-2"></i><span th:text="#{reject.surveySelectButton}"></span></a>
+            <a th:href="@{/survey/select(id=${id}, type=${type}, mode=${mode})}" class="btn btn-primary btn-tu"><i class="far fa-edit mr-2"></i><span th:text="#{reject.surveySelectButton}"></span></a><!--TODO: CONTROLLER UNFINISHED-->
         </div>
 
     </div>
