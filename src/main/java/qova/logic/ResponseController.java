@@ -55,7 +55,7 @@ public class ResponseController {
     // enter which group and which topic they are handing their response in for
     // ---------------------------------------------------------------------------
 
-    @GetMapping("surveySelect")
+    @GetMapping("/survey/select")
     @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String selectSurvey(Model model, SurveySelectForm form, @RequestParam String mode, @RequestParam UUID id,
             @RequestParam(required = false, defaultValue = "") String type) {
@@ -94,7 +94,7 @@ public class ResponseController {
     // ---------------------------------------------------------------------------
 
     // Validation of entry of surveySelect page, and redirect to the actual survey
-    @PostMapping("surveySelect")
+    @PostMapping("/survey/select")
     @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String selectSurveySubmission(Model model, @ModelAttribute("form") SurveySelectForm form,
             @RequestParam String mode, @RequestParam String type, @RequestParam UUID id) {
@@ -115,10 +115,10 @@ public class ResponseController {
         else {
 
             if (mode.equals("participant")) {
-                return "redirect:/survey?id=" + id + "&type=" + type + "&instance=" + form.getInstance() + "&group="
+                return "redirect:/survey/view?id=" + id + "&type=" + type + "&instance=" + form.getInstance() + "&group="
                         + form.getGroup();
             } else if (mode.equals("results")) {
-                return "redirect:/surveyResults?id=" + id + "&type=" + type + "&instance=" + form.getInstance() + "&group="
+                return "redirect:/survey/results?id=" + id + "&type=" + type + "&instance=" + form.getInstance() + "&group="
                         + form.getGroup();
             } else {
                 return "error";
@@ -130,7 +130,7 @@ public class ResponseController {
     // ---------------------------------------------------------------------------
 
     // Mapping for Survey HTML
-    @GetMapping("survey")
+    @GetMapping("/survey/view")
     @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String surveyView(Model model, @RequestParam(required = false) UUID id,
             @RequestParam(required = false) String type, @RequestParam(required = false) String group,
@@ -175,7 +175,7 @@ public class ResponseController {
 
     // PostMapping to submit survey and serialize results
     // ---------------------------------------------------------------------------
-    @PostMapping("/survey")
+    @PostMapping("/survey/view")
     @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String recieveResponseJSON(Model model, SurveyForm form, @RequestParam(required = false) UUID id,
             @RequestParam(required = false) String type, @RequestParam(required = false) String group,
@@ -259,7 +259,7 @@ public class ResponseController {
      * @return The surveyResults template, which shows the compiled results of the
      *         requested questionnaire
      */
-    @GetMapping("/surveyResults")
+    @GetMapping("/survey/results")
     @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String surveyResults(Model model, @RequestParam String type, @RequestParam UUID id,
             @RequestParam String group, @RequestParam String instance, @AuthenticationPrincipal CurrentUserDetails userDetails) {
@@ -307,7 +307,7 @@ public class ResponseController {
      * @param model {@link org.springframework.ui.Model}
      * @return studentBrowser template
      */
-    @GetMapping("studentBrowser")
+    @GetMapping("/survey/results/list")
     @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String studentBrowser(Model model) {
         model.addAttribute("courseList", courseManagement.findAll());
@@ -315,14 +315,15 @@ public class ResponseController {
         return "studentBrowser";
     }
 
-    @GetMapping("surveyCheckout")
+    @GetMapping("/survey/checkout")
     public String surveyCheckout(Model model) {
 
         return "surveyCheckout";
     }
 
     // PDF Generation
-    @GetMapping("/generatePDF")
+    @Deprecated
+    @GetMapping("/survey/results/generatePDF")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public HttpEntity<byte[]> generatePdf(@RequestParam UUID id, @RequestParam String type,
             @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
@@ -358,7 +359,7 @@ public class ResponseController {
     }
 
     // CSV Generation
-    @GetMapping("/generateCSV")
+    @GetMapping("/survey/results/generateCSV")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public HttpEntity<byte[]> generateCsv(@RequestParam UUID id, @RequestParam String type,
             @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)

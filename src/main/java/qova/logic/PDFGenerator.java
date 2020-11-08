@@ -74,6 +74,7 @@ public class PDFGenerator {
      * @throws IOException Thrown by itextpdf
      * @throws Exception   Thrown when none of the Responses Match the given types
      */
+    @Deprecated
     public byte[] createPdf(SurveyResponse response, LocalizationOption language) throws IOException, Exception {
 
         if (language.equals(LocalizationOption.EN)) {

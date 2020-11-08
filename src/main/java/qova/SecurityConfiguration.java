@@ -76,9 +76,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 .addFilter(shibAuthenticationFilter())
                 .authorizeRequests()
-                .antMatchers("/course/**").hasRole("STAFF")
-                .antMatchers("/courses").hasAnyRole("STAFF", "ADMIN")
-                .antMatchers("/admin").hasRole("ADMIN")
+                .antMatchers("/course/**").hasAnyRole("STAFF", "ADMIN")
+                .antMatchers("/admin/**").hasAnyRole("STAFF", "ADMIN")
+                .antMatchers("/survey/**").hasAnyRole("STAFF", "ADMIN")
                 .anyRequest().permitAll()
                 .and().logout().clearAuthentication(true).deleteCookies("JSESSIONID").invalidateHttpSession(true)
                 .logoutUrl("/logout").logoutSuccessUrl("/");

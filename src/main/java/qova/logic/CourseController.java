@@ -59,7 +59,7 @@ public class CourseController {
     int courseNotFound = 1;
 
     // Shows a table containing all courses
-    @GetMapping("courses")
+    @GetMapping("/course/list")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String courses(Model model, @AuthenticationPrincipal CurrentUserDetails userDetails) {
 
