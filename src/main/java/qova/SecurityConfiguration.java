@@ -78,7 +78,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/course/**").hasAnyRole("STAFF", "ADMIN")
                 .antMatchers("/admin/**").hasAnyRole("STAFF", "ADMIN")
-                .antMatchers("/survey/**").hasAnyRole("STAFF", "ADMIN")
+                .antMatchers("/survey/**").hasAnyRole("STUDENT","STAFF", "ADMIN")
                 .anyRequest().permitAll()
                 .and().logout().clearAuthentication(true).deleteCookies("JSESSIONID").invalidateHttpSession(true)
                 .logoutUrl("/logout").logoutSuccessUrl("/");
