@@ -219,7 +219,7 @@ public class ResponseController {
                 if (surveyResponse.getListOfStudentsThatSubmitted().contains(studentId)){
                     model.addAttribute("id", id);
                     model.addAttribute("courseType", type);
-                    return "redirect";
+                    return "redirect:/survey/reject?id=" + id + "&type=" + type;
                 }
 
                 // Increments Submission Counter
