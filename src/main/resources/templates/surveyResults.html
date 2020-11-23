@@ -47,7 +47,7 @@
     <!--Resources-->
     <div id="resource-container" style="display: none;">
         <!--Question Template-->
-        <div class="container result-container with-bars mt-3">
+        <div class="container result-container with-bars mt-3 html2pdf__page-break">
             <div class="row align-items-center justify-content-between mt-2 mb-2">
                 <div class="col-8 text-left">
                     <h5 class="question-type m-0"></h5>
@@ -185,14 +185,14 @@
     }
 
     function download_pdf() {
-        var results = document.getElementById("pdf");
+        var results = document.getElementById("pdf").cloneNode(true);
         var opt = {
             margin:       10,
             filename:     'surveyResults.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 5 },
             jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' },
-            pagebreak:    { avoid: '.result-container' }
+            pagebreak:    { mode: 'legacy' }
         };
 
         var trash = results.getElementsByClassName("noPDF");
