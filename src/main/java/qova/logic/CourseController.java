@@ -252,7 +252,7 @@ public class CourseController {
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String deleteCourse(@RequestParam UUID id) {
         courseManagement.deleteCourse(id);
-        return "redirect:../courses";
+        return "redirect:../course/list";
     }
 
     @PostMapping("course/duplicate")

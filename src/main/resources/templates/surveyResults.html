@@ -185,14 +185,14 @@
     }
 
     function download_pdf() {
-        var results = document.getElementById("pdf").cloneNode(true);
+        var results = document.getElementById("pdf");
         var opt = {
             margin:       10,
             filename:     'surveyResults.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 5 },
             jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' },
-            pagebreak:    { mode: 'avoid-all', before: '.result-container' }
+            pagebreak:    { avoid: '.result-container' }
         };
 
         var trash = results.getElementsByClassName("noPDF");
