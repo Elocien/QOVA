@@ -33,8 +33,7 @@
                     </table>
                     <h5 class="font-weight-light pb-4 m-0"><span class="font-weight-normal" th:text="|#{surveyResults.NoS}: |">NUMBER OF SUBMISSIONS: </span><span th:text="${numberOfSubmissions}"></span></h5>
                     <div class="col-12 noPDF mb-2">
-                        <a class="btn btn-primary btn-tu" th:href="@{/survey/results/generateCSV(id=${id}, type=${type}, groupNumber=${group}, instanceNumber=${instance})}" th:text="#{surveyResults.downloadCSV}">DOWNLOAD CSV</a>
-
+                        <a class="btn btn-primary btn-tu" th:href="@{/survey/results/generateCSV(id=${id}, type=${courseType}, groupNumber=${group}, instanceNumber=${instance})}" th:text="#{surveyResults.downloadCSV}">DOWNLOAD CSV</a>
                         <a class="btn btn-primary btn-tu" th:text="#{surveyResults.downloadButton}" onclick="download_pdf()">DOWNLOAD RESULTS AS PDF</a>
                     </div>
                 </div>
@@ -192,7 +191,8 @@
             filename:     'surveyResults.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 5 },
-            jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' }
+            jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' },
+            pagebreak:    { mode: 'avoid-all', before: '.result-container' }
         };
 
         var trash = results.getElementsByClassName("noPDF");
@@ -208,6 +208,7 @@
 
         html2pdf(results, opt).save();
     }
+
 </script>
 
 </html>

@@ -290,8 +290,6 @@ public class ResponseController {
 
             Integer totalNumberOfSubmissions = responseManagement.getTotalResponses(listOfSurveyResponses);
 
-            System.out.println(resultsJsonString);
-
             model.addAttribute("resultsJson", resultsJsonString.toString());
             model.addAttribute("courseName", course.getName());
             model.addAttribute("courseType", courseType);
