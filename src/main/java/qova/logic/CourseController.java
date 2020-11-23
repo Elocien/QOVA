@@ -96,10 +96,10 @@ public class CourseController {
 
             // QRCode URL (Redirects to a courses survey when scanned)
 
-            String LectureSurveyUrl = domainName + "/surveySelect?type=LECTURE&id=" + course.getId()+"&mode=participant";
-            String TutorialSurveyUrl = domainName +  "/surveySelect?type=TUTORIAL&id=" + course.getId()+"&mode=participant";
-            String SeminarSurveyUrl = domainName + "/surveySelect?type=SEMINAR&id=" + course.getId()+"&mode=participant";
-            String PracticalSurveyUrl = domainName + "/surveySelect?type=PRACTICAL&id=" + course.getId()+"&mode=participant";
+            String LectureSurveyUrl = domainName + "/survey/select?type=LECTURE&id=" + course.getId()+"&mode=participant";
+            String TutorialSurveyUrl = domainName +  "/survey/select?type=TUTORIAL&id=" + course.getId()+"&mode=participant";
+            String SeminarSurveyUrl = domainName + "/survey/select?type=SEMINAR&id=" + course.getId()+"&mode=participant";
+            String PracticalSurveyUrl = domainName + "/survey/select?type=PRACTICAL&id=" + course.getId()+"&mode=participant";
 
 
             model.addAttribute("lectureLink", LectureSurveyUrl);
