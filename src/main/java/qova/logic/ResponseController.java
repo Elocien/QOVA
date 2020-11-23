@@ -23,8 +23,6 @@ import qova.objects.Course;
 import qova.objects.SurveyResponse;
 import qova.users.CurrentUserDetails;
 
-//Temporary Import
-
 
 @Controller // This means that this class is a Controller
 public class ResponseController {
@@ -272,6 +270,8 @@ public class ResponseController {
 
         model.addAttribute("instance", instance);
         model.addAttribute("group", group);
+        model.addAttribute("id", id);
+
 
         // The Course object in an optional
         Optional<Course> crs = courseManagement.findById(id);
@@ -289,6 +289,8 @@ public class ResponseController {
             JSONArray resultsJsonString = responseManagement.generateSurveyResultsJsonArray(listOfSurveyResponses, userIsStudent);
 
             Integer totalNumberOfSubmissions = responseManagement.getTotalResponses(listOfSurveyResponses);
+
+            System.out.println(resultsJsonString);
 
             model.addAttribute("resultsJson", resultsJsonString.toString());
             model.addAttribute("courseName", course.getName());
