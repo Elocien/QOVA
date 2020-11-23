@@ -192,7 +192,7 @@
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 5 },
             jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' },
-            pagebreak:    { avoid: '.result-container' }
+            pagebreak:    { mode: 'css', after: '.result-container' }
         };
 
         var trash = results.getElementsByClassName("noPDF");
