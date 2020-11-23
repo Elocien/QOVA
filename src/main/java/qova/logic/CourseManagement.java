@@ -96,9 +96,22 @@ public class CourseManagement {
 
                 if (courseType.equals(CourseType.LECTURE)) {
                     groupAmount = 1;
-                } else {
+                }
+                else if(form.getGroupAmount(courseType).equals(0)){
+                    groupAmount = 1;
+                }
+                else {
                     groupAmount = form.getGroupAmount(courseType);
                 }
+
+                Integer instanceAmount;
+                if(form.getInstanceAmount(courseType).equals(0)){
+                    instanceAmount = 1;
+                }
+                else {
+                    instanceAmount = form.getInstanceAmount(courseType);
+                }
+
 
                 // Initialise the instanceTitles array with the amount of instances that are set
                 // to exist
@@ -109,7 +122,7 @@ public class CourseManagement {
 
                 // Create the courseInstance
                 CourseInstance instance = new CourseInstance(courseType, groupAmount,
-                        form.getInstanceAmount(courseType), instanceTitles, defaultSurveyMap.get(courseType));
+                        instanceAmount, instanceTitles, defaultSurveyMap.get(courseType));
 
                 // save to database
                 courseInstancesRepo.save(instance);
@@ -559,6 +572,18 @@ public class CourseManagement {
 
         // delete the surveyresponses
         surveyResponseRepository.deleteAll(surveyResponses);
+    }
+
+    /**
+     * Find a {@linkplain Course} with the given Id
+     *
+     * @param courseId The Course id
+     * @param ownerId  The UserId of the courseOwner
+     * @return an {@linkplain Optional} of a {@linkplain Course} with the given id
+     */
+    public Boolean findIfUserOwnsCourse(UUID courseId, String ownerId) {
+        Optional<Course> crs = coursesRepo.findByIdAndOwnerId(courseId, ownerId);
+        return crs.isPresent();
     }
 
 }
