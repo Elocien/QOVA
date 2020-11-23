@@ -92,7 +92,7 @@ public class CourseController {
             model.addAttribute("titlesMissing", courseManagement.getNumberOfInstanceTitlesMissing(course));
 
             //The DomainName
-            String domainName = "qova.med.tu-dresden.de";
+            String domainName = "https://qova.med.tu-dresden.de";
 
             // QRCode URL (Redirects to a courses survey when scanned)
 
