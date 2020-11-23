@@ -47,7 +47,7 @@
     <!--Resources-->
     <div id="resource-container" style="display: none;">
         <!--Question Template-->
-        <div class="container result-container with-bars mt-3">
+        <div class="container result-container bordered with-bars mt-3">
             <div class="row align-items-center justify-content-between mt-2 mb-2">
                 <div class="col-8 text-left">
                     <h5 class="question-type m-0"></h5>
@@ -199,6 +199,11 @@
         var collapsed = results.getElementsByClassName("collapse");
         for (let i = 0; i < collapsed.length; i++) {
             collapsed[i].classList.add("show");
+        }
+
+        var result_containers = results.getElementsByClassName("result-container");
+        for (let i = 0; i < result_containers.length; i++) {
+            result_containers[i].classList.remove("bordered");
         }
 
         html2pdf(results, opt).save();
