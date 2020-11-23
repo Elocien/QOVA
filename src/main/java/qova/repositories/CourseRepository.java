@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 import qova.objects.Course;
 
 import java.time.LocalDate;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.repository.CrudRepository;
@@ -19,6 +20,8 @@ public interface CourseRepository extends CrudRepository <Course, UUID> {
     Iterable<Course> findByCourseDateBetween(LocalDate start, LocalDate end);
 
     Iterable<Course> findByOwnerId(String id);
+
+    Optional<Course> findByIdAndOwnerId(UUID courseId, String ownerId);
 
 }
 

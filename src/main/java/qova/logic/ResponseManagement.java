@@ -379,11 +379,11 @@ public class ResponseManagement {
      *
      * @param listOfSurveyResponses A list of {@linkplain qova.objects.SurveyResponse}'s, which is compiled based on which results
      *                              the user has selected to see
-     * @param userIsStudent         Indicates whether the user retrieving the results is a student or not. If the user is of ROLE_STUDENT,
-     *                              all text responses are removed from the results string, as only ROLE_STAFF are able to view these.
+     * @param userIsOwner           Indicates whether the user retrieving the results is the course owner or not. If the user is not the courseOwner,
+     *                              all text responses are removed from the results string.
      * @return A {@linkplain JSONArray} containing the students compiled responses
      */
-    public JSONArray generateSurveyResultsJsonArray(List<SurveyResponse> listOfSurveyResponses, boolean userIsStudent) {
+    public JSONArray generateSurveyResultsJsonArray(List<SurveyResponse> listOfSurveyResponses, boolean userIsOwner) {
 
 
         // A SurveyResponse object. All surveyResponses have the same survey and the
@@ -468,8 +468,8 @@ public class ResponseManagement {
             }
         }
 
-        //If the user is a student, remove all text responses
-        if (userIsStudent){
+        //If the user is not the course owner, remove all text responses
+        if (!userIsOwner){
             for (int pos = 0; pos < resultsArray.length(); pos++){
                 JSONObject currentJsonObject = resultsArray.getJSONObject(pos);
                 if (currentJsonObject.getString("type").equals("text")){

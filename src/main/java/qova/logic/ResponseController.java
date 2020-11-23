@@ -259,14 +259,9 @@ public class ResponseController {
     public String surveyResults(Model model, @RequestParam String type, @RequestParam UUID id,
             @RequestParam String group, @RequestParam String instance, @AuthenticationPrincipal CurrentUserDetails userDetails) {
 
-        boolean userIsStudent;
+        boolean userIsOwner = courseManagement.findIfUserOwnsCourse(id, userDetails.getUsername());
 
-        if (userDetails.getAuthorities().iterator().next().getAuthority().equals("ROLE_STAFF")){
-            userIsStudent = false;
-        }
-        else {
-            userIsStudent = true;
-        }
+        System.out.println(userIsOwner);
 
         model.addAttribute("instance", instance);
         model.addAttribute("group", group);
@@ -286,7 +281,7 @@ public class ResponseController {
             List<SurveyResponse> listOfSurveyResponses = responseManagement.findSurveyResponses(course, courseType,
                     group, instance);
 
-            JSONArray resultsJsonString = responseManagement.generateSurveyResultsJsonArray(listOfSurveyResponses, userIsStudent);
+            JSONArray resultsJsonString = responseManagement.generateSurveyResultsJsonArray(listOfSurveyResponses, userIsOwner);
 
             Integer totalNumberOfSubmissions = responseManagement.getTotalResponses(listOfSurveyResponses);
 
