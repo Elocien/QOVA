@@ -32,9 +32,9 @@
                         </tbody>
                     </table>
                     <h5 class="font-weight-light pb-4 m-0"><span class="font-weight-normal" th:text="|#{surveyResults.NoS}: |">NUMBER OF SUBMISSIONS: </span><span th:text="${numberOfSubmissions}"></span></h5>
-                    <div class="col-12 data-html2canvas-ignore">
+                    <div class="col-12">
                         <a class="btn btn-primary btn-tu" th:href="@{/survey/results/generateCSV(id=${id}, type=${courseType}, groupNumber=${group}, instanceNumber=${instance})}" th:text="#{surveyResults.downloadCSV}">DOWNLOAD CSV</a>
-                        <a class="btn btn-primary btn-tu" th:text="#{surveyResults.downloadButton}" onclick="download_pdf()">DOWNLOAD RESULTS AS PDF</a>
+                        <a class="btn btn-primary btn-tu noPDF" th:text="#{surveyResults.downloadButton}" onclick="download_pdf()">DOWNLOAD RESULTS AS PDF</a>
                     </div>
                 </div>
                 <!--Survey Results-->
@@ -47,7 +47,7 @@
     <!--Resources-->
     <div id="resource-container" style="display: none;">
         <!--Question Template-->
-        <div class="container result-container bordered with-bars mt-3">
+        <div class="container result-container bordered with-bars mb-4">
             <div class="row align-items-center justify-content-between mt-2 mb-2">
                 <div class="col-8 text-left">
                     <h5 class="question-type m-0"></h5>
@@ -55,7 +55,7 @@
                 <div class="col-3 default-question text-right">
                     <p class="m-0"></p>
                 </div>
-                <div class="col-1 text-only data-html2canvas-ignore">
+                <div class="col-1 text-only noPDF">
                     <a class="collapse-btn" data-toggle="collapse" href="#" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fas fa-plus right collapse-icon"></i></a>
                 </div>
             </div>
@@ -190,7 +190,7 @@
             margin:       11,
             filename:     'surveyResults.pdf',
             image:        { type: 'jpeg', quality: 0.98 },
-            html2canvas:  { scale: 5 , windowWidth: 1200},
+            html2canvas:  { scale: 5 , windowWidth: 1920},
             jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' },
             pagebreak:    { avoid: '.result-container' }
         };
@@ -201,9 +201,16 @@
             collapsed[i].classList.add("show");
         }
 
+        //Hides borders
         var result_containers = results.getElementsByClassName("result-container");
         for (let i = 0; i < result_containers.length; i++) {
             result_containers[i].classList.remove("bordered");
+        }
+
+        //Deletes unneeded elements
+        var trash = results.getElementsByClassName("noPDF");
+        for (let i = 0; i < trash.length; i++) {
+            trash[i].style.display = "none";
         }
 
         html2pdf(results, opt).save();
