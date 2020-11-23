@@ -2,18 +2,18 @@ package qova.forms;
 
 public class SurveySelectForm {
     
-    private Integer group;
-    private Integer instance;
+    private String group;
+    private String instance;
 
-    public SurveySelectForm(Integer group, Integer instance){
+    public SurveySelectForm(String group, String instance){
         this.group = group;
         this.instance = instance;
     }
 
-    public Integer getGroup(){
+    public String getGroup(){
         return this.group;
     }
-    public Integer getInstance(){
+    public String getInstance(){
         return this.instance;
     }
 }
