@@ -45,7 +45,7 @@
                 </div>
             </div>
 
-            <div class="col-12 offset-lg-4 col-lg-4 text-center mt-4">
+            <div th:if="${typeExists}" class="col-12 offset-lg-4 col-lg-4 text-center mt-4">
                 <button type="submit" class="btn btn-primary btn-tu" th:text="#{submit}">SUBMIT</button>
             </div>
         </form>
