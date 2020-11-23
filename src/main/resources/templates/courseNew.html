@@ -91,9 +91,9 @@
                                             <td th:text="#{new.+${type}}">COURSE</td>
                                             <td th:switch="${type}">
                                                 <input th:case="lecture" type="number" class="form-control" id="groupAmountLecture" name="groupAmountLecture" placeholder="1" value="1" readonly>
-                                                <input th:case="*" type="number" class="form-control" th:id="|groupAmount${#strings.capitalize(type)}|" th:name="|groupAmount${#strings.capitalize(type)}|" placeholder="0" min="0" value="0">
+                                                <input th:case="*" type="number" class="form-control" th:id="|groupAmount${#strings.capitalize(type)}|" th:name="|groupAmount${#strings.capitalize(type)}|" placeholder="1" min="1" value="1">
                                             </td>
-                                            <td><input type="number" class="form-control" th:id="|instanceAmount${#strings.capitalize(type)}|" th:name="|instanceAmount${#strings.capitalize(type)}|" placeholder="0" min="0" value="0"></td>
+                                            <td><input type="number" class="form-control" th:id="|instanceAmount${#strings.capitalize(type)}|" th:name="|instanceAmount${#strings.capitalize(type)}|" placeholder="1" min="1" value="1"></td>
                                         </tr>
                                     </tbody>
                                 </table>
