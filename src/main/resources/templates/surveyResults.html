@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
 <head>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.1.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.8.1/html2pdf.bundle.js"></script>
+    <script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
 
     <title th:text="#{title.surveyResults}">TITLE</title>
 </head>
@@ -192,7 +192,7 @@
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 5 },
             jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' },
-            pagebreak:    { mode: 'css' }
+            pagebreak:    { avoid: '.result-container' }
         };
 
         var trash = results.getElementsByClassName("noPDF");
