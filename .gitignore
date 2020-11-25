@@ -30,7 +30,10 @@ build/
 ### VS Code ###
 .vscode/
 
-
 ### Mac ###
 .DS_Store
+
+### Local User Authenitcation ###
+/src/main/java/qova/SecurityConfiguration.java
+
 

@@ -10,6 +10,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
@@ -26,15 +27,26 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    @Override
+    protected UserDetailsService userDetailsService() {
+        UserDetails user1 = User
+                .withUsername("student")
+                .password("$2a$10$sWszOXuTlN0amQi8vXp4cerb.tJUQo.4FzLAnTCsSqChsYhlLdQWW") //password = codejava
+                .roles("STUDENT")
+                .build();
+        UserDetails user2 = User
+                .withUsername("staff")
+                .password("$2a$10$sWszOXuTlN0amQi8vXp4cerb.tJUQo.4FzLAnTCsSqChsYhlLdQWW")
+                .roles("STAFF")
+                .build();
+        UserDetails user3 = User
+                .withUsername("admin")
+                .password("$2a$10$sWszOXuTlN0amQi8vXp4cerb.tJUQo.4FzLAnTCsSqChsYhlLdQWW")
+                .roles("ADMIN")
+                .build();
 
-
-    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("student").password(encoder().encode("student")).roles("STUDENT")
-                .and()
-                .withUser("staff").password(encoder().encode("staff")).roles("STAFF")
-                .and()
-                .withUser("admin").password(encoder().encode("admin")).roles("ADMIN");
+        return new InMemoryUserDetailsManager(user1, user2);
     }
 
     @Override

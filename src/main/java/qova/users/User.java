@@ -51,10 +51,6 @@ public class User {
         return this.userRole;
     }
 
-    public UserDetails toCurrentUserDetails() {
-        return CurrentUserDetails.create(this);
-    }
-
     public void setHasAcceptedUserPolicyFlag(){
         this.hasAcceptedUserPolicyFlag = true;
     }

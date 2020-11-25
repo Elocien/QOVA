@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
@@ -21,7 +22,6 @@ import qova.forms.SurveyForm;
 import qova.forms.SurveySelectForm;
 import qova.objects.Course;
 import qova.objects.SurveyResponse;
-import qova.users.CurrentUserDetails;
 
 
 @Controller // This means that this class is a Controller
@@ -174,7 +174,7 @@ public class ResponseController {
     @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String recieveResponseJSON(Model model, SurveyForm form, @RequestParam(required = false) UUID id,
             @RequestParam(required = false) String type, @RequestParam(required = false) String group,
-            @RequestParam(required = false) String instance,  @AuthenticationPrincipal CurrentUserDetails userDetails) {
+            @RequestParam(required = false) String instance,  @AuthenticationPrincipal UserDetails userDetails) {
 
         if (id == null || type == null || group == null || instance == null) {
             return "error";
@@ -257,7 +257,7 @@ public class ResponseController {
     @GetMapping("/survey/results")
     @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String surveyResults(Model model, @RequestParam String type, @RequestParam UUID id,
-            @RequestParam String group, @RequestParam String instance, @AuthenticationPrincipal CurrentUserDetails userDetails) {
+            @RequestParam String group, @RequestParam String instance, @AuthenticationPrincipal UserDetails userDetails) {
 
         boolean userIsOwner = courseManagement.findIfUserOwnsCourse(id, userDetails.getUsername());
 
