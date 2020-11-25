@@ -34,6 +34,11 @@ public class MiscController {
         return "home";
     }
 
+    @GetMapping("/login")
+    public String login (){
+        return "redirect:/course/list";
+    }
+
     @GetMapping("/logout")
     public String logout(HttpSession session){
         session.invalidate();

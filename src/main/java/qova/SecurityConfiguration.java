@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.*;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationProvider;
 import org.springframework.security.web.authentication.preauth.PreAuthenticatedAuthenticationToken;
 import org.springframework.security.web.authentication.preauth.RequestHeaderAuthenticationFilter;
@@ -19,67 +21,31 @@ import qova.users.UserRepository;
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-
-    /**
-     * The custom defined implementation of {@linkplain UserDetailsService}
-     */
-    private final UserRepository userRepository;
-
-    public SecurityConfiguration(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-
-    /**
-     * Configures The global Authentication, i.e. how does authentication take place.
-     *
-     * @param auth The {@linkplain AuthenticationManagerBuilder} which has the {@link #customAuthenticationProvider()} ()} as
-     *             its {@linkplain org.springframework.security.authentication.AuthenticationProvider} implementation
-     */
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth)  {
-        auth.authenticationProvider(customAuthenticationProvider());
-    }
-
     @Bean
-    public PreAuthenticatedAuthenticationProvider customAuthenticationProvider(){
-
-        AuthenticationUserDetailsService<PreAuthenticatedAuthenticationToken> wrapper =
-                new qova.users.UserDetailsService(userRepository);
-
-        PreAuthenticatedAuthenticationProvider preAuthenticatedAuthenticationProvider = new PreAuthenticatedAuthenticationProvider();
-        preAuthenticatedAuthenticationProvider.setPreAuthenticatedUserDetailsService(wrapper);
-
-        return preAuthenticatedAuthenticationProvider;
-    }
-
-
-    /**
-     * The {@linkplain org.springframework.security.web.authentication.AuthenticationFilter} which takes the Shibboleth
-     * AJP headers
-     *
-     * @return The custom {@linkplain RequestHeaderAuthenticationFilter}
-     * @throws Exception From the {@linkplain org.springframework.security.authentication.AuthenticationManager}
-     */
-    @Bean
-    protected CustomRequestAuthenticationFilter shibAuthenticationFilter() throws Exception {
-        CustomRequestAuthenticationFilter requestHeaderAuthenticationFilter = new CustomRequestAuthenticationFilter();
-        requestHeaderAuthenticationFilter.setAuthenticationManager(authenticationManagerBean());
-        return  requestHeaderAuthenticationFilter;
+    public PasswordEncoder encoder() {
+        return new BCryptPasswordEncoder();
     }
 
 
 
+    protected void configure(final AuthenticationManagerBuilder auth) throws Exception {
+        auth.inMemoryAuthentication()
+                .withUser("student").password(encoder().encode("student")).roles("STUDENT")
+                .and()
+                .withUser("staff").password(encoder().encode("staff")).roles("STAFF")
+                .and()
+                .withUser("admin").password(encoder().encode("admin")).roles("ADMIN");
+    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .addFilter(shibAuthenticationFilter())
                 .authorizeRequests()
                 .antMatchers("/course/**").hasAnyRole("STAFF", "ADMIN")
                 .antMatchers("/admin/**").hasAnyRole("STAFF", "ADMIN")
                 .antMatchers("/survey/**").hasAnyRole("STUDENT","STAFF", "ADMIN")
                 .anyRequest().permitAll()
+                .and().formLogin()
                 .and().logout().clearAuthentication(true).deleteCookies("JSESSIONID").invalidateHttpSession(true)
                 .logoutUrl("/logout").logoutSuccessUrl("/");
     }
