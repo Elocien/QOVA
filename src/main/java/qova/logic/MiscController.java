@@ -46,8 +46,7 @@ public class MiscController {
     }
 
     @GetMapping("/privacy/download")
-    public HttpEntity<byte[]> qrcode(HttpServletResponse response, @RequestParam String type, @RequestParam UUID id)
-            throws IOException, WriterException {
+    public HttpEntity<byte[]> qrcode(HttpServletResponse response) throws IOException {
 
 
         // generate filename
