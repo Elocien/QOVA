@@ -1,290 +1,331 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-
-    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />
-    <link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/resources/css/toggle_checkbox.css}" />
-    
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
-
-    <script src="https://kit.fontawesome.com/5b9febade6.js" crossorigin="anonymous"></script>
-
-    <title th:text="#{home.title}">TITLE</title>
+    <title th:text="#{title.details}">TITLE</title>
 </head>
-<body class="bg-light">
 
+<body>
     <div th:include="navbar"></div>
+    <div class="main col-lg-12">
 
-    <div class="container">
-        <div class="row justify-content-md-center">
-            <div class="col-lg-12">
+        <div class="mb-4" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
+            <h2 class="font-weight-bold text-center mb-4 mt-4 hide_me" th:text="${course.name}">COURSE NAME</h2>
+            <input id="name-input" type="text" class="input-group headline-edit show_me" style="display: none;" th:placeholder="${course.name}" th:value="${course.name}"></input>
+        </div>
 
-                <h2 class="font-weight-bold text-center mb-4 mt-4" th:text="${course.name}">COURSE NAME</h2>
+        <div th:include="finalizeModal"></div>
 
-                <div class="container bg-light border border-dark rounded p-0">
-                    <form th:action="@{/course/delete}" method="post">
-                        <input type="hidden" name="id" th:value="${course.id}" />
-                        <input type="submit" class="btn btn-primary" data-toggle="tooltip" data-placement="top" title="DELETE COURSE" th:value="#{detail.deleteCourse}"/>
-                    </form>
-                    <!-- <button type="button" class="btn btn-link btn-delete" data-toggle="tooltip" data-placement="top" title="DELETE COURSE" th:title="#{detail.deleteCourse}"><i class="fas fa-trash-alt"></i></button> -->
-                    <div class="row justify-content-md-center p-4">
+        <div class="container bg-light border border-dark rounded p-0">
 
-                        <!--Course Details-->
-                        <div class="col-md-6">
-
-                            <!--Headline-->
-                            <div class="row">
-                                <h5 class="font-weight-light text-left" th:text="#{course.details}">COURSE DETAILS</h5>
-                                <button type="button" id="startEdit" class="btn edit_details btn-link p-0 ml-4 align-middle" onclick="edit_mode()" data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}"><i class="far fa-edit"></i></button>
-                                <button type="button" id="finishEdit" class="btn edit_details btn-link p-0 ml-4 align-middle" style="display: none;" data-toggle="tooltip" data-placement="right" th:title="#{detail.finishEdit}"><i class="fas fa-check"></i></button>
-                                <!--th:href="@{/course/edit?id={id}(id=${course.id})}" href="#"-->
-                            </div>
-
-                            <!--1st Table-->
-                            <div class="row">
-                                <table class="table mb-4">
-                                    <tbody>
-                                        <!--Faculty-->
-                                        <tr>
-                                            <th scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
-                                            <td id="faculty_original"><span th:id="'og: ' + ${course.faculty}" th:text="#{'course.faculty.' + ${course.faculty}}">FACULTY</span></td>
-                                            <td id="faculty_dropdown" style="display: none">
-                                                <select id="faculty_select" class="custom-select form-control" th:with="faculties = ${T(qova.course.CourseFaculty).values()}">
-                                                    <option class="dropdown-item" th:id="${faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
-                                                </select>
-                                            </td>
-                                            <td></td>
-                                        </tr>
-                                        <!--Semester Period-->
-                                        <tr>
-                                            <th scope="row" th:text="#{course.courseInstance}">YEAR</th>
-                                            <td class="editable" th:text="${course.semesterUI}">XXXX</td>
-                                            <td></td>
-                                        </tr>
-                                        <!--Semester of Students-->
-                                        <tr>
-                                            <th scope="row" th:text="#{course.semesterOfStudents}">SEMESTER</th>
-                                            <td id="semester_original"><span th:id="${course.semesterOfStudents}" th:text="${course.semesterOfStudents}">IDK - XXXX</span></td>
-                                            <td id="semester_dropdown" style="display: none">
-                                                <select class="custom-select form-control">
-                                                    <option class="dropdown-item" th:id="${course.semesterOfStudents}" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
-                                                </select>
-                                            </td>
-                                            <td></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <!--2nd Table-->
-                            <div class="row">
-                                <table class="table mb-0">
-                                    <thead>
-                                        <tr>
-                                            <th class="border-0 col-md-2" scope="col" th:text="#{detail.classType}">TYPE</th>
-                                            <th class="border-0 text-center col-md-2" scope="col" data-toggle="tooltip" data-placement="top" title="AMOUNT" th:title="#{detail.classAmount}">#</th>
-                                            <th class="border-0 text-center col-md-2" scope="col" th:text="#{detail.classSurvey}">SURVEY</th>
-                                            <th class="border-0"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <!--Lecture-->
-                                        <tr>
-                                            <td scope="row" th:text="#{new.lecture}">LECTURE</td>
-                                            <div th:switch="${course.lectureExists}">
-                                                <div th:case="TRUE">
-                                                    <td class="editable text-center">1</td>
-                                                    <div th:switch="${course.lectureSurvey}">
-                                                        <div th:case="'-'">
-                                                            <td class="editable text-center" id="bool" th:text="#{No}">!EXISTS</td>
-                                                            <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a></td>
-                                                        </div>
-                                                        <div th:case="*">
-                                                            <td class="editable text-center" id="bool" th:text="#{Yes}">EXISTS</td>
-                                                            <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a></td>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div th:case="FALSE">
-                                                    <td class="editable text-center">0</td>
-                                                    <td class="editable text-center">-</td>
-                                                    <td></td>
-                                                </div>
-                                            </div>
-                                        </tr>
-                                        <!--Tutorial-->
-                                        <tr>
-                                            <td scope="row" th:text="#{new.practice}">TUTORIAL</td>
-                                            <td class="editable text-center" th:text="${course.classTotalTutorial}">COUNT</td>
-                                            <div th:switch="${course.tutorialExists}">
-                                                <div th:case="TRUE">
-                                                    <div th:switch="${course.tutorialSurvey}">
-                                                        <div th:case="'-'">
-                                                            <td class="editable text-center" id="bool" th:text="#{No}">!EXISTS</td>
-                                                            <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a></td>
-                                                        </div>
-                                                        <div th:case="*">
-                                                            <td class="editable text-center" id="bool" th:text="#{Yes}">EXISTS</td>
-                                                            <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=TUTORIAL&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a></td>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div th:case="FALSE">
-                                                    <td class="editable text-center">-</td>
-                                                    <td></td>
-                                                </div>
-                                            </div>
-                                        </tr>
-                                        <!--Seminar-->
-                                        <tr>
-                                            <td scope="row" th:text="#{new.seminar}">SEMINAR</td>
-                                            <td class="editable text-center" th:text="${course.classTotalSeminar}">COUNT</td>
-                                            <div th:switch="${course.seminarExists}">
-                                                <div th:case="TRUE">
-                                                    <div th:switch="${course.seminarSurvey}">
-                                                        <div th:case="'-'">
-                                                            <td class="editable text-center" id="bool" th:text="#{No}">!EXISTS</td>
-                                                            <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=LECTURE&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a></td>
-                                                        </div>
-                                                        <div th:case="*">
-                                                            <td class="editable text-center" id="bool" th:text="#{Yes}">EXISTS</td>
-                                                            <td><a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=SEMINAR&id='  + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a></td>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div th:case="FALSE">
-                                                    <td class="editable text-center">-</td>
-                                                    <td></td>
-                                                </div>
-                                            </div>                                            
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-
-                        </div>
-
-                        <div class="col-md-1"></div>
-
-                        <!--QR Codes-->
-                        <div class="col-md-auto">
-                            <h5 class="font-weight-light text-center" th:text="#{detail.QR}">QR CODES</h5>
-                            <div class="row justify-content-md-center">
-                                <div class="container carousel-border border border-secondary p-1">
-                                    <div id="carouselExampleIndicators" class="carousel slide" interval="false">
-                                        <ol class="carousel-indicators">
-                                            <li th:if="!${course.lectureSurvey.equals('-')}" data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
-                                            <li th:if="!${course.tutorialSurvey.equals('-')}" data-target="#carouselExampleIndicators" data-slide-to="1" th:classappend="${course.lectureSurvey.equals('-')} ? active : userclass"></li>
-                                            <li th:if="!${course.seminarSurvey.equals('-')}" data-target="#carouselExampleIndicators" data-slide-to="2" th:classappend="${course.lectureSurvey.equals('-') and course.tutorialSurvey.equals('-')} ? active : userclass"></li>
-                                        </ol>
-                                        <div class="carousel-inner">
-                                            <div th:if="!${course.lectureSurvey.equals('-')}" class="carousel-item active">
-                                                <img class="d-block w-100 mb-5" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/QR_code_Wi-Fi.png/220px-QR_code_Wi-Fi.png" alt="Lecture slide">
-                                                <div class="carousel-caption text-dark d-block mb-1">
-                                                    <h5>Lecture</h5>
-                                                </div>
-                                            </div>
-                                            <div th:if="!${course.tutorialSurvey.equals('-')}" th:classappend="${course.lectureSurvey.equals('-')} ? active : userclass" class="carousel-item">
-                                                <img class="d-block w-100 mb-5" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/QR_code_Wi-Fi.png/220px-QR_code_Wi-Fi.png" alt="Tutorial slide">
-                                                <div class="carousel-caption text-dark d-block mb-1">
-                                                    <h5>Tutorial</h5>
-                                                </div>
-                                            </div>
-                                            <div th:if="!${course.seminarSurvey.equals('-')}" th:classappend="${course.lectureSurvey.equals('-') and course.tutorialSurvey.equals('-')} ? active : userclass" class="carousel-item">
-                                                <img class="d-block w-100 mb-5" src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/15/QR_code_Wi-Fi.png/220px-QR_code_Wi-Fi.png" alt="Seminar slide">
-                                                <div class="carousel-caption text-dark d-block mb-1">
-                                                    <h5>Seminar</h5>
-                                                </div>
-                                            </div>
-                                            <div th:if="${course.lectureSurvey.equals('-') and course.tutorialSurvey.equals('-') and course.seminarSurvey.equals('-')}" class="carousel-item active">
-                                                <img class="d-block w-100 mb-5 bg-dark" src="..." alt="" style="width: 300px; height: 300px;">
-                                                <div class="carousel-caption text-dark d-block mb-0">
-                                                    <h5>No Surveys yet</h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                            <span class="sr-only">Previous</span>
-                                        </a>
-                                        <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                            <span class="sr-only">Next</span>
-                                        </a>
-                                        <!--<img th:src="'data:image/jpeg;base64,' + ${LectureQRCode}" class="img-fluid" alt="lecture_image"/>-->
-                                        <!--<img th:src="'data:image/jpeg;base64,' + ${TutorialQRCode}" class="img-fluid" alt="tutorial_image"/>-->
-                                        <!--<img th:src="'data:image/jpeg;base64,' + ${SeminarQRCode}" class="img-fluid" alt="seminar_image"/>-->
+            <!--Option Buttons-->
+            <div class="options-wrapper">
+                <div class="btn-delete">
+                    <!--Copy Course-->
+                    <button type="submit" class="btn btn-link" data-toggle="modal" data-target="#copyModal"><i class="far fa-clone" data-toggle="tooltip" data-placement="top" title="COPY COURSE" th:title="#{detail.copyCourse}"></i></button>
+                    <div class="modal fade" id="copyModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content text-center">
+                                <!--Duplicate Form-->
+                                <form th:action="@{/course/duplicate?id=__${course.id}__}" th:object="${duplicateForm}" method="post">
+                                    <div class="modal-body">
+                                        <p th:text="#{detail.copyModalText}">PLEASE COPY ME!</p>
+                                        <select id="newYear" class="custom-select form-control" th:field="*{semesterString}">
+                                            <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+                                        </select>
                                     </div>
+                                    <div class="modal-footer text-center">
+                                        <div class="w-100"></div>
+                                        <button type="submit" class="btn btn-primary">Finish</button>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                                        <div class="w-100"></div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Delete Course -->
+                    <button type="submit" class="btn red-link btn-link" data-toggle="modal" data-target="#deleteModal">
+                        <i class="fas fa-trash-alt" data-toggle="tooltip" data-placement="top" title="DELETE COURSE" th:title="#{detail.deleteCourse}"></i>
+                    </button>
+                    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content text-center">
+                                <div class="modal-body">
+                                    <p class="m-0" th:text="#{detail.deleteModalText}">PLEASE DELETE ME!</p>
+                                </div>
+                                <div class="modal-footer text-center">
+                                    <div class="w-100"></div>
+                                    <a th:href="@{/course/delete?id=__${course.id}__}" method="post" class="btn btn-primary">Yes</a>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                                    <div class="w-100"></div>
                                 </div>
                             </div>
-                            <div class="row justify-content-md-center mt-3">
-                                <a type="button" class="btn btn-primary" th:text="#{detail.download}" th:target="_blank" th:href="${'/qrcode?type=LECTURE&id='  + {course.id}}" href="#">DOWNLOAD</a>
-                            </div>
-
                         </div>
-
                     </div>
                 </div>
-
             </div>
-        </div>
-    </div>
-    <div th:include="footer"></div>
-</body>
-<script>
-    $( document ).ready(function() {
-        $('[data-toggle="tooltip"]').tooltip(({trigger : 'hover'}));
-    });
 
-    function replace_with_input(replace_me) {
-        if(replace_me.id === "bool") {
+            <!--Left Side-->
+            <div class="row justify-content-md-center p-4" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
+                <!--Course Details-->
+                <div class="col-6">
+                    <form id="form" method="post" th:action="@{/course/edit?id=__${course.id}__}" th:object="${form}">
 
-            const replacer = document.createElement("LABEL");
-            replacer.className = "switch mt-2";
+                        <!--Headline & Buttons-->
+                        <div class="row">
+                            <h5 class="font-weight-light text-left" th:text="#{course.details}">COURSE DETAILS</h5>
+                            <button th:if="!${course.finalisedFlag}" type="button" id="startEdit" class="btn edit_details btn-link p-0 ml-4 align-middle" onclick="edit_mode()"data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}">
+                                <i class="far fa-edit"></i>
+                            </button>
+                            <button type="button" onClick="window.location.reload();" class="btn edit_details btn-link p-0 ml-4 align-middle show_me" style="display: none;" data-toggle="tooltip" data-placement="right" th:title="#{detail.cancelEdit}">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <button type="submit" class="btn edit_details btn-link p-0 ml-4 align-middle show_me" style="display: none;" data-toggle="tooltip" data-placement="right" th:title="#{detail.finishEdit}">
+                                <i class="fas fa-check"></i>
+                            </button>
+                        </div>
 
-            const input_box = document.createElement("INPUT");
-            input_box.className = "form-control";
-            input_box.type = "checkbox";
-            if(replace_me.innerHTML === "Yes") {
-                input_box.checked = true;
-            }
+                        <!--Hidden Headline-->
+                        <input id="name-input-hidden" type="hidden" th:value="${course.name}" th:name="name"></input>
+
+                        <!--1st Table-->
+                        <div class="row form-group mb-4">
+                            <table class="table">
+                                <tbody>
+                                    <!--Faculty-->
+                                    <tr>
+                                        <th class="col-5" scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
+                                        <td class="hide_me" id="faculty_original"><span th:id="'og: ' + ${course.faculty}" th:text="#{'course.faculty.' + ${course.faculty}}">FACULTY</span></td>
+                                        <td class="show_me" id="faculty_dropdown" style="display: none">
+                                            <select id="faculty_select" class="custom-select form-control" th:with="faculties = ${T(qova.enums.CourseFaculty).values()}" th:field="*{faculty}">
+                                                <option class="dropdown-item" th:id="${faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
+                                            </select>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <!--Semester Period-->
+                                    <tr>
+                                        <th class="col-5" scope="row" th:text="#{course.courseDate}">YEAR</th>
+                                        <td class="hide_me" th:text="${course.semesterString}">XXXX</td>
+                                        <td class="show_me" style="display: none">
+                                            <select class="custom-select form-control" th:field="*{semesterString}">
+                                                <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+                                            </select>
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                    <!--Semester of Students-->
+                                    <tr>
+                                        <th class="col-5" scope="row" th:text="#{course.semesterOfStudents}">SEMESTER</th>
+                                        <td class="hide_me"><span th:text="${course.semesterOfStudents}">IDK - XXXX</span></td>
+                                        <td class="show_me" style="display: none;">
+                                            <input class="form-control" type="number" th:placeholder="${course.semesterOfStudents}" th:value="${course.semesterOfStudents}" name="semesterOfStudents" id="semesterOfStudents">
+                                        </td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!--2nd Table-->
+                        <div class="row form-group hide_me mb-4">
+                            <div th:switch="${course.finalisedFlag}" class="col-12 p-0">
+                                <h5 class="font-weight-light d-block" th:text="#{course.status}">COURSE STATUS</h5>
+                                <p th:case="true" class="m-0" th:text="#{course.status.finalised}">STATUS DESCRIPTION</p>
+                                <th:block th:case="false">
+                                    <p th:text="#{course.status.description}">STATUS DESCRIPTION</p>
+                                    <table class="table">
+                                        <tbody>
+                                            <tr>
+                                                <th class="col-3" scope="row" th:text="#{course.status.surveys}">Surveys:</th>
+                                                <td th:switch="${surveysMissing}">
+                                                    <p th:case="0" class="text-success m-0" th:text="#{course.status.finished}">FINISHED</p>
+                                                    <p th:case="*" class="text-warning m-0"><span th:text="${surveysMissing}">X</span><span> </span><span th:text="#{course.survey.missing}">MISSING</span></p>
+                                                </td>
+                                            </tr>
+                                            <tr class="highlight_me">
+                                                <th class="col-3" scope="row" th:text="#{course.status.instances}">Instances:</th>
+                                                <td>
+                                                    <a th:switch="${titlesMissing}" type="button" class="btn btn-link nounderline p-0" href="#" th:href="${'/course/instanceTitles?id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.editInstance}">
+                                                        <th:block th:case="false">
+                                                            <p class="text-success d-inline-block m-0 mr-2" th:text="#{course.status.finished}">FINISHED</p>
+                                                            <i class="far fa-edit"></i>
+                                                        </th:block>
+                                                        <th:block th:case="true">
+                                                            <p class="text-danger d-inline-block m-0 mr-2" th:text="#{course.names.missing}">NAMES MISSING</p>
+                                                            <i class="far fa-edit"></i>
+                                                        </th:block>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="col-3" scope="row" th:text="#{course.status.finalisation}">Finalisation:</th>
+                                                <td th:switch="${titlesMissing}">
+                                                    <a th:case="true" class="status-btn" onclick="highlight_missing()">
+                                                        <span th:text="#{course.status.pending}">WIP</span>
+                                                    </a>
+                                                    <a th:case="false" class="status-btn" type="submit" data-toggle="modal" data-target="#finalizeModal">
+                                                        <span th:text="#{course.status.pending}">WIP</span>
+                                                    </a>
+                                                </td>
+
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </th:block>
+                            </div>
+                        </div>
+
+                        <!--3rd Table-->
+                        <div class="row form-group">
+                            <table class="table mb-0">
+                                <thead>
+                                    <tr>
+                                        <th class="border-0 col-1 show_me" scope="col" style="display: none;"></th>
+                                        <th class="border-0 col-1" scope="col" th:text="#{detail.classType}">TYPE</th>
+                                        <th class="border-0 text-center col-2" scope="col" th:text="#{detail.instanceAmount}">#Instance</th>
+                                        <th class="border-0 text-center col-2" scope="col" th:text="#{detail.groupAmount}">#Group</th>
+                                        <th class="border-0 text-center col-1 hide_me" scope="col" th:text="#{detail.classSurvey}">SURVEY</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="course_type: ${type_list}" th:classappend="!${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__} ? text-light-grey : userclass" th:id="${course_type} + 'Line'">
+                                        <!--1st Col-->
+                                        <td class="show_me" style="display: none;">
+                                            <div class="col-md-auto">
+                                                <label class="switch m-0 align-middle" th:switch="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}">
+                                                    <input th:case="true"  type="checkbox" th:id="${course_type} + 'Check'" th:onclick="set_hidden_data([[${course_type}]])" checked>
+                                                    <input th:case="false" type="checkbox" th:id="${course_type} + 'Check'" th:onclick="set_hidden_data([[${course_type}]])">
+                                                    <span class="slider round"></span>
+                                                </label>
+                                            </div>
+                                            <input type="text" th:field="*{__${course_type} + 'Exists'__}" style="display: none;">
+                                        </td>
+                                        <!--2nd Col-->
+                                        <td scope="row" th:text="#{'new.' + ${course_type}}">LECTURE</td>
+                                        <!--3rd Col-->
+                                        <td class="text-center" th:text="${__'course.' + ${course_type} + '.instanceAmount'__}">COUNT</td>
+                                        <input type="hidden" th:value="${__'course.' + ${course_type} + '.instanceAmount'__}" th:name="|instanceAmount${#strings.capitalize(course_type)}|"></input>
+                                        <!--4th Col-->
+                                        <td class="text-center hide_me" th:text="${__'course.' + ${course_type} + '.groupAmount'__}">COUNT</td>
+                                        <td class="show_me" style="display: none;">
+                                            <input class="form-control" type="text" th:value="${__'course.' + ${course_type} + '.groupAmount'__}" th:name="|groupAmount${#strings.capitalize(course_type)}|" th:id="|groupAmount${#strings.capitalize(course_type)}|">
+                                        </td>
+                                        <!--5th Col-->
+                                        <th:block th:switch="!${course.finalisedFlag} and !${__'course.'+${course_type}+'.surveyEditedFlag'__}">
+                                            <td th:case="true" class="text-center">
+                                                <a th:if="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
+                                            </td>
+                                            <td th:case="false" class="text-center">
+                                                <a th:if="!${course.finalisedFlag}" type="button" class="btn btn-link p-0 align-middle hide_me mr-2" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="left" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
+                                                <a th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/previewsurvey?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.previewSurvey}"><i class="fa fa-eye"></i></a>
+                                            </td>
+                                        </th:block>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="col-1"></div>
+
+                <!--QR Codes-->
+                <div class="col-auto" th:if="${course.finalisedFlag}">
+                    <h5 class="font-weight-light text-center" th:text="#{detail.QR}">QR CODES</h5>
+                    <div class="row justify-content-md-center">
+                        <div class="container carousel-border border border-secondary p-1 position-relative">
+                            <div id="carouselExampleIndicators" class="carousel slide" interval="false">
+
+                                <ol class="carousel-indicators">
+                                    <li th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" data-target="#carouselExampleIndicators" data-slide-to="0"></li>
+                                </ol>
+
+                                <div class="carousel-inner">
+
+                                    <div th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="carousel-item">
+                                        <img class="d-block w-100 mb-5" th:src="'data:image/jpeg;base64,' + ${__${course_type} + 'QRCode'__}" alt=">.<">
+                                        <div class="carousel-caption text-dark d-block mb-1">
+                                            <h5 th:text="#{${course_type}}">TEXT</h5>
+                                        </div>
+                                    </div>
+
+                                    <div th:if="${!course.lecture.surveyEditedFlag and !course.tutorial.surveyEditedFlag and !course.seminar.surveyEditedFlag and !course.practical.surveyEditedFlag}" class="carousel-item">
+                                        <img class="d-block w-100 mb-5 bg-dark" src="..." alt="" style="width: 300px; height: 300px;">
+                                        <div class="carousel-caption text-dark d-block mb-0">
+                                            <h5>No Surveys yet</h5>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+                                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden></span>
+                                    <span class="sr-only">Previous</span>
+                                </a>
+                                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden></span>
+                                    <span class="sr-only">Next</span>
+                                </a>
+                                
+                            </div>
+                        </div>
+                    </div>
+                    <!--Download Button-->
+                    <div th:if="!${course.lecture.surveyEditedFlag and course.tutorial.surveyEditedFlag and course.seminar.surveyEditedFlag and course.practical.surveyEditedFlag}" class="col-12 text-center">
+                        <p class="m-0 font-weight-light mt-3" th:text="#{detail.download}"></p>
+                        <div class="btn-group row" role="group" aria-label="First group">
+                            <a th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:href="${'/qrcode?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" target="_blank" href="#">TEXT</a>
+                        </div>
+                        <p class="m-0 font-weight-light mt-2" th:text="#{detail.download.link}"></p>
+                        <div class="btn-group row" role="group" aria-label="First group">
+                            <button th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:onclick="copy_url([[${course_type}]])">TEXT</button>
+                        </div>
+                        <div class="row justify-content-center align-items-center mt-2">
+                            <p id="url-label" class="m-0" th:text="|#{copied}:|" style="display: none;">Copied: </p>
+                            <input class="url-input" th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" th:id="|${course_type}Link|" th:name="|${course_type}Link|" th:value="${__${course_type}+'Link'__}" style="display: none;" readonly>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
             
-            const input_box_slider = document.createElement("SPAN");
-            input_box_slider.className = "slider round";
+        </div>
 
-            replacer.appendChild(input_box);
-            replacer.appendChild(input_box_slider);
-            replace_me.innerHTML = "";
-            replace_me.appendChild(replacer);
+    </div>
+    <div th:replace="footer"></div>
+</body>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip(({ trigger: 'hover' }));
+        document.getElementsByClassName("carousel-item")[0].className = "carousel-item active";
+        try {
+            document.getElementsByClassName("carousel-indicators")[0].getElementsByTagName("li")[0].className = "active";
         }
-        else {
-            const replacer = document.createElement("INPUT");
-            replacer.className = "form-control";
-            replacer.type = "text";
-            replacer.setAttribute("placeholder", replace_me.innerHTML);
-                
-            replace_me.innerHTML = "";
-            replace_me.appendChild(replacer);
+        catch (e) {
+            console.log("No QR-Code aviable yet.")
         }
-    }
+    });
+    $('#myModal').on('shown.bs.modal', function () {
+        $('#myInput').trigger('focus')
+    })
+    $('#name-input').keyup(function () {
+        $('#name-input-hidden').val($(this).val());
+    });
 
     function sort_options(select_element) {
         const all_options = select_element.children;
-        
+
         //sorting by innerHTML
         var sorted_option = [];
         for (let index = 0; index < all_options.length; ++index) {
             const option = all_options[index];
             sorted_option.push([option.id, option.innerHTML]);
         }
-        sorted_option.sort(function(a, b) { 
+        sorted_option.sort(function (a, b) {
             return a[1] > b[1] ? 1 : -1;
         });
 
@@ -295,31 +336,105 @@
             select_element.appendChild(new_child);
         }
     }
-    
+
+    function download_all() {
+        const all_downloads = document.getElementsByClassName("download")
+        for (let index = 0; index < all_downloads.length; ++index) {
+            all_downloads[index].click();
+        }
+    }
+
+    function set_hidden_data(type) {
+        const og_input = document.getElementById(type + "Check");
+        const hidden_input = document.getElementById(type + "Exists");
+        const table_line = document.getElementById(type + "Line");
+        if (og_input.checked === false) {
+            table_line.className = "text-light-grey";
+            hidden_input.value = "false";
+            disable_inputs(table_line, true);
+        }
+        else {
+            table_line.className = "";
+            hidden_input.value = "true";
+            disable_inputs(table_line, false);
+        }
+        og_input.disabled = true;
+        setTimeout(function () { og_input.disabled = false; }, 500)
+    }
+
+    function disable_inputs(f_element, bool) {
+        const all_text_inputs = f_element.querySelectorAll('input[type=text]');
+        for (let index = 0; index < all_text_inputs.length; ++index) {
+            if (all_text_inputs[index].className == "form-control") {
+                if (all_text_inputs[index].id == "groupAmountLecture") {
+                    all_text_inputs[index].readOnly = true;
+                }
+                else {
+                    all_text_inputs[index].readOnly = bool;
+                }
+            }
+        }
+        if (bool == true) {
+            f_element.getElementsByClassName("instance_btn")[0].classList.add("disabled-link");
+        }
+        else {
+            f_element.getElementsByClassName("instance_btn")[0].classList.remove("disabled-link");
+        }
+    }
+
+    const name_input = document.getElementById("name-input")
+    name_input.addEventListener("change", function () {
+        document.getElementById("hidden-name-input").value = name_input.value;
+    });
+
+    function switcheroo() {
+        const vis = document.getElementsByClassName("hide_me");
+        for (let index = 0; index < vis.length; ++index) {
+            vis[index].style.display = "none";
+        }
+        const invis = document.getElementsByClassName("show_me");
+        for (let index = 0; index < invis.length; ++index) {
+            invis[index].style.display = "";
+        }
+        const all_types = ["lecture", "tutorial", "seminar", "practical"];
+        for (let index = 0; index < all_types.length; ++index) {
+            set_hidden_data(all_types[index]);
+            if (document.getElementById(all_types[index] + "Exists").value == "false") {
+                disable_inputs(document.getElementById(all_types[index] + "Line"), true);
+            }
+
+        }
+    }
+
     function edit_mode() {
         //turns finish edit button visable & disables edit button
-        document.getElementById("finishEdit").style.display = "block";
         document.getElementById("startEdit").disabled = true;
 
-        //replaces simple values with input fields
-        const editables = document.getElementsByClassName("editable");
-        for (let index = 0; index < editables.length; ++index) {
-            replace_with_input(editables[index]);
-        }
-
         //faculty replacement
-        const faculty_original = document.getElementById("faculty_original");
         sort_options(document.getElementById("faculty_select"));
-        faculty_original.style.display = "none";
-        document.getElementById("faculty_dropdown").style.display = "block";
-        //select new default value
-        const key = faculty_original.querySelector("span").id;
+        const key = document.getElementById("faculty_original").querySelector("span").id;
         document.getElementById(key.slice(4, key.length)).setAttribute("selected", "selected");
 
-        //semester replacement
-        const semester_original = document.getElementById("semester_original");
-        semester_original.style.display = "none";
-        document.getElementById("semester_dropdown").style.display = "block";
+        //replaces everything else
+        switcheroo();
+    }
+
+    function copy_url(type) {
+        const target = document.getElementById(type+"Link");
+        navigator.clipboard.writeText(target.value); //copys the text from the input
+        var hide_us = document.getElementsByClassName("url-input");
+        for (let i = 0; i < hide_us.length; ++i) {
+            hide_us[i].style.display = "none";
+        }
+        target.style.display = "";
+        document.getElementById("url-label").style.display = "";
+    }
+
+    function highlight_missing() {
+        var targets = document.getElementsByClassName("highlight_me");
+        for (let i = 0; i < targets.length; i++) {
+            targets[i].classList.add("highlight-border");
+        }
     }
 </script>
 </html>

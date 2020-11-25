@@ -1,7 +1,23 @@
 body {
     --tu_blue: rgb(0, 37, 87);
+    --fancy_grey: darkslategrey;
 }
 
+.sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top:0;
+}
+
+.buttongroup{
+    float: right;
+    margin: 0px;
+    margin-top: 0px;
+}
+
+.custom-save{
+    padding: 0px 2px;
+}
 .btn-head {
     background-color: var(--tu_blue);
     color: white;
@@ -14,22 +30,28 @@ body {
     text-align: right !important;
 }
 .btn-list {
-    background-color: transparent;
-    color: darkslategrey;
+    background-color: white;
+    color: var(--fancy_grey);
+    border-radius: 0px !important;
 }
 .btn-list:hover {
     background-color: rgba(255, 255, 255, 0.8);
-    border-top: 1px solid darkslategrey;
-    border-bottom: 1px solid darkslategrey;
+    border-top: 1px solid var(--fancy_grey);
+    border-bottom: 1px solid var(--fancy_grey);
+    border-radius: 0px !important;
     transition: 0.5s;
 }
 .btn-list-last {
-    background-color: transparent;
-    color: darkslategrey;
+    background-color: white;
+    color: var(--fancy_grey);
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
 }
 .btn-list-last:hover {
     background-color: rgba(255, 255, 255, 0.8);
-    border-top: 1px solid darkslategrey;
+    border-top: 1px solid var(--fancy_grey);
+    border-top-left-radius: 0px !important;
+    border-top-right-radius: 0px !important;
     transition: 0.5s;
 }
 
@@ -57,9 +79,13 @@ body {
     display: flex;
     flex-direction: column;
 }
-
 .Answer.Option {
     display: initial;
+}
+.answer-icon {
+    width: 2rem;
+    height: 2rem;
+    color: var(--fancy_grey);
 }
 .btn-answere {
     visibility: hidden;
@@ -69,15 +95,16 @@ body {
 }
 
 .Textarea {
-    resize: vertical;
+    overflow: hidden;
 }
 .Textarea.Question{
     width: 100%;
     margin: 0.5rem 0rem;
+    padding: none;
     border:none;
     border-radius: 0px;
     border-bottom: 1px solid black;
-    height: 4rem;
+    height: 2rem;
     min-height: 2rem;
 }
 .Textarea.Answers {
@@ -85,17 +112,17 @@ body {
     margin: 0rem;
     border:none;
     border-radius: 0px;
-    border-bottom: 1px solid grey;
+    border-bottom: 1px solid var(--fancy_grey);
     height: 2rem;
     min-height: 2rem;
 }
 
 .options {
   text-decoration: none !important;
-  color: grey;
+  color: var(--fancy_grey);
 }
 .options:hover {
-    color: darkgrey;
+    color: var(--fancy_grey);
 }
 
 .show {

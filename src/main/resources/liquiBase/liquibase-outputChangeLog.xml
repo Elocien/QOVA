@@ -1,0 +1,449 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+    <changeSet author="lucian (generated)" id="1600875279878-1">
+        <createTable tableName="course">
+            <column name="id" type="BINARY(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="course_date" type="date"/>
+            <column name="faculty" type="INT"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="semester_of_students" type="INT"/>
+            <column name="semester_string" type="VARCHAR(255)"/>
+            <column name="lecture_id" type="BIGINT"/>
+            <column name="practical_id" type="BIGINT"/>
+            <column name="seminar_id" type="BIGINT"/>
+            <column name="tutorial_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-2">
+        <createTable tableName="course_instance">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BIT(1)"/>
+            <column name="course_type" type="INT"/>
+            <column name="finalised" type="BIT(1)"/>
+            <column name="group_amount" type="INT"/>
+            <column name="instance_amount" type="INT"/>
+            <column name="survey" type="LONGTEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-3">
+        <createTable tableName="course_instance_instance_titles">
+            <column name="course_instance_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="instance_titles" type="VARCHAR(255)"/>
+            <column name="instance_titles_order" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-4">
+        <createTable tableName="custom_gen">
+            <column name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-5">
+        <createTable tableName="default_survey">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="default_survey_json" type="LONGTEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-6">
+        <createTable tableName="hibernate_sequence">
+            <column name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-7">
+        <createTable tableName="survey_response">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="course_type" type="INT"/>
+            <column name="date_time" type="datetime"/>
+            <column name="group_number" type="INT"/>
+            <column name="instance_number" type="INT"/>
+            <column name="course_id" type="BINARY(16)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-8">
+        <createTable tableName="survey_response_binary_responses">
+            <column name="survey_response_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="no_total" type="INT"/>
+            <column name="question" type="LONGTEXT"/>
+            <column name="response_type" type="INT"/>
+            <column name="yes_total" type="INT"/>
+            <column name="value" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-9">
+        <createTable tableName="survey_response_multiple_choice_responses">
+            <column name="survey_response_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id" type="BIGINT"/>
+            <column name="multiple_choice_answers" type="LONGBLOB"/>
+            <column name="multiple_choice_options" type="LONGBLOB"/>
+            <column name="question" type="VARCHAR(255)"/>
+            <column name="value" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-10">
+        <createTable tableName="survey_response_position_of_response_types">
+            <column name="survey_response_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="position_of_response_types" type="INT"/>
+            <column name="position_of_response_types_order" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-11">
+        <createTable tableName="survey_response_single_choice_responses">
+            <column name="survey_response_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id" type="BIGINT"/>
+            <column name="question" type="VARCHAR(255)"/>
+            <column name="single_choice_answers" type="LONGBLOB"/>
+            <column name="single_choice_options" type="LONGBLOB"/>
+            <column name="value" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-12">
+        <createTable tableName="survey_response_text_responses">
+            <column name="survey_response_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="question" type="VARCHAR(255)"/>
+            <column name="responses" type="LONGBLOB"/>
+            <column name="value" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-13">
+        <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="course"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-14">
+        <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="course_instance"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-15">
+        <addPrimaryKey columnNames="course_instance_id, instance_titles_order" constraintName="PRIMARY" tableName="course_instance_instance_titles"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-16">
+        <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="default_survey"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-17">
+        <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="survey_response"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-18">
+        <addPrimaryKey columnNames="survey_response_id, value" constraintName="PRIMARY" tableName="survey_response_binary_responses"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-19">
+        <addPrimaryKey columnNames="survey_response_id, value" constraintName="PRIMARY" tableName="survey_response_multiple_choice_responses"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-20">
+        <addPrimaryKey columnNames="survey_response_id, position_of_response_types_order" constraintName="PRIMARY" tableName="survey_response_position_of_response_types"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-21">
+        <addPrimaryKey columnNames="survey_response_id, value" constraintName="PRIMARY" tableName="survey_response_single_choice_responses"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-22">
+        <addPrimaryKey columnNames="survey_response_id, value" constraintName="PRIMARY" tableName="survey_response_text_responses"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-23">
+        <createIndex indexName="FK41fbg8gcfryv9kkpn5pt78jei" tableName="course">
+            <column name="tutorial_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-24">
+        <createIndex indexName="FKc8fl6hfdr7ocetn5k8dg38me0" tableName="course">
+            <column name="practical_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-25">
+        <createIndex indexName="FKo0rmh3uthhv1p31irff5lrojn" tableName="course">
+            <column name="seminar_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-26">
+        <createIndex indexName="FKpeh66m1lc83mibu94ut7olckb" tableName="course">
+            <column name="lecture_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-27">
+        <createIndex indexName="FKsiwhyvv765dtvp2afty4oychh" tableName="survey_response">
+            <column name="course_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-28">
+        <addForeignKeyConstraint baseColumnNames="tutorial_id" baseTableName="course" constraintName="FK41fbg8gcfryv9kkpn5pt78jei" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="course_instance"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-29">
+        <addForeignKeyConstraint baseColumnNames="survey_response_id" baseTableName="survey_response_text_responses" constraintName="FK75qlokv4jc2unw4vqjv81h443" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="survey_response"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-30">
+        <addForeignKeyConstraint baseColumnNames="practical_id" baseTableName="course" constraintName="FKc8fl6hfdr7ocetn5k8dg38me0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="course_instance"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-31">
+        <addForeignKeyConstraint baseColumnNames="survey_response_id" baseTableName="survey_response_single_choice_responses" constraintName="FKhe048cyspx1g898uujnq9txki" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="survey_response"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-32">
+        <addForeignKeyConstraint baseColumnNames="survey_response_id" baseTableName="survey_response_binary_responses" constraintName="FKhgtcoqwiwj2kmwot3fg4s2nj9" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="survey_response"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-33">
+        <addForeignKeyConstraint baseColumnNames="survey_response_id" baseTableName="survey_response_position_of_response_types" constraintName="FKk4ibsyvjhpvkbaqqu1x1ay83" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="survey_response"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-34">
+        <addForeignKeyConstraint baseColumnNames="course_instance_id" baseTableName="course_instance_instance_titles" constraintName="FKl3yoc7vjf1fdvttdiiaev7cys" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="course_instance"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-35">
+        <addForeignKeyConstraint baseColumnNames="seminar_id" baseTableName="course" constraintName="FKo0rmh3uthhv1p31irff5lrojn" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="course_instance"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-36">
+        <addForeignKeyConstraint baseColumnNames="survey_response_id" baseTableName="survey_response_multiple_choice_responses" constraintName="FKocxf2qh1kctpc3rtqp136iaqq" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="survey_response"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-37">
+        <addForeignKeyConstraint baseColumnNames="lecture_id" baseTableName="course" constraintName="FKpeh66m1lc83mibu94ut7olckb" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="course_instance"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875279878-38">
+        <addForeignKeyConstraint baseColumnNames="course_id" baseTableName="survey_response" constraintName="FKsiwhyvv765dtvp2afty4oychh" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="course"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-1">
+        <createTable tableName="course">
+            <column name="id" type="BINARY(16)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="course_date" type="date"/>
+            <column name="faculty" type="INT"/>
+            <column name="name" type="VARCHAR(255)"/>
+            <column name="semester_of_students" type="INT"/>
+            <column name="semester_string" type="VARCHAR(255)"/>
+            <column name="lecture_id" type="BIGINT"/>
+            <column name="practical_id" type="BIGINT"/>
+            <column name="seminar_id" type="BIGINT"/>
+            <column name="tutorial_id" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-2">
+        <createTable tableName="course_instance">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="BIT(1)"/>
+            <column name="course_type" type="INT"/>
+            <column name="finalised" type="BIT(1)"/>
+            <column name="group_amount" type="INT"/>
+            <column name="instance_amount" type="INT"/>
+            <column name="survey" type="LONGTEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-3">
+        <createTable tableName="course_instance_instance_titles">
+            <column name="course_instance_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="instance_titles" type="VARCHAR(255)"/>
+            <column name="instance_titles_order" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-4">
+        <createTable tableName="custom_gen">
+            <column name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-5">
+        <createTable tableName="default_survey">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="default_survey_json" type="LONGTEXT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-6">
+        <createTable tableName="hibernate_sequence">
+            <column name="next_val" type="BIGINT"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-7">
+        <createTable tableName="survey_response">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="course_type" type="INT"/>
+            <column name="date_time" type="datetime"/>
+            <column name="group_number" type="INT"/>
+            <column name="instance_number" type="INT"/>
+            <column name="course_id" type="BINARY(16)"/>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-8">
+        <createTable tableName="survey_response_binary_responses">
+            <column name="survey_response_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="no_total" type="INT"/>
+            <column name="question" type="LONGTEXT"/>
+            <column name="response_type" type="INT"/>
+            <column name="yes_total" type="INT"/>
+            <column name="value" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-9">
+        <createTable tableName="survey_response_multiple_choice_responses">
+            <column name="survey_response_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id" type="BIGINT"/>
+            <column name="multiple_choice_answers" type="LONGBLOB"/>
+            <column name="multiple_choice_options" type="LONGBLOB"/>
+            <column name="question" type="VARCHAR(255)"/>
+            <column name="value" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-10">
+        <createTable tableName="survey_response_position_of_response_types">
+            <column name="survey_response_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="position_of_response_types" type="INT"/>
+            <column name="position_of_response_types_order" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-11">
+        <createTable tableName="survey_response_single_choice_responses">
+            <column name="survey_response_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="id" type="BIGINT"/>
+            <column name="question" type="VARCHAR(255)"/>
+            <column name="single_choice_answers" type="LONGBLOB"/>
+            <column name="single_choice_options" type="LONGBLOB"/>
+            <column name="value" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-12">
+        <createTable tableName="survey_response_text_responses">
+            <column name="survey_response_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="question" type="VARCHAR(255)"/>
+            <column name="responses" type="LONGBLOB"/>
+            <column name="value" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-13">
+        <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="course"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-14">
+        <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="course_instance"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-15">
+        <addPrimaryKey columnNames="course_instance_id, instance_titles_order" constraintName="PRIMARY" tableName="course_instance_instance_titles"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-16">
+        <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="default_survey"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-17">
+        <addPrimaryKey columnNames="id" constraintName="PRIMARY" tableName="survey_response"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-18">
+        <addPrimaryKey columnNames="survey_response_id, value" constraintName="PRIMARY" tableName="survey_response_binary_responses"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-19">
+        <addPrimaryKey columnNames="survey_response_id, value" constraintName="PRIMARY" tableName="survey_response_multiple_choice_responses"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-20">
+        <addPrimaryKey columnNames="survey_response_id, position_of_response_types_order" constraintName="PRIMARY" tableName="survey_response_position_of_response_types"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-21">
+        <addPrimaryKey columnNames="survey_response_id, value" constraintName="PRIMARY" tableName="survey_response_single_choice_responses"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-22">
+        <addPrimaryKey columnNames="survey_response_id, value" constraintName="PRIMARY" tableName="survey_response_text_responses"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-23">
+        <createIndex indexName="FK41fbg8gcfryv9kkpn5pt78jei" tableName="course">
+            <column name="tutorial_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-24">
+        <createIndex indexName="FKc8fl6hfdr7ocetn5k8dg38me0" tableName="course">
+            <column name="practical_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-25">
+        <createIndex indexName="FKo0rmh3uthhv1p31irff5lrojn" tableName="course">
+            <column name="seminar_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-26">
+        <createIndex indexName="FKpeh66m1lc83mibu94ut7olckb" tableName="course">
+            <column name="lecture_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-27">
+        <createIndex indexName="FKsiwhyvv765dtvp2afty4oychh" tableName="survey_response">
+            <column name="course_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-28">
+        <addForeignKeyConstraint baseColumnNames="tutorial_id" baseTableName="course" constraintName="FK41fbg8gcfryv9kkpn5pt78jei" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="course_instance"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-29">
+        <addForeignKeyConstraint baseColumnNames="survey_response_id" baseTableName="survey_response_text_responses" constraintName="FK75qlokv4jc2unw4vqjv81h443" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="survey_response"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-30">
+        <addForeignKeyConstraint baseColumnNames="practical_id" baseTableName="course" constraintName="FKc8fl6hfdr7ocetn5k8dg38me0" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="course_instance"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-31">
+        <addForeignKeyConstraint baseColumnNames="survey_response_id" baseTableName="survey_response_single_choice_responses" constraintName="FKhe048cyspx1g898uujnq9txki" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="survey_response"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-32">
+        <addForeignKeyConstraint baseColumnNames="survey_response_id" baseTableName="survey_response_binary_responses" constraintName="FKhgtcoqwiwj2kmwot3fg4s2nj9" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="survey_response"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-33">
+        <addForeignKeyConstraint baseColumnNames="survey_response_id" baseTableName="survey_response_position_of_response_types" constraintName="FKk4ibsyvjhpvkbaqqu1x1ay83" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="survey_response"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-34">
+        <addForeignKeyConstraint baseColumnNames="course_instance_id" baseTableName="course_instance_instance_titles" constraintName="FKl3yoc7vjf1fdvttdiiaev7cys" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="course_instance"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-35">
+        <addForeignKeyConstraint baseColumnNames="seminar_id" baseTableName="course" constraintName="FKo0rmh3uthhv1p31irff5lrojn" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="course_instance"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-36">
+        <addForeignKeyConstraint baseColumnNames="survey_response_id" baseTableName="survey_response_multiple_choice_responses" constraintName="FKocxf2qh1kctpc3rtqp136iaqq" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="survey_response"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-37">
+        <addForeignKeyConstraint baseColumnNames="lecture_id" baseTableName="course" constraintName="FKpeh66m1lc83mibu94ut7olckb" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="course_instance"/>
+    </changeSet>
+    <changeSet author="lucian (generated)" id="1600875625143-38">
+        <addForeignKeyConstraint baseColumnNames="course_id" baseTableName="survey_response" constraintName="FKsiwhyvv765dtvp2afty4oychh" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" onUpdate="RESTRICT" referencedColumnNames="id" referencedTableName="course"/>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,25 @@
+.slim-line > td, th {
+  font-weight: 400;
+  text-align: center;
+  padding: 0.5rem 5px !important;
+  border: none;
+}
+.slim-line > td > input {
+  width: 168.35px;
+}
+.slim-line > td:first-child {
+  line-height: 38px;
+  text-align: right !important;
+}
+.slim-line > td:last-child {
+  padding-right: 0px !important;
+}
+.slim-line > th:first-child {
+  text-align: right !important;
+}
+.slim-line > th:last-child {
+  padding-right: 0px !important;
+}
+.slim-line > th {
+  padding: 0rem !important;
+}

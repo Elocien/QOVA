@@ -7,49 +7,57 @@ Regex to check email:
 Database shit
 --------------------------------------------
 
-
-DB Password: 
-QOVA2020
-
+To generate database shema as xml
+./mvnw liquibase:generateChangeLog
 
 
-To start mysqld at boot time you have to copy
-support-files/mysql.server to the right place for your system
+To generate the diff between the old diff (in our case production) and the new shema, we need to edit the liquibase.properties file:
 
 
-Two all-privilege accounts were created.
-One is root@localhost, it has no password, but you need to
-be system 'root' user to connect. Use, for example, sudo mysql
-The second is mysql@localhost, it has no password either, but
-you need to be the system 'mysql' user to connect.
-After connecting you can set the password, if you would need to be
-able to connect as any of these users with a password and without sudo
-
-See the MariaDB Knowledgebase at http://mariadb.com/kb or the
-MySQL manual for more instructions.
-
-You can start the MariaDB daemon with:
-cd '/usr' ; /usr/bin/mysqld_safe --datadir='./data'
-
-You can test the MariaDB daemon with mysql-test-run.pl
-cd '/usr/mysql-test' ; perl mysql-test-run.pl
+changeLogFile=classpath:liquibase-changeLog.xml
+url= -- new shema (i think) --
+username=springuser
+password=QOVA2020
+driver=com.mysql.cj.jdbc.Driver
+referenceUrl= -- production(old) shema (i think) --
+diffChangeLogFile=src/main/resources/liquiBaseliquibase-diff-changeLog.xml
 
 
-IMPORTANT:      sudo systemctl start mariadb
-
---------------------------------------------------------------------------
 
 
-medienzentrum@​tu-dresden.de
-
-internes Medizin projekt röder
-
-wegen server
 
 
---------------------------------------------------------------------------
+
+The things im unsure on:
+
+referenceUrl=
+hibernate:spring:qova?dialect=org.hibernate.dialect.MySQL5Dialect&hibernate.physical_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy&hibernate.implicit_naming_strategy=org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrateg
+
+and 
 
 
-1. Write JSON Serializer, Deserializer
-2. Write Controller method for initial view (Get)
-3. Write Controller method with JSON responsebody
+url=
+jdbc:mysql://localhost:3306/db_example?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+
+
+
+
+
+
+default:true
+// switch (type) {
+        //     case LECTURE:
+        //         this.defaultSurveyJson = "[{\"type\":\"SingleChoice\",\"question\":\"Hat die Vorlesung Wissen vermittelt, welches du dir nicht im Selbststudium hättest erarbeiten können?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\",\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Vorlesende den aktiven Austausch mit den Studierenden gesucht?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Waren die Anforderung dem Wissensstand der Studierenden angemessen?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Konnte die Vorlesung gezielt Schwerpunkte setzen und Struktur vermitteln?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Konnte der/die Vorlesende dein Interesse an dem Thema wecken?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Online Lehre v.s. Präsenzveranstaltung\",\"answers\":[\"Die Vorlesung war digital und soll digital bleiben.\",\"Die Vorlesung war digital und wäre als Präsenzveranstaltung besser.\",\"Die Vorlesung war eine Präsenzveranstaltung und soll eine bleiben.\",\"Die Vorlesung war eine Präsenzveranstaltung und sollte digital werden.\"],\"default\":\"true\"}},{\"type\":\"FreeText\",\"question\":\"An dieser Stelle würden wir uns über konstruktive Kritik, aber auch über Anregungen und Lob freuen!\",\"default\":\"true\"}]";
+        //         break;
+        //     case TUTORIAL:
+        //         this.defaultSurveyJson = "[{\"type\":\"SingleChoice\",\"question\":\"Hat die Übung Wissen vermittelt, welches du dir nicht im Selbststudium hättest erarbeiten können?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in den aktiven Austausch mit den Studierenden gesucht?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Waren die Anforderung dem Wissensstand der Studierenden angemessen?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Konnte die Übung gezielt Schwerpunkte setzen und Struktur vermitteln?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Konnte der/die Leiter/in dein Interesse an dem Thema wecken?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in die Möglichkeiten einer Übung gegenüber der Vorlesung ausgeschöpft?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Online Lehre v.s. Präsenzveranstaltung\",\"answers\":[\"Die Übung war digital und soll digital bleiben.\",\"Die Übung war digital und wäre als Präsenzveranstaltung besser.\",\"Die Übung war eine Präsenzveranstaltung und soll eine bleiben.\",\"Die Übung war eine Präsenzveranstaltung und sollte digital werden.\"],\"default\":\"true\"}},{\"type\":\"FreeText\",\"question\":\"An dieser Stelle würden wir uns über konstruktive Kritik, aber auch über Anregungen und Lob freuen!\",\"default\":\"true\"}]";
+        //         break;
+        //     case SEMINAR:
+        //         this.defaultSurveyJson = "[{\"type\":\"SingleChoice\",\"question\":\"Hat das Seminar Wissen vermittelt, welches du dir nicht im Selbststudium hättest erarbeiten können?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in den aktiven Austausch mit den Studierenden gesucht?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Waren die Anforderung dem Wissensstand der Studierenden angemessen?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Konnte das Seminar gezielt Schwerpunkte setzen und Struktur vermitteln?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Konnte der/die Leiter/in dein Interesse an dem Thema wecken?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in die Möglichkeiten eines Seminars gegenüber der Vorlesung ausgeschöpft?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Online Lehre v.s. Präsenzveranstaltung\",\"answers\":[\"Das Seminar war digital und soll digital bleiben.\",\"Das Seminar war digital und wäre als Präsenzveranstaltung besser.\",\"Das Seminar war eine Präsenzveranstaltung und soll eine bleiben.\",\"Das Seminar war eine Präsenzveranstaltung und sollte digital werden.\"],\"default\":\"true\"}},{\"type\":\"FreeText\",\"question\":\"An dieser Stelle würden wir uns über konstruktive Kritik, aber auch über Anregungen und Lob freuen!\",\"default\":\"true\"}]";
+        //         break;
+        //     case PRACTICAL:
+        //         this.defaultSurveyJson = "[{\"type\":\"SingleChoice\",\"question\":\"Hat das Praktikum Wissen vermittelt, welches du dir nicht im Selbststudium hättest erarbeiten können?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in den aktiven Austausch mit den Studierenden gesucht?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Waren die Anforderung dem Wissensstand der Studierenden angemessen?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Konnte der/die Leiter/in dein Interesse an dem Thema wecken?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Hat der/die Leiter/in die Möglichkeiten eines Praktikums gegenüber eines Seminares ausgeschöpft?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Konntest du durch die praktischen Anwendungen Kompetenz aufbauen/festigen?\",\"answers\":[\"1\",\"2\",\"3\",\"4\",\"5\"],\"default\":\"true\"},{\"type\":\"SingleChoice\",\"question\":\"Online Lehre v.s. Präsenzveranstaltung\",\"answers\":[\"Das Praktikum war digital und soll digital bleiben.\",\"Das Praktikum war digital und wäre als Präsenzveranstaltung besser.\",\"Das Praktikum war eine Präsenzveranstaltung und soll eine bleiben.\",\"Das Praktikum war eine Präsenzveranstaltung und sollte digital werden.\"],\"default\":\"true\"}},{\"type\":\"FreeText\",\"question\":\"An dieser Stelle würden wir uns über konstruktive Kritik, aber auch über Anregungen und Lob freuen!\",\"default\":\"true\"}]";
+        //         break;
+        //     default:
+        //         break;
+        // }

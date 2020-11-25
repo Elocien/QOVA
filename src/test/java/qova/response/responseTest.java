@@ -1,128 +1,231 @@
 package qova.response;
 
 import qova.AbstractIntegrationTest;
-import qova.course.Course;
-import qova.course.CourseFaculty;
-import qova.course.CourseType;
-import qova.responses.Response;
-import qova.responses.ResponseType;
+import qova.enums.CourseType;
+import qova.objects.AbstractResponse;
+import qova.objects.BinaryResponse;
+import qova.objects.Course;
+import qova.objects.MultipleChoiceResponse;
+import qova.objects.SingleChoiceResponse;
+import qova.objects.SurveyResponse;
+import qova.objects.TextResponse;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
+import org.json.JSONArray;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 public class responseTest extends AbstractIntegrationTest {
-    @Test
-    public void courseConstructorTest() {
 
-        var name = "test";
-        var lectureExists = true;
-        var tutorialExists = false;
-        var seminarExists = true;
-        var lectureSurvey = "";
-        var tutorialSurvey = "";
-        var seminarSurvey = "";
-        var classTotalSeminar = 10;
-        var classTotalTutorial = 5;
-        var semesterOfStudents = 6;
-        var faculty = CourseFaculty.COMPUTER_SCIENCE;
-        var courseInstance = LocalDate.of(2020, 10, 4);
-        var semesterUI = "SoSe 2020";
-        Course course = new Course(name, lectureExists, tutorialExists, seminarExists, lectureSurvey, tutorialSurvey,
-                seminarSurvey, classTotalTutorial, classTotalSeminar, semesterOfStudents, faculty, semesterUI,
-                courseInstance);
+    @Test
+    public void UserResponseConstructorTest() throws Exception {
 
         // ----------------------------------------------------------------------------------------------------------------------
+        Course course = Mockito.mock(Course.class);
 
-        var courseType = CourseType.LECTURE;
-        var position = 1;
-        var classNo = 1;
-        var question = "test";
-        var responsePossibilites = 3;
+        var type = CourseType.LECTURE;
+        var instance = 1;
+        var group = 1;
 
-        // create test response (binaryAnswer constructor)
-        var binaryAnswer = true;
-        var responseTypeB = ResponseType.BINARY_ANSWER;
-        Response rspB;
+        List<AbstractResponse> listOfResponses = new ArrayList<>();
 
-        try {
-            rspB = new Response(course, courseType, position, classNo, responseTypeB, question, binaryAnswer);
-
-            assertEquals(responseTypeB, rspB.getResponseType());
-            assertEquals(binaryAnswer, rspB.getBinaryAnswer());
-
-            // Common parameters
-            assertEquals(courseType, rspB.getCourseType());
-            assertEquals(position, rspB.getPosition());
-            assertEquals(classNo, rspB.getClassNo());
-            assertEquals(question, rspB.getQuestion());
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        BinaryResponse bnr = new BinaryResponse(0, true);
+        for (int i = 0; i < 35; i++) {
+            bnr.incrementYes();
+        }
+        for (int i = 0; i < 15; i++) {
+            bnr.incrementNo();
         }
 
-        // create test response (TextResponse constructor)
-        var responseTypeT = ResponseType.TEXT_RESPONSE;
-        var textResponse = "some response";
+        listOfResponses.add(bnr);
 
-        Response rspT;
-        try {
-            rspT = new Response(course, courseType, position, classNo, responseTypeT, question, textResponse);
+        MultipleChoiceResponse mcr = new MultipleChoiceResponse(1, 5, true);
 
-            assertEquals(responseTypeT, rspT.getResponseType());
-            assertEquals(textResponse, rspT.getTextResponse());
+        List<Integer> Answers1 = new ArrayList<>();
+        Answers1.add(0);
+        Answers1.add(1);
+        Answers1.add(3);
+        JSONArray mcAnswers1 = new JSONArray(Answers1);
 
-        } catch (Exception e) {
-            e.printStackTrace();
+        List<Integer> Answers2 = new ArrayList<>();
+        Answers2.add(1);
+        Answers2.add(4);
+        JSONArray mcAnswers2 = new JSONArray(Answers2);
+
+        List<Integer> Answers3 = new ArrayList<>();
+        Answers3.add(2);
+        Answers3.add(4);
+        JSONArray mcAnswers3 = new JSONArray(Answers3);
+
+        for (int i = 0; i < 25; i++) {
+            mcr.incrementTotals(mcAnswers1);
+        }
+        for (int i = 0; i < 15; i++) {
+            mcr.incrementTotals(mcAnswers2);
+        }
+        for (int i = 0; i < 10; i++) {
+            mcr.incrementTotals(mcAnswers3);
         }
 
-        // create test response (MultipleChoice constructor)
-
-        var responseTypeM = ResponseType.MULTIPLE_CHOICE;
-        ArrayList<Boolean> MCresponse = new ArrayList<Boolean>();
-        MCresponse.add(false);
-        MCresponse.add(true);
-        MCresponse.add(false);
-
-        ArrayList<String> responseOptions = new ArrayList<String>();
-        responseOptions.add("option1");
-        responseOptions.add("option2");
-        responseOptions.add("option3");
-
-        Response rspM;
-        try {
-            rspM = new Response(course, courseType, position, classNo, responseTypeM, question, responsePossibilites,
-                    MCresponse, responseOptions);
-
-            assertEquals(MCresponse, rspM.getListMCDD());
-            assertEquals(responseOptions, rspM.getOptionsMCDD());
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        TextResponse txr = new TextResponse(2, false);
+        for (int i = 0; i < 20; i++) {
+            txr.addTextSubmission("this is a bit of a test");
+        }
+        for (int i = 0; i < 10; i++) {
+            txr.addTextSubmission("this is a larger test to test the test");
+        }
+        for (int i = 0; i < 17; i++) {
+            txr.addTextSubmission("short test");
+        }
+        for (int i = 0; i < 3; i++) {
+            txr.addTextSubmission(
+                    "this is a very very very very very very very very very very very very very very very very very very very very large test");
         }
 
-        // create test response (MultipleChoice constructor)
+        SurveyResponse response = new SurveyResponse(course, type, instance, group, listOfResponses);
 
-        var responseTypeD = ResponseType.DROP_DOWN;
-        var DDresponse = 1;
-
-        Response rspD;
-        try {
-            rspD = new Response(course, courseType, position, classNo, responseTypeD, question, responsePossibilites,
-                    DDresponse, responseOptions);
-                    
-                assertEquals(true, rspD.getListMCDD().get(DDresponse));
-
-        } 
-        catch (Exception e) {
-            e.printStackTrace();
+        List<String> listOfStudentIds = new ArrayList<>();
+        for (int i = 0; i < 50; i++) {
+            String id = UUID.randomUUID().toString();
+            response.addStundentIdToSubmissionListAndIncrementCounter(id);
+            listOfStudentIds.add(id);
         }
 
-        
-	}
+        assertEquals(course, response.getCourse());
+        assertEquals(type, response.getCourseType());
+        assertEquals(group, response.getGroupNumber());
+        assertEquals(instance, response.getInstanceNumber());
+        // The Maps order is not persisted in the same order the objects are added to it
+        assertEquals(listOfStudentIds.containsAll(response.getListOfStudentsThatSubmitted()),
+                response.getListOfStudentsThatSubmitted().containsAll(listOfStudentIds));
+        assertEquals(50, response.getNumberOfSubmissions());
+        assertEquals(listOfResponses, response.getListOfResponses());
+    }
+
+    @Test
+    public void BinaryResponseConstructorTest() {
+
+        var surveyPosition = 1;
+        var isDefaultQuestion = true;
+
+        BinaryResponse br = new BinaryResponse(surveyPosition, isDefaultQuestion);
+        br.incrementYes();
+        br.incrementNo();
+        br.incrementNo();
+
+        assertEquals("1", br.getYesTotalString());
+        assertEquals("2", br.getNoTotalString());
+        assertEquals(1, br.getYesTotal());
+        assertEquals(2, br.getNoTotal());
+        assertEquals(3, br.getTotal());
+        assertEquals(qova.enums.ResponseType.BINARY_ANSWER, br.getType());
+        assertEquals(surveyPosition, br.getSurveyPosition());
+        assertEquals(isDefaultQuestion, br.getIsDefaultQuestion());
+    }
+
+    @Test
+    public void TextResponseConstructorTest() {
+
+        var surveyPosition = 10;
+        var isDefaultQuestion = false;
+
+        TextResponse tr = new TextResponse(surveyPosition, isDefaultQuestion);
+
+        assertEquals(qova.enums.ResponseType.TEXT_RESPONSE, tr.getType());
+        assertEquals(surveyPosition, tr.getSurveyPosition());
+        assertEquals(isDefaultQuestion, tr.getIsDefaultQuestion());
+    }
+
+    @Test
+    public void SingleChoiceConstructorTest() throws Exception {
+
+        var surveyPosition = 5;
+        var isDefaultQuestion = false;
+
+        SingleChoiceResponse scr = new SingleChoiceResponse(surveyPosition, 5, isDefaultQuestion);
+
+        for (int i = 0; i < 3; i++) {
+            scr.incrementTotal(0);
+        }
+        for (int i = 0; i < 8; i++) {
+            scr.incrementTotal(1);
+        }
+        for (int i = 0; i < 16; i++) {
+            scr.incrementTotal(2);
+        }
+        for (int i = 0; i < 15; i++) {
+            scr.incrementTotal(3);
+        }
+        for (int i = 0; i < 8; i++) {
+            scr.incrementTotal(4);
+        }
+
+        ArrayList<Integer> totals = new ArrayList<Integer>();
+        totals.add(3);
+        totals.add(8);
+        totals.add(16);
+        totals.add(15);
+        totals.add(8);
+
+        assertEquals(totals, scr.getSingleChoiceAnswers());
+        assertEquals(qova.enums.ResponseType.SINGLE_CHOICE, scr.getType());
+        assertEquals(surveyPosition, scr.getSurveyPosition());
+        assertEquals(isDefaultQuestion, scr.getIsDefaultQuestion());
+    }
+
+    @Test
+    public void MultipleChoiceConstructorTest() throws Exception {
+
+        var surveyPosition = 5;
+        var isDefaultQuestion = false;
+
+        MultipleChoiceResponse mcr = new MultipleChoiceResponse(surveyPosition, 5, isDefaultQuestion);
+
+        List<Integer> Answers1 = new ArrayList<>();
+        Answers1.add(0);
+        Answers1.add(1);
+        Answers1.add(3);
+        JSONArray mcAnswers1 = new JSONArray(Answers1);
+
+        List<Integer> Answers2 = new ArrayList<>();
+        Answers2.add(1);
+        Answers2.add(4);
+        JSONArray mcAnswers2 = new JSONArray(Answers2);
+
+        List<Integer> Answers3 = new ArrayList<>();
+        Answers3.add(2);
+        Answers3.add(4);
+        JSONArray mcAnswers3 = new JSONArray(Answers3);
+
+        for (int i = 0; i < 25; i++) {
+            mcr.incrementTotals(mcAnswers1);
+        }
+        for (int i = 0; i < 15; i++) {
+            mcr.incrementTotals(mcAnswers2);
+        }
+        for (int i = 0; i < 10; i++) {
+            mcr.incrementTotals(mcAnswers3);
+        }
+
+        // arraylist containing the totals set above, used to check against actual
+        // arraylist
+        List<Integer> totals = new ArrayList<>();
+        totals.add(25);
+        totals.add(40);
+        totals.add(10);
+        totals.add(25);
+        totals.add(25);
+
+        assertEquals(totals, mcr.getMultipleChoiceAnswers());
+        assertEquals(5, mcr.getNumberOfAnswerPossibilites());
+        assertEquals(qova.enums.ResponseType.MULTIPLE_CHOICE, mcr.getType());
+        assertEquals(surveyPosition, mcr.getSurveyPosition());
+        assertEquals(isDefaultQuestion, mcr.getIsDefaultQuestion());
+    }
+
 }
-
-

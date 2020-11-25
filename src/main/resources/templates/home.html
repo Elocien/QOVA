@@ -1,59 +1,33 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
 <head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
-
-	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap.min.css}" />
-	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/vendor/bootstrap-select.min.css}" />	
-	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/style.css}" />
-	
-	<title th:text="#{home.title}">TITLE</title>
+	<title th:text="#{title.home}">TITLE</title>
 </head>
 <body>
 <div th:include="navbar"></div>
-<div class="container-fluid">
+<div class="main container-fluid">
 
 	<!--Banner-->
-	<div class="row justify-content-end align-items-center p-5 mb-3">
-		<div class="col-md-3">
-			<img class="logo-home float-right" th:src="@{/resources/images/qova_logo_text.png}" src="../static/resources/images/qova_logo_text.png" alt="Logo"/>
-		</div>
-		<div class="col-md-3">
-			<ul class="fancy_text font-weight-light list-unstyled m-0">
-				<li>QR-Code based</li>
-				<li>Online</li>
-				<li>Evaluation</li>
-			</ul>
-		</div>
-		<div class="col-md-3"></div>
-		<!--Login-Window-->
-		<div class="col-md-3">
-			<div class="card">
-				<div class="card-header">
-					<h3 th:text="#{home.login}">TITLE</h3>
+	<div class="row justify-content-center align-items-center p-0 pt-5 pb-5">
+		<!--Logo-->
+		<div class="col-12">
+			<div class="row">
+				<div class="col-6">
+					<img class="logo-home float-right" th:src="@{/resources/images/qova_logo_text.png}" src="../static/resources/images/qova_logo_text.png" alt="Logo"/>
 				</div>
-				<div class="card-body">
-						<form class="form" method="post" th:action="@{/login}">
-						<div class="form-group">
-							<label for="username" th:text="#{home.email}">MAIL</label>
-							<input id="username" name="username" type="text" class="form-control" required />
-						</div>
-						<div class="form-group">
-							<label for="password" th:text="#{home.password}">PASSWORD</label>
-							<input id="password" name="password" type="password" class="form-control" required />
-						</div>
-						<button type="submit" class="btn btn-primary btn-tu btn-lg float-right" th:text="#{home.login}">LOGIN</button>
-					</form>
+				<div class="col-6 d-flex align-items-center">
+					<ul class="fancy_text font-weight-light list-unstyled">
+						<li>QR-Code based</li>
+						<li>Online</li>
+						<li>Evaluation</li>
+					</ul>
 				</div>
 			</div>
 		</div>
 	</div>
 
 	<div class="row about_text justify-content-center">
-		<div class="col col-6 pt-4 bg-white">
+		<div class="col col-lg-6 col-md-12 col-sm-12 pt-4 bg-white">
 			<h3>About QOVA:</h3>
 			<p>
 				QOVA is a online tool designed to streamline the process of creating, sharing & evaluating surveys. Topic of these surveys are the different courses of the TU Dresden.
@@ -71,6 +45,6 @@
 	</div>
 
 </div>
-<div th:include="footer"></div>
+<footer th:replace="footer"></footer>
 </body>
 </html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <title th:text="#{title.reject}">TITLE</title>
+</head>
+<body>
+<div th:include="navbar"></div>
+<div class="main container-fluid">
+    <div class="row justify-content-center">
+
+        <!--Headline-->
+        <div class="col-12 text-center justify-content-center">
+            <h5 class="font-weight-bold mb-4" th:text="#{reject.description}">CHECKOUT DESCRIPTION</h5>
+            <a th:href="@{/survey/select(id=${id}, type=${type}, mode=${mode})}" class="btn btn-primary btn-tu"><i class="far fa-edit mr-2"></i><span th:text="#{reject.surveySelectButton}"></span></a><!--TODO: CONTROLLER-->
+        </div>
+
+    </div>
+</div>
+<footer th:replace="footer"></footer>
+</body>
+</html>

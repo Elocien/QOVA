@@ -2,47 +2,73 @@ package qova.course;
 
 import org.junit.jupiter.api.Test;
 
+import org.mockito.Mockito;
 import qova.AbstractIntegrationTest;
+import qova.admin.DefaultSurvey;
+import qova.enums.CourseFaculty;
+import qova.enums.CourseType;
+import qova.objects.Course;
+import qova.objects.CourseInstance;
+import qova.users.User;
 
 import java.time.LocalDate;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class courseTest extends AbstractIntegrationTest {
 
     @Test
-	public void courseConstructorTest(){
-        var name = "test";
-        var lectureExists = true;
-        var tutorialExists = false;
-        var seminarExists = true;  
-        var lectureSurvey = "";
-        var tutorialSurvey = "";
-        var seminarSurvey = "";
-        var classTotalSeminar = 10;
-        var classTotalTutorial = 5;
-        var semesterOfStudents = 6;
+    public void courseConstructorTest() {
+
+        DefaultSurvey defaultSurvey = Mockito.mock(DefaultSurvey.class);
+        User owner = Mockito.mock(User.class);
+
+        var name = "Rechnernetze";
+
+        var groupAmount = 10;
+        var instanceAmount = 12;
+        var active = true;
+
+        List<String> instanceTitles = new ArrayList<>(Arrays.asList("Einführung", "Bitübertragungsschicht", "Netztechnologien 1", "Netztechnologien 2",
+                "Sicherungsschicht", "Vermittlungsschicht", "Transportschicht", "Netzwerkperformance",
+                "Internetdienste", "Multimediakommunikation", "Mobile Computing", "Verteilte Systeme"));
+
+        CourseInstance lecture = new CourseInstance(CourseType.LECTURE, groupAmount, instanceAmount, instanceTitles,
+                defaultSurvey);
+
+        CourseInstance tutorial = new CourseInstance(CourseType.TUTORIAL, groupAmount, instanceAmount, instanceTitles,
+                defaultSurvey);
+
+        CourseInstance seminar = new CourseInstance(CourseType.SEMINAR, defaultSurvey);
+
+        CourseInstance practical = new CourseInstance(CourseType.PRACTICAL, defaultSurvey);
+
+
+        var semesterOfStudents = 4;
         var faculty = CourseFaculty.COMPUTER_SCIENCE;
-        var courseInstance = LocalDate.of(2020, 10, 4);
-        var semesterUI = "SoSe 2020";
+        var courseDate = LocalDate.of(2020, 10, 4);
+        var semesterString = "SoSe 2020";
 
-        Course crs  = new Course(name, lectureExists, tutorialExists, seminarExists, lectureSurvey, tutorialSurvey, seminarSurvey, classTotalTutorial, classTotalSeminar, semesterOfStudents, faculty, semesterUI, courseInstance);
-
+        Course crs = new Course(name, owner.getAjpPersistentId(), lecture, tutorial, seminar, practical, semesterOfStudents, faculty,
+                semesterString, courseDate);
 
         assertEquals(name, crs.getName());
-        assertEquals(lectureExists, crs.getLectureExists());
-        assertEquals(tutorialExists, crs.getTutorialExists());
-        assertEquals(seminarExists, crs.getSeminarExists());
-        assertEquals(lectureSurvey, crs.getLectureSurvey());
-        assertEquals(tutorialSurvey, crs.getTutorialSurvey());
-        assertEquals(seminarSurvey, crs.getSeminarSurvey());
-        assertEquals(classTotalSeminar, crs.getClassTotalSeminar());
-        assertEquals(classTotalTutorial, crs.getClassTotalTutorial());
+        assertEquals(true, crs.getLectureExists());
+        assertEquals(true, crs.getTutorialExists());
+        assertEquals(false, crs.getSeminarExists());
+        assertEquals(false, crs.getPracticalExists());
+        assertEquals(lecture, crs.getLecture());
+        assertEquals(tutorial, crs.getTutorial());
+        assertEquals(seminar, crs.getSeminar());
+        assertEquals(practical, crs.getPractical());
         assertEquals(semesterOfStudents, crs.getSemesterOfStudents());
         assertEquals(faculty, crs.getFaculty());
-        assertEquals(courseInstance, crs.getCourseInstance());
-        assertEquals(semesterUI, crs.getSemesterUI());
+        assertEquals(courseDate, crs.getCourseDate());
+        assertEquals(semesterString, crs.getSemesterString());
 
-	}
+    }
 
 }

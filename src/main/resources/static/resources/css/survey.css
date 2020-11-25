@@ -1,0 +1,149 @@
+/*The addressees are mainly mobile phones.
+If the display is larger, it is adapted for these devices, which improves the performance for mobile phones.
+I read that somewhere ;) */
+.Textarea {
+    overflow: hidden;
+}
+
+.input {
+    display: none;
+}
+
+.submit {
+    display: inline-block;
+    padding-top: 20px;
+    padding-bottom: 40px;
+}
+
+.center {
+    margin: 0;
+    position: absolute;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.Textarea.FreeText{
+    width: 100%;
+    margin: 0.5rem 0rem;
+    border:none;
+    border-radius: 0px;
+    border-bottom: 1px solid black;
+    height: 2rem;
+    min-height: 2rem;
+}
+
+.Question {
+    padding-left: 60px;
+    margin-bottom: 1.5rem;
+}
+
+.Hint.Multiplechoice{
+    color: grey;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    font-weight: 300;
+}
+
+.Edit.Buttons{
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.row.survey {
+}
+
+.tickbox {
+    margin-right: 12px;
+}
+
+.tickbox.OnetoFive{
+    margin-bottom: 1.5rem;
+    margin-top: 1rem;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.Label.OnetoFive{
+    margin: auto;
+}
+
+.index-number {
+    background-color: var(--tu_blue);
+    border-top-left-radius: 0.25rem;
+    border-bottom-right-radius: 0.25rem;
+    height: 3rem;
+    width: 3rem;
+    line-height: 3rem;
+    margin-top: -1px;
+    margin-left: -1px;
+    float: left;
+    font-size: 1.75rem;
+}
+
+.Options.SingleChoice{
+    flex-direction: column;
+    display: flex;
+}
+
+.Options.OnetoFive{
+    flex-direction: row;
+    display: flex;
+}
+
+
+.Option{
+    display: flex;
+}
+
+.Option.OnetoFive{
+    flex-direction: column-reverse;
+    display: flex;
+    margin: auto;
+}
+
+.LabelOnetoFive{
+    flex-direction: column-reverse;
+    display: flex;
+    margin-bottom: 1.2rem;
+}
+
+
+
+.bg-light-grey {
+    background-color: lightgrey;
+}
+
+
+/* Medium devices (landscape tablets, 768px and up) */
+@media only screen and (min-width: 768px) {
+
+    .Question {
+    }
+
+}
+
+
+/* Large devices (laptops/desktops, 992px and up) */
+@media only screen and (min-width: 992px) {
+
+
+    .Question {
+    }
+
+    .index-number {
+        background-color: var(--tu_blue);
+        border-top-left-radius: 0.25rem;
+        border-bottom-right-radius: 0.25rem;
+        height: 3rem;
+        width: 3rem;
+        line-height: 3rem;
+        margin-top: -1px;
+        margin-left: -1px;
+        float: left;
+        font-size: 1.75rem;
+
+    }
+
+
+}
