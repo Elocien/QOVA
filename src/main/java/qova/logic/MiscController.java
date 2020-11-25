@@ -49,8 +49,8 @@ public class MiscController {
         String filename = "static/resources/privacyPolicy.pdf";
 
         // Get PDF
-        File file = ResourceUtils.getFile("classpath:resources/static/resources/privacyPolicy.pdf");
-        byte[] pdf = Files.readAllBytes(file.toPath());
+        byte[] pdf = this.getClass().getClassLoader()
+                .getResourceAsStream("static/resources/privacyPolicy.pdf").readAllBytes();
 
 
         // Set HTTP headers and return HttpEntity
