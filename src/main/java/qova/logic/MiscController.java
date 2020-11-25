@@ -1,21 +1,17 @@
 package qova.logic;
 
-import com.google.zxing.WriterException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import qova.objects.Course;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.Optional;
-import java.util.UUID;
 
 @Controller
 public class MiscController {
@@ -50,10 +46,10 @@ public class MiscController {
 
 
         // generate filename
-        String filename = "privacyPolicy.pdf";
+        String filename = "static/resources/privacyPolicy.pdf";
 
         // Get PDF
-        File file = new File("/resources/static/resources/privacyPolicy.pdf");
+        File file = ResourceUtils.getFile("classpath:resources/static/resources/privacyPolicy.pdf");
         byte[] pdf = Files.readAllBytes(file.toPath());
 
 
