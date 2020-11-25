@@ -538,7 +538,7 @@ public class CourseController {
 
         // QRCode URL (Redirects to a courses survey when scanned). Generated using
         // pathvariables
-        String url = "localhost:8080/survey?type=" + type + "&id=" + id;
+        String url = "qova.med.tu-dresden.de/survey/select?type=" + type + "&id=" + id+"&mode=participant";
 
         // find course
         Optional<Course> crs = courseManagement.findById(id);
