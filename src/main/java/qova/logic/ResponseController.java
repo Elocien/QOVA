@@ -261,8 +261,6 @@ public class ResponseController {
 
         boolean userIsOwner = courseManagement.findIfUserOwnsCourse(id, userDetails.getUsername());
 
-        System.out.println(userIsOwner);
-
         model.addAttribute("instance", instance);
         model.addAttribute("group", group);
         model.addAttribute("id", id);

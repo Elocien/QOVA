@@ -61,7 +61,4 @@ public class MiscController {
 
         return new HttpEntity<>(pdf, header);
     }
-
-
-
 }
