@@ -22,15 +22,11 @@
             <!--Everything after this will be turned into the PDF-->
             <div class="col-12 text-center" id="pdf">
                 <div id="meta">
-                    <table class="table table-borderless m-0">
-                        <tbody>
-                            <tr>
-                                <th class="border-0" scope="row"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{new.courseName}: |">COURSE NAME: </span><span th:text="${courseName}"></span></h5></th>
-                                <th class="border-0"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{type}: |">TYPE: </span><span th:text="#{|editor.${courseType}|}"></span></h5></th>
-                                <th class="border-0"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{course.courseDate}: |">SEMESTER: </span><span th:text="${semester}"></span></h5></th>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="row">
+                        <div class="col-lg-4 col-md-12 col-sm-12"><h5><span class="font-weight-normal" th:text="|#{new.courseName}: |">COURSE NAME: </span><span class="font-weight-light" th:text="${courseName}"></span></h5></div>
+                        <div class="col-lg-4 col-md-12 col-sm-12"><h5><span class="font-weight-normal" th:text="|#{type}: |">TYPE: </span><span class="font-weight-light" th:text="#{|editor.${courseType}|}"></span></h5></div>
+                        <div class="col-lg-4 col-md-12 col-sm-12"><h5><span class="font-weight-normal" th:text="|#{course.courseDate}: |">SEMESTER: </span><span class="font-weight-light" th:text="${semester}"></span></h5></div>
+                    </div>
                     <h5 class="font-weight-light pb-4 m-0"><span class="font-weight-normal" th:text="|#{surveyResults.NoS}: |">NUMBER OF SUBMISSIONS: </span><span th:text="${numberOfSubmissions}"></span></h5>
                     <div class="col-12">
                         <a class="btn btn-primary btn-tu" th:href="@{/survey/results/generateCSV(id=${id}, type=${courseType}, groupNumber=${group}, instanceNumber=${instance})}" th:text="#{surveyResults.downloadCSV}">DOWNLOAD CSV</a>
@@ -49,14 +45,14 @@
         <!--Question Template-->
         <div class="container result-container bordered with-bars mb-4">
             <div class="row align-items-center justify-content-between mt-2 mb-2">
-                <div class="col-8 text-left">
+                <div class="col-auto text-left">
                     <h5 class="question-type m-0"></h5>
-                </div>
-                <div class="col-3 default-question text-right">
-                    <p class="m-0"></p>
                 </div>
                 <div class="col-1 text-only noPDF">
                     <a class="collapse-btn" data-toggle="collapse" href="#" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fas fa-plus right collapse-icon"></i></a>
+                </div>
+                <div class="col-12 default-question">
+                    <p class="m-0"></p>
                 </div>
             </div>
             <div class="col answere-column p-0 mt-4 mb-2"></div>
