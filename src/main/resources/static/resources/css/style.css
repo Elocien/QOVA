@@ -194,6 +194,10 @@ footer {
   background-color: var(--tu_blue_highlight);
 }
 
+.course-table-wrapper{
+  overflow-x: scroll;
+}
+
 /*courseDetails.html*/
 .headline-edit {
   border: 0px;
