@@ -69,6 +69,10 @@ input[type=number] {
   color: rgb(255, 0, 0) !important;
 }
 
+.text-large {
+  font-size: 150%;
+}
+
 /*footer.html*/
 footer {
   width: 100%;
