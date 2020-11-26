@@ -45,13 +45,13 @@
         <!--Question Template-->
         <div class="container result-container bordered with-bars mb-4">
             <div class="row align-items-center justify-content-between mt-2 mb-2">
-                <div class="col-auto text-left">
+                <div class="col-11 text-left" id="edit_me">
                     <h5 class="question-type m-0"></h5>
                 </div>
                 <div class="col-1 text-only noPDF">
                     <a class="collapse-btn" data-toggle="collapse" href="#" role="button" aria-expanded="false" aria-controls="collapseExample"><i class="fas fa-plus right collapse-icon"></i></a>
                 </div>
-                <div class="col-12 default-question">
+                <div class="col-12 default-question text-left">
                     <p class="m-0"></p>
                 </div>
             </div>
@@ -115,6 +115,8 @@
             var question_template = create_question(type, answer["question"], answers, i);
             if (type != "text") {
                 delete_multiple_elements(question_template.getElementsByClassName("text-only"));
+                var edit_me = question_template.getElementById("edit_me");
+                edit_me.classList.remove("col-11"); edit_me.classList.add("col-12"); edit_me.removeAttribute("id");
             }
             if (answer["default"]) {
                 var txt = /*[[#{default}]]*/"default";
