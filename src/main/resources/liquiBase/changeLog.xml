@@ -1,0 +1,5 @@
+<changeSet  author="lucian"  id="01099">
+    <dropColumn  columnName="survey_edited_flag"
+                 tableName="course_instance">
+    </dropColumn>
+</changeSet>
