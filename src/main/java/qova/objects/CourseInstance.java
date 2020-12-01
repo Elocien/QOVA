@@ -113,7 +113,7 @@ public class CourseInstance {
         this.instanceAmount = 0;
         this.instanceTitles = new ArrayList<>();
         this.active = false;
-        this.surveyEditedFlag = true;
+        this.surveyEditedFlag = false;
         this.defaultSurvey = defaultSurvey;
     }
 
@@ -163,6 +163,7 @@ public class CourseInstance {
 
     public void setActive() {
         this.active = true;
+        this.surveyEditedFlag=true;
     }
 
     public void setInactive() {
@@ -170,6 +171,7 @@ public class CourseInstance {
         this.groupAmount = 0;
         this.instanceAmount = 0;
         this.instanceTitles = new ArrayList<>();
+        this.surveyEditedFlag=false;
     }
 
     /**
