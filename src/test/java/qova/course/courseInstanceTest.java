@@ -37,7 +37,7 @@ public class courseInstanceTest extends AbstractIntegrationTest {
         assertEquals(instanceAmount, courseInstance.getInstanceAmount());
         assertEquals(true, courseInstance.isActive());
         assertEquals(instanceTitles, courseInstance.getInstanceTitles());
-        assertEquals(false, courseInstance.getSurveyEditedFlag());
+        assertEquals(true, courseInstance.getSurveyEditedFlag());
         assertEquals(defaultSurvey, courseInstance.getDefaultSurvey());
     }
 
@@ -53,7 +53,7 @@ public class courseInstanceTest extends AbstractIntegrationTest {
         assertEquals(0, courseInstance.getGroupAmount());
         assertEquals(0, courseInstance.getInstanceAmount());
         assertEquals(false, courseInstance.isActive());
-        assertEquals(false, courseInstance.getSurveyEditedFlag());
+        assertEquals(true, courseInstance.getSurveyEditedFlag());
         assertEquals(defaultSurvey, courseInstance.getDefaultSurvey());
     }
 

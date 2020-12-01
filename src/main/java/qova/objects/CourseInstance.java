@@ -92,7 +92,7 @@ public class CourseInstance {
         this.instanceAmount = instanceAmount;
         this.instanceTitles = instanceTitles;
         this.active = true;
-        this.surveyEditedFlag = false;
+        this.surveyEditedFlag = true;
         this.defaultSurvey = defaultSurvey;
     }
 
@@ -113,7 +113,7 @@ public class CourseInstance {
         this.instanceAmount = 0;
         this.instanceTitles = new ArrayList<>();
         this.active = false;
-        this.surveyEditedFlag = false;
+        this.surveyEditedFlag = true;
         this.defaultSurvey = defaultSurvey;
     }
 
@@ -172,6 +172,10 @@ public class CourseInstance {
         this.instanceTitles = new ArrayList<>();
     }
 
+    /**
+     * Method was used to set flag, but the flag has been deleted from
+     */
+    @Deprecated
     public void setSurveEditedFlag() {
         this.surveyEditedFlag = true;
     }
