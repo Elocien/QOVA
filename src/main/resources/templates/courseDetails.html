@@ -75,7 +75,7 @@
 
                         <!--Headline & Buttons-->
                         <div class="row">
-                            <h5 class="font-weight-light text-left" th:text="#{course.details}">COURSE DETAILS</h5>
+                            <h5 class="font-weight-bold text-left" th:text="#{course.details}">COURSE DETAILS</h5>
                             <button th:if="!${course.finalisedFlag}" type="button" id="startEdit" class="btn edit_details btn-link p-0 ml-4 align-middle" onclick="edit_mode()"data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}">
                                 <i class="far fa-edit"></i>
                             </button>
@@ -132,20 +132,29 @@
                         <!--2nd Table-->
                         <div class="row form-group hide_me mb-4">
                             <div th:switch="${course.finalisedFlag}" class="col-12 p-0">
-                                <h5 class="font-weight-light d-block" th:text="#{course.status}">COURSE STATUS</h5>
+                                <h5 class="font-weight-bold d-block" th:text="#{course.status}">COURSE STATUS</h5>
                                 <p th:case="true" class="m-0" th:text="#{course.status.finalised}">STATUS DESCRIPTION</p>
                                 <th:block th:case="false">
                                     <p th:text="#{course.status.description}">STATUS DESCRIPTION</p>
                                     <table class="table">
                                         <tbody>
-                                            <tr>
+                                            <tr id="highlight_me_surveys">
                                                 <th class="col-3" scope="row" th:text="#{course.status.surveys}">Surveys:</th>
                                                 <td th:switch="${surveysMissing}">
                                                     <p th:case="0" class="text-success m-0" th:text="#{course.status.finished}">FINISHED</p>
-                                                    <p th:case="*" class="text-warning m-0"><span th:text="${surveysMissing}">X</span><span> </span><span th:text="#{course.survey.missing}">MISSING</span></p>
+                                                    <th:block th:case="*">
+                                                        <p class="text-warning m-0"><span th:text="${surveysMissing}">X</span><span> </span><span th:text="#{course.survey.missing}">MISSING</span></p>
+                                                        <div id="surveyMissingHelp" style="display: none;">
+                                                            <p class="m-0" th:text="#{course.survey.missing.help}">DO U WANT TO INITILIZE THE REMAINING SURVEYS AS DEFAULT SURVEYS?</p>
+                                                            <div>
+                                                                <a class="btn btn-sm btn-primary" th:text="#{Yes}"></a> <!--TODO: Button needs fitting function-->
+                                                                <a class="btn btn-sm btn-secondary" th:text="#{No}" onclick="hide_survey_help()"></a>
+                                                            </div>
+                                                        </div>
+                                                    </th:block>
                                                 </td>
                                             </tr>
-                                            <tr class="highlight_me">
+                                            <tr id="highlight_me_titles">
                                                 <th class="col-3" scope="row" th:text="#{course.status.instances}">Instances:</th>
                                                 <td>
                                                     <a th:switch="${titlesMissing}" type="button" class="btn btn-link nounderline p-0" href="#" th:href="${'/course/instanceTitles?id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.editInstance}">
@@ -161,8 +170,8 @@
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <th class="col-3" scope="row" th:text="#{course.status.finalisation}">Finalisation:</th>
-                                                <td th:switch="${titlesMissing}">
+                                                <th class="col-3" scope="row" th:text="#{course.status.finalisation}">FINALISATION:</th>
+                                                <td th:switch="${titlesMissing or (surveysMissing > 0)}">
                                                     <a th:case="true" class="status-btn" onclick="highlight_missing()">
                                                         <span th:text="#{course.status.pending}">WIP</span>
                                                     </a>
@@ -434,10 +443,19 @@
     }
 
     function highlight_missing() {
-        var targets = document.getElementsByClassName("highlight_me");
-        for (let i = 0; i < targets.length; i++) {
-            targets[i].classList.add("highlight-border");
+        var surveysMissing = /*[[${surveysMissing}]]*/ 0;
+        var instanceMissing = /*[[${titlesMissing}]]*/ 0;
+        if (instanceMissing) {
+            document.getElementById("highlight_me_titles").classList.add("highlight-border");
         }
+        if (surveysMissing > 0) {
+            document.getElementById("highlight_me_surveys").classList.add("highlight-border");
+            document.getElementById("surveyMissingHelp").style.display = "";
+        }
+    }
+
+    function hide_survey_help() {
+        document.getElementById("surveyMissingHelp").style.display = "none";
     }
 </script>
 </html>
