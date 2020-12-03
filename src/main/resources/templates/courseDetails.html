@@ -202,8 +202,8 @@
                                                 </label>
                                             </div>
                                             <th:block th:switch="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}">
-                                                <input th:case="true"  value="true"  type="text" th:id="${__${course_type} + 'Exists'__}" th:name="${__${course_type} + 'Exists'__}" style="display: none;">
-                                                <input th:case="false" value="false" type="text" th:id="${__${course_type} + 'Exists'__}" th:name="${__${course_type} + 'Exists'__}" style="display: none;">
+                                                <input th:case="true"  value="true"  type="text" th:id="${course_type} + 'Exists'" th:name="${course_type} + 'Exists'" style="display: none;">
+                                                <input th:case="false" value="false" type="text" th:id="${course_type} + 'Exists'" th:name="${course_type} + 'Exists'" style="display: none;">
                                             </th:block>
                                         </td>
                                         <!--2nd Col-->
