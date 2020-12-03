@@ -201,7 +201,10 @@
                                                     <span class="slider round"></span>
                                                 </label>
                                             </div>
-                                            <input type="text" th:field="*{__${course_type} + 'Exists'__}" style="display: none;">
+                                            <th:block th:switch="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}">
+                                                <input th:case="true"  value="true"  type="text" th:id="${__${course_type} + 'Exists'__}" th:name="${__${course_type} + 'Exists'__}" style="display: none;">
+                                                <input th:case="false" value="false" type="text" th:id="${__${course_type} + 'Exists'__}" th:name="${__${course_type} + 'Exists'__}" style="display: none;">
+                                            </th:block>
                                         </td>
                                         <!--2nd Col-->
                                         <td scope="row" th:text="#{'new.' + ${course_type}}">LECTURE</td>
