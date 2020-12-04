@@ -150,11 +150,10 @@ public class CourseController {
      * @param id {@linkplain UUID} of the {@linkplain Course}
      * @return The courseDetails template, with the surveyEditedFlag of the {@linkplain CourseInstance} set to true
      */
-    @PostMapping("course/setDefaultSurvey")
+    @GetMapping("course/setDefaultSurvey")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String setDefaultSurvey(@RequestParam UUID id) {
 
-        System.out.println("yay");
         Optional<Course> crs = courseManagement.findById(id);
         if (crs.isPresent()) {
             var course = crs.get();
