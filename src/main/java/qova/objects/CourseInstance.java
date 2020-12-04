@@ -187,10 +187,10 @@ public class CourseInstance {
     public Boolean titlesMissing() {
         for(String title: instanceTitles){
             if(title.equals("")){
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
 }

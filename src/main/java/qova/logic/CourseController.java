@@ -144,6 +144,34 @@ public class CourseController {
 
     }
 
+    /**
+     * Used in the courseDetails.html template to let the user set all surveys as default surveys, when attempting to finalise their course
+     *
+     * @param model {@linkplain Model}
+     * @param id {@linkplain UUID} of the {@linkplain Course}
+     * @return The courseDetails template, with the surveyEditedFlag of the {@linkplain CourseInstance} set to true
+     */
+    @PostMapping("course/setDefaultSurvey")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
+    public String setDefaultSurvey(Model model, @RequestParam UUID id) {
+
+
+
+        Optional<Course> crs = courseManagement.findById(id);
+        if (crs.isPresent()) {
+            var course = crs.get();
+            for(CourseType courseType : CourseType.values()){
+                var courseInstance = course.getInstance(courseType);
+                if(courseInstance.isActive()){
+                    courseManagement.setSurveyEditedFlagForCourseInstance(courseInstance);
+                }
+            }
+            return "redirect:/course/details?id=" + id;
+        }
+        return "redirect:/course/list";
+
+    }
+
     // Create Course
     @GetMapping("course/new")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")

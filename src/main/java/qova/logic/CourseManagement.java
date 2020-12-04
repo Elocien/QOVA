@@ -319,7 +319,8 @@ public class CourseManagement {
 
     public Boolean getInstanceTitlesMissingFlag(Course course){
         for (CourseType courseType : CourseType.values()){
-            if (course.getInstance(courseType).titlesMissing()) {
+            var instance = course.getInstance(courseType);
+            if (instance.isActive() && instance.titlesMissing()) {
                 return true;
             }
         }
