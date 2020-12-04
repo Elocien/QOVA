@@ -89,7 +89,7 @@ public class CourseController {
 
             //Used for status flags
             model.addAttribute("surveysMissing", courseManagement.getNumberOfSurveysMissing(course));
-            model.addAttribute("titlesMissing", courseManagement.getNumberOfInstanceTitlesMissing(course));
+            model.addAttribute("titlesMissing", courseManagement.getInstanceTitlesMissingFlag(course));
 
             //The DomainName
             String domainName = "https://qova.med.tu-dresden.de";
@@ -127,6 +127,7 @@ public class CourseController {
             BindingResult result, DuplicateCourseForm duplcateCourseForm, @RequestParam UUID id) throws Exception {
 
         if (result.hasErrors()) {
+            System.out.println(result.getAllErrors());
             return courseDetails(model, duplcateCourseForm, form, id);
         }
 

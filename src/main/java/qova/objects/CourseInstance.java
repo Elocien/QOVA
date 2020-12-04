@@ -185,7 +185,12 @@ public class CourseInstance {
     }
 
     public Boolean titlesMissing() {
-        return this.instanceAmount > instanceTitles.size();
+        for(String title: instanceTitles){
+            if(title.equals("")){
+                return false;
+            }
+        }
+        return true;
     }
 
 }
