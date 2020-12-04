@@ -147,7 +147,7 @@
                                                         <div id="surveyMissingHelp" style="display: none;">
                                                             <p class="m-0" th:text="#{course.survey.missing.help}">DO U WANT TO INITILIZE THE REMAINING SURVEYS AS DEFAULT SURVEYS?</p>
                                                             <div>
-                                                                <a class="btn btn-sm btn-primary" th:text="#{Yes}"></a> <!--TODO: Button needs fitting function-->
+                                                                <a th:href="@{/course/setDefaultSurvey?id=__${course.id}__}" method="post" class="btn btn-sm btn-primary" th:text="#{Yes}"></a> <!--TODO: Button needs fitting function-->
                                                                 <a class="btn btn-sm btn-secondary" th:text="#{No}" onclick="hide_survey_help()"></a>
                                                             </div>
                                                         </div>
