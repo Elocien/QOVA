@@ -158,7 +158,6 @@ public class CourseController {
     @GetMapping("course/setDefaultSurvey")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String setDefaultSurvey(@RequestParam UUID id) {
-
         Optional<Course> crs = courseManagement.findById(id);
         if (crs.isPresent()) {
             var course = crs.get();
