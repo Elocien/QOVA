@@ -317,7 +317,7 @@ public class CourseManagement {
         return numberOfSurveyMissing;
     }
 
-    public Boolean getNumberOfInstanceTitlesMissing(Course course){
+    public Boolean getInstanceTitlesMissingFlag(Course course){
         for (CourseType courseType : CourseType.values()){
             if (course.getInstance(courseType).titlesMissing()) {
                 return true;
