@@ -92,7 +92,7 @@ public class CourseInstance {
         this.instanceAmount = instanceAmount;
         this.instanceTitles = instanceTitles;
         this.active = true;
-        this.surveyEditedFlag = true;
+        this.surveyEditedFlag = false;
         this.defaultSurvey = defaultSurvey;
     }
 
