@@ -174,16 +174,14 @@ public class ResponseManagement {
 
             //Check that the length of the JSON sent matches the length of the survey, as for each survey question, one answer
             //must be sent.
-            if (studentResponseJson.length() == surveyArrayLength) {
-                return true;
+            if (!(studentResponseJson.length() == surveyArrayLength)){
+                return false;
             }
         } catch (Exception e) {
             return false;
         }
 
-        // TODO: Check for other malicious strings
-
-        return false;
+        return true;
     }
 
     public Integer getTotalResponses(List<SurveyResponse> listOfSurveyResponses){
@@ -597,7 +595,13 @@ public class ResponseManagement {
             }
 
             if (abstractResponse instanceof qova.objects.TextResponse) {
-                ((TextResponse) abstractResponse).addTextSubmission(currentPositionArray.getString(0));
+                String studentText = currentPositionArray.getString(0);
+
+                //Makes sure that text longer
+                if(studentText.length() >= 10000){
+                    studentText = "";
+                }
+                ((TextResponse) abstractResponse).addTextSubmission(studentText);
             }
 
             if (abstractResponse instanceof qova.objects.SingleChoiceResponse) {

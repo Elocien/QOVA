@@ -16,7 +16,7 @@ public class TextResponse extends AbstractResponse {
 
     // Container for response
     @ElementCollection
-    @Column(length=10000)
+    @Column(length=1024)
     private List<String> responses = new ArrayList<>();
 
     // Needed for JPA puposes
