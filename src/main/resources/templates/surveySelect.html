@@ -51,7 +51,7 @@
         </form>
 
     </div>
-    <p class="mt-4 text-center" th:text="|(#{student.select.anonymous})|"></p>
+    <p th:if="${mode == 'participant'}" class="mt-4 text-center" th:text="|(#{student.select.anonymous})|"></p>
 </div>
 
 <div th:replace="footer"></div>
