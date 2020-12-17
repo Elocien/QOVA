@@ -178,6 +178,15 @@ footer {
   border-top: solid 1px var(--tu_blue);
   background-color: rgba(255, 255, 255, 0.7);
 }
+.home-page-list {
+  margin: 0;
+}
+@media (max-width: 767.98px) {
+  .home-page-list {
+    margin: 0 auto;
+    text-align: center;
+  }
+}
 
 /*IDK*/
 .form-control {
