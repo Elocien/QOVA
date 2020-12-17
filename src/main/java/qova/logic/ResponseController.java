@@ -204,9 +204,13 @@ public class ResponseController {
 
             Course course = crs.get();
 
-            // Verify that the sent JSON is not malicious
-            responseManagement.verifyStudentResponseJson(studentResponseJson,
-                    course.getInstance(courseType).getSurvey());
+            // Verify that the sent JSON is not malicious. If malicious, returns false
+            if(!responseManagement.verifyStudentResponseJson(studentResponseJson,
+                    course.getInstance(courseType).getSurvey())) {
+
+                //Return to the previous view
+                return recieveResponseJSON(model, form, id, type, group, instance, userDetails);
+            }
 
             Optional<SurveyResponse> survRsp = responseManagement
                     .findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course, courseType,
