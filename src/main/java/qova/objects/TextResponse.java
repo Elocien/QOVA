@@ -3,6 +3,7 @@ package qova.objects;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 
@@ -15,6 +16,7 @@ public class TextResponse extends AbstractResponse {
 
     // Container for response
     @ElementCollection
+    @Column(length=10000)
     private List<String> responses = new ArrayList<>();
 
     // Needed for JPA puposes
