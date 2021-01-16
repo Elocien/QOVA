@@ -169,6 +169,10 @@ public class ResponseManagement {
      */
     public Boolean verifyStudentResponseJson(JSONArray studentResponseJson, String surveyAsString) {
 
+        System.out.println(studentResponseJson.toString());
+        System.out.println(surveyAsString);
+
+
         try {
             int surveyArrayLength = new JSONArray(surveyAsString).length();
 

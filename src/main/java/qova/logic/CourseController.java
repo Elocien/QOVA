@@ -404,27 +404,25 @@ public class CourseController {
                 courseManagement.setSurveyEditedFlagForCourseInstance(instance);
             }
 
-            else {
-                // check if JSON is valid
-                try {
-                    new JSONArray(form.getQuestionnaireJson());
-                } catch (Exception e) {
-                    return questioneditor(model, type, id);
-                }
-
-                // Create a JSON Array out of the response from the questioneditor
-                JSONArray survey = new JSONArray(form.getQuestionnaireJson());
-
-                // parse JSON to check for correctness (length, special characters)
-                Boolean validSurvey = responseManagement.verifyJsonArray(survey);
-                if (Boolean.FALSE.equals(validSurvey)) {
-                    return questioneditor(model, type, id);
-                }
-
-                // Sets the survey string for a given course (takes the default survey and
-                // conncatenates it with the create survey)
-                courseManagement.setSurveyforType(course.get(), type, form.getQuestionnaireJson());
+            // check if JSON is valid
+            try {
+                new JSONArray(form.getQuestionnaireJson());
+            } catch (Exception e) {
+                return questioneditor(model, type, id);
             }
+
+            // Create a JSON Array out of the response from the questioneditor
+            JSONArray survey = new JSONArray(form.getQuestionnaireJson());
+
+            // parse JSON to check for correctness (length, special characters)
+            Boolean validSurvey = responseManagement.verifyJsonArray(survey);
+            if (Boolean.FALSE.equals(validSurvey)) {
+                return questioneditor(model, type, id);
+            }
+
+            // Sets the survey string for a given course (takes the default survey and
+            // conncatenates it with the create survey)
+            courseManagement.setSurveyforType(course.get(), type, form.getQuestionnaireJson());
 
             // Redirect back to CourseDetails page
             return "redirect:../course/details" + "?id=" + id;
@@ -510,29 +508,28 @@ public class CourseController {
             if (Boolean.FALSE.equals(instance.getSurveyEditedFlag())) {
                 courseManagement.setSurveyEditedFlagForCourseInstance(instance);
             }
-          
-            else {
-                // check if JSON is valid
-                try {
-                    new JSONArray(form.getQuestionnaireJson());
-                } catch (Exception e) {
-                    return questioneditor(model, type, id);
-                }
 
-                // Create a JSON Array out of the response from the questioneditor
-                JSONArray survey = new JSONArray(form.getQuestionnaireJson());
-
-                // parse JSON to check for correctness (length, special characters)
-                Boolean validSurvey = responseManagement.verifyJsonArray(survey);
-                if (Boolean.FALSE.equals(validSurvey)) {
-                    // TODO: redirect to error page with code 02
-                    return questioneditor(model, type, id);
-                }
-
-                // Sets the survey string for a given course (takes the default survey and
-                // conncatenates it with the create survey)
-                courseManagement.setSurveyforType(course.get(), type, form.getQuestionnaireJson());
+            // check if JSON is valid
+            try {
+                new JSONArray(form.getQuestionnaireJson());
+            } catch (Exception e) {
+                return questioneditor(model, type, id);
             }
+
+            // Create a JSON Array out of the response from the questioneditor
+            JSONArray survey = new JSONArray(form.getQuestionnaireJson());
+
+            // parse JSON to check for correctness (length, special characters)
+            Boolean validSurvey = responseManagement.verifyJsonArray(survey);
+            if (Boolean.FALSE.equals(validSurvey)) {
+                // TODO: redirect to error page with code 02
+                return questioneditor(model, type, id);
+            }
+
+            // Sets the survey string for a given course (takes the default survey and
+            // conncatenates it with the create survey)
+            courseManagement.setSurveyforType(course.get(), type, form.getQuestionnaireJson());
+
 
             // Part der anders ist als questioneditorSubmit
             model.addAttribute("typeID", responseManagement.parseCourseType(type));

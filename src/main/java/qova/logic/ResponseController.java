@@ -204,12 +204,17 @@ public class ResponseController {
 
             Course course = crs.get();
 
+
+            // Concatenate the default survey to the course survey
+            String fullSurvey = adminManagement.concatenateDefaultSurveyToSurveyString(course.getInstance(courseType).getSurvey(),
+                    responseManagement.parseCourseType(type));
+
             // Verify that the sent JSON is not malicious. If malicious, returns false
-            if(!responseManagement.verifyStudentResponseJson(studentResponseJson,
-                    course.getInstance(courseType).getSurvey())) {
+            if(!responseManagement.verifyStudentResponseJson(studentResponseJson, fullSurvey)
+                    ) {
 
                 //Return to the previous view
-                return recieveResponseJSON(model, form, id, type, group, instance, userDetails);
+                return surveyView(model, id, type, group, instance);
             }
 
             Optional<SurveyResponse> survRsp = responseManagement
@@ -254,7 +259,7 @@ public class ResponseController {
      * @param id            The Id of the {@linkplain qova.objects.Course}
      * @param group         The groupNumber of the {@linkplain qova.objects.Course}
      * @param instance      The instanceNumber of the {@linkplain qova.objects.Course}
-     * @param userDetails   {@linkplain CurrentUserDetails} used to retrieve the users Authorities
+     * @param userDetails   Used to retrieve the users Authorities
      * @return The surveyResults template, which shows the compiled results of the
      *         requested questionnaire
      */
