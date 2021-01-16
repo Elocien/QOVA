@@ -34,6 +34,18 @@ public class MiscController {
         return "home";
     }
 
+    /**
+     * Landing Page for the application, identical to {@linkplain MiscController#welcome()}.
+     * This is used so that users enter a directory where authentication is required, thus triggering shibboleth.
+     * @return home.html template
+     */
+    @GetMapping("survey/home")
+    public String loginHome() {
+        return "home";
+    }
+
+
+
     @GetMapping("/logout")
     public String logout(HttpSession session){
         session.invalidate();

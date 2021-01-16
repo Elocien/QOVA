@@ -58,11 +58,6 @@ public class CourseController {
     // Error codes
     int courseNotFound = 1;
 
-    @GetMapping("/course/home")
-    public String home() {
-        return "home";
-    }
-
     // Shows a table containing all courses
     @GetMapping("/course/list")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
