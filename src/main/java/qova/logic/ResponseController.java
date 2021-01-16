@@ -204,12 +204,16 @@ public class ResponseController {
 
             Course course = crs.get();
 
+
+            // Concatenate the default survey to the course survey
+            String fullSurvey = adminManagement.concatenateDefaultSurveyToSurveyString(course.getInstance(courseType).getSurvey(),
+                    responseManagement.parseCourseType(type));
+
             // Verify that the sent JSON is not malicious. If malicious, returns false
-            if(!responseManagement.verifyStudentResponseJson(studentResponseJson,
-                    course.getInstance(courseType).getSurvey())) {
+            if(!responseManagement.verifyStudentResponseJson(studentResponseJson, fullSurvey)) {
 
                 //Return to the previous view
-                return recieveResponseJSON(model, form, id, type, group, instance, userDetails);
+                return surveyView(model, id, type, group, instance);
             }
 
             Optional<SurveyResponse> survRsp = responseManagement
