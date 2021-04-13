@@ -50,7 +50,7 @@ public class SurveyResponse {
     }
 
     /**
-     * A {@linkplain SurveyResponse} represents the data that is collected for unique paring of group and instance, for a
+     * A {@linkplain SurveyResponse} represents the data that is collected for a unique paring of group and instance, for a
      * given {@linkplain Course}. E.g. If a course has 4 groups and 3 instances, then there are 12 {@linkplain SurveyResponse}'s,
      * one for each unique pairing. A SurveyResponse tracks who submitted to the surveyResponse
      *
