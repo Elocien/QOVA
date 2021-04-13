@@ -144,18 +144,18 @@ public class SurveyResponse {
 
         if (jsonObject.getString("type").equals("OnetoFive")) {
             return new ArrayList<>(Arrays.asList("1", "2", "3", "4", "5"));
-        } else if (jsonObject.getString("type").equals("SingleChoice")) {
+        } else if (jsonObject.getString("type").equals("SingleChoice") || jsonObject.getString("type").equals("MultipleChoice")) {
             JSONArray answerOptions = jsonObject.getJSONArray("answers");
 
             // Array of all possibilieties, passed to the constructor of the
             // MultipleChoiceResponse
-            ArrayList<String> singleChoiceOptions = new ArrayList<>(answerOptions.length());
+            ArrayList<String> optionsArrayList = new ArrayList<>(answerOptions.length());
 
             for (int j = 0; j < answerOptions.length(); j++) {
-                singleChoiceOptions.add(answerOptions.getString(j));
+                optionsArrayList.add(answerOptions.getString(j));
             }
 
-            return singleChoiceOptions;
+            return optionsArrayList;
         }
 
         else {
