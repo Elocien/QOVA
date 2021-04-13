@@ -92,7 +92,7 @@ public class CourseController {
             model.addAttribute("titlesMissing", courseManagement.getInstanceTitlesMissingFlag(course));
 
             //The DomainName
-            String domainName = "https://localhost:8080";
+            String domainName = "localhost:8080";
 
             // QRCode URL (Redirects to a courses survey when scanned)
 
@@ -127,7 +127,6 @@ public class CourseController {
             BindingResult result, DuplicateCourseForm duplcateCourseForm, @RequestParam UUID id) throws Exception {
 
         if (result.hasErrors()) {
-            System.out.println(result.getAllErrors());
             return courseDetails(model, duplcateCourseForm, form, id);
         }
 
@@ -187,6 +186,7 @@ public class CourseController {
                                          BindingResult result,  @AuthenticationPrincipal UserDetails userDetails) {
 
         if (result.hasErrors()) {
+            System.out.println(result.getAllErrors());
             return createCourse(model, form);
         }
 
