@@ -20,7 +20,6 @@ public class CourseForm {
     @NotNull
     private Boolean practicalExists;
 
-    @NotNull
     private Integer groupAmountLecture;
     @NotNull
     private Integer groupAmountTutorial;
