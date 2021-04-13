@@ -292,6 +292,8 @@ public class ResponseController {
 
             JSONArray resultsJsonString = responseManagement.generateSurveyResultsJsonArray(listOfSurveyResponses, userIsOwner);
 
+            System.out.println(resultsJsonString.toString());
+
             Integer totalNumberOfSubmissions = responseManagement.getTotalResponses(listOfSurveyResponses);
 
             model.addAttribute("resultsJson", resultsJsonString.toString());
