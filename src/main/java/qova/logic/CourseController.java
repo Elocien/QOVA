@@ -462,6 +462,7 @@ public class CourseController {
             model.addAttribute("defaultSurvey",
                     adminManagement.getDefaultSurvey(responseManagement.parseCourseType(type)));
             model.addAttribute("coursename", course.get().getName());
+            model.addAttribute("finalised", course.get().getFinalisedFlag());
 
             return "surveypreview";
         } else {
