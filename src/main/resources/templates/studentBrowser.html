@@ -55,18 +55,17 @@ function expand(input) {
     var target = input.parentElement.parentElement.getElementsByClassName("clCollapse")[0];
     var trash = document.getElementsByClassName("clButton_after");
     for (let i = 0; i < trash.length; ++i) {
-        trash[i].parentElement.parentElement.getElementsByClassName("clCollapse")[0].style.display = "none";;
-        trash[i].parentElement.parentElement.style.height = "3rem";
+        trash[i].parentElement.parentElement.getElementsByClassName("clCollapse")[0].style.display = "none";
+        trash[i].parentElement.parentElement.style.borderWidth = "1px"
         trash[i].className="clButton";
     }
     if (target.style.display == "none") {
         target.style.display = "";
-        input.parentElement.parentElement.style.height = 3+2*target.getElementsByClassName("clInner").length+"rem"
+        input.parentElement.parentElement.style.borderWidth = "3px"
         input.className = "clButton_after"
     }
     else {
         target.style.display = "none";
-        input.parentElement.parentElement.style.height = "3rem"
         input.className = "clButton"
     }
 }

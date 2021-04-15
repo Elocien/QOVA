@@ -466,12 +466,15 @@ select {
 /*studentBrowser.html*/
 .clWrapper {
   border: solid 0.01rem var(--tu_blue);
-  border-bottom: none;
+  border-top: none;
   position: relative;
-  height: 3rem;
+}
+.clWrapper:first-of-type {
+  border-top: solid 0.01rem var(--tu_blue);
+  border-radius: 3px 3px 0px 0px;
 }
 .clWrapper:last-of-type {
-  border-bottom: solid 0.01rem var(--tu_blue);
+  border-radius: 0px 0px 3px 3px;
 }
 .clWrapper:hover {
   cursor: pointer;
@@ -498,13 +501,15 @@ select {
   padding: 0.5rem;
 }
 .clCollapse {
-  border: 3px solid var(--tu_blue);
   border-top: none;
 }
 .clInner {
   border-bottom: 1px solid var(--tu_blue);
   height: 2rem;
   position: relative;
+}
+.clInner:last-of-type {
+  border: none;
 }
 .clSurvey {
   font-weight: 600 !important;
