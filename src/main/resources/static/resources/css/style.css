@@ -7,7 +7,7 @@ body {
   --tu_blue: rgb(0, 37, 87);
   --tu_blue_light: rgb(0, 74, 174);
   --tu_blue_highlight: rgb(230, 230, 255);
-  --fancy_grey: darkslategrey;
+  --fancy_grey: rgb(50, 50, 50);
   background-image: url(../images/seamless-bg.jpg);
   background-repeat: auto;
   background-color: rgb(200, 200, 200);
@@ -472,16 +472,16 @@ select {
 
 /*studentBrowser.html*/
 .clWrapper {
-  border-top: solid 0.01rem var(--tu_blue);
-  border-bottom: solid 0.01rem var(--tu_blue);
+  border: solid 0.01rem var(--tu_blue);
+  border-bottom: none;
   position: relative;
   height: 3rem;
 }
-.clWrapper:first-of-type {
-  border-top: none;
-}
 .clWrapper:last-of-type {
-  border-bottom: none;
+  border-bottom: solid 0.01rem var(--tu_blue);
+}
+.clWrapper:hover {
+  cursor: pointer;
 }
 .clButton {
   position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;
@@ -514,16 +514,17 @@ select {
   position: relative;
 }
 .clSurvey {
-  font-weight: 400 !important;
+  font-weight: 600 !important;
   position: absolute; top: 0; right: 0; bottom: 0; left: 0; width: 100%; height: 100%;
   line-height: 2rem;
   padding-left: 0.5rem;
-  color: black !important;
+  color: var(--fancy_grey) !important;
 }
 .clSurvey:hover {
-  background-color: grey;
-  color: white !important;
+  color: black !important;
+  background-color: rgb(230, 230, 230);
   text-decoration: none;
+  cursor: pointer;
 }
 
 /*error.html*/
