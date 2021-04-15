@@ -21,13 +21,13 @@
 			<!-- Survey-->
 			<div class="col-md-6">
 				<div id="survey"></div>
-				<div class="Edit Buttons mt-3 mb-6">
-				<div class="row mt-2 text-center justify-content-center	mr-auto ml-2">
-					<a th:href="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" class="btn btn-primary btn-tu"><i class="far fa-edit mr-2"></i><span th:text="#{question.surveyeditor}"></span></a>
-				</div>
-				<div class="row mt-2 text-center justify-content-center ml-auto mr-2">
-					<a th:href="@{/course/details?id={id}(id=${id})}" class="btn btn-primary btn-tu"><i class="far fa-save mr-2"></i><span th:text="#{question.save}"></span></a>
-				</div>
+				<div class="Edit Buttons mt-3 mb-6" th:if="!${finalised}">
+					<div class="row mt-2 text-center justify-content-center	mr-auto ml-2">
+						<a th:href="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" class="btn btn-primary btn-tu"><i class="far fa-edit mr-2"></i><span th:text="#{question.surveyeditor}"></span></a>
+					</div>
+					<div class="row mt-2 text-center justify-content-center ml-auto mr-2">
+						<a th:href="@{/course/details?id={id}(id=${id})}" class="btn btn-primary btn-tu"><i class="far fa-save mr-2"></i><span th:text="#{question.save}"></span></a>
+					</div>
 				</div>
 			</div>
 			<div class="col-md-3"></div>
