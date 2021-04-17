@@ -96,7 +96,6 @@
 
         //loading survey into javascript + rendering
         const survey = JSON.parse([[${survey}]]);
-        console.log(survey)
         function render_list(render_us) {
             for ( let i=0; i < render_us.length; i++){
                 render_question_element(render_us[i], i)
@@ -105,13 +104,12 @@
         function render_all() {
             render_list(survey)
         }
-        window.onload = function(){
+        function render_all_refresh() {
+            document.getElementById("questionnaire").innerHTML = ""
             render_all()
         }
 
-        function render_all_refresh() {
-            document.getElementById("questionnaire").innerHTML = ""
-            console.log(survey)
+        window.onload = function(){
             render_all()
         }
 
@@ -297,18 +295,18 @@
 
         $(document).ready(function () {
             $("form").submit(function () {
-                saveInputs();
+                check_for_changes();
             })
         });
 
         $('#submitsurvey').submit(function () {
-            saveInputs();
-            document.getElementById("questionnairejson").value = JSON.stringify(questionnaire);
+            check_for_changes();
+            document.getElementById("questionnairejson").value = JSON.stringify(survey);
             return true;
         });
         $('#previewsurvey').submit(function () {
-            saveInputs();
-            document.getElementById("questionnairejson2").value = JSON.stringify(questionnaire);
+            check_for_changes();
+            document.getElementById("questionnairejson2").value = JSON.stringify(survey);
             return true;
         });
 
