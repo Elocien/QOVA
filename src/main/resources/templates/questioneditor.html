@@ -111,6 +111,7 @@
 
         function render_all_refresh() {
             document.getElementById("questionnaire").innerHTML = ""
+            console.log(survey)
             render_all()
         }
 
@@ -158,10 +159,10 @@
             delete_element(target)
 
             //filling in the question if it exists
-            var question_input = template.getElementsByClassName("question-row");
+            var question_input = template.getElementsByClassName("question-row")[0];
             question_input.id = index;
             if (value["question"] != "") {
-                question_input.defaultValue = value["question"];
+                question_input.value = value["question"];
             }
 
             //adding/removing the choices
@@ -180,6 +181,7 @@
 
         //create new question of specified type
         function question_new(type) {
+            check_for_changes()
             var new_question = {"type": type, "question": "", "default": false}
             if (["SingleChoice", "MultipleChoice"].includes(type)) {
                 new_question["answers"] = ['', '', '']
@@ -189,16 +191,19 @@
         }
         //question buttons
         function question_delete(clicked_button) {
+            check_for_changes()
             var question_index = clicked_button.parentElement.parentElement.parentElement.id
             survey.splice(question_index, 1)
             render_all_refresh()
         }
         function question_clone(clicked_button) {
+            check_for_changes()
             var question_index = clicked_button.parentElement.parentElement.parentElement.id
             survey.splice(question_index, 0, survey[question_index])
             render_all_refresh()
         }
         function question_move(clicked_button, mode) {
+            check_for_changes()
             var question_index = clicked_button.parentElement.parentElement.parentElement.id
             var copied_element = survey[question_index]
             if ((mode === 'up') && (question_index > 0)) {
@@ -210,6 +215,22 @@
                 survey.splice(question_index+1, 0, copied_element)
             }
             render_all_refresh()
+        }
+
+        //updates loaded json according to the users changes
+        function check_for_changes() {
+            var rendered_questions = document.getElementById("questionnaire").children;
+            for (let i=0; i < survey.length; i++) {
+                survey[i]["question"] = rendered_questions[i].getElementsByClassName("question-row")[0].value;
+                if (["SingleChoice", "MultipleChoice"].includes(survey[i]["type"])) {
+                    var rendered_answers = rendered_questions[i].getElementsByClassName("answer-col")[0].children;
+                    var new_answers = []
+                    for (let i=0; i < rendered_answers.length; i++) {
+                        new_answers[i] = rendered_answers[i].getElementsByClassName("Textarea")[0].value;
+                    }
+                    survey[i]["answers"] = new_answers
+                }
+            }
         }
 
         //adds new answer option
@@ -253,29 +274,6 @@
             }
         }
 
-        function check_for_changes() {
-
-        }
-
-
-
-        function saveInputs() {
-            const textareas_question = document.getElementsByClassName("Textarea Question");
-            for (let i=0;i<textareas_question.length;i++){
-                const questionid = textareas_question[i].id;
-                questionnaire[questionid].question = textareas_question[i].value;
-
-            }
-
-            const textareas_answer = document.getElementsByClassName("Textarea Answers");
-            for (let i=0;i<textareas_answer.length;i++){
-                const questionid = textareas_answer[i].parentElement.parentElement.parentElement.id;
-                const answerid = textareas_answer[i].id;
-                questionnaire[questionid].answers[answerid] = textareas_answer[i].value;
-
-            }
-
-        }
 
         //Onclick Show the Dropdown Content
         function hideshowdropdowntitle(q_index) {
