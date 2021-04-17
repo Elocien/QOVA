@@ -19,11 +19,11 @@
                 <div class="sticky">
                     <div class="btn-group-vertical float-lg-right border border-dark rounded mt-4 sticky" role="group" aria-label="First group">
                         <button type="button" class="btn btn-head btn-text-right" th:text="#{question.new}">NEW QUESTION</button>
-                        <button type="button" class="btn btn-list btn-text-right" onclick="addMultipleChoiceQuestion()"><span th:text="#{question.multiple-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
-                        <button type="button" class="btn btn-list btn-text-right" onclick="addSingleChoiceQuestion()"><span th:text="#{question.single-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
-                        <button type="button" class="btn btn-list btn-text-right" onclick="addYesNoQuestion()"><span th:text="#{question.yes-no-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
-                        <button type="button" class="btn btn-list btn-text-right" onclick="addOnetoFiveQuestion()"><span th:text="#{question.onetofive-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
-                        <button type="button" class="btn btn-list btn-text-right" onclick="addFreeTextQuestion()"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                        <button type="button" class="btn btn-list btn-text-right" onclick="question_new('MultipleChoice')"><span th:text="#{question.multiple-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                        <button type="button" class="btn btn-list btn-text-right" onclick="question_new('SingleChoice')"><span th:text="#{question.single-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                        <button type="button" class="btn btn-list btn-text-right" onclick="question_new('YesNo')"><span th:text="#{question.yes-no-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                        <button type="button" class="btn btn-list btn-text-right" onclick="question_new('OnetoFive')"><span th:text="#{question.onetofive-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                        <button type="button" class="btn btn-list btn-text-right" onclick="question_new('FreeText')"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                         <button type="button" class="btn btn-head btn-text-right" th:text="#{question.edit}">OPTIONS</button>
                         <a type="button" class="btn btn-list btn-text-right" th:href="@{/course/details(id=${id})}" th:text="#{question.back}"></a>
                         <form th:action="@{/course/previewsurvey?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="previewsurvey" style="width:100%">
@@ -41,44 +41,46 @@
             <div class="col-lg-6 col-md-12 col-sm-12">
                 <div id="questionnaire"></div>
                 
-                <!--Question Template-->
-                <div id="question_template" class="container bg-white border border-secondary rounded mt-4">
-                    <div class="row head-row">
-                        <div class="col-md-8 pl-0">
-                            <h3 class="text-light text-center index-number">0</h3>
-                            <!--Change Question-->
-                            <button class="btn btn-link dropdown-toggle question-headline font-weight-light" type="button" id="dropdownMenuButton(X)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">QUESTION TYPE</button>
-                            <div id="dropdown-menu" class="dropdown-menu" x-placement="bottom-start">
-                                <a class="dropdown-item YesNo" onclick="changeQuestionTyp(1,1)" th:text="#{question.yes-no-question}">YesNo-Question</a>
-                                <a class="dropdown-item MultipleChoice" onclick="changeQuestionTyp(1,2)" th:text="#{question.multiple-choice}">Multiple Question</a>
-                                <a class="dropdown-item SingleChoice" onclick="changeQuestionTyp(1,3)" th:text="#{question.single-choice}">Single Choice</a>
-                                <a class="dropdown-item OnetoFive" onclick="changeQuestionTyp(1,4)" th:text="#{question.onetofive-question}">OnetoFive-Question</a>
-                                <a class="dropdown-item FreeText" onclick="changeQuestionTyp(1,5)" th:text="#{question.free-text-question}">Free-Text-Question</a>
+                <div class="templates" style="display: none;">
+                    <!--Question Template-->
+                    <div id="question_template" class="container bg-white border border-secondary rounded mt-4">
+                        <div class="row head-row">
+                            <div class="col-md-8 pl-0">
+                                <h3 class="text-light text-center index-number">0</h3>
+                                <!--Change Question-->
+                                <button class="btn btn-link dropdown-toggle question-headline font-weight-light" type="button" id="dropdownMenuButton(X)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">QUESTION TYPE</button>
+                                <div id="dropdown-menu" class="dropdown-menu" x-placement="bottom-start">
+                                    <a class="dropdown-item YesNo" onclick="changeQuestionTyp(1,1)" th:text="#{question.yes-no-question}">YesNo-Question</a>
+                                    <a class="dropdown-item MultipleChoice" onclick="changeQuestionTyp(1,2)" th:text="#{question.multiple-choice}">Multiple Question</a>
+                                    <a class="dropdown-item SingleChoice" onclick="changeQuestionTyp(1,3)" th:text="#{question.single-choice}">Single Choice</a>
+                                    <a class="dropdown-item OnetoFive" onclick="changeQuestionTyp(1,4)" th:text="#{question.onetofive-question}">OnetoFive-Question</a>
+                                    <a class="dropdown-item FreeText" onclick="changeQuestionTyp(1,5)" th:text="#{question.free-text-question}">Free-Text-Question</a>
+                                </div>
+                            </div>
+                            <div class="col-md-4 pr-0">
+                                <button class="btn btn-link nounderline pull-right m-1" onclick="question_delete(this)" data-toggle="tooltip" data-placement="top" data-original-title="Delete Question"><i class="fa fa-trash"></i></button>
+                                <button class="btn btn-link nounderline pull-right m-1" onclick="question_clone(this)" data-toggle="tooltip" data-placement="top" data-original-title="Copy Question"><i class="fa fa-clone"></i></button>
+                                <button class="btn btn-link nounderline pull-right m-1" onclick="question_move(this, 'up')" data-toggle="tooltip" data-placement="top" data-original-title="Move up one position"><i class="fa fa-arrow-up"></i></button>
+                                <button class="btn btn-link nounderline pull-right m-1" onclick="question_move(this, 'down')" data-toggle="tooltip" data-placement="top" data-original-title="Move down one position"><i class="fa fa-arrow-down"></i></button>
                             </div>
                         </div>
-                        <div class="col-md-4 pr-0">
-                            <button class="btn btn-link nounderline pull-right m-1" onclick="question_delete(this)" data-toggle="tooltip" data-placement="top" data-original-title="Delete Question"><i class="fa fa-trash"></i></button>
-                            <button class="btn btn-link nounderline pull-right m-1" onclick="question_clone(this)" data-toggle="tooltip" data-placement="top" data-original-title="Copy Question"><i class="fa fa-clone"></i></button>
-                            <button class="btn btn-link nounderline pull-right m-1" onclick="question_move(this, 'up')" data-toggle="tooltip" data-placement="top" data-original-title="Move up one position"><i class="fa fa-arrow-up"></i></button>
-                            <button class="btn btn-link nounderline pull-right m-1" onclick="question_move(this, 'down')" data-toggle="tooltip" data-placement="top" data-original-title="Move down one position"><i class="fa fa-arrow-down"></i></button>
+                        <textarea class="row question-row Textarea Question ml-1 mr-1" maxlength="1024" placeholder="Question" style="height: 1px; overflow-y: hidden;"></textarea>
+                        <div class="row options-row ml-4">
+                            <div class="col-12 answer-col"></div>
+                            <button class="btn btn-primary mb-2 editor-color new-answer-button" onclick="new_answer_button(this)">NEW ANSWER</button>
                         </div>
                     </div>
-                    <textarea class="row question-row Textarea Question ml-1 mr-1" maxlength="1024" placeholder="Question" style="height: 1px; overflow-y: hidden;"></textarea>
-                    <div class="row options-row ml-4">
-                        <div class="col-12 answer-col"></div>
-                        <button class="btn btn-primary mb-2 editor-color new-answer-button" onclick="new_answer_button(this)">NEW ANSWER</button>
-                    </div>
-                </div>
-
-                <!--Answer Template-->
-                <div class="row" id="answer_template">
-                    <div class="col-auto"><i class="far fa-circle"></i></div>
-                    <div class="col-7"><textarea class="Textarea Question ml-1 mr-1" maxlength="1024" placeholder="Answer" style="height: 1px; overflow-y: hidden;"></textarea></div>
-                    <div class="col-4">
-                        <button class="btn btn-link nounderline" onclick="answer_delete(this)"><i class="fa fa-trash"></i></button>
-                        <button class="btn btn-link nounderline" onclick="answer_clone(this)"><i class="fa fa-clone"></i></button>
-                        <button class="btn btn-link nounderline" onclick="answer_move(this, 'up')"><i class="fa fa-arrow-up"></i></button>
-                        <button class="btn btn-link nounderline" onclick="answer_move(this, 'down')"><i class="fa fa-arrow-down"></i></button>
+    
+                    <!--Answer Template-->
+                    <div class="row" id="answer_template">
+                        <div class="col-auto"><i class="far fa-circle"></i></div>
+                        <div class="col-7"><textarea class="Textarea Question ml-1 mr-1" maxlength="1024" placeholder="Answer" style="height: 1px; overflow-y: hidden;"></textarea></div>
+                        <div class="col-4">
+                            <button class="btn btn-link nounderline" onclick="answer_delete(this)"><i class="fa fa-trash"></i></button>
+                            <button class="btn btn-link nounderline" onclick="answer_clone(this)"><i class="fa fa-clone"></i></button>
+                            <button class="btn btn-link nounderline" onclick="answer_move(this, 'up')"><i class="fa fa-arrow-up"></i></button>
+                            <button class="btn btn-link nounderline" onclick="answer_move(this, 'down')"><i class="fa fa-arrow-down"></i></button>
+                        </div>
                     </div>
                 </div>
 
@@ -94,6 +96,7 @@
 
         //loading survey into javascript + rendering
         const survey = JSON.parse([[${survey}]]);
+        console.log(survey)
         function render_list(render_us) {
             for ( let i=0; i < render_us.length; i++){
                 render_question_element(render_us[i], i)
@@ -175,6 +178,15 @@
             document.getElementById("questionnaire").appendChild(template);
         }
 
+        //create new question of specified type
+        function question_new(type) {
+            var new_question = {"type": type, "question": "", "default": false}
+            if (["SingleChoice", "MultipleChoice"].includes(type)) {
+                new_question["answers"] = ['', '', '']
+            }
+            survey.push(new_question)
+            render_all_refresh()
+        }
         //question buttons
         function question_delete(clicked_button) {
             var question_index = clicked_button.parentElement.parentElement.parentElement.id
@@ -199,7 +211,6 @@
             }
             render_all_refresh()
         }
-
 
         //adds new answer option
         function new_answer(target, content) {
@@ -242,6 +253,10 @@
             }
         }
 
+        function check_for_changes() {
+
+        }
+
 
 
         function saveInputs() {
@@ -262,128 +277,8 @@
 
         }
 
-        function deleteQuestion(index) {
-            saveInputs();
-            questionnaire.splice(index,1);
-            renderall();
-        }
-
-        function pushQuestionUp(index){
-            saveInputs();
-            const predecessor = index -1;
-            const question = questionnaire[index];
-            questionnaire[index]= questionnaire[predecessor];
-            questionnaire[predecessor]=question;
-            renderall();
-        }
-
-        function pushQuestionDown(index) {
-            saveInputs();
-            const predecessor = index +1;
-            const question = questionnaire[index];
-            questionnaire[index]= questionnaire[predecessor];
-            questionnaire[predecessor]=question;
-            renderall();
-
-        }
-
-        function addnewAnswer(index){
-            saveInputs();
-            if(questionnaire[index].answers.length<10) {
-                questionnaire[index].answers.push("Answer");
-            }
-            else{
-                alert("The maximum for possible answers is 10.");
-            }
-            renderall();
-        }
-        //jump
-        
-        function createButtonUpAnswer(index,answerindex){
-
-            const btn_upAnswer = document.createElement("Button");
-            btn_upAnswer.className = "btn btn-link btn-answere nounderline";
-            btn_upAnswer.setAttribute("onclick", "pushAnswerup("+index+","+answerindex+")");
-
-            const btn_icon = document.createElement("i");
-            btn_icon.className = "fa fa-arrow-up";
-
-            btn_upAnswer.setAttribute("data-toggle","tooltip");
-            btn_upAnswer.setAttribute("data-placement","top");
-            btn_upAnswer.title = [[#{question.up}]];
-
-            btn_upAnswer.appendChild(btn_icon);
-
-            return btn_upAnswer;
-        }
-
-        function pushAnswerup(q_index, a_index) {
-            saveInputs();
-            swapAnswer(q_index,(a_index-1),a_index);
-            renderall();
-
-        }
-
-
-        function createButtonDownAnswer(index,answerindex){
-
-            const btn_downAnswer = document.createElement("Button");
-            btn_downAnswer.className = "btn btn-link btn-answere nounderline";
-            btn_downAnswer.setAttribute("onclick", "pushAnswerdown("+index+","+answerindex+")");
-
-            const btn_icon = document.createElement("i");
-            btn_icon.className = "fa fa-arrow-down";
-
-            btn_downAnswer.setAttribute("data-toggle","tooltip");
-            btn_downAnswer.setAttribute("data-placement","top");
-            btn_downAnswer.title = [[#{question.down}]];
-
-            btn_downAnswer.appendChild(btn_icon);
-
-            return btn_downAnswer;
-        }
-
-        function pushAnswerdown(q_index, a_index) {
-            saveInputs();
-            swapAnswer(q_index, a_index, (a_index+1));
-            renderall();
-
-        }
-
-        function swapAnswer (q_index, a1_index, a2_index){
-            const predecessor = questionnaire[q_index].answers[a1_index];
-            questionnaire[q_index].answers[a1_index]= questionnaire[q_index].answers[a2_index];
-            questionnaire[q_index].answers[a2_index] =predecessor;
-        }
-
-        function deleteanswer(indexq,indexa) {
-            saveInputs();
-            questionnaire[indexq].answers.splice(indexa,1);
-            renderall();
-
-        }
-
-        function copyQuestion(index) {
-            saveInputs();
-            questionnaire.push(questionnaire[index]);
-            renderall();
-
-        }
-
-        function loadsurveystring (){
-            const survey = [(${survey})];
-            for ( let i=0; i < survey.length; i++){
-                questionnaire.push(survey[i]);
-
-            }
-            renderall();
-
-        }
-
-
         //Onclick Show the Dropdown Content
         function hideshowdropdowntitle(q_index) {
-
             document.getElementById(q_index).getElementsByClassName("dropdown-content")[0].classList.toggle("show");
         }
 
