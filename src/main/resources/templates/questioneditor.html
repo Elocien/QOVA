@@ -266,15 +266,15 @@
                     answer_index = i
                 }
             }
-            console.log(mode)
             var relevant_answer_clone = relevant_answer.cloneNode(true)
-            if (mode === 'up') {
+            if ((mode === 'up') && (answer_index > 0)) {
                 answer_container.insertBefore(relevant_answer_clone, answer_container.children[answer_index-1])
+                delete_element(relevant_answer)
             }
-            else if (mode === 'down') {
-                answer_container.insertBefore(relevant_answer_clone, answer_container.children[answer_index+1])
+            else if ((mode === 'down') && (answer_index < answer_container.children.length-1)) {
+                answer_container.insertBefore(relevant_answer_clone, answer_container.children[answer_index+2])
+                delete_element(relevant_answer)
             }
-            delete_element(relevant_answer)
         }
 
 
