@@ -57,10 +57,10 @@
                             </div>
                         </div>
                         <div class="col-md-4 pr-0">
-                            <button class="btn btn-link nounderline pull-right m-1" onclick="deleteQuestion(X)" data-toggle="tooltip" data-placement="top" data-original-title="Delete Question"><i class="fa fa-trash"></i></button>
-                            <button class="btn btn-link nounderline pull-right m-1" onclick="copyQuestion(X)" data-toggle="tooltip" data-placement="top" data-original-title="Copy Question"><i class="fa fa-clone"></i></button>
-                            <button class="btn btn-link nounderline pull-right m-1" onclick="pushQuestionUp(X)" data-toggle="tooltip" data-placement="top" data-original-title="Move up one position"><i class="fa fa-arrow-up"></i></button>
-                            <button class="btn btn-link nounderline pull-right m-1" onclick="pushQuestionDown(X)" data-toggle="tooltip" data-placement="top" data-original-title="Move down one position"><i class="fa fa-arrow-down"></i></button>
+                            <button class="btn btn-link nounderline pull-right m-1" onclick="question_delete(this)" data-toggle="tooltip" data-placement="top" data-original-title="Delete Question"><i class="fa fa-trash"></i></button>
+                            <button class="btn btn-link nounderline pull-right m-1" onclick="question_clone(this)" data-toggle="tooltip" data-placement="top" data-original-title="Copy Question"><i class="fa fa-clone"></i></button>
+                            <button class="btn btn-link nounderline pull-right m-1" onclick="question_move(this, 'up')" data-toggle="tooltip" data-placement="top" data-original-title="Move up one position"><i class="fa fa-arrow-up"></i></button>
+                            <button class="btn btn-link nounderline pull-right m-1" onclick="question_move(this, 'down')" data-toggle="tooltip" data-placement="top" data-original-title="Move down one position"><i class="fa fa-arrow-down"></i></button>
                         </div>
                     </div>
                     <textarea class="row question-row Textarea Question ml-1 mr-1" maxlength="1024" placeholder="Question" style="height: 1px; overflow-y: hidden;"></textarea>
@@ -91,7 +91,26 @@
     <div th:replace="footer"></div>
 
     <script th:inline="javascript">
-        
+
+        //loading survey into javascript + rendering
+        const survey = JSON.parse([[${survey}]]);
+        function render_list(render_us) {
+            for ( let i=0; i < render_us.length; i++){
+                render_question_element(render_us[i], i)
+            }
+        }
+        function render_all() {
+            render_list(survey)
+        }
+        window.onload = function(){
+            render_all()
+        }
+
+        function render_all_refresh() {
+            document.getElementById("questionnaire").innerHTML = ""
+            render_all()
+        }
+
         //auto resize for the textareas
         const line_height = convertRemToPixels(2);
         var tx = document.getElementsByTagName('textarea');
@@ -112,8 +131,7 @@
         function convertRemToPixels(rem) {
             return rem * parseFloat(getComputedStyle(document.documentElement).fontSize);
         }
-        
-        
+                
         function delete_element(element) {
             try {
                 element.parentNode.removeChild(element);
@@ -123,109 +141,31 @@
             }
         }
 
-        const questionnaire = [];
-        const defaultquestionnaire = [];
-
-        function addYesNoQuestion() {
-            saveInputs();
-            const yesnoQuestion = {
-                type: "YesNo",
-                question: "Question",
-                default: false
-            };
-            questionnaire.push(yesnoQuestion);
-            renderall();
-        }
-
-        function addMultipleChoiceQuestion(){
-            saveInputs();
-            const multiplechoiceQuestion = {
-                type: "MultipleChoice",
-                question: "Question",
-                default: false,
-                answers: []
-            };
-            questionnaire.push(multiplechoiceQuestion);
-            renderall();
-
-        }
-
-        function addSingleChoiceQuestion() {
-            saveInputs();
-            const singlechoiceQuestion = {
-                type: "SingleChoice",
-                question: "Question",
-                default: false,
-                answers: []
-            };
-            questionnaire.push(singlechoiceQuestion);
-            renderall();
-        }
-
-        function addFreeTextQuestion() {
-            saveInputs();
-            const freetextQuestion={
-                type: "FreeText",
-                question: "Question",
-                default: false
-            };
-            questionnaire.push(freetextQuestion);
-            renderall();
-
-        }
-
-        function addOnetoFiveQuestion(){
-            saveInputs();
-            const onetofiveQuestion={
-                type: "OnetoFive",
-                question: "Question",
-                default: false
-            };
-            questionnaire.push(onetofiveQuestion);
-            renderall();
-        }
-
-        function getJson() {
-            saveInputs();
-            document.getElementById("json").innerHTML= JSON.stringify(questionnaire);
-            renderall();
-
-        }
-
-        function renderall(){
-            clearquestionnaire();
-            questionnaire.forEach(renderquestionnaireelement);
-            document.getElementById("questionnairejson").value = JSON.stringify(questionnaire);
-            refreshTextareas();
-            $('[data-toggle="tooltip"]').tooltip();
-
-        }
-
         //Bootsrapped
-        function renderquestionnaireelement (value, index, array){
-
+        function render_question_element (value, index){
+            
             const template = document.getElementById("question_template").cloneNode(true);
             template.id = index;
 
             template.getElementsByClassName("index-number")[0].innerHTML = index+1;
 
             //dropdown fix (changes title & removes present )
-            var target = template.getElementsByClassName("dropdown-menu")[0].getElementsByClassName(value.type)[0]
+            var target = template.getElementsByClassName("dropdown-menu")[0].getElementsByClassName(value["type"])[0]
             template.getElementsByClassName("dropdown-toggle")[0].innerHTML = target.innerHTML
             delete_element(target)
 
             //filling in the question if it exists
             var question_input = template.getElementsByClassName("question-row");
             question_input.id = index;
-            if (value.question != "") {
-                question_input.defaultValue = value.question;
+            if (value["question"] != "") {
+                question_input.defaultValue = value["question"];
             }
 
             //adding/removing the choices
             var target = template.getElementsByClassName("options-row")[0];
-            if (["SingleChoice", "MultipleChoice"].includes(value.type)) {
-                for ( let i=0; i < value.answers.length; i++){
-                    new_answer(target.getElementsByClassName("answer-col")[0], value.answers[i])
+            if (["SingleChoice", "MultipleChoice"].includes(value["type"])) {
+                for ( let i=0; i < value["answers"].length; i++){
+                    new_answer(target.getElementsByClassName("answer-col")[0], value["answers"][i])
                 }
             }
             else {
@@ -233,6 +173,31 @@
             }
 
             document.getElementById("questionnaire").appendChild(template);
+        }
+
+        //question buttons
+        function question_delete(clicked_button) {
+            var question_index = clicked_button.parentElement.parentElement.parentElement.id
+            survey.splice(question_index, 1)
+            render_all_refresh()
+        }
+        function question_clone(clicked_button) {
+            var question_index = clicked_button.parentElement.parentElement.parentElement.id
+            survey.splice(question_index, 0, survey[question_index])
+            render_all_refresh()
+        }
+        function question_move(clicked_button, mode) {
+            var question_index = clicked_button.parentElement.parentElement.parentElement.id
+            var copied_element = survey[question_index]
+            if ((mode === 'up') && (question_index > 0)) {
+                survey.splice(question_index, 1)
+                survey.splice(question_index-1, 0, copied_element)
+            }
+            else if ((mode === 'down') && (question_index < survey.length-1)) {
+                survey.splice(question_index, 1)
+                survey.splice(question_index+1, 0, copied_element)
+            }
+            render_all_refresh()
         }
 
 
@@ -278,16 +243,6 @@
         }
 
 
-        function clearquestionnaire() {
-            const questionnaire = document.getElementById("questionnaire");
-            while (questionnaire.firstChild){
-                questionnaire.removeChild(questionnaire.lastChild);
-            }
-            const toolbox = document.getElementsByClassName("tooltip fade");
-            if(toolbox.length===1) {
-                toolbox[0].remove();
-            }
-        }
 
         function saveInputs() {
             const textareas_question = document.getElementsByClassName("Textarea Question");
@@ -304,82 +259,6 @@
                 questionnaire[questionid].answers[answerid] = textareas_answer[i].value;
 
             }
-
-        }
-
-        //Relevant for Frontend
-        function createButtonDelete (index){
-
-            const btn_d = document.createElement("BUTTON");
-            btn_d.className = "btn btn-link nounderline pull-right m-1";
-            btn_d.setAttribute("onclick","deleteQuestion("+ index+")");
-
-            const btn_icon = document.createElement("i");
-            btn_icon.className = "fa fa-trash";
-
-            btn_d.setAttribute("data-toggle","tooltip");
-            btn_d.setAttribute("data-placement","top");
-            btn_d.title = [[#{question.delete}]];
-
-            btn_d.appendChild(btn_icon);
-
-            return btn_d;
-
-        }
-
-        function createButtonCopy(index) {
-
-            const btn_copy = document.createElement("Button");
-            btn_copy.className="btn btn-link nounderline pull-right m-1";
-            btn_copy.setAttribute("onclick","copyQuestion("+index+")");
-
-            const btn_icon = document.createElement("i");
-            btn_icon.className = "fa fa-clone";
-
-            btn_copy.setAttribute("data-toggle","tooltip");
-            btn_copy.setAttribute("data-placement","top");
-            btn_copy.title = [[#{question.copy}]];
-
-            btn_copy.appendChild(btn_icon);
-
-            return btn_copy;
-
-        }
-
-        function createButtonUp(index) {
-
-            const btn_up = document.createElement("Button");
-            btn_up.className = "btn btn-link nounderline pull-right m-1";
-            btn_up.setAttribute("onclick","pushQuestionUp("+index+")");
-
-            const btn_icon = document.createElement("i");
-            btn_icon.className = "fa fa-arrow-up";
-
-            btn_up.setAttribute("data-toggle","tooltip");
-            btn_up.setAttribute("data-placement","top");
-            btn_up.title = [[#{question.up}]];
-
-            btn_up.appendChild(btn_icon);
-
-            return btn_up;
-        }
-
-        function createButtonDown(index) {
-
-            const btn_down = document.createElement("Button");
-            btn_down.className="btn btn-link nounderline pull-right m-1";
-            btn_down.setAttribute("onclick","pushQuestionDown("+index+")");
-
-            const btn_icon = document.createElement("i");
-            btn_icon.className = "fa fa-arrow-down";
-
-            btn_down.setAttribute("data-toggle","tooltip");
-            btn_down.setAttribute("data-placement","top");
-            btn_down.title = [[#{question.down}]];
-
-            btn_down.appendChild(btn_icon);
-
-            return btn_down;
 
         }
 
@@ -522,13 +401,6 @@
             }
 
         }
-
-        window.onload = function(){
-            loadsurveystring();
-            renderall();
-        }
-
-
 
         $(document).ready(function () {
             $("form").submit(function () {
