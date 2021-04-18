@@ -50,11 +50,11 @@
                                 <!--Change Question-->
                                 <button class="btn btn-link dropdown-toggle question-headline font-weight-light" type="button" id="dropdownMenuButton(X)" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">QUESTION TYPE</button>
                                 <div id="dropdown-menu" class="dropdown-menu" x-placement="bottom-start">
-                                    <a class="dropdown-item YesNo" onclick="changeQuestionTyp(1,1)" th:text="#{question.yes-no-question}">YesNo-Question</a>
-                                    <a class="dropdown-item MultipleChoice" onclick="changeQuestionTyp(1,2)" th:text="#{question.multiple-choice}">Multiple Question</a>
-                                    <a class="dropdown-item SingleChoice" onclick="changeQuestionTyp(1,3)" th:text="#{question.single-choice}">Single Choice</a>
-                                    <a class="dropdown-item OnetoFive" onclick="changeQuestionTyp(1,4)" th:text="#{question.onetofive-question}">OnetoFive-Question</a>
-                                    <a class="dropdown-item FreeText" onclick="changeQuestionTyp(1,5)" th:text="#{question.free-text-question}">Free-Text-Question</a>
+                                    <a class="dropdown-item YesNo" onclick="question_change_type(this, 'YesNo')" th:text="#{question.yes-no-question}">YesNo-Question</a>
+                                    <a class="dropdown-item MultipleChoice" onclick="question_change_type(this, 'MultipleChoice')" th:text="#{question.multiple-choice}">Multiple Question</a>
+                                    <a class="dropdown-item SingleChoice" onclick="question_change_type(this, 'SingleChoice')" th:text="#{question.single-choice}">Single Choice</a>
+                                    <a class="dropdown-item OnetoFive" onclick="question_change_type(this, 'OnetoFive')" th:text="#{question.onetofive-question}">OnetoFive-Question</a>
+                                    <a class="dropdown-item FreeText" onclick="question_change_type(this, 'FreeText')" th:text="#{question.free-text-question}">Free-Text-Question</a>
                                 </div>
                             </div>
                             <div class="col-md-4 pr-0">
@@ -212,6 +212,20 @@
                 survey.splice(question_index, 1)
                 survey.splice(question_index+1, 0, copied_element)
             }
+            render_all_refresh()
+        }
+        function question_change_type(clicked_button, new_type) {
+            check_for_changes()
+            var question_index = clicked_button.parentElement.parentElement.parentElement.parentElement.id;
+            var old_type = survey[question_index]["type"];
+            var with_answer = ["SingleChoice", "MultipleChoice"];
+            if (!with_answer.includes(new_type) && with_answer.includes(old_type)) {
+                delete survey[question_index]["answers"]
+            }
+            else if (with_answer.includes(new_type) && !with_answer.includes(old_type)) {
+                survey[question_index]["answers"] = ["", "", ""]
+            }
+            survey[question_index]["type"] = new_type
             render_all_refresh()
         }
 
