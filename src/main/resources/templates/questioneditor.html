@@ -57,7 +57,7 @@
                                     <a class="dropdown-item FreeText" onclick="question_change_type(this, 'FreeText')" th:text="#{question.free-text-question}">Free-Text-Question</a>
                                 </div>
                             </div>
-                            <div class="col-md-4 pr-0">
+                            <div class="col-md-4 pr-0 text-right">
                                 <button class="btn btn-link nounderline pull-right m-1" onclick="question_delete(this)" data-toggle="tooltip" data-placement="top" data-original-title="Delete Question"><i class="fa fa-trash"></i></button>
                                 <button class="btn btn-link nounderline pull-right m-1" onclick="question_clone(this)" data-toggle="tooltip" data-placement="top" data-original-title="Copy Question"><i class="fa fa-clone"></i></button>
                                 <button class="btn btn-link nounderline pull-right m-1" onclick="question_move(this, 'up')" data-toggle="tooltip" data-placement="top" data-original-title="Move up one position"><i class="fa fa-arrow-up"></i></button>
@@ -67,15 +67,17 @@
                         <textarea class="row question-row Textarea Question ml-1 mr-1" maxlength="1024" placeholder="Question" style="height: 1px; overflow-y: hidden;"></textarea>
                         <div class="row options-row ml-4">
                             <div class="col-12 answer-col"></div>
-                            <button class="btn btn-primary mb-2 editor-color new-answer-button" onclick="new_answer_button(this)">NEW ANSWER</button>
+
+                            <div class="col-auto mb-4 d-flex align-items-center"><i class="far align-middle fa-circle"></i></div>
+                            <div class="col-auto mb-4"><button class="btn btn-primary editor-color new-answer-button" onclick="new_answer_button(this)" th:text="#{question.add-new-answer}">NEW ANSWER</button></div>
                         </div>
                     </div>
     
                     <!--Answer Template-->
                     <div class="row" id="answer_template">
-                        <div class="col-auto"><i class="far fa-circle"></i></div>
+                        <div class="col-auto d-flex align-items-center"><i class="far align-middle fa-circle"></i></div>
                         <div class="col-7"><textarea class="Textarea Question ml-1 mr-1" maxlength="1024" placeholder="Answer" style="height: 1px; overflow-y: hidden;"></textarea></div>
-                        <div class="col-4">
+                        <div class="col-4 d-flex align-items-center answer-options">
                             <button class="btn btn-link nounderline" onclick="answer_delete(this)"><i class="fa fa-trash"></i></button>
                             <button class="btn btn-link nounderline" onclick="answer_clone(this)"><i class="fa fa-clone"></i></button>
                             <button class="btn btn-link nounderline" onclick="answer_move(this, 'up')"><i class="fa fa-arrow-up"></i></button>

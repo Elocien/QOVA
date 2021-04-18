@@ -136,3 +136,9 @@ body {
     display: none;
 }
 
+.answer-col .answer-options button {
+    color: rgb(190, 190, 190);
+}
+.answer-col .answer-options button:hover {
+    color: rgb(150, 150, 150);
+}
