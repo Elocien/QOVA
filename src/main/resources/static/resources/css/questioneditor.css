@@ -142,3 +142,14 @@ body {
 .answer-col .answer-options button:hover {
     color: rgb(150, 150, 150);
 }
+
+
+#default_questionnaire .not-default {
+    display: none !important;
+}
+#default_questionnaire textarea {
+    background-color: white;
+}
+#default_questionnaire .index-number {
+    background-color: grey;
+}
