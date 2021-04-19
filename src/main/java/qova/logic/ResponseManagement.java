@@ -391,8 +391,6 @@ public class ResponseManagement {
         // Generate the resultsArray Structure
         JSONArray resultsArray = generateJsonResultsArrayStructure(response);
 
-        System.out.println(resultsArray);
-
         // Iterate through an populate JSON Objects with data
         for (SurveyResponse surveyResponse : listOfSurveyResponses) {
 
@@ -498,11 +496,11 @@ public class ResponseManagement {
         // Generate JSON Objects for populating
         for (AbstractResponse abstractResponse : response.getListOfResponses()) {
             JSONObject jsonResponseObject = new JSONObject();
-            jsonResponseObject.append("default", abstractResponse.getIsDefaultQuestion());
-            jsonResponseObject.append("question", response.getQuestionTextForQuestionAtPosition(surveyPosition));
+            jsonResponseObject.put("default", abstractResponse.getIsDefaultQuestion());
+            jsonResponseObject.put("question", response.getQuestionTextForQuestionAtPosition(surveyPosition));
 
             if (abstractResponse instanceof BinaryResponse) {
-                jsonResponseObject.append("type", "binary");
+                jsonResponseObject.put("type", "binary");
                 JSONArray binaryOptionsArray = new JSONArray(new ArrayList<>(Arrays.asList("yesTotal", "noTotal")));
                 jsonResponseObject.put("options", binaryOptionsArray);
                 jsonResponseObject.put("answers", new JSONArray(Arrays.asList(0, 0)));
