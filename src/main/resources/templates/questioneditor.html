@@ -12,6 +12,13 @@
         
         <h2 class="font-weight-bold text-center" th:text="#{editor.headline}">SURVEY EDITOR</h2>
         <h5 class="font-weight-light text-center"><span th:text="${coursename} + ': '"></span><span th:text="#{'editor.' + ${typeID}}"></span></h5>
+        <div class="text-center default-toggle-wrapper">
+            <a class="btn btn-light default-toggle" type="button" onclick="collapse_default_questions()">
+                <h5 class="m-1 default-shown" th:text="#{question.default-shown}">HIDE DEFAULT QUESTIONS</h5>
+                <h5 class="m-1 default-hidden" th:text="#{question.default-hidden}" style="display: none">SHOW DEFAULT QUESTIONS</h5>
+            </a>
+        </div>
+
 
         <div class="row">       
             <div class="col-lg-3 col-md-12 col-sm-12 text-center">
@@ -278,7 +285,7 @@
             target.appendChild(template);
         }
         function new_answer_button(clicked_button) {
-            new_answer(clicked_button.parentElement.getElementsByClassName("answer-col")[0], "");
+            new_answer(clicked_button.parentElement.parentElement.parentElement.getElementsByClassName("answer-col")[0], "");
         }
         //answer buttons
         function answer_delete(clicked_button) {
@@ -315,6 +322,20 @@
             document.getElementById(q_index).getElementsByClassName("dropdown-content")[0].classList.toggle("show");
         }
 
+        function collapse_default_questions(id) {
+            var collapse_me = document.getElementById('default_questionnaire')
+            if (collapse_me.style.display === "") {
+                collapse_me.style.display = "none"
+                document.getElementsByClassName('default-shown')[0].style.display = "none"
+                document.getElementsByClassName('default-hidden')[0].style.display = ""
+            }
+            else if (collapse_me.style.display === "none") {
+                collapse_me.style.display = ""
+                document.getElementsByClassName('default-shown')[0].style.display = ""
+                document.getElementsByClassName('default-hidden')[0].style.display = "none"
+            }
+        }
+
         //Close Dropdwon if the User Clicks Outside
         //Problem das man mehrer Dropdown klicken kann ohne das vorherige schließt
         window.onclick = function (event) {
@@ -327,7 +348,6 @@
                     }
                 }
             }
-
         }
 
         $(document).ready(function () {

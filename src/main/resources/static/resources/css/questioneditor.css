@@ -153,3 +153,13 @@ body {
 #default_questionnaire .index-number {
     background-color: grey;
 }
+
+.default-toggle-wrapper {
+    margin-top: 3.5rem;
+}
+.default-toggle {
+    border: solid 1px black !important;
+}
+.default-toggle:hover {
+    background-color: white;
+}
