@@ -187,6 +187,18 @@ footer {
     text-align: center;
   }
 }
+.icon-wrapper {
+  display: inline-block;
+  height: 10rem;
+  width: 10rem;
+  border-radius: 100%;
+  background-color: var(--tu_blue_light);
+  margin-bottom: 2rem;
+}
+.icon-wrapper i {
+  margin-top: 2rem;
+  color: white;
+}
 
 /*IDK*/
 .form-control {
