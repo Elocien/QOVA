@@ -186,7 +186,6 @@ public class CourseController {
                                          BindingResult result,  @AuthenticationPrincipal UserDetails userDetails) {
 
         if (result.hasErrors()) {
-            System.out.println(result.getAllErrors());
             return createCourse(model, form);
         }
 
