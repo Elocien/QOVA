@@ -120,7 +120,7 @@
             if (type != "text") {
                 delete_multiple_elements(question_template.getElementsByClassName("text-only"));
             }
-            if (!answer["default"][0]) {
+            if (!answer["default"]) {
                 delete_element(question_template.getElementsByClassName("default-question")[0]);
             }
 
