@@ -391,6 +391,8 @@ public class ResponseManagement {
         // Generate the resultsArray Structure
         JSONArray resultsArray = generateJsonResultsArrayStructure(response);
 
+        System.out.println(resultsArray);
+
         // Iterate through an populate JSON Objects with data
         for (SurveyResponse surveyResponse : listOfSurveyResponses) {
 
