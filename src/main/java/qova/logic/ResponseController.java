@@ -105,7 +105,7 @@ public class ResponseController {
             return "error";
         }
 
-        // TODO validate that parameters only contain valid charachters. E.g. a-zA-Z0-9
+        // TODO validate that parameters only contain valid characters. E.g. a-zA-Z0-9
 
         else {
 
