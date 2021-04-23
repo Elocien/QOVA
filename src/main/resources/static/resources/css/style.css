@@ -8,6 +8,7 @@ body {
   --tu_blue_light: rgb(0, 74, 174);
   --tu_blue_highlight: rgb(230, 230, 255);
   --fancy_grey: rgb(50, 50, 50);
+  --bright_grey: rgb(220, 220, 220);
   background-image: url(../images/seamless-bg.jpg);
   background-repeat: auto;
   background-color: rgb(200, 200, 200);
@@ -174,10 +175,6 @@ footer {
   height: 200px;
   filter: invert(0.8);
 }
-.about_text {
-  border-top: solid 1px var(--tu_blue);
-  background-color: rgba(255, 255, 255, 0.7);
-}
 .home-page-list {
   margin: 0;
 }
@@ -189,15 +186,42 @@ footer {
 }
 .icon-wrapper {
   display: inline-block;
-  height: 10rem;
-  width: 10rem;
+  height: 7rem;
+  width: 7rem;
   border-radius: 100%;
-  background-color: var(--tu_blue_light);
+  background-color: var(--tu_blue);
   margin-bottom: 2rem;
 }
 .icon-wrapper i {
-  margin-top: 2rem;
+  margin-top: 1.45rem;
   color: white;
+}
+.about_text {
+  border-top: solid 1px var(--bright_grey);
+  background-color: rgba(255, 255, 255, 0.7);
+}
+.card-wrapper {
+  background-color: rgb(255, 255, 255);
+  padding: 1rem;
+  margin-bottom: 3rem;
+  border: 1px solid var(--bright_grey);
+  box-shadow: 5px 5px 5px var(--bright_grey);
+  border-radius: 5px;
+}
+.card-wrapper:first-of-type {
+  margin-top: 3rem;
+}
+.card-image {
+  border-radius: 5px;
+}
+.text-wrapper h3 {
+  font-weight: 500;
+  padding-bottom: 1rem;
+  border-bottom: 3px solid var(--bright_grey);
+  margin: none !important;
+}
+.text-wrapper p {
+  margin-top: 1rem;
 }
 
 /*IDK*/

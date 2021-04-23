@@ -1,65 +1,85 @@
 <!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
 <head>
-	<title th:text="#{title.home}">TITLE</title>
+    <title th:text="#{title.home}">TITLE</title>
 </head>
 <body>
 <div th:include="navbar"></div>
-<div class="main container-fluid">
+<div class="main container-fluid m-0">
 
-	<!--Banner-->
-	<div class="row justify-content-center align-items-center p-0 pt-5 pb-5">
-		<!--Logo-->
-		<div class="col-12">
-			<div class="row">
-				<div class="col-md-6 col-sm-12">
-					<img class="logo-home float-md-right m-auto d-block" th:src="@{/resources/images/qova_logo_text.png}" src="../static/resources/images/qova_logo_text.png" alt="Logo"/>
-				</div>
-				<div class="col-md-6 col-sm-12 d-flex align-items-center">
-					<ul class="fancy_text font-weight-light list-unstyled home-page-list">
-						<li>QR-Code based</li>
-						<li>Online</li>
-						<li>Evaluation</li>
-					</ul>
-				</div>
-			</div>
-			<div class="row m-4 pt-5">
-				<div class="col-lg-3 col-sm-12 ml-auto mr-auto text-center">
-					<div class="icon-wrapper"><i class="fas fa-bolt fa-6x"></i></div>
-					<h3 th:text="#{home.fast}">FAST</h3>
-					<p th:text="#{home.fast.desc}">PH</p>
-				</div>
-				<div class="col-lg-3 col-sm-12 ml-auto mr-auto text-center">
-					<div class="icon-wrapper text-center"><i class="fas fa-unlock-alt fa-6x"></i></div>
-					<h3 th:text="#{home.anonymous}">ANONYMOUS</h3>
-					<p th:text="#{home.anonymous.desc}">PH</p>
-				</div>
-				<div class="col-lg-3 col-sm-12 ml-auto mr-auto text-center">
-					<div class="icon-wrapper text-center"><i class="fas fa-random fa-6x"></i></div>
-					<h3 th:text="#{home.direct}">DIRECT</h3>
-					<p th:text="#{home.direct.desc}">PH</p>
-				</div>
-			</div>
-		</div>
-	</div>
+    <!--Banner-->
+    <div class="row justify-content-center align-items-center p-0 pt-5 pb-5">
+        <!--Logo-->
+        <div class="col-12">
+            <div class="row">
+                <div class="col-md-6 col-sm-12">
+                    <img class="logo-home float-md-right m-auto d-block" th:src="@{/resources/images/qova_logo_text.png}" src="../static/resources/images/qova_logo_text.png" alt="Logo"/>
+                </div>
+                <div class="col-md-6 col-sm-12 d-flex align-items-center">
+                    <ul class="fancy_text font-weight-light list-unstyled home-page-list">
+                        <li>QR-Code based</li>
+                        <li>Online</li>
+                        <li>Evaluation</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row m-4 pt-5">
+                <div class="col-lg-3 col-sm-12 ml-auto mr-auto text-center">
+                    <div class="icon-wrapper"><i class="fas fa-bolt fa-4x"></i></div>
+                    <h3 th:text="#{home.fast}">FAST</h3>
+                    <p th:text="#{home.fast.desc}">PH</p>
+                </div>
+                <div class="col-lg-3 col-sm-12 ml-auto mr-auto text-center">
+                    <div class="icon-wrapper text-center"><i class="fas fa-unlock-alt fa-4x"></i></div>
+                    <h3 th:text="#{home.anonymous}">ANONYMOUS</h3>
+                    <p th:text="#{home.anonymous.desc}">PH</p>
+                </div>
+                <div class="col-lg-3 col-sm-12 ml-auto mr-auto text-center">
+                    <div class="icon-wrapper text-center"><i class="fas fa-random fa-4x"></i></div>
+                    <h3 th:text="#{home.direct}">DIRECT</h3>
+                    <p th:text="#{home.direct.desc}">PH</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<div class="row about_text justify-content-center">
-		<div class="col col-lg-6 col-md-12 col-sm-12 pt-4 bg-white">
-			<h3>About QOVA:</h3>
-			<p>
-				QOVA is a online tool designed to streamline the process of creating, sharing & evaluating surveys. Topic of these surveys are the different courses of the TU Dresden.
-			</p>
-			<p>
-				Access to creating courses & surveys is limited to employes of the TU Dresden. New surveys can be shared by downloading the QR-Codes on the course page.
-				Once scanned by the students they will get redirected to the online survey. Afterwards the results can be checked on the 'Survey Results' page.
-			</p>
-			<br>
-<!--			<h3>News:</h3>-->
-<!--			<p>-->
-<!--				Ultricies lacus sed turpis tincidunt id aliquet risus feugiat in. At tellus at urna condimentum mattis. Massa tempor nec feugiat nisl pretium fusce id velit. Amet consectetur adipiscing elit ut aliquam. Vulputate enim nulla aliquet porttitor lacus. Pharetra sit amet aliquam id diam maecenas ultricies mi eget. Sagittis orci a scelerisque purus. Fermentum et sollicitudin ac orci phasellus egestas tellus rutrum. Sapien et ligula ullamcorper malesuada proin libero nunc consequat. Mus mauris vitae ultricies leo integer malesuada. Nunc scelerisque viverra mauris in aliquam sem. Vulputate odio ut enim blandit volutpat. Diam donec adipiscing tristique risus nec feugiat in. Quis risus sed vulputate odio ut enim blandit volutpat maecenas. Ornare suspendisse sed nisi lacus. Vulputate sapien nec sagittis aliquam malesuada bibendum arcu. Magna etiam tempor orci eu lobortis elementum nibh. Tempor nec feugiat nisl pretium fusce. Nulla pellentesque dignissim enim sit.</br>-->
-<!--			</p>-->
-		</div>
-	</div>
+    <div class="row about_text justify-content-center">
+        <div class="col col-lg-6 col-md-12 col-sm-12">
+            
+            <div class="row card-wrapper">
+                <div class="col col-6 pl-0">
+                    <img class="card-image img-fluid" th:src="@{/resources/images/manual_survey.jpg}" src="../static/resources/images/manual_survey.jpg" alt="Card image cap">
+                </div>
+                <div class="col col-6 d-flex align-items-center pr-0">
+                    <div class="text-wrapper m-4">
+                        <h3>About QOVA</h3>
+                        <p>
+                            QOVA is a project initiated at the faculty of medicine. QOVA aims to make the evaluation process more transparent for
+                            students as well as mentors and lecturers. By publishing results publicly, a more detailed picture can be painted of how
+                            relevant, engaging and informative subjects at the TU Dresden actually are, as evaluated by students.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row card-wrapper">
+                <div class="col col-6 pl-0">
+                    <img class="card-image img-fluid" th:src="@{/resources/images/work_station.jpg}" src="../static/resources/images/work_station.jpg" alt="Card image cap">
+                </div>
+                <div class="col col-6 d-flex align-items-center pr-0">
+                    <div class="text-wrapper m-4">
+                        <h3>Beta Version</h3>
+                        <p>
+                            The current beta 0.1 version was launched at the beginning of the winter semester 2020/2021. We are currently working on
+                            improvements for both students and teachers, with a few features in the works for a release during the summer semester
+                            2021. We appreciate any and all feedback!
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
 
 </div>
 <footer th:replace="footer"></footer>
