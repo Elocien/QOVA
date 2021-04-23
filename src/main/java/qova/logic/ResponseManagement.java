@@ -725,7 +725,5 @@ public class ResponseManagement {
                 }
             }
         }
-
     }
-
 }
