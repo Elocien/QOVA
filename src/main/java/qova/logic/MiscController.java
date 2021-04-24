@@ -10,7 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import qova.users.CurrentUserDetails;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -38,25 +37,20 @@ public class MiscController {
     @GetMapping("/")
     public String welcome() {
 
-        //Model model, @AuthenticationPrincipal CurrentUserDetails userDetails, HttpServletRequest request
+        //Model model, @AuthenticationPrincipal UserDetails userDetails,HttpServletRequest request
 
-//        //If user is logged in, the username will be present and not null
-//        if(userDetails.getUsername() != null){
-//            if(request.isUserInRole("ROLE_STAFF")){
-//                String userId = userDetails.getUsername();
-//
-//                //Send a list of the users courses to the model
-//                model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
-//            }
+//        String userId = userDetails.getUsername();
+//        if(request.isUserInRole("ROLE_STAFF")){
+//            System.out.println("lol");
+//            model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
 //        }
 
-        //Return the home html template
         return "home";
     }
 
 
     /**
-     * Landing url for the application when a user logs in. After authentication, redirect to home page
+     * Landing Page for the application once a user is authenticated, identical to {@linkplain MiscController#welcome()}.
      * This is used so that users enter a directory where authentication is required, thus triggering shibboleth.
      * @return home.html template
      */
@@ -64,8 +58,6 @@ public class MiscController {
     public String loginHome() {
         return "redirect:/";
     }
-
-
 
     @GetMapping("/logout")
     public String logout(HttpSession session){
@@ -94,4 +86,7 @@ public class MiscController {
 
         return new HttpEntity<>(pdf, header);
     }
+
+
+
 }
