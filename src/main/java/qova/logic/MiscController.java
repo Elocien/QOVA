@@ -35,10 +35,9 @@ public class MiscController {
      * @return home.html template
      */
     @GetMapping("/")
-    public String welcome(Model model, @AuthenticationPrincipal UserDetails userDetails,HttpServletRequest request) {
+    public String welcome(Model model, @AuthenticationPrincipal UserDetails userDetails, HttpServletRequest request) {
         String userId = userDetails.getUsername();
         if(request.isUserInRole("ROLE_STAFF")){
-            System.out.println("lol");
             model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
         }
         return "home";
@@ -46,7 +45,7 @@ public class MiscController {
 
 
     /**
-     * Landing Page for the application once a user is authenticated, identical to {@linkplain MiscController#welcome()}.
+     * Landing url for the application when a user logs in. After authentication, redirect to home page
      * This is used so that users enter a directory where authentication is required, thus triggering shibboleth.
      * @return home.html template
      */
