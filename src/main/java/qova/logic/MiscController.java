@@ -37,11 +37,18 @@ public class MiscController {
      */
     @GetMapping("/")
     public String welcome(Model model, @AuthenticationPrincipal CurrentUserDetails userDetails, HttpServletRequest request) {
-        String userId = userDetails.getUsername();
-        if(request.isUserInRole("ROLE_STAFF")){
-            System.out.println("lol");
-            model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
+
+        //If user is logged in, the username will be present and not null
+        if(userDetails.getUsername() != null){
+            if(request.isUserInRole("ROLE_STAFF")){
+                String userId = userDetails.getUsername();
+
+                //Send a list of the users courses to the model
+                model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
+            }
         }
+
+        //Return the home html template
         return "home";
     }
 
