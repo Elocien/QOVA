@@ -1,6 +1,9 @@
 package qova.logic;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 
 import qova.admin.DefaultSurvey;
@@ -370,8 +373,31 @@ public class CourseManagement {
         ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
         MatrixToImageWriter.writeToStream(bitMatrix, "PNG", pngOutputStream);
         return pngOutputStream.toByteArray();
-
     }
+
+    public HttpEntity<byte[]> qrCodeAsHttpEntity(String type, UUID id) throws IOException, WriterException {
+
+        //The url contained in the QR Code. This redirects to the survey selection screen
+        String url = "qova.med.tu-dresden.de/survey/select?type=" + type + "&id=" + id+"&mode=participant";
+
+        //Retrieve the relevant course
+        Optional<Course> crs = findById(id);
+
+        //Generate the filename of the qrcode image
+        String filename = crs.get().getName() + "_" + type + "_" + "QRCode";
+
+        // Generate QRCode
+        byte[] qrcode = generateQRCodeImage(url);
+
+        // Set HTTP headers and return HttpEntity
+        HttpHeaders header = new HttpHeaders();
+        header.setContentType(MediaType.IMAGE_PNG);
+        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
+        header.setContentLength(qrcode.length);
+
+        return new HttpEntity<>(qrcode, header);
+    }
+
 
     // Generates a set amount of semesters which are added to the model, to pick
     // from as course creation dates.

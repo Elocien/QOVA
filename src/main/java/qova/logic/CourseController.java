@@ -34,7 +34,9 @@ import qova.objects.Course;
 import qova.objects.CourseInstance;
 import qova.users.CurrentUserDetails;
 
-
+/**
+ * The class responsible for all mappings
+ */
 @Controller
 public class CourseController {
 
@@ -560,25 +562,6 @@ public class CourseController {
     public HttpEntity<byte[]> qrcode(HttpServletResponse response, @RequestParam String type, @RequestParam UUID id)
             throws IOException, WriterException {
 
-        // QRCode URL (Redirects to a courses survey when scanned). Generated using
-        // pathvariables
-        String url = "qova.med.tu-dresden.de/survey/select?type=" + type + "&id=" + id+"&mode=participant";
-
-        // find course
-        Optional<Course> crs = courseManagement.findById(id);
-
-        // generate filename
-        String filename = crs.get().getName() + "_" + type + "_" + "QRCode";
-
-        // Generate QRCode
-        byte[] qrcode = courseManagement.generateQRCodeImage(url);
-
-        // Set HTTP headers and return HttpEntity
-        HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.IMAGE_PNG);
-        header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
-        header.setContentLength(qrcode.length);
-
-        return new HttpEntity<>(qrcode, header);
+        return courseManagement.qrCodeAsHttpEntity(type, id);
     }
 }
