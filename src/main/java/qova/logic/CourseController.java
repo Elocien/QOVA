@@ -35,7 +35,14 @@ import qova.objects.Course;
 import qova.objects.CourseInstance;
 
 /**
- * The class responsible for all mappings
+ * <p>The class responsible for all mappings relating to the subdomain ../course</p>
+ *
+ * <p>All mappings under the ../course subdomain relate to functionality only available to users with the STAFF role. The main features captured in this controller
+ * pertain to basic crud functions for the course object as well as viewing details. Further mappings in the controller cover questioneditor operations,
+ * including editing and viewing a preview of the questionnaire</p>
+ *
+ * <p>The controller contains as little business logic as possible, as this is contained in the {@linkplain CourseManagement} class. </p>
+ *
  */
 @Controller
 public class CourseController {
@@ -60,7 +67,12 @@ public class CourseController {
     // Error codes
     int courseNotFound = 1;
 
-    // Shows a table containing all courses
+    /**
+     * Mapping for displaying all {@linkplain Course}s a user has created. The page returned also allows users to start course creation
+     * @param model {@linkplain Model}
+     * @param userDetails Used for retrieving the details of the {@linkplain qova.users.User}
+     * @return the "courses" html page with the {@linkplain Course}s belonging to the {@linkplain qova.users.User}
+     */
     @GetMapping("/course/list")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String courses(Model model, @AuthenticationPrincipal UserDetails userDetails) {
@@ -71,11 +83,19 @@ public class CourseController {
         return "courses";
     }
 
-    // Shows the details for a specific course
+    /**
+     * The mapping allowing the viewing of individual {@linkplain Course}s. The page has inbuilt functionality to allow for the editing of a courses information.
+     * @param model {@linkplain Model}
+     * @param duplicateForm The form used when duplicating a {@linkplain Course}, via the {@linkplain #duplicateCourseWithNewSemester(DuplicateCourseForm, UUID)} method
+     * @param form The form used when editing the information of a {@linkplain Course}, via the {@linkplain #editCourseValidation(Model, CourseForm, BindingResult, DuplicateCourseForm, UUID)} method
+     * @param id The {@linkplain UUID} of the {@linkplain Course} being viewed
+     * @return The html page "courseDetails" 
+     * @throws Exception Thrown by the qrCode generation method {@linkplain CourseManagement#generateQRCodeImage(String)}
+     */
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     @GetMapping("course/details")
     public String courseDetails(Model model, DuplicateCourseForm duplicateForm, CourseForm form,
-            @RequestParam(required = false) UUID id) throws Exception {
+            @RequestParam(required = false) UUID id) throws IOException, WriterException {
 
         // for editing purposes:
         model.addAttribute("semesterDates", courseManagement.findSemesters());
@@ -123,10 +143,23 @@ public class CourseController {
 
     // Edit Course Validation (when course is updated, check wether the fields are
     // all appropriately set e.g. NotNull)
+
+    /**
+     * Edit Course Validation. Validates all fields in the {@linkplain CourseForm} using {@linkplain BindingResult} to check for errors in the supplied input.
+     * If all fields are valid, the details of the {@linkplain Course} are updated.
+     * @param model {@linkplain Model}
+     * @param form The form used when editing the information of a {@linkplain Course}. Contains all relevant fields of the {@linkplain Course} object which
+     *             are available for editing
+     * @param result The result of the validation, containing any possible errors
+     * @param duplcateCourseForm The form containing all relevant information required for duplicating a course
+     * @param id The {@linkplain UUID} of the {@linkplain Course} being edited
+     * @return The "courseDetails" html template in case of successful changes
+     * @throws Exception From {{@link #courseDetails(Model, DuplicateCourseForm, CourseForm, UUID)}}
+     */
     @PostMapping("course/edit")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String editCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
-            BindingResult result, DuplicateCourseForm duplcateCourseForm, @RequestParam UUID id) throws Exception {
+            BindingResult result, DuplicateCourseForm duplcateCourseForm, @RequestParam UUID id) throws IOException, WriterException {
 
         if (result.hasErrors()) {
             return courseDetails(model, duplcateCourseForm, form, id);
@@ -169,7 +202,13 @@ public class CourseController {
 
     }
 
-    // Create Course
+    /**
+     * The first step of course creation.
+     * Mapping for creating new courses
+     * @param model {@linkplain Model}
+     * @param form {@linkplain CourseForm} conatining all relevant fields for course creation
+     * @return "courseNew" html template
+     */
     @GetMapping("course/new")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String createCourse(Model model, CourseForm form) {
@@ -181,7 +220,15 @@ public class CourseController {
         return "courseNew";
     }
 
-    // Validation of Created course
+    /**
+     * The postMapping used to validate the details entered by the user and serialise the course object, as well as persist it in the database
+     *
+     * @param model model {@linkplain Model}
+     * @param form form {@linkplain CourseForm} conatining all relevant fields for course creation
+     * @param result The result of the validation on the fields of the {@linkplain CourseForm}
+     * @param userDetails  Used for retrieving the details of the {@linkplain qova.users.User}
+     * @return The "instanceTitles" html template for the newly created course, allowing the user to set the title for the number of given instances
+     */
     @PostMapping("course/new")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
@@ -210,7 +257,15 @@ public class CourseController {
         return "redirect:../course/instanceTitles?id=" + id;
     }
 
-    // Create Course
+    /**
+     * The second step of course creation
+     * The user sets the titles for each of the instances of the course
+     * Model attributes are added so a javascript function can dynamically display the right number of fields for the chosen {@linkplain CourseType}s
+     * @param model model {@linkplain Model}
+     * @param form The {@linkplain InstanceTitleForm} containing fields for setting the titles
+     * @param id {@linkplain UUID} of the {@linkplain Course}
+     * @return The "instanceTitles" html template with relevant model fields
+     */
     @GetMapping("course/instanceTitles")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String createCourseSetInstanceTitles(Model model, @ModelAttribute("form") InstanceTitleForm form,
@@ -260,7 +315,15 @@ public class CourseController {
         return "instanceTitles";
     }
 
-    // Validation of Created course
+    /**
+     * Validation of instanceTitles set by the user. Instance titles are sent via JSON, as forms can't have a dynamic number of fields, as well as thymeleaf having
+     * problems with arrays. The JSON parsing is done inside of the {@linkplain InstanceTitleForm}.
+     * @param model model {@linkplain Model}
+     * @param form The {@linkplain InstanceTitleForm} containing fields for setting the titles
+     * @param id {@linkplain UUID} of the {@linkplain Course}
+     * @param result The result of the validation on the fields of the {@linkplain InstanceTitleForm}
+     * @return The "courseDetails" html template of the newly created course
+     */
     @PostMapping("course/instanceTitles")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String createCourseSetInstanceTitlesValidation(Model model, InstanceTitleForm form, @RequestParam UUID id,
@@ -273,14 +336,28 @@ public class CourseController {
         return "redirect:../course/details" + "?id=" + id;
     }
 
-    // Delete Course and its CourseInstances
+    /**
+     * Course deletion mapping
+     * @param id {@linkplain UUID} of the {@linkplain Course}
+     * @param userDetails Used for retrieving the details of the {@linkplain qova.users.User}                           
+     * @return A redirect to {@linkplain #courses(Model, UserDetails)}
+     */
     @GetMapping("course/delete")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
-    public String deleteCourse(@RequestParam UUID id) {
-        courseManagement.deleteCourse(id);
+    public String deleteCourse(@RequestParam UUID id, @AuthenticationPrincipal UserDetails userDetails) {
+        if(courseManagement.findIfUserOwnsCourse(id, userDetails.getUsername())){
+            courseManagement.deleteCourse(id);
+        }
         return "redirect:../course/list";
     }
 
+    /**
+     * Mapping for duplicating a course. Main use case is to allow users to duplicate a course offered in the past, so as to not have to set all fields again
+     * manually, only specify the new semester and thereby creating a new Course.
+     * @param form The {@linkplain DuplicateCourseForm} containing all relevant fields for duplication
+     * @param id {@linkplain UUID} of the {@linkplain Course}
+     * @return The "courseDetails" html template of the new course
+     */
     @PostMapping("course/duplicate")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String duplicateCourseWithNewSemester(@ModelAttribute("duplicateForm") DuplicateCourseForm form,
@@ -291,6 +368,12 @@ public class CourseController {
         return "redirect:../course/details?id=" + newCourse.getId();
     }
 
+    /**
+     * Mappping for finalising a course. Once a Course is finalised, all relevant objects are serialised in the database, allowing results to be captured.
+     * Finalisation is more described in more detail in the documentation
+     * @param id {@linkplain UUID} of the {@linkplain Course}
+     * @return The "courseDetails" html template of the finalised course (reloads the same page essentially)
+     */
     @GetMapping("course/finalise")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String finaliseCourse(@RequestParam UUID id) {
@@ -325,7 +408,8 @@ public class CourseController {
     // ---------------------------------------------------------------------------
 
     /**
-     * Mapping for surveyeditor HTML (called from CourseDetails Page!)
+     * Mapping for surveyeditor HTML (called from CourseDetails Page!). The questioneditor is used for adding custom questions to the
+     * default questionnaire. Most of the functionality occurs in the template via javascript.
      *
      * @param model {@link org.springframework.ui.Model}
      * @param type  {@linkplain qova.enums.CourseType} in String form
@@ -435,7 +519,7 @@ public class CourseController {
     // ---------------------------------------------------------------------------
 
     /**
-     * The GetMapping to preview a survey created in the SurveyEditor
+     * The GetMapping to preview a survey created in the SurveyEditor by the user
      *
      * @param model The {@linkplain Model}
      * @param type The {@linkplain CourseType}
@@ -546,8 +630,7 @@ public class CourseController {
 
 
     /**
-     * This method takes id and CourseType as parameters, and returns a qrcode with
-     * the given string that is assembled below
+     * This method takes id and CourseType as parameters, and returns a qrcode as a {@linkplain HttpEntity}
      *
      * @param response {@link javax.servlet.http.HttpServletResponse}
      * @param type     {@linkplain qova.enums.CourseType}
