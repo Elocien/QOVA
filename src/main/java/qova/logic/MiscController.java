@@ -36,17 +36,19 @@ public class MiscController {
      * @return home.html template
      */
     @GetMapping("/")
-    public String welcome(Model model, @AuthenticationPrincipal CurrentUserDetails userDetails, HttpServletRequest request) {
+    public String welcome() {
 
-        //If user is logged in, the username will be present and not null
-        if(userDetails.getUsername() != null){
-            if(request.isUserInRole("ROLE_STAFF")){
-                String userId = userDetails.getUsername();
+        //Model model, @AuthenticationPrincipal CurrentUserDetails userDetails, HttpServletRequest request
 
-                //Send a list of the users courses to the model
-                model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
-            }
-        }
+//        //If user is logged in, the username will be present and not null
+//        if(userDetails.getUsername() != null){
+//            if(request.isUserInRole("ROLE_STAFF")){
+//                String userId = userDetails.getUsername();
+//
+//                //Send a list of the users courses to the model
+//                model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
+//            }
+//        }
 
         //Return the home html template
         return "home";
