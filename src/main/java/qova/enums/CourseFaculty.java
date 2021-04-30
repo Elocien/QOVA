@@ -1,5 +1,14 @@
 package qova.enums;
 
+import org.springframework.ui.Model;
+import qova.forms.CourseForm;
+
+/**
+ * <p>Enumeration for all faculties of TU Dresden as per: https://tu-dresden.de/tu-dresden/organisation/bereiche-fakultaeten?set_language=en </p>
+ * <p>This is given to the model in {@linkplain qova.logic.CourseController#createCourse(Model, CourseForm)}, so the user may select the faculty at which the
+ * course is taking place. </p>
+ * <p>Also used in the "studentBrowser" html template for ordering courses</p>
+ */
 public enum CourseFaculty {
     BIOLOGY, 
     CHEMISTRY,
