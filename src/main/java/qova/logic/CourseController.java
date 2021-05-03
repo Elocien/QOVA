@@ -558,7 +558,7 @@ public class CourseController {
     /**
      * The PostMapping for the surveyPreview. This functions the same as
      * {@linkplain CourseController#questioneditorSubmit(Model, SurveyForm, String, UUID)}. It sets the survey string
-     * as well as the surveyEdited flag.
+     * as well as the surveyEdited flag. However, instead of returning to the details page, it redirects to a preview of the survey
      *
      * @param model The {@linkplain Model}
      * @param type The {@linkplain CourseType}
