@@ -2,12 +2,27 @@ package qova.forms;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import qova.enums.CourseType;
 
+/**
+ * <p>
+ *    Form used for the second step of course creation, namely it is passed to the model in
+ *    {@linkplain qova.logic.CourseController#createCourseSetInstanceTitles(Model, InstanceTitleForm, UUID)} and
+ *    returned with fitting values in {@linkplain qova.logic.CourseController#createCourseSetInstanceTitlesValidation(Model, InstanceTitleForm, UUID, BindingResult)}
+ * </p>
+ *
+ * <p>
+ *    The form makes use of JSON strings to pass the titles, as forms cannot take dynamically large arrays using thymeleaf, at least not without effort.
+ *    The functionality of the getter is described below.
+ * </p>
+ */
 public class InstanceTitleForm {
 
     // String Arrays containing titles
@@ -25,10 +40,10 @@ public class InstanceTitleForm {
 
     /**
      * The Method takes the JSON String generated in InstanceTitles.html and
-     * converts it to a {@link org.json.JSONArray}. On position for each position 0
-     * to 3, the corresponding titles for lecture, tutorial, seminar and practical,
-     * respectively, can be found. The method iterates through, and uses the titles
-     * to set them in the {@linkplain qova.logic.CourseManagement}
+     * converts it to a {@link org.json.JSONArray}. Through the positions 0 to 3,
+     * the titles for lecture, tutorial, seminar and practical, respectively,
+     * can be found. The method iterates through, and uses the titles
+     * to set them in {@linkplain qova.logic.CourseManagement}
      * 
      * @param courseType The {@linkplain qova.enums.CourseType}
      * @return The instance titles as a {@link java.util.List}
