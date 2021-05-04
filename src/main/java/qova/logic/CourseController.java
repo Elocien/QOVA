@@ -167,10 +167,14 @@ public class CourseController {
     public String editCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
             BindingResult result, DuplicateCourseForm duplcateCourseForm, @RequestParam UUID id) throws IOException, WriterException {
 
+        //If the validation on the form finds any errors on the user input, then the user is returned to the details page of the course,
+        //with no changes taking place
         if (result.hasErrors()) {
             return courseDetails(model, duplcateCourseForm, form, id);
         }
 
+        //If no errors were found in the form, the course is retrieved. If the course is finalised, no changes occur, otherwise the changes are
+        //loaded from the form and applied to the given course object
         Optional<Course> crs = courseManagement.findById(id);
         if (crs.isPresent()) {
             if (Boolean.TRUE.equals(crs.get().getFinalisedFlag())) {
@@ -180,12 +184,15 @@ public class CourseController {
             return "redirect:/course/details?id=" + id;
         }
 
+        //If the course is not present for whatever reason, redirect to the homepage. This is however not really plausible, since the user must be on the
+        //details page of an existing course to edit it
         return "redirect:/";
 
     }
 
     /**
-     * Used in the courseDetails.html template to let the user set all surveys as default surveys, when attempting to finalise their course
+     * Used in the courseDetails.html template to let the user set all surveys as default surveys, when attempting to finalise their course.
+     * Upon execution, all active CourseInstances for the given course have their survey set to the default survey
      *
      * @param id {@linkplain UUID} of the {@linkplain Course}
      * @return The courseDetails template, with the surveyEditedFlag of the {@linkplain CourseInstance} set to true
@@ -193,6 +200,8 @@ public class CourseController {
     @GetMapping("course/setDefaultSurvey")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String setDefaultSurvey(@RequestParam UUID id) {
+
+        //Retrieve Course
         Optional<Course> crs = courseManagement.findById(id);
         if (crs.isPresent()) {
             var course = crs.get();
@@ -209,8 +218,13 @@ public class CourseController {
     }
 
     /**
-     * The first step of course creation.
-     * Mapping for creating new courses
+     * Mapping for creating new courses.
+     * The first step of course creation. Allows user to set the following attributes of a course:
+     * [Name, LectureExists, TutorialExists, SeminarExists,
+     *             PracticalExists, GroupAmountLecture, GroupAmountTutorial,
+     *             GroupAmountSeminar, GroupAmountPractical, InstanceAmountLecture,
+     *             InstanceAmountTutorial, InstanceAmountSeminar, InstanceAmountPractical,
+     *             SemesterOfStudents, CourseFaculty, SemesterString]
      * @param model {@linkplain Model}
      * @param form {@linkplain CourseForm} conatining all relevant fields for course creation
      * @return "courseNew" html template
@@ -219,9 +233,11 @@ public class CourseController {
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String createCourse(Model model, CourseForm form) {
 
+        //Add form to model
         model.addAttribute("form", form);
 
-        // List of Semesters for Course Creator to pick from
+        //List of Semesters for Course Creator to pick from. In the format described in the documentation for the
+        //courseManagement findSemesters() method
         model.addAttribute("semesterDates", courseManagement.findSemesters());
         return "courseNew";
     }
@@ -240,11 +256,13 @@ public class CourseController {
     public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
                                          BindingResult result,  @AuthenticationPrincipal UserDetails userDetails) {
 
+        //If the validation on the form finds any errors on the user input, then the user is returned to the inital course creation page,
+        //with no changes taking place
         if (result.hasErrors()) {
             return createCourse(model, form);
         }
 
-        // Get DefaultSurvey to reference in CourseInstance
+        
         EnumMap<CourseType, DefaultSurvey> defaultSurveyMap = new EnumMap<>(CourseType.class);
         for(CourseType courseType : CourseType.values()){
             defaultSurveyMap.put(courseType, adminManagement.getDefaultSurveyObject(courseType));
@@ -252,6 +270,7 @@ public class CourseController {
 
         String userId = userDetails.getUsername();
 
+        //User Id should in no case be empty
         if(userId.isEmpty()){
             return "redirect:/";
         }
