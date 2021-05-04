@@ -1,5 +1,6 @@
 package qova.admin;
 
+import java.util.EnumMap;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,16 @@ public class AdminManagement {
     // Submission of new default survey
     public void updateDefaultSurvey(SurveyForm form, CourseType type) {
         getDefaultSurveyObject(type).setDefaultSurveyJson(form.getQuestionnaireJson());
+    }
+
+    public EnumMap getDefaultSurveyMap(){
+
+        EnumMap<CourseType, DefaultSurvey> defaultSurveyMap = new EnumMap<>(CourseType.class);
+        for(CourseType courseType : CourseType.values()){
+            defaultSurveyMap.put(courseType, getDefaultSurveyObject(courseType));
+        }
+
+        return defaultSurveyMap;
     }
 
 }

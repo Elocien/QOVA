@@ -262,23 +262,19 @@ public class CourseController {
             return createCourse(model, form);
         }
 
-        
-        EnumMap<CourseType, DefaultSurvey> defaultSurveyMap = new EnumMap<>(CourseType.class);
-        for(CourseType courseType : CourseType.values()){
-            defaultSurveyMap.put(courseType, adminManagement.getDefaultSurveyObject(courseType));
-        }
-
+        //Get the username of the authenticated user
         String userId = userDetails.getUsername();
 
-        //User Id should in no case be empty
+        //User Id should in no case be empty, but just in case
         if(userId.isEmpty()){
             return "redirect:/";
         }
 
-        // Management Method returns String of new Course
-        UUID id = courseManagement.createCourseAndCourseInstanceAndReturnCourseId(userId, form, defaultSurveyMap);
+        //Business logic to create the new course and its instances, using the parameters passed in the course form. The method returns the id of the
+        //newly created course.
+        UUID id = courseManagement.createCourseAndCourseInstanceAndReturnCourseId(userId, form, adminManagement.getDefaultSurveyMap());
 
-        // Redirect to SurveyEditor to start creating survey
+        //Redirect to the second step of course creation, the setting of instance titles.
         return "redirect:../course/instanceTitles?id=" + id;
     }
 
