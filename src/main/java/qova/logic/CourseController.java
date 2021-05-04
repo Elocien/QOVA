@@ -617,7 +617,7 @@ public class CourseController {
             courseManagement.setSurveyforType(course.get(), type, form.getQuestionnaireJson());
 
 
-            // Part der anders ist als questioneditorSubmit
+            // Instead of redirecting to details, redirect to the survey
             model.addAttribute("typeID", responseManagement.parseCourseType(type));
             model.addAttribute("id", id);
 
