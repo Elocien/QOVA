@@ -56,6 +56,12 @@ public class CourseController {
     @Autowired
     private final AdminManagement adminManagement;
 
+    /**
+     * Constructor, wiring in the relevant Management classes containing the business logic of the application
+     * @param courseManagement {@linkplain CourseManagement}
+     * @param responseManagement {@linkplain ResponseManagement}
+     * @param adminManagement {@linkplain AdminManagement}
+     */
     @Autowired
     CourseController(CourseManagement courseManagement, ResponseManagement responseManagement,
             AdminManagement adminManagement) {
@@ -77,8 +83,10 @@ public class CourseController {
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String courses(Model model, @AuthenticationPrincipal UserDetails userDetails) {
 
+        //Retrieve username
         String userId = userDetails.getUsername();
 
+        //Add a list of all Courses, belonging to the user, to the model
         model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
         return "courses";
     }
@@ -87,49 +95,49 @@ public class CourseController {
      * The mapping allowing the viewing of individual {@linkplain Course}s. The page has inbuilt functionality to allow for the editing of a courses information.
      * @param model {@linkplain Model}
      * @param duplicateForm The form used when duplicating a {@linkplain Course}, via the {@linkplain #duplicateCourseWithNewSemester(DuplicateCourseForm, UUID)} method
-     * @param form The form used when editing the information of a {@linkplain Course}, via the {@linkplain #editCourseValidation(Model, CourseForm, BindingResult, DuplicateCourseForm, UUID)} method
+     * @param courseForm The form used when editing the information of a {@linkplain Course}, via the {@linkplain #editCourseValidation(Model, CourseForm, BindingResult, DuplicateCourseForm, UUID)} method
      * @param id The {@linkplain UUID} of the {@linkplain Course} being viewed
      * @return The html page "courseDetails" 
      * @throws Exception Thrown by the qrCode generation method {@linkplain CourseManagement#generateQRCodeImage(String)}
      */
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     @GetMapping("course/details")
-    public String courseDetails(Model model, DuplicateCourseForm duplicateForm, CourseForm form,
+    public String courseDetails(Model model, DuplicateCourseForm duplicateForm, CourseForm courseForm,
             @RequestParam(required = false) UUID id) throws IOException, WriterException {
 
-        // for editing purposes:
+        //Add a list of semesters, the CourseForm and DuplicateCourseForm to model, to allow for seamless transition to the edit page, without needing a reload.
         model.addAttribute("semesterDates", courseManagement.findSemesters());
-        model.addAttribute("form", form);
+        model.addAttribute("form", courseForm);
         model.addAttribute("duplicateForm", duplicateForm);
 
-        // fetch course and go to details if present
+        //Fetch course and go to details if present
         Optional<Course> crs = courseManagement.findById(id);
         if (crs.isPresent()) {
             Course course = crs.get();
 
+            //add course to model
             model.addAttribute("course", course);
 
-            //Used for status flags
+            //Used for status flags, telling the user what is needed for finalisation
             model.addAttribute("surveysMissing", courseManagement.getNumberOfSurveysMissing(course));
             model.addAttribute("titlesMissing", courseManagement.getInstanceTitlesMissingFlag(course));
 
-            //The DomainName
+            //The DomainName (is https://qova.med.tu-dresden.de/ in production)
             String domainName = "localhost:8080";
 
-            // QRCode URL (Redirects to a courses survey when scanned)
-
+            //QRCode URL (Redirects to a courses survey when scanned)
             String LectureSurveyUrl = domainName + "/survey/select?type=LECTURE&id=" + course.getId()+"&mode=participant";
             String TutorialSurveyUrl = domainName +  "/survey/select?type=TUTORIAL&id=" + course.getId()+"&mode=participant";
             String SeminarSurveyUrl = domainName + "/survey/select?type=SEMINAR&id=" + course.getId()+"&mode=participant";
             String PracticalSurveyUrl = domainName + "/survey/select?type=PRACTICAL&id=" + course.getId()+"&mode=participant";
 
-
+            //The url which can be copied by the user, which redirect to survey selection
             model.addAttribute("lectureLink", LectureSurveyUrl);
             model.addAttribute("tutorialLink", TutorialSurveyUrl);
             model.addAttribute("seminarLink", SeminarSurveyUrl);
             model.addAttribute("practicalLink", PracticalSurveyUrl);
 
-            // send byte array (the QRCode image) to model
+            //Generate QR-codes, encode to byte array end byte array (the QRCode image) to model
             model.addAttribute("lectureQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(LectureSurveyUrl)));
             model.addAttribute("tutorialQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(TutorialSurveyUrl)));
             model.addAttribute("seminarQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(SeminarSurveyUrl)));
@@ -141,8 +149,6 @@ public class CourseController {
         }
     }
 
-    // Edit Course Validation (when course is updated, check wether the fields are
-    // all appropriately set e.g. NotNull)
 
     /**
      * Edit Course Validation. Validates all fields in the {@linkplain CourseForm} using {@linkplain BindingResult} to check for errors in the supplied input.
