@@ -292,44 +292,27 @@ public class CourseController {
     public String createCourseSetInstanceTitles(Model model, @ModelAttribute("form") InstanceTitleForm form,
             @RequestParam UUID id) {
 
+        //Retrieve course by id
         Optional<Course> crs = courseManagement.findById(id);
 
+        //Check the optional
         if (crs.isPresent()) {
 
+            //Get the object within the optional
             Course course = crs.get();
 
+            //Give the course id to the model
             model.addAttribute("id", crs.get().getId());
 
-            if (Boolean.TRUE.equals(crs.get().getLectureExists())) {
-                model.addAttribute("lectureExists", true);
-                model.addAttribute("lectureInstances", course.getLecture().getInstanceAmount());
-                model.addAttribute("lectureInstanceTitles", course.getLecture().getInstanceTitles());
-            } else {
-                model.addAttribute("lectureExists", false);
-            }
-
-            if (Boolean.TRUE.equals(crs.get().getTutorialExists())) {
-                model.addAttribute("tutorialExists", true);
-                model.addAttribute("tutorialInstances", course.getTutorial().getInstanceAmount());
-                model.addAttribute("tutorialInstanceTitles", course.getTutorial().getInstanceTitles());
-            } else {
-                model.addAttribute("tutorialExists", false);
-            }
-
-            if (Boolean.TRUE.equals(crs.get().getSeminarExists())) {
-                model.addAttribute("seminarExists", true);
-                model.addAttribute("seminarInstances", course.getSeminar().getInstanceAmount());
-                model.addAttribute("seminarInstanceTitles", course.getSeminar().getInstanceTitles());
-            } else {
-                model.addAttribute("seminarExists", false);
-            }
-
-            if (Boolean.TRUE.equals(crs.get().getPracticalExists())) {
-                model.addAttribute("practicalExists", true);
-                model.addAttribute("practicalInstances", course.getPractical().getInstanceAmount());
-                model.addAttribute("practicalInstanceTitles", course.getPractical().getInstanceTitles());
-            } else {
-                model.addAttribute("practicalExists", false);
+            //For each CourseType, if it is set to exist, add the parameters below to the model.
+            for(CourseType courseType : CourseType.values()) {
+                if (Boolean.TRUE.equals(crs.get().getInstanceExists(courseType))) {
+                    model.addAttribute(courseType.toString() + "Exists", true);
+                    model.addAttribute(courseType.toString() + "Instances", course.getInstance(courseType).getInstanceAmount());
+                    model.addAttribute(courseType.toString() + "InstanceTitles", course.getInstance(courseType).getInstanceTitles());
+                } else {
+                    model.addAttribute(courseType.toString() + "Exists", false);
+                }
             }
         }
 

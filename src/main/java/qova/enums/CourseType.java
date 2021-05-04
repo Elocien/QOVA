@@ -8,5 +8,24 @@ package qova.enums;
  * course types, as these have differing surveys</p>
  */
 public enum CourseType {
-    LECTURE, TUTORIAL, SEMINAR, PRACTICAL;
+    LECTURE{
+        public String toString(){
+            return "lecture";
+        }
+    },
+    TUTORIAL{
+        public String toString(){
+            return "tutorial";
+        }
+    },
+    SEMINAR{
+        public String toString(){
+            return "seminar";
+        }
+    },
+    PRACTICAL{
+        public String toString(){
+            return "practical";
+        }
+    };
 }
