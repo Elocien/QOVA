@@ -89,8 +89,9 @@ public class CourseController {
      * @param duplicateForm The form used when duplicating a {@linkplain Course}, via the {@linkplain #duplicateCourseWithNewSemester(DuplicateCourseForm, UUID)} method
      * @param form The form used when editing the information of a {@linkplain Course}, via the {@linkplain #editCourseValidation(Model, CourseForm, BindingResult, DuplicateCourseForm, UUID)} method
      * @param id The {@linkplain UUID} of the {@linkplain Course} being viewed
-     * @return The html page "courseDetails" 
-     * @throws Exception Thrown by the qrCode generation method {@linkplain CourseManagement#generateQRCodeImage(String)}
+     * @return The html page "courseDetails"
+     * @throws IOException Thrown by the qrCode generation method {@linkplain CourseManagement#generateQRCodeImage(String)}
+     * @throws WriterException Thrown by the qrCode generation method {@linkplain CourseManagement#generateQRCodeImage(String)}
      */
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     @GetMapping("course/details")
@@ -154,7 +155,8 @@ public class CourseController {
      * @param duplcateCourseForm The form containing all relevant information required for duplicating a course
      * @param id The {@linkplain UUID} of the {@linkplain Course} being edited
      * @return The "courseDetails" html template in case of successful changes
-     * @throws Exception From {{@link #courseDetails(Model, DuplicateCourseForm, CourseForm, UUID)}}
+     * @throws IOException Thrown by the qrCode generation method {@linkplain CourseManagement#generateQRCodeImage(String)}
+     * @throws WriterException Thrown by the qrCode generation method {@linkplain CourseManagement#generateQRCodeImage(String)}
      */
     @PostMapping("course/edit")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
@@ -339,11 +341,11 @@ public class CourseController {
      * Course deletion mapping
      * @param id {@linkplain UUID} of the {@linkplain Course}
      * @param userDetails Used for retrieving the details of the {@linkplain qova.users.User}                           
-     * @return A redirect to {@linkplain #courses(Model, UserDetails)}
+     * @return A redirect to {@linkplain #courses(Model, CurrentUserDetails)}
      */
     @GetMapping("course/delete")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
-    public String deleteCourse(@RequestParam UUID id, @AuthenticationPrincipal UserDetails userDetails) {
+    public String deleteCourse(@RequestParam UUID id, @AuthenticationPrincipal CurrentUserDetails userDetails) {
         if(courseManagement.findIfUserOwnsCourse(id, userDetails.getUsername())){
             courseManagement.deleteCourse(id);
         }

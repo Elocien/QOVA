@@ -73,7 +73,7 @@ public class AdminController {
     @GetMapping("/delete")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String deleteCourse(@RequestParam UUID id, @AuthenticationPrincipal UserDetails userDetails) {
-        if(userDetails.getUsername() == "staff"){
+        if(userDetails.getUsername() == "https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!YA5MO4SfcGmbXRgccVo6IMWfX0k="){
             courseManagement.deleteCourse(id);
         }
         return "redirect:../course/list";
