@@ -1,17 +1,23 @@
 package qova.admin;
 
 import java.util.Objects;
+import java.util.UUID;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import org.springframework.web.bind.annotation.ResponseBody;
 import qova.enums.CourseType;
 import qova.forms.SurveyForm;
+import qova.logic.CourseManagement;
 import qova.logic.ResponseManagement;
-
+import qova.objects.Course;
 
 
 @Controller
@@ -21,9 +27,12 @@ public class AdminController {
 
     private final ResponseManagement responseManagement;
 
-    AdminController(AdminManagement adminManagement, ResponseManagement responseManagement){
+    private final CourseManagement courseManagement;
+
+    AdminController(AdminManagement adminManagement, ResponseManagement responseManagement, CourseManagement courseManagement){
         this.adminManagement = Objects.requireNonNull(adminManagement);
         this.responseManagement = Objects.requireNonNull(responseManagement);
+        this.courseManagement = Objects.requireNonNull(courseManagement);
     }
 
 
@@ -59,6 +68,22 @@ public class AdminController {
         adminManagement.updateDefaultSurvey(form, responseManagement.parseCourseType(type));
 
         return "adminPanel";
+    }
+
+    @GetMapping("/delete")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
+    public String deleteCourse(@RequestParam UUID id, @AuthenticationPrincipal UserDetails userDetails) {
+        if(userDetails.getUsername() == "staff"){
+            courseManagement.deleteCourse(id);
+        }
+        return "redirect:../course/list";
+    }
+
+    @GetMapping("/username")
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
+    @ResponseBody
+    public String getUsername(@AuthenticationPrincipal UserDetails userDetails) {
+        return userDetails.getUsername();
     }
     
 
