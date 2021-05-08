@@ -161,27 +161,15 @@
                                                 <td>
                                                     <a th:switch="${titlesMissing}" type="button" class="btn btn-link nounderline p-0" href="#" th:href="${'/course/instanceTitles?id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.editInstance}">
                                                         <th:block th:case="false">
-                                                            <p class="text-success d-inline-block m-0 mr-2" th:text="#{course.status.finished}">FINISHED</p>
+                                                            <p class="text-success d-inline-block m-0 mr-2" th:text="#{course.titles.finished}">FINISHED</p>
                                                             <i class="far fa-edit"></i>
                                                         </th:block>
                                                         <th:block th:case="true">
-                                                            <p class="text-danger d-inline-block m-0 mr-2" th:text="#{course.names.missing}">NAMES MISSING</p>
+                                                            <p class="text-danger d-inline-block m-0 mr-2" th:text="#{course.titles.missing}">NAMES MISSING</p>
                                                             <i class="far fa-edit"></i>
                                                         </th:block>
                                                     </a>
                                                 </td>
-                                            </tr>
-                                            <tr>
-                                                <th class="col-3" scope="row" th:text="#{course.status.finalisation}">FINALISATION:</th>
-                                                <td th:switch="${titlesMissing or (surveysMissing > 0)}">
-                                                    <a th:case="true" class="status-btn" onclick="highlight_missing()">
-                                                        <span th:text="#{course.status.pending}">WIP</span>
-                                                    </a>
-                                                    <a th:case="false" class="status-btn" type="submit" data-toggle="modal" data-target="#finalizeModal">
-                                                        <span th:text="#{course.status.pending}">WIP</span>
-                                                    </a>
-                                                </td>
-
                                             </tr>
                                         </tbody>
                                     </table>
@@ -196,9 +184,10 @@
                                     <tr>
                                         <th class="border-0 col-1 show_me" scope="col" style="display: none;"></th>
                                         <th class="border-0 col-1" scope="col" th:text="#{detail.classType}">TYPE</th>
-                                        <th class="border-0 text-center col-2" scope="col" th:text="#{detail.instanceAmount}">#Instance</th>
-                                        <th class="border-0 text-center col-2" scope="col" th:text="#{detail.groupAmount}">#Group</th>
+                                        <th class="border-0 text-center col-2" scope="col" th:text="#{detail.instanceAmount}">Instance</th>
+                                        <th class="border-0 text-center col-2" scope="col" th:text="#{detail.groupAmount}">Group</th>
                                         <th class="border-0 text-center col-1 hide_me" scope="col" th:text="#{detail.classSurvey}">SURVEY</th>
+                                        <th class="border-0 text-center col-1" scope="col" th:text="#{detail.surveyType}">SURVEY TYPE</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -237,9 +226,34 @@
                                                 <a th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/previewsurvey?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.previewSurvey}"><i class="fa fa-eye"></i></a>
                                             </td>
                                         </th:block>
+                                        <!--6th Col-->
+                                        <th:block th:switch="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}">
+                                            <td th:case="true" class="text-center">
+                                                <th:block th:switch="!${course.finalisedFlag} and !${__'course.'+${course_type}+'.surveyEditedFlag'__}">
+                                                    <span th:case="true">none</span>
+                                                    <th:block th:case="false">
+                                                        <th:block th:switch="${__'course.'+${course_type}+'.surveyEditedFlag'__}">
+                                                            <span th:case="true">custom</span>
+                                                            <span th:case="false">default</span>                                                            
+                                                        </th:block>
+                                                    </th:block>
+                                                </th:block>
+                                            </td>
+                                            <td th:case="false"></td>
+                                        </th:block>
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+
+                        <!--Final Button-->
+                        <div class="row justify-content-center" th:switch="${titlesMissing or (surveysMissing > 0)}">
+                            <a th:case="true" class="status-btn" onclick="highlight_missing()">
+                                <span th:text="#{course.status.pending}">WIP</span>
+                            </a>
+                            <a th:case="false" class="status-btn" type="submit" data-toggle="modal" data-target="#finalizeModal">
+                                <span th:text="#{course.status.pending}">WIP</span>
+                            </a>
                         </div>
 
                     </form>
