@@ -2,15 +2,31 @@ package qova.forms;
 
 import javax.validation.constraints.NotNull;
 
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import qova.enums.CourseFaculty;
 import qova.enums.CourseType;
 
+import java.util.UUID;
+
+/**
+ * <p>The form used for the first step of creating a {@linkplain qova.objects.Course} in the
+ * {@linkplain qova.logic.CourseController#createCourse(Model, CourseForm)} method.</p>
+ *
+ * <p>Also used for editing the details of a {@linkplain qova.objects.Course} in the
+ * {@linkplain qova.logic.CourseController#editCourseValidation(Model, CourseForm, BindingResult, DuplicateCourseForm, UUID)} method</p>
+ *
+ * <p>The form captures all of the relevant variables and allows for retrieval. Extra methods for getting {@linkplain qova.objects.CourseInstance} specific variables
+ * are added to make methods more compact in {@linkplain qova.logic.CourseManagement}</p>
+ */
 public class CourseForm {
 
-    // name
+    /**
+     * The name of the {@linkplain qova.objects.Course}
+     */
     private String name;
 
-    // Existance of each CourseInstance (CourseType)
+
     @NotNull
     private Boolean lectureExists;
     @NotNull
