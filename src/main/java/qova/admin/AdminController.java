@@ -18,6 +18,7 @@ import qova.forms.SurveyForm;
 import qova.logic.CourseManagement;
 import qova.logic.ResponseManagement;
 import qova.objects.Course;
+import qova.users.CurrentUserDetails;
 
 
 @Controller
@@ -41,12 +42,14 @@ public class AdminController {
     //Default-Survey methods
     //---------------------------------------------------------------------------
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/admin/home")
     public String adminLogin() {
         return "adminPanel";
     }
 
 
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @GetMapping("/admin/updateDefaultSurvey")
     public String updateDefaultSurvey(Model model, @RequestParam String type){
 
@@ -61,7 +64,8 @@ public class AdminController {
 
 
 
-    //Mapping to submit a questionaire 
+    //Mapping to submit a questionaire
+    @PreAuthorize("hasAnyRole('ADMIN')")
     @PostMapping("/admin/updateDefaultSurvey")
     public String defaultSurveySubmit(SurveyForm form, @RequestParam String type){
 
@@ -71,10 +75,10 @@ public class AdminController {
     }
 
     @GetMapping("/delete")
-    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
-    public String deleteCourse(@RequestParam UUID id, @AuthenticationPrincipal UserDetails userDetails) {
-        if(userDetails.getUsername() == "https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!YA5MO4SfcGmbXRgccVo6IMWfX0k="){
+    public String deleteCourse(@RequestParam UUID id, @AuthenticationPrincipal CurrentUserDetails userDetails) {
+        if(userDetails.getUsername().equals("https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!YA5MO4SfcGmbXRgccVo6IMWfX0k=")){
             courseManagement.deleteCourse(id);
+            return "home";
         }
         return "redirect:../course/list";
     }
