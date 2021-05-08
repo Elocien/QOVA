@@ -101,7 +101,7 @@
             <ul class="navbar-nav align-items-end">
                 <li class="nav-item media" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')"><a class="nav-link link_to_page" th:text="#{navbar.course}" th:href="@{/course/list}">course managment</a></li>
                 <li class="nav-item media" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_STUDENT')"><a class="nav-link link_to_page" th:text="#{navbar.results}" th:href="@{/survey/results/list}">survey results</a></li>
-                <li class="nav-item media" sec:authorize="isAnonymous()"><a class="nav-link link_to_page" th:href="@{/home}">Login</a></li>
+                <li class="nav-item media" sec:authorize="isAnonymous()"><a class="nav-link link_to_page" th:href="@{/login}">Login</a></li>
                 <li class="nav-item media" sec:authorize="!isAnonymous()"><a class="nav-link link_to_page" th:href="@{/logout}">Logout</a></li>
                 <!--Settings-->
                 <!--<li class="nav-item media dropdown p-0">

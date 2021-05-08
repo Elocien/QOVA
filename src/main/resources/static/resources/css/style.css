@@ -184,18 +184,6 @@ footer {
     text-align: center;
   }
 }
-.icon-wrapper {
-  display: inline-block;
-  height: 7rem;
-  width: 7rem;
-  border-radius: 100%;
-  background-color: var(--tu_blue);
-  margin-bottom: 2rem;
-}
-.icon-wrapper i {
-  margin-top: 1.45rem;
-  color: white;
-}
 .about_text {
   border-top: solid 1px var(--bright_grey);
   background-color: rgba(255, 255, 255, 0.7);
@@ -207,6 +195,17 @@ footer {
   border: 1px solid var(--bright_grey);
   box-shadow: 5px 5px 5px var(--bright_grey);
   border-radius: 5px;
+}
+.login-button {
+  width: 10rem;
+  border: 1px solid black;
+  color: white !important;
+  background-color: var(--tu_blue);
+  display: block;
+}
+.login-button:hover {
+  background-color: transparent;
+  color: black !important;
 }
 .card-wrapper:first-of-type {
   margin-top: 3rem;
