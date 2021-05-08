@@ -15,76 +15,80 @@
             <input id="name-input" type="text" class="input-group headline-edit show_me" style="display: none;" th:placeholder="${course.name}" th:value="${course.name}"></input>
         </div>
 
+        <!--Modals-->
         <div th:include="finalizeModal"></div>
-
-        <div class="container bg-light border border-dark rounded p-0">
-
-            <!--Option Buttons-->
-            <div class="options-wrapper">
-                <div class="btn-delete">
-                    <!--Copy Course-->
-                    <button type="submit" class="btn btn-link" data-toggle="modal" data-target="#copyModal"><i class="far fa-clone" data-toggle="tooltip" data-placement="top" title="COPY COURSE" th:title="#{detail.copyCourse}"></i></button>
-                    <div class="modal fade" id="copyModal" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content text-center">
-                                <!--Duplicate Form-->
-                                <form th:action="@{/course/duplicate?id=__${course.id}__}" th:object="${duplicateForm}" method="post">
-                                    <div class="modal-body">
-                                        <p th:text="#{detail.copyModalText}">PLEASE COPY ME!</p>
-                                        <select id="newYear" class="custom-select form-control" th:field="*{semesterString}">
-                                            <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
-                                        </select>
-                                    </div>
-                                    <div class="modal-footer text-center">
-                                        <div class="w-100"></div>
-                                        <button type="submit" class="btn btn-primary">Finish</button>
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
-                                        <div class="w-100"></div>
-                                    </div>
-                                </form>
-                            </div>
+        <div class="modal fade" id="copyModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content text-center">
+                    <!--Duplicate Form-->
+                    <form th:action="@{/course/duplicate?id=__${course.id}__}" th:object="${duplicateForm}" method="post">
+                        <div class="modal-body">
+                            <p th:text="#{detail.copyModalText}">PLEASE COPY ME!</p>
+                            <select id="newYear" class="custom-select form-control" th:field="*{semesterString}">
+                                <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+                            </select>
                         </div>
+                        <div class="modal-footer text-center">
+                            <div class="w-100"></div>
+                            <button type="submit" class="btn btn-primary">Finish</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                            <div class="w-100"></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content text-center">
+                    <div class="modal-body">
+                        <p class="m-0" th:text="#{detail.deleteModalText}">PLEASE DELETE ME!</p>
                     </div>
-                    <!-- Delete Course -->
-                    <button type="submit" class="btn red-link btn-link" data-toggle="modal" data-target="#deleteModal">
-                        <i class="fas fa-trash-alt" data-toggle="tooltip" data-placement="top" title="DELETE COURSE" th:title="#{detail.deleteCourse}"></i>
-                    </button>
-                    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
-                        <div class="modal-dialog modal-dialog-centered" role="document">
-                            <div class="modal-content text-center">
-                                <div class="modal-body">
-                                    <p class="m-0" th:text="#{detail.deleteModalText}">PLEASE DELETE ME!</p>
-                                </div>
-                                <div class="modal-footer text-center">
-                                    <div class="w-100"></div>
-                                    <a th:href="@{/course/delete?id=__${course.id}__}" method="post" class="btn btn-primary">Yes</a>
-                                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
-                                    <div class="w-100"></div>
-                                </div>
-                            </div>
-                        </div>
+                    <div class="modal-footer text-center">
+                        <div class="w-100"></div>
+                        <a th:href="@{/course/delete?id=__${course.id}__}" method="post" class="btn btn-primary">Yes</a>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                        <div class="w-100"></div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!--Left Side-->
+        <form id="form" method="post" th:action="@{/course/edit?id=__${course.id}__}" th:object="${form}">
             <div class="row justify-content-md-center p-4" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
+                <!--Options Buttons-->
+                <div class="col-3">
+                    <div class="btn-group-vertical float-lg-right border border-dark rounded sticky" id="OptionsMenu">
+                        <button type="button" class="btn btn-head btn-text-right">
+                            <span th:text="#{detail.options}">COURSE OPTIONS</span>
+                        </button>
+                        <th:block th:if="!${course.finalisedFlag}">
+                            <button th:if="!${course.finalisedFlag}" type="button" class="btn btn-list btn-text-right hide_me" onclick="edit_mode()">
+                                <span th:text="#{detail.editCourse}">EDIT COURSE</span><i class="far fa-edit ml-2"></i>
+                            </button>
+                            <button type="submit" class="btn btn-list btn-text-right show_me" style="display: none;">
+                                <span th:text="#{detail.finishEdit}">FINISH EDITING</span><i class="fas fa-check ml-2"></i>
+                            </button>
+                            <button type="button" onClick="window.location.reload();" class="btn btn-list btn-text-right show_me" style="display: none;">
+                                <span th:text="#{detail.cancelEdit}">CANCEL EDITING</span><i class="fas fa-times ml-2"></i>
+                            </button>
+                        </th:block>
+                        <button type="button" class="btn btn-list btn-text-right" data-toggle="modal" data-target="#copyModal">
+                            <span th:text="#{detail.copyCourse}">COPY ME</span><i class="far fa-clone ml-2"></i>
+                        </button>
+                        <button type="button" class="btn btn-list-last btn-text-right" data-toggle="modal" data-target="#deleteModal">
+                            <span th:text="#{detail.deleteCourse}">DELETE ME</span><i class="fas fa-trash-alt ml-2"></i>
+                        </button>
+                    </div>
+                </div>
+
                 <!--Course Details-->
                 <div class="col-6">
-                    <form id="form" method="post" th:action="@{/course/edit?id=__${course.id}__}" th:object="${form}">
+                    <div class="ml-4 mr-4">
 
                         <!--Headline & Buttons-->
                         <div class="row">
                             <h5 class="font-weight-bold text-left" th:text="#{course.details}">COURSE DETAILS</h5>
-                            <button th:if="!${course.finalisedFlag}" type="button" id="startEdit" class="btn edit_details btn-link p-0 ml-4 align-middle" onclick="edit_mode()"data-toggle="tooltip" data-placement="right" th:title="#{detail.editCourse}">
-                                <i class="far fa-edit"></i>
-                            </button>
-                            <button type="button" onClick="window.location.reload();" class="btn edit_details btn-link p-0 ml-4 align-middle show_me" style="display: none;" data-toggle="tooltip" data-placement="right" th:title="#{detail.cancelEdit}">
-                                <i class="fas fa-times"></i>
-                            </button>
-                            <button type="submit" class="btn edit_details btn-link p-0 ml-4 align-middle show_me" style="display: none;" data-toggle="tooltip" data-placement="right" th:title="#{detail.finishEdit}">
-                                <i class="fas fa-check"></i>
-                            </button>
                         </div>
 
                         <!--Hidden Headline-->
@@ -92,7 +96,7 @@
 
                         <!--1st Table-->
                         <div class="row form-group mb-4">
-                            <table class="table">
+                            <table class="table table-light">
                                 <tbody>
                                     <!--Faculty-->
                                     <tr>
@@ -103,7 +107,6 @@
                                                 <option class="dropdown-item" th:id="${faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
                                             </select>
                                         </td>
-                                        <td></td>
                                     </tr>
                                     <!--Semester Period-->
                                     <tr>
@@ -114,7 +117,6 @@
                                                 <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
                                             </select>
                                         </td>
-                                        <td></td>
                                     </tr>
                                     <!--Semester of Students-->
                                     <tr>
@@ -123,61 +125,45 @@
                                         <td class="show_me" style="display: none;">
                                             <input class="form-control" type="number" th:placeholder="${course.semesterOfStudents}" th:value="${course.semesterOfStudents}" name="semesterOfStudents" id="semesterOfStudents">
                                         </td>
-                                        <td></td>
+                                    </tr>
+                                    <!--Titles Status-->
+                                    <tr id="highlight_me_titles">
+                                        <th class="col-3" scope="row" th:text="#{course.status.instances}">Instances:</th>
+                                        <td>
+                                            <a th:switch="${titlesMissing}" type="button" class="btn btn-link nounderline p-0" href="#" th:href="${'/course/instanceTitles?id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.editInstance}">
+                                                <th:block th:case="false">
+                                                    <p class="text-success d-inline-block m-0 mr-2" th:text="#{course.titles.finished}">FINISHED</p>
+                                                    <i class="far fa-edit"></i>
+                                                </th:block>
+                                                <th:block th:case="true">
+                                                    <p class="text-danger d-inline-block m-0 mr-2" th:text="#{course.titles.missing}">NAMES MISSING</p>
+                                                    <i class="far fa-edit"></i>
+                                                </th:block>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    <!--Survey Status-->
+                                    <tr id="highlight_me_surveys">
+                                        <th class="col-3" scope="row" th:text="#{course.status.surveys}">Surveys:</th>
+                                        <td th:switch="${surveysMissing}">
+                                            <p th:case="0" class="text-success m-0" th:text="#{course.survey.finished}">FINISHED</p>
+                                            <th:block th:case="*">
+                                                <p class="text-warning m-0"><span th:text="${surveysMissing}">X</span><span> </span><span th:text="#{course.survey.missing}">MISSING</span></p>
+                                                <div id="surveyMissingHelp" style="display: none;">
+                                                    <p class="m-0" th:text="#{course.survey.missing.help}">DO U WANT TO INITILIZE THE REMAINING SURVEYS AS DEFAULT SURVEYS?</p>
+                                                    <div>
+                                                        <a th:href="@{/course/setDefaultSurvey?id=__${course.id}__}" method="get" class="btn btn-sm btn-primary" th:text="#{Yes}"></a>
+                                                        <a class="btn btn-sm btn-secondary text-white" th:text="#{No}" onclick="hide_survey_help()"></a>
+                                                    </div>
+                                                </div>
+                                            </th:block>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <!--2nd Table (Course Status)-->
-                        <div class="row form-group hide_me mb-4">
-                            <div th:switch="${course.finalisedFlag}" class="col-12 p-0">
-                                <h5 class="font-weight-bold d-block" th:text="#{course.status}">COURSE STATUS</h5>
-                                <p th:case="true" class="m-0" th:text="#{course.status.finalised}">STATUS DESCRIPTION</p>
-                                <th:block th:case="false">
-                                    <p th:text="#{course.status.description}">STATUS DESCRIPTION</p>
-                                    <table class="table">
-                                        <tbody>
-                                            <!--Survey Status-->
-                                            <tr id="highlight_me_surveys">
-                                                <th class="col-3" scope="row" th:text="#{course.status.surveys}">Surveys:</th>
-                                                <td th:switch="${surveysMissing}">
-                                                    <p th:case="0" class="text-success m-0" th:text="#{course.status.finished}">FINISHED</p>
-                                                    <th:block th:case="*">
-                                                        <p class="text-warning m-0"><span th:text="${surveysMissing}">X</span><span> </span><span th:text="#{course.survey.missing}">MISSING</span></p>
-                                                        <div id="surveyMissingHelp" style="display: none;">
-                                                            <p class="m-0" th:text="#{course.survey.missing.help}">DO U WANT TO INITILIZE THE REMAINING SURVEYS AS DEFAULT SURVEYS?</p>
-                                                            <div>
-                                                                <a th:href="@{/course/setDefaultSurvey?id=__${course.id}__}" method="get" class="btn btn-sm btn-primary" th:text="#{Yes}"></a>
-                                                                <a class="btn btn-sm btn-secondary" th:text="#{No}" onclick="hide_survey_help()"></a>
-                                                            </div>
-                                                        </div>
-                                                    </th:block>
-                                                </td>
-                                            </tr>
-                                            <!--Titles Status-->
-                                            <tr id="highlight_me_titles">
-                                                <th class="col-3" scope="row" th:text="#{course.status.instances}">Instances:</th>
-                                                <td>
-                                                    <a th:switch="${titlesMissing}" type="button" class="btn btn-link nounderline p-0" href="#" th:href="${'/course/instanceTitles?id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.editInstance}">
-                                                        <th:block th:case="false">
-                                                            <p class="text-success d-inline-block m-0 mr-2" th:text="#{course.titles.finished}">FINISHED</p>
-                                                            <i class="far fa-edit"></i>
-                                                        </th:block>
-                                                        <th:block th:case="true">
-                                                            <p class="text-danger d-inline-block m-0 mr-2" th:text="#{course.titles.missing}">NAMES MISSING</p>
-                                                            <i class="far fa-edit"></i>
-                                                        </th:block>
-                                                    </a>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </th:block>
-                            </div>
-                        </div>
-
-                        <!--3rd Table-->
+                        <!--2nd Table-->
                         <div class="row form-group">
                             <table class="table mb-0">
                                 <thead>
@@ -190,7 +176,7 @@
                                         <th class="border-0 text-center col-1" scope="col" th:text="#{detail.surveyType}">SURVEY TYPE</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="bg-light">
                                     <tr th:each="course_type: ${type_list}" th:classappend="!${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__} ? text-light-grey : userclass" th:id="${course_type} + 'Line'">
                                         <!--1st Col-->
                                         <td class="show_me" style="display: none;">
@@ -246,26 +232,16 @@
                             </table>
                         </div>
 
-                        <!--Final Button-->
-                        <div class="row justify-content-center" th:switch="${titlesMissing or (surveysMissing > 0)}">
-                            <a th:case="true" class="status-btn" onclick="highlight_missing()">
-                                <span th:text="#{course.status.pending}">WIP</span>
-                            </a>
-                            <a th:case="false" class="status-btn" type="submit" data-toggle="modal" data-target="#finalizeModal">
-                                <span th:text="#{course.status.pending}">WIP</span>
-                            </a>
-                        </div>
-
-                    </form>
+                    </div>
                 </div>
 
-                <div class="col-1"></div>
+                <div class="col-3" th:if="!${course.finalisedFlag}"></div>
 
                 <!--QR Codes-->
-                <div class="col-auto" th:if="${course.finalisedFlag}">
-                    <h5 class="font-weight-light text-center" th:text="#{detail.QR}">QR CODES</h5>
+                <div class="col-3" th:if="${course.finalisedFlag}">
+                    <h5 class="font-weight-bold text-center" th:text="#{detail.QR}">QR CODES</h5>
                     <div class="row justify-content-md-center">
-                        <div class="container carousel-border border border-secondary p-1 position-relative">
+                        <div class="carousel-border border border-secondary p-1 position-relative">
                             <div id="carouselExampleIndicators" class="carousel slide" interval="false">
 
                                 <ol class="carousel-indicators">
@@ -320,9 +296,18 @@
 
                 </div>
             </div>
-            
-        </div>
+        </form>
 
+        <!--Final Button-->
+        <div class="row justify-content-center mb-4" th:if="!${course.finalisedFlag}" th:switch="${titlesMissing or (surveysMissing > 0)}">
+            <a th:case="true" class="status-btn" onclick="highlight_missing()">
+                <span th:text="#{course.status.pending}">WIP</span>
+            </a>
+            <a th:case="false" class="status-btn" type="submit" data-toggle="modal" data-target="#finalizeModal">
+                <span th:text="#{course.status.pending}">WIP</span>
+            </a>
+        </div>
+            
     </div>
     <div th:replace="footer"></div>
 </body>
@@ -435,9 +420,6 @@
     }
 
     function edit_mode() {
-        //turns finish edit button visable & disables edit button
-        document.getElementById("startEdit").disabled = true;
-
         //faculty replacement
         sort_options(document.getElementById("faculty_select"));
         const key = document.getElementById("faculty_original").querySelector("span").id;
