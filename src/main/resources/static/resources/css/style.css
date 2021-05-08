@@ -8,6 +8,7 @@ body {
   --tu_blue_light: rgb(0, 74, 174);
   --tu_blue_highlight: rgb(230, 230, 255);
   --fancy_grey: rgb(50, 50, 50);
+  --bright_grey: rgb(220, 220, 220);
   background-image: url(../images/seamless-bg.jpg);
   background-repeat: auto;
   background-color: rgb(200, 200, 200);
@@ -67,10 +68,6 @@ input[type=number] {
 
 .text-danger {
   color: rgb(255, 0, 0) !important;
-}
-
-.text-large {
-  font-size: 150%;
 }
 
 /*footer.html*/
@@ -178,10 +175,6 @@ footer {
   height: 200px;
   filter: invert(0.8);
 }
-.about_text {
-  border-top: solid 1px var(--tu_blue);
-  background-color: rgba(255, 255, 255, 0.7);
-}
 .home-page-list {
   margin: 0;
 }
@@ -191,17 +184,43 @@ footer {
     text-align: center;
   }
 }
-.icon-wrapper {
-  display: inline-block;
-  height: 10rem;
-  width: 10rem;
-  border-radius: 100%;
-  background-color: var(--tu_blue_light);
-  margin-bottom: 2rem;
+.about_text {
+  border-top: solid 1px var(--bright_grey);
+  background-color: rgba(255, 255, 255, 0.7);
 }
-.icon-wrapper i {
-  margin-top: 2rem;
-  color: white;
+.card-wrapper {
+  background-color: rgb(255, 255, 255);
+  padding: 1rem;
+  margin-bottom: 3rem;
+  border: 1px solid var(--bright_grey);
+  box-shadow: 5px 5px 5px var(--bright_grey);
+  border-radius: 5px;
+}
+.login-button {
+  width: 10rem;
+  border: 1px solid black;
+  color: white !important;
+  background-color: var(--tu_blue);
+  display: block;
+}
+.login-button:hover {
+  background-color: transparent;
+  color: black !important;
+}
+.card-wrapper:first-of-type {
+  margin-top: 3rem;
+}
+.card-image {
+  border-radius: 5px;
+}
+.text-wrapper h3 {
+  font-weight: 500;
+  padding-bottom: 1rem;
+  border-bottom: 3px solid var(--bright_grey);
+  margin: none !important;
+}
+.text-wrapper p {
+  margin-top: 1rem;
 }
 
 /*IDK*/
@@ -213,10 +232,6 @@ footer {
 
 .form_color {
   background-color: var(--tu_blue_highlight);
-}
-
-.course-table-wrapper{
-  overflow-x: scroll;
 }
 
 /*courseDetails.html*/
@@ -405,6 +420,7 @@ select {
 }
 .result-text {
   line-height: 1rem;
+  height: 1rem;
 }
 .result-bar {
   position: left;
