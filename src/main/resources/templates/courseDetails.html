@@ -62,17 +62,9 @@
                         <button type="button" class="btn btn-head btn-text-right">
                             <span th:text="#{detail.options}">COURSE OPTIONS</span>
                         </button>
-                        <th:block th:if="!${course.finalisedFlag}">
-                            <button th:if="!${course.finalisedFlag}" type="button" class="btn btn-list btn-text-right hide_me" onclick="edit_mode()">
-                                <span th:text="#{detail.editCourse}">EDIT COURSE</span><i class="far fa-edit ml-2"></i>
-                            </button>
-                            <button type="submit" class="btn btn-list btn-text-right show_me" style="display: none;">
-                                <span th:text="#{detail.finishEdit}">FINISH EDITING</span><i class="fas fa-check ml-2"></i>
-                            </button>
-                            <button type="button" onClick="window.location.reload();" class="btn btn-list btn-text-right show_me" style="display: none;">
-                                <span th:text="#{detail.cancelEdit}">CANCEL EDITING</span><i class="fas fa-times ml-2"></i>
-                            </button>
-                        </th:block>
+                        <button th:if="!${course.finalisedFlag}" type="button" class="btn btn-list btn-text-right hide_me" onclick="edit_mode()">
+                            <span th:text="#{detail.editCourse}">EDIT COURSE</span><i class="far fa-edit ml-2"></i>
+                        </button>
                         <button type="button" class="btn btn-list btn-text-right" data-toggle="modal" data-target="#copyModal">
                             <span th:text="#{detail.copyCourse}">COPY ME</span><i class="far fa-clone ml-2"></i>
                         </button>
@@ -296,10 +288,21 @@
 
                 </div>
             </div>
+
+            <div class="row justify-content-center">
+                <button type="submit" class="status-btn blue show_me" style="display: none;">
+                    <span th:text="#{detail.finishEdit}">FINISH EDITING</span><i class="fas fa-check"></i>
+                </button>
+                <div class="ml-2 mr-2"></div>
+                <button type="button" onClick="window.location.reload();" class="status-btn show_me" style="display: none;">
+                    <span th:text="#{detail.cancelEdit}">CANCEL EDITING</span><i class="fas fa-times"></i>
+                </button>
+            </div>
+
         </form>
 
         <!--Final Button-->
-        <div class="row justify-content-center mb-4" th:if="!${course.finalisedFlag}" th:switch="${titlesMissing or (surveysMissing > 0)}">
+        <div class="row justify-content-center mb-4 hide_me" th:if="!${course.finalisedFlag}" th:switch="${titlesMissing or (surveysMissing > 0)}">
             <a th:case="true" class="status-btn" onclick="highlight_missing()">
                 <span th:text="#{course.status.pending}">WIP</span>
             </a>
