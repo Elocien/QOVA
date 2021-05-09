@@ -375,6 +375,10 @@ input[type="text"]:disabled::placeholder {
   overflow: hidden;
   padding: 0.4rem;
 }
+.status-btn i {
+  color: white;
+  padding: 0.4rem;
+}
 .status-btn:hover {
   cursor: pointer;
   border-color: red;
@@ -383,7 +387,7 @@ input[type="text"]:disabled::placeholder {
 .status-btn > span {
   color: white;
 }
-.status-btn:hover > span {
+.status-btn:hover * {
   color: red;
 }
 .blue {
@@ -392,7 +396,7 @@ input[type="text"]:disabled::placeholder {
 .blue:hover {
   border-color: var(--tu_blue_light);
 }
-.blue:hover > span {
+.blue:hover * {
   color: var(--tu_blue_light);
 }
 

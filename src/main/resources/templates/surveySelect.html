@@ -12,9 +12,10 @@
 
         <!--Headline-->
         <div class="col-12 text-center">
-            <h2 class="font-weight-bold" th:text="|#{student.select.header} ${courseName} (#{'editor.' + ${type}})|">COURSE BROWSER</h2>
-            <h5 th:if="${mode == 'participant' and !typeExists}" class="font-weight-light" th:text="#{student.select.description_participant_typeless}">DESCRIPTION</h5>
-            <h5 th:if="${mode == 'results' and !typeExists}" class="font-weight-light" th:text="#{student.select.description_results_typeless}">DESCRIPTION</h5>
+            <h2 th:if="!${typeExists}" class="font-weight-bold" th:text="${courseName}">COURSE BROWSER</h2>
+            <h2 th:if="${typeExists}" class="font-weight-bold" th:text="|${courseName} (#{'editor.' + ${type}})|">COURSE BROWSER</h2>
+            <h5 th:if="${mode == 'participant'}" class="font-weight-light" th:text="#{student.select.description_participant_typeless}">DESCRIPTION</h5>
+            <h5 th:if="${mode == 'results'}" class="font-weight-light" th:text="#{student.select.description_results_typeless}">DESCRIPTION</h5>
         </div>
 
         <form th:action="@{/survey/select(id=${id}, type=${type}, mode=${mode})}" th:object="${form}" method="post">
@@ -27,8 +28,8 @@
                 </div>
                 <!--Step 2-->
                 <div class="text-center mt-4 mb-4">
-                    <h5 th:if="${mode == 'participant' and typeExists}" class="font-weight-light" th:text="#{student.select.description_participant}">DESCRIPTION</h5>
-                    <h5 th:if="${mode == 'results' and typeExists}" class="font-weight-light" th:text="#{student.select.description_results}">DESCRIPTION</h5>
+                    <h5 th:if="${mode == 'participant'}" class="font-weight-light" th:text="#{student.select.description_participant}">DESCRIPTION</h5>
+                    <h5 th:if="${mode == 'results'}" class="font-weight-light" th:text="#{student.select.description_results}">DESCRIPTION</h5>
                 </div>
                 <div th:if="${typeExists}" class="col-lg-4 offset-lg-4 col-md-6 offset-md-3 col-12">
                     <h5 class="text-center" th:text="#{instance}">INSTANCE</h5>
