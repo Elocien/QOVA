@@ -191,7 +191,6 @@ footer {
 .card-wrapper {
   background-color: rgb(255, 255, 255);
   padding: 1rem;
-  margin-bottom: 3rem;
   border: 1px solid var(--bright_grey);
   box-shadow: 5px 5px 5px var(--bright_grey);
   border-radius: 5px;
@@ -207,9 +206,6 @@ footer {
   background-color: transparent;
   color: black !important;
 }
-.card-wrapper:first-of-type {
-  margin-top: 3rem;
-}
 .card-image {
   border-radius: 5px;
 }
@@ -221,6 +217,24 @@ footer {
 }
 .text-wrapper p {
   margin-top: 1rem;
+}
+#home-carousel .c_item {
+  display: none;
+}
+#home-carousel .c_item.active {
+  display: flex;
+}
+.vertical-center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+.c_btn:hover {
+  cursor: pointer;
+}
+.c_btn:hover > i {
+  color: black;
 }
 
 /*IDK*/

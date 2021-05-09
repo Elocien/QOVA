@@ -29,39 +29,49 @@
         </div>
     </div>
 
-    <div class="row about_text justify-content-center">
-        <div class="col col-lg-6 col-md-12 col-sm-12">
+    <div class="row about_text justify-content-center pb-5">
+        <div class="col col-lg-8 col-md-12 col-sm-12 pt-4">
             
-            <div class="row card-wrapper">
-                <div class="col col-6 pl-0">
-                    <img class="card-image img-fluid" th:src="@{/resources/images/manual_survey.jpg}" src="../static/resources/images/manual_survey.jpg" alt="Card image cap">
-                </div>
-                <div class="col col-6 d-flex align-items-center pr-0">
-                    <div class="text-wrapper m-4">
-                        <h3>About QOVA</h3>
-                        <p>
-                            QOVA is a project initiated at the faculty of medicine. QOVA aims to make the evaluation process more transparent for
-                            students as well as mentors and lecturers. By publishing results publicly, a more detailed picture can be painted of how
-                            relevant, engaging and informative subjects at the TU Dresden actually are, as evaluated by students.
-                        </p>
+            <div class="row">
+                <a class="col-1 offset-1 c_btn pr-0" onclick="move_carousel('l', 'home-carousel')">
+                    <i class="fas fa-chevron-left vertical-center"></i>
+                </a>
+                <div class="col-8" id="home-carousel">
+                    <div class="row c_item active card-wrapper">
+                        <div class="col col-6 pl-0">
+                            <img class="card-image img-fluid vertical-center" th:src="@{/resources/images/manual_survey.jpg}" src="../static/resources/images/manual_survey.jpg" alt="Card image cap">
+                        </div>
+                        <div class="col col-6 d-flex align-items-center pr-0">
+                            <div class="text-wrapper m-4">
+                                <h3>About QOVA</h3>
+                                <p>
+                                    QOVA is a project initiated at the faculty of medicine. QOVA aims to make the evaluation process more transparent for
+                                    students as well as mentors and lecturers. By publishing results publicly, a more detailed picture can be painted of how
+                                    relevant, engaging and informative subjects at the TU Dresden actually are, as evaluated by students.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <div class="row c_item card-wrapper">
+                        <div class="col col-6 pl-0">
+                            <img class="card-image img-fluid vertical-center" th:src="@{/resources/images/work_station.jpg}" src="../static/resources/images/work_station.jpg" alt="Card image cap">
+                        </div>
+                        <div class="col col-6 d-flex align-items-center pr-0">
+                            <div class="text-wrapper m-4">
+                                <h3>Beta Version</h3>
+                                <p>
+                                    The current beta 0.1 version was launched at the beginning of the winter semester 2020/2021. We are currently working on
+                                    improvements for both students and teachers, with a few features in the works for a release during the summer semester
+                                    2021. We appreciate any and all feedback!
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="row card-wrapper">
-                <div class="col col-6 pl-0">
-                    <img class="card-image img-fluid" th:src="@{/resources/images/work_station.jpg}" src="../static/resources/images/work_station.jpg" alt="Card image cap">
-                </div>
-                <div class="col col-6 d-flex align-items-center pr-0">
-                    <div class="text-wrapper m-4">
-                        <h3>Beta Version</h3>
-                        <p>
-                            The current beta 0.1 version was launched at the beginning of the winter semester 2020/2021. We are currently working on
-                            improvements for both students and teachers, with a few features in the works for a release during the summer semester
-                            2021. We appreciate any and all feedback!
-                        </p>
-                    </div>
-                </div>
+                <a class="col-1 c_btn pl-0" onclick="move_carousel('r', 'home-carousel')">
+                    <i class="fas fa-chevron-right vertical-center"></i>
+                </a>
             </div>
 
         </div>
@@ -70,4 +80,29 @@
 </div>
 <footer th:replace="footer"></footer>
 </body>
+<script>
+    function move_carousel(direction, target_id) {
+        const target = document.getElementById(target_id)
+        const items = target.getElementsByClassName("c_item")
+        var active_element = target.getElementsByClassName("active")[0]
+        var i =  Array.prototype.slice.call(items).indexOf(active_element)
+        active_element.classList.remove("active")
+        if(direction == "l") {
+            if (i == 0) {
+                items[items.length-1].classList.add("active")
+            }
+            else {
+                items[i-1].classList.add("active")
+            }
+        }
+        if(direction == "r") {
+            if (i+1 == items.length) {
+                items[0].classList.add("active")
+            }
+            else {
+                items[i+1].classList.add("active")
+            }
+        }
+    }
+</script>
 </html>
