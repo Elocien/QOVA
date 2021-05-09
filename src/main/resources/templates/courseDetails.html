@@ -280,13 +280,13 @@
                     </div>
                     <!--Download Button-->
                     <div th:if="!${course.lecture.surveyEditedFlag and course.tutorial.surveyEditedFlag and course.seminar.surveyEditedFlag and course.practical.surveyEditedFlag}" class="col-12 text-center">
-                        <p class="m-0 font-weight-light mt-3" th:text="#{detail.download}"></p>
+                        <p class="m-0 font-weight-light mt-3" th:text="#{detail.download}">COPY QR-CODE</p>
                         <div class="btn-group row" role="group" aria-label="First group">
                             <a th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:href="${'/qrcode?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" target="_blank" href="#">TEXT</a>
                         </div>
-                        <p class="m-0 font-weight-light mt-2" th:text="#{detail.download.link}"></p>
+                        <p class="m-0 font-weight-light mt-2" th:text="#{detail.download.link}">COPY URL</p>
                         <div class="btn-group row" role="group" aria-label="First group">
-                            <button th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:onclick="copy_url([[${course_type}]])">TEXT</button>
+                            <button type="button" th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:onclick="copy_url([[${course_type}]])">TEXT</button>
                         </div>
                         <div class="row justify-content-center align-items-center mt-2">
                             <p id="url-label" class="m-0" th:text="|#{copied}:|" style="display: none;">Copied: </p>
