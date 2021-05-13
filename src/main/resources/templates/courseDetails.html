@@ -7,312 +7,313 @@
 </head>
 
 <body>
-    <div th:include="navbar"></div>
-    <div class="main col-lg-12">
+<div th:include="navbar"></div>
+<div class="main col-lg-12">
 
-        <div class="mb-4" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
-            <h2 class="font-weight-bold text-center mb-4 mt-4 hide_me" th:text="${course.name}">COURSE NAME</h2>
-            <input id="name-input" type="text" class="input-group headline-edit show_me" style="display: none;" th:placeholder="${course.name}" th:value="${course.name}"></input>
-        </div>
+    <div class="mb-4" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
+        <h2 class="font-weight-bold text-center mb-4 mt-4 hide_me" th:text="${course.name}">COURSE NAME</h2>
+        <input id="name-input" type="text" class="input-group headline-edit show_me" style="display: none;" th:placeholder="${course.name}" th:value="${course.name}"></input>
+    </div>
 
-        <!--Modals-->
-        <div th:include="finalizeModal"></div>
-        <div class="modal fade" id="copyModal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content text-center">
-                    <!--Duplicate Form-->
-                    <form th:action="@{/course/duplicate?id=__${course.id}__}" th:object="${duplicateForm}" method="post">
-                        <div class="modal-body">
-                            <p th:text="#{detail.copyModalText}">PLEASE COPY ME!</p>
-                            <select id="newYear" class="custom-select form-control" th:field="*{semesterString}">
-                                <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
-                            </select>
-                        </div>
-                        <div class="modal-footer text-center">
-                            <div class="w-100"></div>
-                            <button type="submit" class="btn btn-primary">Finish</button>
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
-                            <div class="w-100"></div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content text-center">
+    <!--Modals-->
+    <div th:include="finalizeModal"></div>
+    <div class="modal fade" id="copyModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content text-center">
+                <!--Duplicate Form-->
+                <form th:action="@{/course/duplicate?id=__${course.id}__}" th:object="${duplicateForm}" method="post">
                     <div class="modal-body">
-                        <p class="m-0" th:text="#{detail.deleteModalText}">PLEASE DELETE ME!</p>
+                        <p th:text="#{detail.copyModalText}">PLEASE COPY ME!</p>
+                        <select id="newYear" class="custom-select form-control" th:field="*{semesterString}">
+                            <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+                        </select>
                     </div>
                     <div class="modal-footer text-center">
                         <div class="w-100"></div>
-                        <a th:href="@{/course/delete?id=__${course.id}__}" method="post" class="btn btn-primary">Yes</a>
+                        <button type="submit" class="btn btn-primary">Finish</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
                         <div class="w-100"></div>
                     </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content text-center">
+                <div class="modal-body">
+                    <p class="m-0" th:text="#{detail.deleteModalText}">PLEASE DELETE ME!</p>
+                </div>
+                <div class="modal-footer text-center">
+                    <div class="w-100"></div>
+                    <a th:href="@{/course/delete?id=__${course.id}__}" method="post" class="btn btn-primary">Yes</a>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                    <div class="w-100"></div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <form id="form" method="post" th:action="@{/course/edit?id=__${course.id}__}" th:object="${form}">
-            <div class="row justify-content-md-center p-4" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
-                <!--Options Buttons-->
-                <div class="col-3">
-                    <div class="btn-group-vertical float-lg-right border border-dark rounded sticky" id="OptionsMenu">
-                        <button type="button" class="btn btn-head btn-text-right">
-                            <span th:text="#{detail.options}">COURSE OPTIONS</span>
-                        </button>
-                        <button th:if="!${course.finalisedFlag}" type="button" class="btn btn-list btn-text-right hide_me" onclick="edit_mode()">
-                            <span th:text="#{detail.editCourse}">EDIT COURSE</span><i class="far fa-edit ml-2"></i>
-                        </button>
-                        <button type="button" class="btn btn-list btn-text-right" data-toggle="modal" data-target="#copyModal">
-                            <span th:text="#{detail.copyCourse}">COPY ME</span><i class="far fa-clone ml-2"></i>
-                        </button>
-                        <button type="button" class="btn btn-list-last btn-text-right" data-toggle="modal" data-target="#deleteModal">
-                            <span th:text="#{detail.deleteCourse}">DELETE ME</span><i class="fas fa-trash-alt ml-2"></i>
-                        </button>
-                    </div>
+    <form id="form" method="post" th:action="@{/course/edit?id=__${course.id}__}" th:object="${form}">
+        <div class="row justify-content-md-center p-4" th:with="type_list = ${ {'lecture', 'tutorial', 'seminar' ,'practical'} }">
+            <!--Options Buttons-->
+            <div class="col-3">
+                <div class="btn-group-vertical float-lg-right border border-dark rounded sticky" id="OptionsMenu">
+                    <button type="button" class="btn btn-head btn-text-right">
+                        <span th:text="#{detail.options}">COURSE OPTIONS</span>
+                    </button>
+                    <button th:if="!${course.finalisedFlag}" type="button" class="btn btn-list btn-text-right hide_me" onclick="edit_mode()">
+                        <span th:text="#{detail.editCourse}">EDIT COURSE</span><i class="far fa-edit ml-2"></i>
+                    </button>
+                    <button type="button" class="btn btn-list btn-text-right" data-toggle="modal" data-target="#copyModal">
+                        <span th:text="#{detail.copyCourse}">COPY ME</span><i class="far fa-clone ml-2"></i>
+                    </button>
+                    <button type="button" class="btn btn-list-last btn-text-right" data-toggle="modal" data-target="#deleteModal">
+                        <span th:text="#{detail.deleteCourse}">DELETE ME</span><i class="fas fa-trash-alt ml-2"></i>
+                    </button>
                 </div>
+            </div>
 
-                <!--Course Details-->
-                <div class="col-6">
-                    <div class="ml-4 mr-4">
+            <!--Course Details-->
+            <div class="col-6">
+                <div class="ml-4 mr-4">
 
-                        <!--Headline & Buttons-->
-                        <div class="row">
-                            <h5 class="font-weight-bold text-left" th:text="#{course.details}">COURSE DETAILS</h5>
-                        </div>
+                    <!--Headline & Buttons-->
+                    <div class="row">
+                        <h5 class="font-weight-bold text-left" th:text="#{course.details}">COURSE DETAILS</h5>
+                    </div>
 
-                        <!--Hidden Headline-->
-                        <input id="name-input-hidden" type="hidden" th:value="${course.name}" th:name="name"></input>
+                    <!--Hidden Headline-->
+                    <input id="name-input-hidden" type="hidden" th:value="${course.name}" th:name="name"></input>
 
-                        <!--1st Table-->
-                        <div class="row form-group mb-4">
-                            <table class="table table-light">
-                                <tbody>
-                                    <!--Faculty-->
-                                    <tr>
-                                        <th class="col-5" scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
-                                        <td class="hide_me" id="faculty_original"><span th:id="'og: ' + ${course.faculty}" th:text="#{'course.faculty.' + ${course.faculty}}">FACULTY</span></td>
-                                        <td class="show_me" id="faculty_dropdown" style="display: none">
-                                            <select id="faculty_select" class="custom-select form-control" th:with="faculties = ${T(qova.enums.CourseFaculty).values()}" th:field="*{faculty}">
-                                                <option class="dropdown-item" th:id="${faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <!--Semester Period-->
-                                    <tr>
-                                        <th class="col-5" scope="row" th:text="#{course.courseDate}">YEAR</th>
-                                        <td class="hide_me" th:text="${course.semesterString}">XXXX</td>
-                                        <td class="show_me" style="display: none">
-                                            <select class="custom-select form-control" th:field="*{semesterString}">
-                                                <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
-                                            </select>
-                                        </td>
-                                    </tr>
-                                    <!--Semester of Students-->
-                                    <tr>
-                                        <th class="col-5" scope="row" th:text="#{course.semesterOfStudents}">SEMESTER</th>
-                                        <td class="hide_me"><span th:text="${course.semesterOfStudents}">IDK - XXXX</span></td>
-                                        <td class="show_me" style="display: none;">
-                                            <input class="form-control" type="number" th:placeholder="${course.semesterOfStudents}" th:value="${course.semesterOfStudents}" name="semesterOfStudents" id="semesterOfStudents">
-                                        </td>
-                                    </tr>
-                                    <!--Titles Status-->
-                                    <tr id="highlight_me_titles">
-                                        <th class="col-3" scope="row" th:text="#{course.status.instances}">Instances:</th>
-                                        <td>
-                                            <a th:switch="${titlesMissing}" type="button" class="btn btn-link nounderline p-0" href="#" th:href="${'/course/instanceTitles?id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.editInstance}">
-                                                <th:block th:case="false">
-                                                    <p class="text-success d-inline-block m-0 mr-2" th:text="#{course.titles.finished}">FINISHED</p>
-                                                    <i class="far fa-edit"></i>
-                                                </th:block>
-                                                <th:block th:case="true">
-                                                    <p class="text-danger d-inline-block m-0 mr-2" th:text="#{course.titles.missing}">NAMES MISSING</p>
-                                                    <i class="far fa-edit"></i>
-                                                </th:block>
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    <!--Survey Status-->
-                                    <tr id="highlight_me_surveys">
-                                        <th class="col-3" scope="row" th:text="#{course.status.surveys}">Surveys:</th>
-                                        <td th:switch="${surveysMissing}">
-                                            <p th:case="0" class="text-success m-0" th:text="#{course.survey.finished}">FINISHED</p>
-                                            <th:block th:case="*">
-                                                <p class="text-warning m-0"><span th:text="${surveysMissing}">X</span><span> </span><span th:text="#{course.survey.missing}">MISSING</span></p>
-                                                <div id="surveyMissingHelp" style="display: none;">
-                                                    <p class="m-0" th:text="#{course.survey.missing.help}">DO U WANT TO INITILIZE THE REMAINING SURVEYS AS DEFAULT SURVEYS?</p>
-                                                    <div>
-                                                        <a th:href="@{/course/setDefaultSurvey?id=__${course.id}__}" method="get" class="btn btn-sm btn-primary" th:text="#{Yes}"></a>
-                                                        <a class="btn btn-sm btn-secondary text-white" th:text="#{No}" onclick="hide_survey_help()"></a>
-                                                    </div>
-                                                </div>
-                                            </th:block>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <!--2nd Table-->
-                        <div class="row form-group">
-                            <table class="table mb-0">
-                                <thead>
-                                    <tr>
-                                        <th class="border-0 col-1 show_me" scope="col" style="display: none;"></th>
-                                        <th class="border-0 col-1" scope="col" th:text="#{detail.classType}">TYPE</th>
-                                        <th class="border-0 text-center col-2" scope="col" th:text="#{detail.instanceAmount}">Instance</th>
-                                        <th class="border-0 text-center col-2" scope="col" th:text="#{detail.groupAmount}">Group</th>
-                                        <th class="border-0 text-center col-1 hide_me" scope="col" th:text="#{detail.classSurvey}">SURVEY</th>
-                                        <th class="border-0 text-center col-1" scope="col" th:text="#{detail.surveyType}">SURVEY TYPE</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="bg-light">
-                                    <tr th:each="course_type: ${type_list}" th:classappend="!${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__} ? text-light-grey : userclass" th:id="${course_type} + 'Line'">
-                                        <!--1st Col-->
-                                        <td class="show_me" style="display: none;">
-                                            <div class="col-md-auto">
-                                                <label class="switch m-0 align-middle" th:switch="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}">
-                                                    <input th:case="true"  type="checkbox" th:id="${course_type} + 'Check'" th:onclick="set_hidden_data([[${course_type}]])" checked>
-                                                    <input th:case="false" type="checkbox" th:id="${course_type} + 'Check'" th:onclick="set_hidden_data([[${course_type}]])">
-                                                    <span class="slider round"></span>
-                                                </label>
+                    <!--1st Table-->
+                    <div class="row form-group mb-4">
+                        <table class="table table-light">
+                            <tbody>
+                            <!--Faculty-->
+                            <tr>
+                                <th class="col-5" scope="row" th:text="#{new.courseFaculty}">FACULTY NAME</th>
+                                <td class="hide_me" id="faculty_original"><span th:id="'og: ' + ${course.faculty}" th:text="#{'course.faculty.' + ${course.faculty}}">FACULTY</span></td>
+                                <td class="show_me" id="faculty_dropdown" style="display: none">
+                                    <select id="faculty_select" class="custom-select form-control" th:with="faculties = ${T(qova.enums.CourseFaculty).values()}" th:field="*{faculty}">
+                                        <option class="dropdown-item" th:id="${faculty}" th:each="faculty : ${#lists.sort(faculties)}" th:text="#{'course.faculty.' + ${faculty}}" th:value="${faculty}">FACULTY</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <!--Semester Period-->
+                            <tr>
+                                <th class="col-5" scope="row" th:text="#{course.courseDate}">YEAR</th>
+                                <td class="hide_me" th:text="${course.semesterString}">XXXX</td>
+                                <td class="show_me" style="display: none">
+                                    <select class="custom-select form-control" th:field="*{semesterString}">
+                                        <option class="dropdown-item" th:each="year : ${semesterDates}" th:text="${year}" th:value="${year}">YEAR</option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <!--Semester of Students-->
+                            <tr>
+                                <th class="col-5" scope="row" th:text="#{course.semesterOfStudents}">SEMESTER</th>
+                                <td class="hide_me"><span th:text="${course.semesterOfStudents}">IDK - XXXX</span></td>
+                                <td class="show_me" style="display: none;">
+                                    <input class="form-control" type="number" th:placeholder="${course.semesterOfStudents}" th:value="${course.semesterOfStudents}" name="semesterOfStudents" id="semesterOfStudents">
+                                </td>
+                            </tr>
+                            <!--Titles Status-->
+                            <tr id="highlight_me_titles">
+                                <th class="col-3" scope="row" th:text="#{course.status.instances}">Instances:</th>
+                                <td>
+                                    <a th:switch="${titlesMissing}" type="button" class="btn btn-link nounderline p-0" href="#" th:href="${'/course/instanceTitles?id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.editInstance}">
+                                        <th:block th:case="false">
+                                            <p class="text-success d-inline-block m-0 mr-2" th:text="#{course.titles.finished}">FINISHED</p>
+                                            <i class="far fa-edit"></i>
+                                        </th:block>
+                                        <th:block th:case="true">
+                                            <p class="text-danger d-inline-block m-0 mr-2" th:text="#{course.titles.missing}">NAMES MISSING</p>
+                                            <i class="far fa-edit"></i>
+                                        </th:block>
+                                    </a>
+                                </td>
+                            </tr>
+                            <!--Survey Status-->
+                            <tr id="highlight_me_surveys">
+                                <th class="col-3" scope="row" th:text="#{course.status.surveys}">Surveys:</th>
+                                <td th:switch="${surveysMissing}">
+                                    <p th:case="0" class="text-success m-0" th:text="#{course.survey.finished}">FINISHED</p>
+                                    <th:block th:case="*">
+                                        <p class="text-warning m-0"><span th:text="${surveysMissing}">X</span><span> </span><span th:text="#{course.survey.missing}">MISSING</span></p>
+                                        <div id="surveyMissingHelp" style="display: none;">
+                                            <p class="m-0" th:text="#{course.survey.missing.help}">DO U WANT TO INITILIZE THE REMAINING SURVEYS AS DEFAULT SURVEYS?</p>
+                                            <div>
+                                                <a th:href="@{/course/setDefaultSurvey?id=__${course.id}__}" method="get" class="btn btn-sm btn-primary" th:text="#{Yes}"></a>
+                                                <a class="btn btn-sm btn-secondary text-white" th:text="#{No}" onclick="hide_survey_help()"></a>
                                             </div>
-                                            <th:block th:switch="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}">
-                                                <input th:case="true"  value="true"  type="text" th:id="${course_type} + 'Exists'" th:name="${course_type} + 'Exists'" style="display: none;">
-                                                <input th:case="false" value="false" type="text" th:id="${course_type} + 'Exists'" th:name="${course_type} + 'Exists'" style="display: none;">
-                                            </th:block>
-                                        </td>
-                                        <!--2nd Col-->
-                                        <td scope="row" th:text="#{'new.' + ${course_type}}">LECTURE</td>
-                                        <!--3rd Col-->
-                                        <td class="text-center" th:text="${__'course.' + ${course_type} + '.instanceAmount'__}">COUNT</td>
-                                        <input type="hidden" th:value="${__'course.' + ${course_type} + '.instanceAmount'__}" th:name="|instanceAmount${#strings.capitalize(course_type)}|"></input>
-                                        <!--4th Col-->
-                                        <td class="text-center hide_me" th:text="${__'course.' + ${course_type} + '.groupAmount'__}">COUNT</td>
-                                        <td class="show_me" style="display: none;">
-                                            <input class="form-control" type="text" th:value="${__'course.' + ${course_type} + '.groupAmount'__}" th:name="|groupAmount${#strings.capitalize(course_type)}|" th:id="|groupAmount${#strings.capitalize(course_type)}|">
-                                        </td>
-                                        <!--5th Col-->
-                                        <th:block th:switch="!${course.finalisedFlag} and !${__'course.'+${course_type}+'.surveyEditedFlag'__}">
-                                            <td th:case="true" class="text-center">
-                                                <a th:if="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
-                                            </td>
-                                            <td th:case="false" class="text-center">
-                                                <a th:if="!${course.finalisedFlag}" type="button" class="btn btn-link p-0 align-middle hide_me mr-2" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="left" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
-                                                <a th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/previewsurvey?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.previewSurvey}"><i class="fa fa-eye"></i></a>
-                                            </td>
-                                        </th:block>
-                                        <!--6th Col-->
-                                        <th:block th:switch="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}">
-                                            <td th:case="true" class="text-center">
-                                                <th:block th:switch="!${course.finalisedFlag} and !${__'course.'+${course_type}+'.surveyEditedFlag'__}">
-                                                    <span th:case="true">none</span>
-                                                    <th:block th:case="false">
-                                                        <th:block th:switch="${__'course.'+${course_type}+'.surveyEditedFlag'__}">
-                                                            <span th:case="true">custom</span>
-                                                            <span th:case="false">default</span>                                                            
-                                                        </th:block>
-                                                    </th:block>
-                                                </th:block>
-                                            </td>
-                                            <td th:case="false"></td>
-                                        </th:block>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
+                                        </div>
+                                    </th:block>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
+
+                    <!--2nd Table-->
+                    <div class="row form-group">
+                        <table class="table mb-0">
+                            <thead>
+                            <tr>
+                                <th class="border-0 col-1 show_me" scope="col" style="display: none;"></th>
+                                <th class="border-0 col-1" scope="col" th:text="#{detail.classType}">TYPE</th>
+                                <th class="border-0 text-center col-2" scope="col" th:text="#{detail.instanceAmount}">Instance</th>
+                                <th class="border-0 text-center col-2" scope="col" th:text="#{detail.groupAmount}">Group</th>
+                                <th class="border-0 text-center col-1 hide_me" scope="col" th:text="#{detail.classSurvey}">SURVEY</th>
+                                <th class="border-0 text-center col-1" scope="col" th:text="#{detail.surveyType}">SURVEY TYPE</th>
+                            </tr>
+                            </thead>
+                            <tbody class="bg-light">
+                            <tr th:each="course_type: ${type_list}" th:classappend="!${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__} ? text-light-grey : userclass" th:id="${course_type} + 'Line'">
+                                <!--1st Col-->
+                                <td class="show_me" style="display: none;">
+                                    <div class="col-md-auto">
+                                        <label class="switch m-0 align-middle" th:switch="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}">
+                                            <input th:case="true"  type="checkbox" th:id="${course_type} + 'Check'" th:onclick="set_hidden_data([[${course_type}]])" checked>
+                                            <input th:case="false" type="checkbox" th:id="${course_type} + 'Check'" th:onclick="set_hidden_data([[${course_type}]])">
+                                            <span class="slider round"></span>
+                                        </label>
+                                    </div>
+                                    <th:block th:switch="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}">
+                                        <input th:case="true"  value="true"  type="text" th:id="${course_type} + 'Exists'" th:name="${course_type} + 'Exists'" style="display: none;">
+                                        <input th:case="false" value="false" type="text" th:id="${course_type} + 'Exists'" th:name="${course_type} + 'Exists'" style="display: none;">
+                                    </th:block>
+                                </td>
+                                <!--2nd Col-->
+                                <td scope="row" th:text="#{'new.' + ${course_type}}">LECTURE</td>
+                                <!--3rd Col-->
+                                <td class="text-center" th:text="${__'course.' + ${course_type} + '.instanceAmount'__}">COUNT</td>
+                                <input type="hidden" th:value="${__'course.' + ${course_type} + '.instanceAmount'__}" th:name="|instanceAmount${#strings.capitalize(course_type)}|"></input>
+                                <!--4th Col-->
+                                <td class="text-center hide_me" th:text="${__'course.' + ${course_type} + '.groupAmount'__}">COUNT</td>
+                                <td class="show_me" style="display: none;">
+                                    <input class="form-control" type="text" th:value="${__'course.' + ${course_type} + '.groupAmount'__}" th:name="|groupAmount${#strings.capitalize(course_type)}|" th:id="|groupAmount${#strings.capitalize(course_type)}|">
+                                </td>
+                                <!--5th Col-->
+                                <th:block th:if="${__'course.'+${course_type}+'.active'__}" th:switch="!${course.finalisedFlag} and !${__'course.'+${course_type}+'.surveyEditedFlag'__}">
+                                    <td th:case="true" class="text-center hide_me">
+                                        <a th:if="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
+                                    </td>
+                                    <td th:case="false" class="text-center hide_me">
+                                        <a th:if="!${course.finalisedFlag}" type="button" class="btn btn-link p-0 align-middle hide_me mr-2" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="left" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
+                                        <a th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/previewsurvey?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.previewSurvey}"><i class="fa fa-eye"></i></a>
+                                    </td>
+                                </th:block>
+                                <td th:if="!${__'course.'+${course_type}+'.active'__}"> </td>
+                                <!--6th Col-->
+                                <th:block th:switch="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}">
+                                    <td th:case="true" class="text-center">
+                                        <th:block th:switch="!${course.finalisedFlag} and !${__'course.'+${course_type}+'.surveyEditedFlag'__}">
+                                            <span th:case="true">none</span>
+                                            <th:block th:case="false">
+                                                <th:block th:switch="${__'course.'+${course_type}+'.surveyEditedFlag'__}">
+                                                    <span th:case="true">custom</span>
+                                                    <span th:case="false">default</span>
+                                                </th:block>
+                                            </th:block>
+                                        </th:block>
+                                    </td>
+                                    <td th:case="false"></td>
+                                </th:block>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
                 </div>
+            </div>
 
-                <div class="col-3" th:if="!${course.finalisedFlag}"></div>
+            <div class="col-3" th:if="!${course.finalisedFlag}"></div>
 
-                <!--QR Codes-->
-                <div class="col-3" th:if="${course.finalisedFlag}">
-                    <h5 class="font-weight-bold text-center" th:text="#{detail.QR}">QR CODES</h5>
-                    <div class="row justify-content-md-center">
-                        <div class="carousel-border border border-secondary p-1 position-relative">
-                            <div id="carouselExampleIndicators" class="carousel slide" interval="false">
+            <!--QR Codes-->
+            <div class="col-3" th:if="${course.finalisedFlag}">
+                <h5 class="font-weight-bold text-center" th:text="#{detail.QR}">QR CODES</h5>
+                <div class="row justify-content-md-center">
+                    <div class="carousel-border border border-secondary p-1 position-relative">
+                        <div id="carouselExampleIndicators" class="carousel slide" interval="false">
 
-                                <ol class="carousel-indicators">
-                                    <li th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" data-target="#carouselExampleIndicators" data-slide-to="0"></li>
-                                </ol>
+                            <ol class="carousel-indicators">
+                                <li th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.active'__}" data-target="#carouselExampleIndicators" data-slide-to="0"></li>
+                            </ol>
 
-                                <div class="carousel-inner">
+                            <div class="carousel-inner">
 
-                                    <div th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="carousel-item">
-                                        <img class="d-block w-100 mb-5" th:src="'data:image/jpeg;base64,' + ${__${course_type} + 'QRCode'__}" alt=">.<">
-                                        <div class="carousel-caption text-dark d-block mb-1">
-                                            <h5 th:text="#{${course_type}}">TEXT</h5>
-                                        </div>
+                                <div th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.active'__}" class="carousel-item">
+                                    <img class="d-block w-100 mb-5" th:src="'data:image/jpeg;base64,' + ${__${course_type} + 'QRCode'__}" alt=">.<">
+                                    <div class="carousel-caption text-dark d-block mb-1">
+                                        <h5 th:text="#{${course_type}}">TEXT</h5>
                                     </div>
-
-                                    <div th:if="${!course.lecture.surveyEditedFlag and !course.tutorial.surveyEditedFlag and !course.seminar.surveyEditedFlag and !course.practical.surveyEditedFlag}" class="carousel-item">
-                                        <img class="d-block w-100 mb-5 bg-dark" src="..." alt="" style="width: 300px; height: 300px;">
-                                        <div class="carousel-caption text-dark d-block mb-0">
-                                            <h5>No Surveys yet</h5>
-                                        </div>
-                                    </div>
-
                                 </div>
 
-                                <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden></span>
-                                    <span class="sr-only">Previous</span>
-                                </a>
-                                <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden></span>
-                                    <span class="sr-only">Next</span>
-                                </a>
-                                
+                                <div th:if="${!course.lecture.active and !course.tutorial.active and !course.seminar.active and !course.practical.active}" class="carousel-item">
+                                    <img class="d-block w-100 mb-5 bg-dark" src="..." alt="" style="width: 300px; height: 300px;">
+                                    <div class="carousel-caption text-dark d-block mb-0">
+                                        <h5>No Surveys yet</h5>
+                                    </div>
+                                </div>
+
                             </div>
-                        </div>
-                    </div>
-                    <!--Download Button-->
-                    <div th:if="!${course.lecture.surveyEditedFlag and course.tutorial.surveyEditedFlag and course.seminar.surveyEditedFlag and course.practical.surveyEditedFlag}" class="col-12 text-center">
-                        <p class="m-0 font-weight-light mt-3" th:text="#{detail.download}">COPY QR-CODE</p>
-                        <div class="btn-group row" role="group" aria-label="First group">
-                            <a th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:href="${'/qrcode?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" target="_blank" href="#">TEXT</a>
-                        </div>
-                        <p class="m-0 font-weight-light mt-2" th:text="#{detail.download.link}">COPY URL</p>
-                        <div class="btn-group row" role="group" aria-label="First group">
-                            <button type="button" th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:onclick="copy_url([[${course_type}]])">TEXT</button>
-                        </div>
-                        <div class="row justify-content-center align-items-center mt-2">
-                            <p id="url-label" class="m-0" th:text="|#{copied}:|" style="display: none;">Copied: </p>
-                            <input class="url-input" th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" th:id="|${course_type}Link|" th:name="|${course_type}Link|" th:value="${__${course_type}+'Link'__}" style="display: none;" readonly>
-                        </div>
-                    </div>
 
+                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+
+                        </div>
+                    </div>
                 </div>
+                <!--Download Button-->
+                <div th:if="${course.lecture.active or course.tutorial.active or course.seminar.active or course.practical.active}" class="col-12 text-center">
+                    <p class="m-0 font-weight-light mt-3" th:text="#{detail.download}">COPY QR-CODE</p>
+                    <div class="btn-group row" role="group" aria-label="First group">
+                        <a th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.active'__}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:href="${'/qrcode?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" target="_blank" href="#">TEXT</a>
+                    </div>
+                    <p class="m-0 font-weight-light mt-2" th:text="#{detail.download.link}">COPY URL</p>
+                    <div class="btn-group row" role="group" aria-label="First group">
+                        <button type="button" th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.active'__}" class="btn btn-outline-primary btn-sm" th:text="#{'new.' + ${course_type}}" th:onclick="copy_url([[${course_type}]])">TEXT</button>
+                    </div>
+                    <div class="row justify-content-center align-items-center mt-2">
+                        <p id="url-label" class="m-0" th:text="|#{copied}:|" style="display: none;">Copied: </p>
+                        <input class="url-input" th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.active'__}" th:id="|${course_type}Link|" th:name="|${course_type}Link|" th:value="${__${course_type}+'Link'__}" style="display: none;" readonly>
+                    </div>
+                </div>
+
             </div>
-
-            <div class="row justify-content-center">
-                <button type="submit" class="status-btn blue show_me" style="display: none;">
-                    <span th:text="#{detail.finishEdit}">FINISH EDITING</span><i class="fas fa-check"></i>
-                </button>
-                <div class="ml-2 mr-2"></div>
-                <button type="button" onClick="window.location.reload();" class="status-btn show_me" style="display: none;">
-                    <span th:text="#{detail.cancelEdit}">CANCEL EDITING</span><i class="fas fa-times"></i>
-                </button>
-            </div>
-
-        </form>
-
-        <!--Final Button-->
-        <div class="row justify-content-center mb-4 hide_me" th:if="!${course.finalisedFlag}" th:switch="${titlesMissing or (surveysMissing > 0)}">
-            <a th:case="true" class="status-btn" onclick="highlight_missing()">
-                <span th:text="#{course.status.pending}">WIP</span>
-            </a>
-            <a th:case="false" class="status-btn" type="submit" data-toggle="modal" data-target="#finalizeModal">
-                <span th:text="#{course.status.pending}">WIP</span>
-            </a>
         </div>
-            
+
+        <div class="row justify-content-center">
+            <button type="submit" class="status-btn blue show_me" style="display: none;">
+                <span th:text="#{detail.finishEdit}">FINISH EDITING</span><i class="fas fa-check"></i>
+            </button>
+            <div class="ml-2 mr-2"></div>
+            <button type="button" onClick="window.location.reload();" class="status-btn show_me" style="display: none;">
+                <span th:text="#{detail.cancelEdit}">CANCEL EDITING</span><i class="fas fa-times"></i>
+            </button>
+        </div>
+
+    </form>
+
+    <!--Final Button-->
+    <div class="row justify-content-center mb-4 hide_me" th:if="!${course.finalisedFlag}" th:switch="${titlesMissing or (surveysMissing > 0)}">
+        <a th:case="true" class="status-btn" onclick="highlight_missing()">
+            <span th:text="#{course.status.pending}">WIP</span>
+        </a>
+        <a th:case="false" class="status-btn" type="submit" data-toggle="modal" data-target="#finalizeModal">
+            <span th:text="#{course.status.pending}">WIP</span>
+        </a>
     </div>
-    <div th:replace="footer"></div>
+
+</div>
+<div th:replace="footer"></div>
 </body>
 <script th:inline="javascript">
     $(document).ready(function () {
