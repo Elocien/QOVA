@@ -535,7 +535,7 @@ public class CourseManagement {
     /**
      * Retrieves all {@linkplain Course}s from the repository
      *
-     * @return an {@linkplain Iterable} of a {@linkplain Course} with the given id
+     * @return an {@linkplain Iterable} of all {@linkplain Course}s
      */
     public Iterable<Course> findAll() {
         return coursesRepo.findAll();
