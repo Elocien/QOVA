@@ -472,10 +472,10 @@ public class ResponseManagement {
                 JSONObject currentJsonObject = resultsArray.getJSONObject(pos);
                 if (currentJsonObject.getString("type").equals("text")){
                     resultsArray.remove(pos);
+                    pos--;
                 }
             }
         }
-
 
 
         return resultsArray;
