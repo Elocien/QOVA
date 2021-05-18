@@ -25,6 +25,9 @@
                 <div sec:authorize="isAnonymous()" class="col-12 d-flex justify-content-center mt-5">
                     <a class="btn login-button" th:href="@{/survey/home}">LOGIN</a>
                 </div>
+                <div class="col-12 mt-5 text-center text-danger">
+                    <p><span class="font-weight-bold" th:text="|#{disclaimer}: |">DISCLAIMER: </span><span th:text="#{username.error.disclaimer}">DISCLAIMER TEXT</span></p>
+                </div>
             </div>                
         </div>
     </div>
