@@ -87,6 +87,13 @@ public class MiscController {
         return new HttpEntity<>(pdf, header);
     }
 
+    @GetMapping("/course/username")
+    public String getUsername(Model model, @AuthenticationPrincipal UserDetails userDetails){
+        model.addAttribute("username", userDetails.getUsername());
+
+        return "usernameDisplayPage";
+    }
+
 
 
 }
