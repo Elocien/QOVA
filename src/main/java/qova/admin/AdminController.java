@@ -79,11 +79,35 @@ public class AdminController {
         return "redirect:../course/list";
     }
 
-    @GetMapping("/username")
-    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
+    @GetMapping("/course/username")
+    public String getUsername(Model model, @AuthenticationPrincipal UserDetails userDetails){
+        model.addAttribute("username", userDetails.getUsername());
+
+        return "usernameDisplayPage";
+    }
+
     @ResponseBody
-    public String getUsername(@AuthenticationPrincipal UserDetails userDetails) {
-        return userDetails.getUsername();
+    @GetMapping("/course/userCourses")
+    public String getUserCourses(Model model, @AuthenticationPrincipal UserDetails userDetails, String userId){
+        if(userDetails.getUsername().equals("https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!YA5MO4SfcGmbXRgccVo6IMWfX0k=")){
+            String courseOwnerList = "";
+            for(Course crs : courseManagement.findByOwnerid(userId)){
+                courseOwnerList = courseOwnerList + "Course name: " + crs.getName() + " - Owner Username: " + crs.getOwnerId() + "\n\n";
+            }
+
+            return courseOwnerList;
+        }
+
+        return "home";
+    }
+
+    @ResponseBody
+    @GetMapping("/course/courseOwner")
+    public String getCourseOwner(Model model, @AuthenticationPrincipal UserDetails userDetails, @RequestParam UUID courseId){
+        if(userDetails.getUsername().equals("https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!YA5MO4SfcGmbXRgccVo6IMWfX0k=")) {
+            return courseManagement.findById(courseId).get().getOwnerId();
+        }
+        return "home";
     }
     
 
