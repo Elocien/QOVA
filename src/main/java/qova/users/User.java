@@ -54,4 +54,8 @@ public class User {
     public void setHasAcceptedUserPolicyFlag(){
         this.hasAcceptedUserPolicyFlag = true;
     }
+
+    public void setAjpPersistentId(String id) {
+        this.ajpPersistentId = id;
+    }
 }

@@ -10,6 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import qova.objects.Course;
+import qova.users.User;
+import qova.users.UserManagement;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Objects;
+import java.util.UUID;
 
 @Controller
 public class MiscController {
@@ -26,8 +32,12 @@ public class MiscController {
     private final CourseManagement courseManagement;
 
     @Autowired
-    MiscController(CourseManagement courseManagement){
+    private final UserManagement userManagement;
+
+    @Autowired
+    MiscController(CourseManagement courseManagement, UserManagement userManagement){
         this.courseManagement = Objects.requireNonNull(courseManagement);
+        this.userManagement = Objects.requireNonNull(userManagement);
     }
 
     /**
@@ -87,13 +97,23 @@ public class MiscController {
         return new HttpEntity<>(pdf, header);
     }
 
-    @GetMapping("/course/username")
-    public String getUsername(Model model, @AuthenticationPrincipal UserDetails userDetails){
-        model.addAttribute("username", userDetails.getUsername());
 
-        return "usernameDisplayPage";
-    }
 
+//    @GetMapping("fix")
+//    public String fixUsernames(){
+//        for (Course crs : courseManagement.findAll()){
+//            String ownerId = crs.getOwnerId();
+//            crs.setOwnerId(ownerId.substring(ownerId.length() - 28));
+//        }
+//
+//        for(User usr : userManagement.findAll()){
+//            String usrId = usr.getAjpPersistentId();
+//            usr.setAjpPersistentId(usrId.substring(usrId.length() - 28));
+//        }
+//
+//        return "solved";
+//    }
 
 
 }
+

@@ -243,4 +243,8 @@ public class Course {
         this.finalisedFlag = true;
     }
 
+    public void setOwnerId(String ownerId){
+        this.ownerId = ownerId;
+    }
+
 }
