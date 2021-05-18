@@ -1,0 +1,23 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <title th:text="#{title.courseBrowser}">TITLE</title>
+</head>
+
+<body>
+
+<div th:include="navbar"></div>
+
+<div style="text-align:center;vertical-align:middle;">
+  <label id="usernameText" style="position: relative; top: 40%;" th:text="Username">Username:</label>
+</div>
+<div style="text-align: center;">
+  <label id="usernameObj" style="position: relative; top: 50%;" th:text="${username}"></label>
+</div>
+
+
+<div th:replace="footer"></div>
+
+</body>
+</html>
