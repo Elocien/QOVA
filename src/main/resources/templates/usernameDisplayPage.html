@@ -9,13 +9,11 @@
 
 <div th:include="navbar"></div>
 
-<div style="text-align:center;vertical-align:middle;">
-  <label id="usernameText" style="position: relative; top: 40%;" th:text="Username">Username:</label>
+<div class="main">
+  <div style="text-align:center;">
+    <p><span th:text="|#{username}: |">Username: </span><span th:text="${username}"></span></p>
+  </div>
 </div>
-<div style="text-align: center;">
-  <label id="usernameObj" style="position: relative; top: 50%;" th:text="${username}"></label>
-</div>
-
 
 <div th:replace="footer"></div>
 
