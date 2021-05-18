@@ -45,18 +45,20 @@ public class MiscController {
      * @return home.html template
      */
     @GetMapping("/")
-    public String welcome(Model model, @AuthenticationPrincipal UserDetails userDetails, HttpServletRequest request) {
-        try {
-            String userId = userDetails.getUsername();
-            if(request.isUserInRole("ROLE_STAFF")){
-                model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
-            }
-        }
-        catch(Exception e) {
-            System.out.println(e);
-        }
+    public String welcome(){
         return "home";
     }
+
+    //    public String welcome(Model model, @AuthenticationPrincipal UserDetails userDetails, HttpServletRequest request) {
+//        try {
+//            String userId = userDetails.getUsername();
+//            if(request.isUserInRole("ROLE_STAFF")){
+//                model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
+//            }
+//        }
+//        catch(Exception e) {
+//            System.out.println(e);
+//        }
 
 
     /**
