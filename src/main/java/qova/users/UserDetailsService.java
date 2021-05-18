@@ -27,6 +27,12 @@ public class UserDetailsService implements
         //AJP_persistent-id
         String persistentId = preAuthenticatedAuthenticationToken.getPrincipal().toString();
 
+        //TODO: Uncomment to make new usernames!
+//        //Takes the last 28 charachters of the given id and generates a user from this
+//        //String is of the form: https://idp2.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!uzJJQpA7CLKz0Lixs0YMpFxJhHA=
+//        //We only take: uzJJQpA7CLKz0Lixs0YMpFxJhHA=
+//        String userName = persistentId.substring(persistentId.length() - 28);
+
         //Exception if empty
         if (persistentId.isEmpty()) {
             throw new UsernameNotFoundException("Username is empty");
