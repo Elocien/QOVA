@@ -101,21 +101,14 @@ public class MiscController {
 
 
 
-//    @GetMapping("fix")
-//    public String fixUsernames(){
-//        for (Course crs : courseManagement.findAll()){
-//            String ownerId = crs.getOwnerId();
-//            crs.setOwnerId(ownerId.substring(ownerId.length() - 28));
-//        }
-//
-//        for(User usr : userManagement.findAll()){
-//            String usrId = usr.getAjpPersistentId();
-//            usr.setAjpPersistentId(usrId.substring(usrId.length() - 28));
-//        }
-//
-//        return "solved";
-//    }
+    @GetMapping("fix")
+    public String fixUsernames(){
+        for (Course crs : courseManagement.findAll()){
+            String ownerId = crs.getOwnerId();
+            crs.setOwnerId(ownerId.replace("https://idp2.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!", "https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!"));
+        }
 
+        return "solved";
+    }
 
 }
-
