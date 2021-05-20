@@ -98,17 +98,4 @@ public class MiscController {
 
         return new HttpEntity<>(pdf, header);
     }
-
-
-
-    @GetMapping("fix")
-    public String fixUsernames(){
-        for (Course crs : courseManagement.findAll()){
-            String ownerId = crs.getOwnerId();
-            crs.setOwnerId(ownerId.replace("https://idp2.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!", "https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!"));
-        }
-
-        return "solved";
-    }
-
 }
