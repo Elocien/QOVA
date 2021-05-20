@@ -10,6 +10,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import qova.objects.Course;
+import qova.users.User;
+import qova.users.UserManagement;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +23,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Objects;
+import java.util.UUID;
 
 @Controller
 public class MiscController {
@@ -26,8 +32,12 @@ public class MiscController {
     private final CourseManagement courseManagement;
 
     @Autowired
-    MiscController(CourseManagement courseManagement){
+    private final UserManagement userManagement;
+
+    @Autowired
+    MiscController(CourseManagement courseManagement, UserManagement userManagement){
         this.courseManagement = Objects.requireNonNull(courseManagement);
+        this.userManagement = Objects.requireNonNull(userManagement);
     }
 
     /**
@@ -35,22 +45,24 @@ public class MiscController {
      * @return home.html template
      */
     @GetMapping("/")
-    public String welcome() {
-
-        //Model model, @AuthenticationPrincipal UserDetails userDetails,HttpServletRequest request
-
-//        String userId = userDetails.getUsername();
-//        if(request.isUserInRole("ROLE_STAFF")){
-//            System.out.println("lol");
-//            model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
-//        }
-
+    public String welcome(){
         return "home";
     }
 
+    //    public String welcome(Model model, @AuthenticationPrincipal UserDetails userDetails, HttpServletRequest request) {
+//        try {
+//            String userId = userDetails.getUsername();
+//            if(request.isUserInRole("ROLE_STAFF")){
+//                model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
+//            }
+//        }
+//        catch(Exception e) {
+//            System.out.println(e);
+//        }
+
 
     /**
-     * Landing Page for the application once a user is authenticated, identical to {@linkplain MiscController#welcome()}.
+     * Landing url for the application when a user logs in. After authentication, redirect to home page
      * This is used so that users enter a directory where authentication is required, thus triggering shibboleth.
      * @return home.html template
      */
