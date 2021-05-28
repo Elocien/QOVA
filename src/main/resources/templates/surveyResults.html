@@ -26,7 +26,7 @@
                         <tbody>
                             <tr>
                                 <th class="border-0" scope="row"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{new.courseName}: |">COURSE NAME: </span><span th:text="${courseName}"></span></h5></th>
-                                <th class="border-0"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{type}: |">TYPE: </span><span th:text="#{|editor.${courseType}|}"></span></h5></th>
+                                <th class="border-0"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{type}: |">TYPE: </span><span th:text="#{${courseType}}"></span></h5></th>
                                 <th class="border-0"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{course.courseDate}: |">SEMESTER: </span><span th:text="${semester}"></span></h5></th>
                             </tr>
                         </tbody>
@@ -84,6 +84,9 @@
     const resources = document.getElementById("resource-container");
     var free_text_count = 0;
     var NoS = /*[[${numberOfSubmissions}]]*/ 100;
+    var pdf_title = /*[[${pdf_title}]]*/ "survey.pdf";
+    pdf_title = pdf_title.replace(/\s/g, "_")
+    console.log(pdf_title)
 
     function bar_color(question_list) {
         for (let i = 0; i < question_list.length; ++i) {
@@ -184,7 +187,7 @@
         var results = document.getElementById("pdf").cloneNode(true);
         var opt = {
             margin:       11,
-            filename:     'surveyResults.pdf',
+            filename:     pdf_title,
             image:        { type: 'jpeg', quality: 0.98 },
             html2canvas:  { scale: 5 , windowWidth: 1920},
             jsPDF:        { unit: 'mm', format: 'letter', orientation: 'portrait' },
