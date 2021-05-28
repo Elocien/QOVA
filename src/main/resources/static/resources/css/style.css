@@ -197,9 +197,14 @@ footer {
   padding: 0 0.5rem;
 }
 .quickselect .toggles {
-  padding-top: 0.3rem;
+  padding: 0.2rem;
+  padding-top: 0.1rem;
+  padding-bottom: 0;
   background-color: white;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.quickselect .toggles > button {
+  width: 53px;
 }
 .quickselect a {
   margin: 0.3rem 0;
