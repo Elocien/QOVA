@@ -7,28 +7,39 @@
 <div th:include="navbar"></div>
 <div class="main container-fluid m-0">
 
-    <!--Banner-->
-    <div class="row justify-content-center align-items-center p-0 pt-5 mb-5">
-        <!--Logo-->
-        <div class="col-12">
-            <div class="row">
-                <div class="col-md-6 col-sm-12">
-                    <img class="logo-home float-md-right m-auto d-block" th:src="@{/resources/images/qova_logo_text.png}" src="../static/resources/images/qova_logo_text.png" alt="Logo"/>
+    <div class="row">
+        <!--Quickselect-->
+        <div class="d-none d-md-block d-lg-block d-xl-block col-auto quickselect" sec:authorize="!isAnonymous()">
+            <p th:text="#{home.quickselect}">QUICKSELECT</p>
+            <a th:text="#{course.new}" th:href="@{/course/new}">NEW COURSE</a>
+            <p class="sub-header" th:text="#{home.myCourses}">MY COURSES</p>
+            <a th:href="@{/course/list}">THIS IS A VERY LONG COURSE NAME MADE FOR TESTING</a>
+        </div>
+        <!--Banner-->
+        <div class="col">
+            <div class="row justify-content-center align-items-center p-0 pt-5 mb-5">
+                <!--Logo-->
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-md-6 col-sm-12">
+                            <img class="logo-home float-md-right m-auto d-block" th:src="@{/resources/images/qova_logo_text.png}" src="../static/resources/images/qova_logo_text.png" alt="Logo"/>
+                        </div>
+                        <div class="col-md-6 col-sm-12 d-flex align-items-center">
+                            <ul class="fancy_text font-weight-light list-unstyled home-page-list">
+                                <li>QR-Code based</li>
+                                <li>Online</li>
+                                <li>Evaluation</li>
+                            </ul>
+                        </div>
+                        <div sec:authorize="isAnonymous()" class="col-12 d-flex justify-content-center mt-5">
+                            <a class="btn login-button" th:href="@{/login}">LOGIN</a>
+                        </div>
+                        <div class="col-12 mt-5 text-center text-info">
+                            <p><span class="font-weight-bold" th:text="|#{info}: |">DISCLAIMER: </span><span th:text="#{username.error.fix}">DISCLAIMER TEXT</span></p>
+                        </div>
+                    </div>                
                 </div>
-                <div class="col-md-6 col-sm-12 d-flex align-items-center">
-                    <ul class="fancy_text font-weight-light list-unstyled home-page-list">
-                        <li>QR-Code based</li>
-                        <li>Online</li>
-                        <li>Evaluation</li>
-                    </ul>
-                </div>
-                <div sec:authorize="isAnonymous()" class="col-12 d-flex justify-content-center mt-5">
-                    <a class="btn login-button" th:href="@{/survey/home}">LOGIN</a>
-                </div>
-                <div class="col-12 mt-5 text-center text-info">
-                    <p><span class="font-weight-bold" th:text="|#{info}: |">DISCLAIMER: </span><span th:text="#{username.error.fix}">DISCLAIMER TEXT</span></p>
-                </div>
-            </div>                
+            </div>
         </div>
     </div>
 
