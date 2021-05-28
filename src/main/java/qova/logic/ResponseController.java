@@ -294,6 +294,7 @@ public class ResponseController {
             model.addAttribute("resultsJson", resultsJsonString.toString());
             model.addAttribute("courseName", course.getName());
             model.addAttribute("courseType", courseType);
+            model.addAttribute("pdf_title", (course.getName()+"_"+courseType+"_G="+group.toString()+"_I="+instance+".pdf"));
             model.addAttribute("semester", course.getCourseDate());
             model.addAttribute("numberOfSubmissions", totalNumberOfSubmissions);
 
