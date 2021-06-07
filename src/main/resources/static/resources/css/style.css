@@ -204,6 +204,7 @@ footer {
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 .quickselect .toggles > button {
+  align-self: right;
   width: 53px;
 }
 .quickselect a {
@@ -229,17 +230,6 @@ footer {
   margin-top: 0.2rem;
   border-top: 1px solid rgba(0, 0, 0, 0.1);
 }
-.about_text {
-  border-top: solid 1px var(--bright_grey);
-  background-color: rgba(255, 255, 255, 0.7);
-}
-.card-wrapper {
-  background-color: rgb(255, 255, 255);
-  padding: 1rem;
-  border: 1px solid var(--bright_grey);
-  box-shadow: 5px 5px 5px var(--bright_grey);
-  border-radius: 5px;
-}
 .login-button {
   width: 10rem;
   border: 1px solid black;
@@ -251,9 +241,6 @@ footer {
   background-color: transparent;
   color: black !important;
 }
-.card-image {
-  border-radius: 5px;
-}
 .text-wrapper h3 {
   font-weight: 500;
   padding-bottom: 1rem;
@@ -263,7 +250,47 @@ footer {
 .text-wrapper p {
   margin-top: 1rem;
 }
+.about-section {
+  padding: 3rem 0;
+  border-top: solid 1px var(--bright_grey);
+  background-color: rgba(255, 255, 255, 0.7);
+  justify-content: center !important;
+}
+@media only screen and (min-width: 1080px) {
+  #home-carousel {
+    display: flex;
+  }
+  #phone-version {
+    display: none;
+  }
+}
+@media only screen and (max-width: 1080px) {
+  #home-carousel {
+    display: none;
+  }
+  #phone-version {
+    display: flex;
+  }
+}
+#phone-version .card-wrapper {
+  box-shadow: none;
+  border-radius: none;
+  border: none;
+}
+.card-image {
+  margin: 0 1.5rem;
+  max-height: 16rem;
+  border-radius: 5px;
+}
+.card-wrapper {
+  background-color: rgb(255, 255, 255);
+  padding: 1rem;
+  border: 1px solid var(--bright_grey);
+  box-shadow: 5px 5px 5px var(--bright_grey);
+  border-radius: 5px;
+}
 #home-carousel .c_item {
+  width: 50rem;
   display: none;
 }
 #home-carousel .c_item.active {
