@@ -12,7 +12,7 @@
         <!--Quickselect-->
         <div class="d-none d-md-block d-lg-block d-xl-block col-auto quickselect" sec:authorize="!isAnonymous()" id="quickselect">
             <div class="links toggles">
-                <button class="switch_me btn btn-link text-left" onclick="switchero('quickselect')"><i class="fas fa-angle-double-left fa-lg"></i></button>
+                <button class="switch_me btn btn-link" onclick="switchero('quickselect')"><i class="fas fa-angle-double-left fa-lg"></i></button>
                 <button class="switch_me btn btn-link" onclick="switchero('quickselect')" style="display: none;"><i class="fas fa-bars"></i></button>
             </div>
             <p class="switch_me" th:text="#{home.quickselect}">QUICKSELECT</p>
@@ -28,7 +28,8 @@
         </div>
 
         <!--Everything Else-->
-        <div class="col">
+        <div class="col p-0">
+
             <!--Banner-->
             <div class="row justify-content-center align-items-center p-0 pt-5 mb-5">
                 <!--Logo-->
@@ -47,60 +48,58 @@
                         <div sec:authorize="isAnonymous()" class="col-12 d-flex justify-content-center mt-5">
                             <a class="btn login-button" th:href="@{/login}">LOGIN</a>
                         </div>
-                        <div class="col-12 mt-5 text-center text-info">
-                            <p><span class="font-weight-bold" th:text="|#{info}: |">DISCLAIMER: </span><span th:text="#{username.error.fix}">DISCLAIMER TEXT</span></p>
-                        </div>
                     </div>                
                 </div>
             </div>
         
-            <div class="row about_text justify-content-center pb-5">
-                <div class="col col-lg-8 col-md-12 col-sm-12 pt-4">
-                    
-                    <div class="row">
-                        <a class="col-1 offset-1 c_btn pr-0" onclick="move_carousel('l', 'home-carousel')">
-                            <i class="fas fa-chevron-left vertical-center"></i>
-                        </a>
-                        <div class="col-8" id="home-carousel">
-                            <div class="row c_item active card-wrapper">
-                                <div class="col col-6 pl-0">
-                                    <img class="card-image img-fluid vertical-center" th:src="@{/resources/images/manual_survey.jpg}" src="../static/resources/images/manual_survey.jpg" alt="Card image cap">
-                                </div>
-                                <div class="col col-6 d-flex align-items-center pr-0">
-                                    <div class="text-wrapper m-4">
-                                        <h3>About QOVA</h3>
-                                        <p>
-                                            QOVA is a project initiated at the faculty of medicine. QOVA aims to make the evaluation process more transparent for
-                                            students as well as mentors and lecturers. By publishing results publicly, a more detailed picture can be painted of how
-                                            relevant, engaging and informative subjects at the TU Dresden actually are, as evaluated by students.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-            
-                            <div class="row c_item card-wrapper">
-                                <div class="col col-6 pl-0">
-                                    <img class="card-image img-fluid vertical-center" th:src="@{/resources/images/work_station.jpg}" src="../static/resources/images/work_station.jpg" alt="Card image cap">
-                                </div>
-                                <div class="col col-6 d-flex align-items-center pr-0">
-                                    <div class="text-wrapper m-4">
-                                        <h3>Beta Version</h3>
-                                        <p>
-                                            The current beta 0.1 version was launched at the beginning of the winter semester 2020/2021. We are currently working on
-                                            improvements for both students and teachers, with a few features in the works for a release during the summer semester
-                                            2021. We appreciate any and all feedback!
-                                        </p>
-                                    </div>
-                                </div>
+            <!--About Section-->
+            <div class="row about-section" id="home-carousel">   
+                <a class="col-1 c_btn pr-0" onclick="move_carousel('l', 'home-carousel')"><i class="fas fa-chevron-left vertical-center"></i></a>
+                <div class="items">
+                    <div class="row c_item active card-wrapper">
+                        <div class="col col-6 pl-0">
+                            <img class="card-image img-fluid vertical-center" th:src="@{/resources/images/manual_survey.jpg}" src="../static/resources/images/manual_survey.jpg" alt="Card image cap">
+                        </div>
+                        <div class="col col-6 d-flex align-items-center pr-0">
+                            <div class="text-wrapper m-4">
+                                <h3 th:text="#{home.about.headline}"></h3>
+                                <p th:text="#{home.about.desc}"></p>
                             </div>
                         </div>
-                        <a class="col-1 c_btn pl-0" onclick="move_carousel('r', 'home-carousel')">
-                            <i class="fas fa-chevron-right vertical-center"></i>
-                        </a>
                     </div>
-        
+    
+                    <div class="row c_item card-wrapper">
+                        <div class="col col-6 pl-0">
+                            <img class="card-image img-fluid vertical-center" th:src="@{/resources/images/work_station.jpg}" src="../static/resources/images/work_station.jpg" alt="Card image cap">
+                        </div>
+                        <div class="col col-6 d-flex align-items-center pr-0">
+                            <div class="text-wrapper m-4">
+                                <h3 th:text="#{home.beta.headline}"></h3>
+                                <p th:text="#{home.beta.desc}"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a class="col-1 c_btn pl-0" onclick="move_carousel('r', 'home-carousel')"><i class="fas fa-chevron-right vertical-center"></i></a>
+            </div>
+            <div class="about-section" id="phone-version"><div class="items">
+                <div class="col col-12">
+                    <img class="card-image" th:src="@{/resources/images/manual_survey.jpg}" src="../static/resources/images/manual_survey.jpg">
+                    <div class="text-wrapper m-4">
+                        <h3 th:text="#{home.about.headline}"></h3>
+                        <p th:text="#{home.about.desc}"></p>
+                    </div>
+                </div>
+                <div class="col col-12">
+                    <img class="card-image" th:src="@{/resources/images/work_station.jpg}" src="../static/resources/images/work_station.jpg">
+                    <div class="text-wrapper m-4">
+                        <h3 th:text="#{home.beta.headline}"></h3>
+                        <p th:text="#{home.beta.desc}"></p>
+                    </div>
+                </div>
                 </div>
             </div>
+
         </div>
 
     </div>
