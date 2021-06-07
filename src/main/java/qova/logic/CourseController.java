@@ -15,6 +15,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -32,7 +34,6 @@ import qova.forms.InstanceTitleForm;
 import qova.forms.SurveyForm;
 import qova.objects.Course;
 import qova.objects.CourseInstance;
-import qova.users.CurrentUserDetails;
 
 /**
  * <p>The class responsible for all mappings relating to the subdomain ../course</p>
@@ -56,6 +57,12 @@ public class CourseController {
     @Autowired
     private final AdminManagement adminManagement;
 
+    /**
+     * Constructor, wiring in the relevant Management classes containing the business logic of the application
+     * @param courseManagement {@linkplain CourseManagement}
+     * @param responseManagement {@linkplain ResponseManagement}
+     * @param adminManagement {@linkplain AdminManagement}
+     */
     @Autowired
     CourseController(CourseManagement courseManagement, ResponseManagement responseManagement,
             AdminManagement adminManagement) {
@@ -75,10 +82,12 @@ public class CourseController {
      */
     @GetMapping("/course/list")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
-    public String courses(Model model, @AuthenticationPrincipal CurrentUserDetails userDetails) {
+    public String courses(Model model, @AuthenticationPrincipal UserDetails userDetails) {
 
+        //Retrieve username
         String userId = userDetails.getUsername();
 
+        //Add a list of all Courses, belonging to the user, to the model
         model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
         return "courses";
     }
@@ -87,63 +96,70 @@ public class CourseController {
      * The mapping allowing the viewing of individual {@linkplain Course}s. The page has inbuilt functionality to allow for the editing of a courses information.
      * @param model {@linkplain Model}
      * @param duplicateForm The form used when duplicating a {@linkplain Course}, via the {@linkplain #duplicateCourseWithNewSemester(DuplicateCourseForm, UUID)} method
-     * @param form The form used when editing the information of a {@linkplain Course}, via the {@linkplain #editCourseValidation(Model, CourseForm, BindingResult, DuplicateCourseForm, UUID)} method
+     * @param courseForm The form used when editing the information of a {@linkplain Course}, via the {@linkplain #editCourseValidation(Model, CourseForm, BindingResult, DuplicateCourseForm, UUID, UserDetails)} method
      * @param id The {@linkplain UUID} of the {@linkplain Course} being viewed
-     * @return The html page "courseDetails"
-     * @throws IOException Thrown by the qrCode generation method {@linkplain CourseManagement#generateQRCodeImage(String)}
-     * @throws WriterException Thrown by the qrCode generation method {@linkplain CourseManagement#generateQRCodeImage(String)}
+     * @param userDetails Used for retrieving the details of the {@linkplain qova.users.User}
+     * @return The html page "courseDetails" 
+     * @throws Exception Thrown by the qrCode generation method {@linkplain CourseManagement#generateQRCodeImage(String)}
      */
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     @GetMapping("course/details")
-    public String courseDetails(Model model, DuplicateCourseForm duplicateForm, CourseForm form,
-            @RequestParam(required = false) UUID id) throws IOException, WriterException {
+    public String courseDetails(Model model, DuplicateCourseForm duplicateForm, CourseForm courseForm,
+            @RequestParam(required = false) UUID id, @AuthenticationPrincipal UserDetails userDetails) throws IOException, WriterException {
 
-        // for editing purposes:
-        model.addAttribute("semesterDates", courseManagement.findSemesters());
-        model.addAttribute("form", form);
-        model.addAttribute("duplicateForm", duplicateForm);
+        //Only allow user to edit details if they own the course
+        if(courseManagement.findIfUserOwnsCourse(id, userDetails.getUsername())) {
+            //Add a list of semesters, the CourseForm and DuplicateCourseForm to model, to allow for seamless transition to the edit page, without needing a reload.
+            model.addAttribute("semesterDates", courseManagement.findSemesters());
+            model.addAttribute("form", courseForm);
+            model.addAttribute("duplicateForm", duplicateForm);
 
-        // fetch course and go to details if present
-        Optional<Course> crs = courseManagement.findById(id);
-        if (crs.isPresent()) {
-            Course course = crs.get();
+            //Fetch course and go to details if present
+            Optional<Course> crs = courseManagement.findById(id);
+            if (crs.isPresent()) {
+                Course course = crs.get();
 
-            model.addAttribute("course", course);
+                //add course to model
+                model.addAttribute("course", course);
 
-            //Used for status flags
-            model.addAttribute("surveysMissing", courseManagement.getNumberOfSurveysMissing(course));
-            model.addAttribute("titlesMissing", courseManagement.getInstanceTitlesMissingFlag(course));
+                //Used for status flags, telling the user what is needed for finalisation
+                model.addAttribute("surveysMissing", courseManagement.getNumberOfSurveysMissing(course));
+                model.addAttribute("titlesMissing", courseManagement.getInstanceTitlesMissingFlag(course));
 
-            //The DomainName
-            String domainName = "https://qova.med.tu-dresden.de";
+                //The DomainName (is https://qova.med.tu-dresden.de/ in production)
+                String domainName = "localhost:8080";
 
-            // QRCode URL (Redirects to a courses survey when scanned)
+                //QRCode URL (Redirects to a courses survey when scanned)
+                String LectureSurveyUrl = domainName + "/survey/select?type=LECTURE&id=" + course.getId() + "&mode=participant";
+                String TutorialSurveyUrl = domainName + "/survey/select?type=TUTORIAL&id=" + course.getId() + "&mode=participant";
+                String SeminarSurveyUrl = domainName + "/survey/select?type=SEMINAR&id=" + course.getId() + "&mode=participant";
+                String PracticalSurveyUrl = domainName + "/survey/select?type=PRACTICAL&id=" + course.getId() + "&mode=participant";
 
-            String LectureSurveyUrl = domainName + "/survey/select?type=LECTURE&id=" + course.getId()+"&mode=participant";
-            String TutorialSurveyUrl = domainName +  "/survey/select?type=TUTORIAL&id=" + course.getId()+"&mode=participant";
-            String SeminarSurveyUrl = domainName + "/survey/select?type=SEMINAR&id=" + course.getId()+"&mode=participant";
-            String PracticalSurveyUrl = domainName + "/survey/select?type=PRACTICAL&id=" + course.getId()+"&mode=participant";
+                //The url which can be copied by the user, which redirect to survey selection
+                model.addAttribute("lectureLink", LectureSurveyUrl);
+                model.addAttribute("tutorialLink", TutorialSurveyUrl);
+                model.addAttribute("seminarLink", SeminarSurveyUrl);
+                model.addAttribute("practicalLink", PracticalSurveyUrl);
 
+                //Generate QR-codes, encode to byte array end byte array (the QRCode image) to model
+                model.addAttribute("lectureQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(LectureSurveyUrl)));
+                model.addAttribute("tutorialQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(TutorialSurveyUrl)));
+                model.addAttribute("seminarQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(SeminarSurveyUrl)));
+                model.addAttribute("practicalQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(PracticalSurveyUrl)));
 
-            model.addAttribute("lectureLink", LectureSurveyUrl);
-            model.addAttribute("tutorialLink", TutorialSurveyUrl);
-            model.addAttribute("seminarLink", SeminarSurveyUrl);
-            model.addAttribute("practicalLink", PracticalSurveyUrl);
+                return "courseDetails";
+            }
 
-            // send byte array (the QRCode image) to model
-            model.addAttribute("lectureQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(LectureSurveyUrl)));
-            model.addAttribute("tutorialQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(TutorialSurveyUrl)));
-            model.addAttribute("seminarQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(SeminarSurveyUrl)));
-            model.addAttribute("practicalQRCode", Base64.getEncoder().encodeToString(courseManagement.generateQRCodeImage(PracticalSurveyUrl)));
-
-            return "courseDetails";
-        } else {
-            return "error";
+            //Return home if course is not present
+            else {
+                return "home";
+            }
         }
+
+        //Return user to homepage if they dont own the course
+        return "home";
     }
 
-    // Edit Course Validation (when course is updated, check wether the fields are
-    // all appropriately set e.g. NotNull)
 
     /**
      * Edit Course Validation. Validates all fields in the {@linkplain CourseForm} using {@linkplain BindingResult} to check for errors in the supplied input.
@@ -154,31 +170,34 @@ public class CourseController {
      * @param result The result of the validation, containing any possible errors
      * @param duplcateCourseForm The form containing all relevant information required for duplicating a course
      * @param id The {@linkplain UUID} of the {@linkplain Course} being edited
+     * @param userDetails Used for retrieving the details of the {@linkplain qova.users.User}
      * @return The "courseDetails" html template in case of successful changes
-     * @throws IOException Thrown by the qrCode generation method {@linkplain CourseManagement#generateQRCodeImage(String)}
-     * @throws WriterException Thrown by the qrCode generation method {@linkplain CourseManagement#generateQRCodeImage(String)}
+     * @throws Exception From {{@link #courseDetails(Model, DuplicateCourseForm, CourseForm, UUID, UserDetails)}
      */
     @PostMapping("course/edit")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String editCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
-            BindingResult result, DuplicateCourseForm duplcateCourseForm, @RequestParam UUID id) throws IOException, WriterException {
+            BindingResult result, DuplicateCourseForm duplcateCourseForm, @RequestParam UUID id, @AuthenticationPrincipal UserDetails userDetails) throws IOException, WriterException {
 
-        //If the validation on the form finds any errors on the user input, then the user is returned to the details page of the course,
-        //with no changes taking place
-        if (result.hasErrors()) {
-            System.out.println(result.getAllErrors());
-            return courseDetails(model, duplcateCourseForm, form, id);
-        }
+        //Only allow user to edit details if they own the course
+        if(courseManagement.findIfUserOwnsCourse(id, userDetails.getUsername())){
 
-        //If no errors were found in the form, the course is retrieved. If the course is finalised, no changes occur, otherwise the changes are
-        //loaded from the form and applied to the given course object
-        Optional<Course> crs = courseManagement.findById(id);
-        if (crs.isPresent()) {
-            if (Boolean.TRUE.equals(crs.get().getFinalisedFlag())) {
-                return courseDetails(model, duplcateCourseForm, form, id);
+            //If the validation on the form finds any errors on the user input, then the user is returned to the details page of the course,
+            //with no changes taking place
+            if (result.hasErrors()) {
+                return courseDetails(model, duplcateCourseForm, form, id, userDetails);
             }
-            courseManagement.updateCourseDetails(id, form);
-            return "redirect:/course/details?id=" + id;
+
+            //If no errors were found in the form, the course is retrieved. If the course is finalised, no changes occur, otherwise the changes are
+            //loaded from the form and applied to the given course object
+            Optional<Course> crs = courseManagement.findById(id);
+            if (crs.isPresent()) {
+                if (Boolean.TRUE.equals(crs.get().getFinalisedFlag())) {
+                    return courseDetails(model, duplcateCourseForm, form, id, userDetails);
+                }
+                courseManagement.updateCourseDetails(id, form);
+                return "redirect:/course/details?id=" + id;
+            }
         }
 
         //If the course is not present for whatever reason, redirect to the homepage. This is however not really plausible, since the user must be on the
@@ -251,7 +270,7 @@ public class CourseController {
     @PostMapping("course/new")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String createCourseValidation(Model model, @Valid @ModelAttribute("form") CourseForm form,
-                                         BindingResult result,  @AuthenticationPrincipal CurrentUserDetails userDetails) {
+                                         BindingResult result,  @AuthenticationPrincipal UserDetails userDetails) {
 
         //If the validation on the form finds any errors on the user input, then the user is returned to the inital course creation page,
         //with no changes taking place
@@ -341,11 +360,11 @@ public class CourseController {
      * Course deletion mapping
      * @param id {@linkplain UUID} of the {@linkplain Course}
      * @param userDetails Used for retrieving the details of the {@linkplain qova.users.User}                           
-     * @return A redirect to {@linkplain #courses(Model, CurrentUserDetails)}
+     * @return A redirect to {@linkplain #courses(Model, UserDetails)}
      */
     @GetMapping("course/delete")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
-    public String deleteCourse(@RequestParam UUID id, @AuthenticationPrincipal CurrentUserDetails userDetails) {
+    public String deleteCourse(@RequestParam UUID id, @AuthenticationPrincipal UserDetails userDetails) {
         if(courseManagement.findIfUserOwnsCourse(id, userDetails.getUsername())){
             courseManagement.deleteCourse(id);
         }
@@ -373,32 +392,38 @@ public class CourseController {
      * Mappping for finalising a course. Once a Course is finalised, all relevant objects are serialised in the database, allowing results to be captured.
      * Finalisation is more described in more detail in the documentation
      * @param id {@linkplain UUID} of the {@linkplain Course}
+     * @param userDetails Used for retrieving the details of the {@linkplain qova.users.User}
      * @return The "courseDetails" html template of the finalised course (reloads the same page essentially)
      */
     @GetMapping("course/finalise")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
-    public String finaliseCourse(@RequestParam UUID id) {
+    public String finaliseCourse(@RequestParam UUID id, @AuthenticationPrincipal UserDetails userDetails) {
 
-        courseManagement.setCourseFinalised(id);
+        //Only allow user to edit details if they own the course
+        if (courseManagement.findIfUserOwnsCourse(id, userDetails.getUsername())) {
 
-        Optional<Course> course = courseManagement.findById(id);
-        if (course.isPresent()) {
-            for (CourseType courseType : CourseType.values()) {
+            //Set the field in the course finalised flag in the relevant course object
+            courseManagement.setCourseFinalised(id);
 
-                String completeSurvey = adminManagement.concatenateDefaultSurveyToSurveyString(
-                        courseManagement.getSurveyforType(id, courseType), courseType);
+            Optional<Course> course = courseManagement.findById(id);
+            if (course.isPresent()) {
+                for (CourseType courseType : CourseType.values()) {
 
-                try {
-                    new JSONArray(completeSurvey);
-                } catch (Exception e) {
-                    return "redirect:../course/details" + "?id=" + id;
+                    String completeSurvey = adminManagement.concatenateDefaultSurveyToSurveyString(
+                            courseManagement.getSurveyforType(id, courseType), courseType);
+
+                    try {
+                        new JSONArray(completeSurvey);
+                    } catch (Exception e) {
+                        return "redirect:../course/details" + "?id=" + id;
+                    }
+
+                    // Create JSON Array
+                    JSONArray survey = new JSONArray(completeSurvey);
+
+                    // Create the relevant objects
+                    responseManagement.createSurveyResponse(survey, course.get(), courseType);
                 }
-
-                // Create JSON Array
-                JSONArray survey = new JSONArray(completeSurvey);
-
-                // Create the relevant objects
-                responseManagement.createSurveyResponse(survey, course.get(), courseType);
             }
         }
 
@@ -509,7 +534,6 @@ public class CourseController {
             // Sets the survey string for a given course (takes the default survey and
             // conncatenates it with the create survey)
             courseManagement.setSurveyforType(course.get(), type, form.getQuestionnaireJson());
-
 
             // Redirect back to CourseDetails page
             return "redirect:../course/details" + "?id=" + id;
