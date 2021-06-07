@@ -4,26 +4,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import qova.objects.Course;
-import qova.users.User;
+
 import qova.users.UserManagement;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.File;
+
 import java.io.IOException;
-import java.nio.file.Files;
+
 import java.util.Objects;
-import java.util.UUID;
+
 
 @Controller
 public class MiscController {
@@ -45,20 +43,22 @@ public class MiscController {
      * @return home.html template
      */
     @GetMapping("/")
-    public String welcome(){
+    public String welcome(Model model, @AuthenticationPrincipal UserDetails userDetails, HttpServletRequest request){
+
+        //Workaround.
+        //Get the username and subsequently find all courses belonging to the user
+        try {
+            String userId = userDetails.getUsername();
+            if(request.isUserInRole("ROLE_STAFF")){
+                model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
+            }
+        }
+        //If the user is not logged in, catch the nullpointer thrown by userDetails
+        catch (NullPointerException e){
+        }
+
         return "home";
     }
-
-    //    public String welcome(Model model, @AuthenticationPrincipal UserDetails userDetails, HttpServletRequest request) {
-//        try {
-//            String userId = userDetails.getUsername();
-//            if(request.isUserInRole("ROLE_STAFF")){
-//                model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
-//            }
-//        }
-//        catch(Exception e) {
-//            System.out.println(e);
-//        }
 
 
     /**
