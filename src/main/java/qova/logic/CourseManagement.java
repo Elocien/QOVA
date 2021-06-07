@@ -4,12 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import qova.admin.DefaultSurvey;
 import qova.enums.CourseFaculty;
 import qova.enums.CourseType;
 import qova.forms.CourseForm;
+import qova.forms.DuplicateCourseForm;
 import qova.forms.InstanceTitleForm;
 import qova.objects.Course;
 import qova.objects.CourseInstance;
@@ -39,6 +43,9 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
+/**
+ * The class responsible for all business logic relating to the mappings in the {@linkplain CourseController}.
+ */
 @Service
 @Transactional
 public class CourseManagement {
@@ -59,6 +66,15 @@ public class CourseManagement {
     }
 
     // Create Course and get Id from new course
+
+    /**
+     * Create a new {@linkplain Course} object and return its newly generated Id to the controller, so that the user may be redirected to the course instances
+     * page of the newly created course
+     * @param userId The id of the {@linkplain qova.users.User}
+     * @param form {@linkplain CourseForm}
+     * @param defaultSurveyMap An {@linkplain EnumMap} containing the {@linkplain CourseType} Enumeration as the key and its corresponding default survey as the value
+     * @return The id of the newly created {@linkplain Course}
+     */
     public UUID createCourseAndCourseInstanceAndReturnCourseId(String userId, CourseForm form, EnumMap<CourseType, DefaultSurvey> defaultSurveyMap) {
         Objects.requireNonNull(form);
 
@@ -81,8 +97,25 @@ public class CourseManagement {
         return crs.getId();
     }
 
-    // Method for createing CourseInstances
 
+    /**
+     * <p>
+     *     A helper method user to create the {@linkplain CourseInstance} objects required above in
+     *     {@linkplain #createCourseAndCourseInstanceAndReturnCourseId(String, CourseForm, EnumMap)}.
+     * </p>
+     *
+     * <p>
+     *     The method takes the values from the {@linkplain CourseForm} to create and serialise a new {@linkplain CourseInstance} for the newly created course.
+     *     It differentiates between active and inactive {@linkplain CourseInstance} objects, but generates one for each {@linkplain CourseType} regardless.
+     * </p>
+     *
+     * <p>
+     *     A further functionality is populating the instance title arrays, so that they may be passed to the frontend and populated.
+     * </p>
+     * @param form {@linkplain CourseForm}
+     * @param defaultSurveyMap An {@linkplain EnumMap} containing the {@linkplain CourseType} Enumeration as the key and its corresponding default survey as the value
+     * @return
+     */
     private Map<CourseType, CourseInstance> createCourseInstances(CourseForm form, EnumMap<CourseType, DefaultSurvey> defaultSurveyMap) {
 
         // Map containing CourseInstances, with CourseType as key
@@ -97,6 +130,7 @@ public class CourseManagement {
                 // form.getGroupAmountLecture)
                 Integer groupAmount;
 
+                //If lecture
                 if (courseType.equals(CourseType.LECTURE)) {
                     groupAmount = 1;
                 }
@@ -143,7 +177,12 @@ public class CourseManagement {
         return courseInstances;
     }
 
-    // update course details
+    /**
+     * The method called when {@linkplain CourseController#editCourseValidation(Model, CourseForm, BindingResult, DuplicateCourseForm, UUID, UserDetails)} is
+     * executed. It allows the updating of various attributes of a {@linkplain Course} object, so long as that course is not yet finalised.
+     * @param id Id of the {@linkplain Course}
+     * @param form {@linkplain CourseForm} containing all fields of the course which can be edited
+     */
     public void updateCourseDetails(UUID id, CourseForm form) {
 
         Optional<Course> crs = coursesRepo.findById(id);
@@ -152,13 +191,10 @@ public class CourseManagement {
             // The existing course object being edited
             Course course = crs.get();
 
-            // These attributes are always editable!
             course.setName(form.getName());
             course.setSemesterOfStudents(form.getSemesterOfStudents());
             course.setFaculty(form.getFaculty());
             course.setSemesterString(form.getSemesterString());
-
-            // These attributes are NOT editable, when the instance has been finalised!!!
 
             for (CourseType courseType : CourseType.values()) {
                 // Instance EXISTS, but is toggled OFF
@@ -210,13 +246,17 @@ public class CourseManagement {
                     instance.setInstanceAmount(form.getInstanceAmount(courseType));
                 }
             }
-
-            // We are intentionally not allowing the option to edit the CourseDate of
-            // SemesterString
         }
     }
 
     // Set Instance titles for each CourseInstance
+
+    /**
+     * The method used to set the instance titles for each {@linkplain CourseInstance}.
+     * Used in {@linkplain CourseController#createCourseSetInstanceTitlesValidation(Model, InstanceTitleForm, UUID, BindingResult)}
+     * @param form {@linkplain InstanceTitleForm}
+     * @param id the id of the {@linkplain Course} object
+     */
     public void createCourseSetInstanceTitles(InstanceTitleForm form, UUID id) {
         Optional<Course> crs = coursesRepo.findById(id);
         if (crs.isPresent()) {
