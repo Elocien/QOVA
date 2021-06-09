@@ -210,19 +210,36 @@ footer {
 .quickselect a {
   margin: 0.3rem 0;
   line-height: 85%;
-  color: rgb(80, 80, 80);
+  color: black;
 }
 .quickselect a:hover {
-  color: black;
+  color: var(--tu_blue_light);
   text-decoration: none;
 }
+.quickselect .no-link {
+  padding: 0.3rem 0.5rem;
+  color: white;
+  border-radius: 3px;
+  background-color: var(--tu_blue_light);
+}
+.quickselect .no-link:hover {
+  border: 1px solid black;
+  color: black;
+  background-color: transparent;
+} 
 .quickselect .links {
   display: flex;
   flex-direction: column;
 }
+.quickselect .link {
+  text-align: left;
+}
+.quickselect .link:hover {
+  color: var(--tu_blue_light);
+}
 .quickselect > p {
   font-size: 110%;
-  color: black;
+  color: rgb(80, 80, 80);
   margin: 0;
 }
 .quickselect > .sub-header {

@@ -16,14 +16,16 @@
                 <button class="switch_me btn btn-link" onclick="switchero('quickselect')" style="display: none;"><i class="fas fa-bars"></i></button>
             </div>
             <p class="switch_me" th:text="#{home.quickselect}">QUICKSELECT</p>
-            <div class="links switch_me">
-                <a th:text="#{course.new}" th:href="@{/course/new}">NEW COURSE</a>
+            <div class="links">
+                <a type="button" class="switch_me no-link" th:href="@{/course/new}">
+                    <i class="fas fa-plus pr-2"></i><span th:text="#{course.new}">NEW COURSE</span>
+                </a>
             </div>
             <p class="sub-header switch_me" th:text="#{home.myCourses}">MY COURSES</p>
             <div class="links switch_me">
-                <a th:href="@{/course/list}">THIS IS A VERY LONG COURSE NAME MADE FOR TESTING</a>
-                <a th:href="@{/course/list}">ANOTHER COURSE NAME</a>
-                <a th:href="@{/course/list}">YET ANOTHER SHORT COURSE NAME</a>
+                <a type="button" class="switch_me link" th:href="@{/course/list}">
+                    <i class="fas fa-book pr-2"></i><span>THIS IS A VERY LONG COURSE NAME MADE FOR TESTING</span>
+                </a>
             </div>
         </div>
 
@@ -31,7 +33,7 @@
         <div class="col p-0">
 
             <!--Banner-->
-            <div class="row justify-content-center align-items-center p-0 pt-5 mb-5">
+            <div class="row justify-content-center align-items-center p-0 pt-5 mb-5 ml-0 mr-0">
                 <!--Logo-->
                 <div class="col-12">
                     <div class="row">
@@ -53,7 +55,7 @@
             </div>
         
             <!--About Section-->
-            <div class="row about-section" id="home-carousel">   
+            <div class="row ml-0 mr-0 about-section" id="home-carousel">   
                 <a class="col-1 c_btn pr-0" onclick="move_carousel('l', 'home-carousel')"><i class="fas fa-chevron-left vertical-center"></i></a>
                 <div class="items">
                     <div class="row c_item active card-wrapper">
