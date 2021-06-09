@@ -2,6 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" >
 <head>
 	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/survey.css}" />
+	<link rel="stylesheet" type="text/css" th:href="@{/resources/css/questioneditor.css}" />
 	<title th:text="#{title.preview}">TITLE</title>
 </head>
 <body>
@@ -20,6 +21,7 @@
 			<div class="col-md-3"></div>
 			<!-- Survey-->
 			<div class="col-md-6">
+				<div id="default_questionnaire"></div>
 				<div id="survey"></div>
 				<div class="Edit Buttons mt-3 mb-6" th:if="!${finalised}">
 					<div class="row mt-2 text-center justify-content-center	mr-auto ml-2">
@@ -44,16 +46,13 @@
 
 	//onload buildt the survey clientside
 	window.onload = function () {
-		for ( let i=0; i < survey.length; i++){
-			defaultsurvey.push(survey[i]);
-
-		}
-		defaultsurvey.forEach(renderquestion);
-		console.log(defaultsurvey);
-
+		survey.forEach((Value, Index, Array) => renderquestion(Value, Index, Array, "survey"))
+		defaultsurvey.forEach((Value, Index, Array) => renderquestion(Value, Index, Array, "default_questionnaire"));
 	}
 
-	function renderquestion (value,index,array){
+	function renderquestion (value,index,array, final_destination){
+
+		console.log(final_destination)
 
 		const x = document.createElement("DIV");
 
@@ -69,7 +68,6 @@
 		left.className = "col-md-12 pl-0";
 
 		left.appendChild(index_number);
-
 
 		//Part for the question
 		const question = document.createElement("h4");
@@ -144,6 +142,7 @@
 			x.appendChild(div);
 
 		}
+
 		else if (value.type === "OnetoFive") {
 
 			x.className = "container bg-white border border-secondary rounded mt-4 SingleChoice";
@@ -195,10 +194,6 @@
 
 			x.appendChild(selectionOption);
 
-
-
-
-
 		}
 
 		else if (value.type === "SingleChoice") {
@@ -232,10 +227,6 @@
 				}
 
 				x.appendChild(selectionOption);
-
-
-
-
 
 		}
 		else if (value.type === "MultipleChoice") {
@@ -279,18 +270,12 @@
 			x.appendChild(selectionOption);
 			x.appendChild(footer);
 
-
-
 		}
 
-		document.getElementById("survey").appendChild(x);
+		document.getElementById(final_destination).appendChild(x);
 
 
 	}
-
-
-
-
 
 </script>
 </body>
