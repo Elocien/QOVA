@@ -32,7 +32,6 @@
                         <button type="button" class="btn btn-list btn-text-right" onclick="question_new('OnetoFive')"><span th:text="#{question.onetofive-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                         <button type="button" class="btn btn-list btn-text-right" onclick="question_new('FreeText')"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                         <button type="button" class="btn btn-head btn-text-right" th:text="#{question.edit}">OPTIONS</button>
-                        <a type="button" class="btn btn-list btn-text-right" th:href="@{/course/details(id=${id})}" th:text="#{question.back}"></a>
                         <form th:action="@{/course/previewsurvey?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="previewsurvey" style="width:100%">
                             <input type="text" name="questionnairejson" id="questionnairejson2" class="input"></input>
                             <button class="btn btn-list btn-text-right" type="submit" ><span th:text="#{question.preview}"></span><i class="fa fa-eye ml-2"></i></i></button>
@@ -41,6 +40,7 @@
                             <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
                             <button class="btn btn-list-last btn-text-right" type="submit"><span th:text="#{question.save}"></span><i class="fas fa-save custom-save ml-2"></i></button>
                         </form>
+                        <a type="button" class="btn btn-list btn-text-right" onclick="history.back()" th:text="#{question.back}"></a>
                     </div>
                 </div>
             </div>
@@ -73,7 +73,7 @@
                                 <button class="btn btn-link nounderline pull-right m-1" onclick="question_move(this, 'down')" data-toggle="tooltip" data-placement="top" data-original-title="Move down one position"><i class="fa fa-arrow-down"></i></button>
                             </div>
                         </div>
-                        <textarea class="row question-row Textarea Question ml-1 mr-1" maxlength="1024" placeholder="Question" style="height: 1px; overflow-y: hidden;"></textarea>
+                        <textarea class="row question-row Textarea Question ml-1 mr-1" maxlength="1024" th:placeholder="#{Question}" style="height: 1px; overflow-y: hidden;"></textarea>
                         <div class="row options-row ml-4">
                             <div class="col-12 answer-col"></div>
 
@@ -87,7 +87,7 @@
                     <!--Answer Template-->
                     <div class="row" id="answer_template">
                         <div class="col-auto d-flex align-items-center"><i class="far align-middle fa-circle"></i></div>
-                        <div class="col-7"><textarea class="Textarea Question ml-1 mr-1" maxlength="1024" placeholder="Answer" style="height: 1px; overflow-y: hidden;"></textarea></div>
+                        <div class="col-7"><textarea class="Textarea Question ml-1 mr-1" maxlength="1024" th:placeholder="#{Answer}" style="height: 1px; overflow-y: hidden;"></textarea></div>
                         <div class="col-4 d-flex align-items-center answer-options not-default">
                             <button class="btn btn-link nounderline" onclick="answer_delete(this)"><i class="fa fa-trash"></i></button>
                             <button class="btn btn-link nounderline" onclick="answer_clone(this)"><i class="fa fa-clone"></i></button>
