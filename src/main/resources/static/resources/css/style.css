@@ -169,8 +169,8 @@ footer {
   flex-direction: row;
   flex-wrap: wrap;
   margin: none;
-  margin-top: 9rem;
-  margin-bottom: 10rem;
+  margin-top: 4rem;
+  margin-bottom: 5rem;
   justify-content: center;
   align-items: center;
 }
@@ -284,7 +284,7 @@ footer {
   background-color: rgba(255, 255, 255, 0.7);
   justify-content: center !important;
 }
-@media only screen and (min-width: 1080px) {
+@media only screen and (min-width: 1140px) {
   #home-carousel {
     display: flex;
   }
@@ -292,11 +292,11 @@ footer {
     display: none;
   }
 }
-@media only screen and (max-width: 1080px) {
+@media only screen and (max-width: 1140px) {
   #home-carousel-wrapper {
     display: none;
   }
-  #home-carousel {
+  #quickselect {
     display: none;
   }
   #phone-version {
