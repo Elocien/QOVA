@@ -164,6 +164,16 @@ footer {
 }
 
 /*home.html start*/
+.banner {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: none;
+  margin-top: 9rem;
+  margin-bottom: 10rem;
+  justify-content: center;
+  align-items: center;
+}
 .fancy_text {
   font-size: xx-large;
   letter-spacing: 0.4rem;
@@ -185,6 +195,7 @@ footer {
   }
 }
 .quickselect {
+  min-height: 100vh;
   margin-top: -1rem;
   padding: 0;
   max-width: 20rem;

@@ -33,7 +33,7 @@
         <div class="col p-0">
 
             <!--Banner-->
-            <div class="row justify-content-center align-items-center p-0 pt-5 mb-5 ml-0 mr-0">
+            <div class="banner">
                 <!--Logo-->
                 <div class="col-12">
                     <div class="row">
@@ -84,21 +84,22 @@
                 </div>
                 <a class="col-1 c_btn pl-0" onclick="move_carousel('r', 'home-carousel')"><i class="fas fa-chevron-right vertical-center"></i></a>
             </div>
-            <div class="about-section" id="phone-version"><div class="items">
-                <div class="col col-12">
-                    <img class="card-image" th:src="@{/resources/images/manual_survey.jpg}" src="../static/resources/images/manual_survey.jpg">
-                    <div class="text-wrapper m-4">
-                        <h3 th:text="#{home.about.headline}"></h3>
-                        <p th:text="#{home.about.desc}"></p>
+            <div class="about-section" id="phone-version">
+                <div class="items">
+                    <div class="col col-12">
+                        <img class="card-image" th:src="@{/resources/images/manual_survey.jpg}" src="../static/resources/images/manual_survey.jpg">
+                        <div class="text-wrapper m-4">
+                            <h3 th:text="#{home.about.headline}"></h3>
+                            <p th:text="#{home.about.desc}"></p>
+                        </div>
                     </div>
-                </div>
-                <div class="col col-12">
-                    <img class="card-image" th:src="@{/resources/images/work_station.jpg}" src="../static/resources/images/work_station.jpg">
-                    <div class="text-wrapper m-4">
-                        <h3 th:text="#{home.beta.headline}"></h3>
-                        <p th:text="#{home.beta.desc}"></p>
+                    <div class="col col-12">
+                        <img class="card-image" th:src="@{/resources/images/work_station.jpg}" src="../static/resources/images/work_station.jpg">
+                        <div class="text-wrapper m-4">
+                            <h3 th:text="#{home.beta.headline}"></h3>
+                            <p th:text="#{home.beta.desc}"></p>
+                        </div>
                     </div>
-                </div>
                 </div>
             </div>
 
