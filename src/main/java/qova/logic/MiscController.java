@@ -40,6 +40,9 @@ public class MiscController {
 
     /**
      * Landing Page for the application
+     * @param model {@linkplain Model}
+     * @param userDetails {@linkplain UserDetails}
+     * @param request {@linkplain HttpServletRequest}
      * @return home.html template
      */
     @GetMapping("/")

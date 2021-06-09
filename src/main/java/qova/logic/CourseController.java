@@ -99,8 +99,9 @@ public class CourseController {
      * @param courseForm The form used when editing the information of a {@linkplain Course}, via the {@linkplain #editCourseValidation(Model, CourseForm, BindingResult, DuplicateCourseForm, UUID, UserDetails)} method
      * @param id The {@linkplain UUID} of the {@linkplain Course} being viewed
      * @param userDetails Used for retrieving the details of the {@linkplain qova.users.User}
-     * @return The html page "courseDetails" 
-     * @throws Exception Thrown by the qrCode generation method {@linkplain CourseManagement#generateQRCodeImage(String)}
+     * @return The html page "courseDetails"
+     * @throws IOException QR-code gen
+     * @throws WriterException QR-code gen
      */
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     @GetMapping("course/details")
@@ -172,7 +173,8 @@ public class CourseController {
      * @param id The {@linkplain UUID} of the {@linkplain Course} being edited
      * @param userDetails Used for retrieving the details of the {@linkplain qova.users.User}
      * @return The "courseDetails" html template in case of successful changes
-     * @throws Exception From {{@link #courseDetails(Model, DuplicateCourseForm, CourseForm, UUID, UserDetails)}
+     * @throws IOException QR-code gen
+     * @throws WriterException QR-code gen
      */
     @PostMapping("course/edit")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
