@@ -30,7 +30,7 @@
                         </div>
                         <div class="modal-footer text-center">
                             <div class="w-100"></div>
-                            <button type="submit" class="btn btn-primary">Finish</button>
+                            <button type="submit" class="btn btn-primary" th:text="#{Submit}">Finish</button>
                             <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
                             <div class="w-100"></div>
                         </div>
@@ -46,8 +46,8 @@
                     </div>
                     <div class="modal-footer text-center">
                         <div class="w-100"></div>
-                        <a th:href="@{/course/delete?id=__${course.id}__}" method="post" class="btn btn-primary">Yes</a>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">Cancel</button>
+                        <a th:href="@{/course/delete?id=__${course.id}__}" method="post" class="btn btn-primary" th:text="#{Yes}">YES</a>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" th:text="#{cancel}">CANCEL</button>
                         <div class="w-100"></div>
                     </div>
                 </div>
