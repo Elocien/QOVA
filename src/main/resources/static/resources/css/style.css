@@ -282,12 +282,19 @@ footer {
   }
 }
 @media only screen and (max-width: 1080px) {
+  #home-carousel-wrapper {
+    display: none;
+  }
   #home-carousel {
     display: none;
   }
   #phone-version {
     display: flex;
   }
+}
+#home-carousel {
+  justify-content: center;
+  align-items: center;
 }
 #phone-version .card-wrapper {
   box-shadow: none;
