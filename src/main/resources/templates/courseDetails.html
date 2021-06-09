@@ -140,7 +140,7 @@
                                         <td th:switch="${surveysMissing}">
                                             <p th:case="0" class="text-success m-0" th:text="#{course.survey.finished}">FINISHED</p>
                                             <th:block th:case="*">
-                                                <p class="text-warning m-0"><span th:text="${surveysMissing}">X</span><span> </span><span th:text="#{course.survey.missing}">MISSING</span></p>
+                                                <p class="text-warning m-0" th:text="${surveysMissing}">X</p>
                                                 <div id="surveyMissingHelp" style="display: none;">
                                                     <p class="m-0" th:text="#{course.survey.missing.help}">DO U WANT TO INITILIZE THE REMAINING SURVEYS AS DEFAULT SURVEYS?</p>
                                                     <div>
@@ -209,11 +209,11 @@
                                         <th:block th:switch="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}">
                                             <td th:case="true" class="text-center">
                                                 <th:block th:switch="!${course.finalisedFlag} and !${__'course.'+${course_type}+'.surveyEditedFlag'__}">
-                                                    <span th:case="true">none</span>
+                                                    <span th:case="true" th:text="#{none}">none</span>
                                                     <th:block th:case="false">
                                                         <th:block th:switch="${__'course.'+${course_type}+'.surveyEditedFlag'__}">
-                                                            <span th:case="true">custom</span>
-                                                            <span th:case="false">default</span>                                                            
+                                                            <span th:case="true" th:text="#{custom}">custom</span>
+                                                            <span th:case="false" th:text="#{default}">default</span>                                                            
                                                         </th:block>
                                                     </th:block>
                                                 </th:block>
