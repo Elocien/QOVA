@@ -7,7 +7,7 @@
 <div th:include="navbar"></div>
 <div class="main container-fluid m-0">
     
-    <div class="row" style="min-height: 70vh;">
+    <div class="row">
         
         <!--Quickselect-->
         <div class="d-none d-md-block d-lg-block d-xl-block col-auto quickselect" sec:authorize="!isAnonymous()" id="quickselect">
@@ -55,36 +55,34 @@
             </div>
         
             <!--About Section-->
-            <div class="col about-section">
-                <div class="row ml-0 mr-0" id="home-carousel">
-                    <a class="col-1 c_btn pr-0" onclick="move_carousel('l', 'home-carousel')"><i class="fas fa-chevron-left vertical-center"></i></a>
-                    <div class="items">
-                        <div class="row c_item active card-wrapper">
-                            <div class="col col-6 pl-0">
-                                <img class="card-image img-fluid vertical-center" th:src="@{/resources/images/manual_survey.jpg}" src="../static/resources/images/manual_survey.jpg" alt="Card image cap">
-                            </div>
-                            <div class="col col-6 d-flex align-items-center pr-0">
-                                <div class="text-wrapper m-4">
-                                    <h3 th:text="#{home.about.headline}"></h3>
-                                    <p th:text="#{home.about.desc}"></p>
-                                </div>
-                            </div>
+            <div class="row ml-0 mr-0 about-section" id="home-carousel">   
+                <a class="col-1 c_btn pr-0" onclick="move_carousel('l', 'home-carousel')"><i class="fas fa-chevron-left vertical-center"></i></a>
+                <div class="items">
+                    <div class="row c_item active card-wrapper">
+                        <div class="col col-6 pl-0">
+                            <img class="card-image img-fluid vertical-center" th:src="@{/resources/images/manual_survey.jpg}" src="../static/resources/images/manual_survey.jpg" alt="Card image cap">
                         </div>
-        
-                        <div class="row c_item card-wrapper">
-                            <div class="col col-6 pl-0">
-                                <img class="card-image img-fluid vertical-center" th:src="@{/resources/images/work_station.jpg}" src="../static/resources/images/work_station.jpg" alt="Card image cap">
-                            </div>
-                            <div class="col col-6 d-flex align-items-center pr-0">
-                                <div class="text-wrapper m-4">
-                                    <h3 th:text="#{home.beta.headline}"></h3>
-                                    <p th:text="#{home.beta.desc}"></p>
-                                </div>
+                        <div class="col col-6 d-flex align-items-center pr-0">
+                            <div class="text-wrapper m-4">
+                                <h3 th:text="#{home.about.headline}"></h3>
+                                <p th:text="#{home.about.desc}"></p>
                             </div>
                         </div>
                     </div>
-                    <a class="col-1 c_btn pl-0" onclick="move_carousel('r', 'home-carousel')"><i class="fas fa-chevron-right vertical-center"></i></a>
+    
+                    <div class="row c_item card-wrapper">
+                        <div class="col col-6 pl-0">
+                            <img class="card-image img-fluid vertical-center" th:src="@{/resources/images/work_station.jpg}" src="../static/resources/images/work_station.jpg" alt="Card image cap">
+                        </div>
+                        <div class="col col-6 d-flex align-items-center pr-0">
+                            <div class="text-wrapper m-4">
+                                <h3 th:text="#{home.beta.headline}"></h3>
+                                <p th:text="#{home.beta.desc}"></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <a class="col-1 c_btn pl-0" onclick="move_carousel('r', 'home-carousel')"><i class="fas fa-chevron-right vertical-center"></i></a>
             </div>
             <div class="about-section" id="phone-version"><div class="items">
                 <div class="col col-12">
