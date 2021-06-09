@@ -45,7 +45,9 @@ public class MiscController {
     @GetMapping("/")
     public String welcome(Model model, @AuthenticationPrincipal UserDetails userDetails, HttpServletRequest request){
 
-        //Workaround.
+        //Not a great workaround. Didn't have time to implement correctly. Need some form of check to see if user is logged in, not though UserDetails
+        //or Authentication object.
+
         //Get the username and subsequently find all courses belonging to the user
         try {
             String userId = userDetails.getUsername();
