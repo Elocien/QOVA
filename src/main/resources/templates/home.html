@@ -23,8 +23,8 @@
             </div>
             <p class="sub-header switch_me" th:text="#{home.myCourses}">MY COURSES</p>
             <div class="links switch_me">
-                <a type="button" class="switch_me link" th:href="@{/course/list}">
-                    <i class="fas fa-book pr-2"></i><span>THIS IS A VERY LONG COURSE NAME MADE FOR TESTING</span>
+                <a th:each="course : ${courseList}" type="button" class="switch_me link" th:href="@{/course/details?id={id}(id=${course.id})}">
+                    <i class="fas fa-book pr-2"></i><span th:text="${course.name}">???</span>
                 </a>
             </div>
         </div>
