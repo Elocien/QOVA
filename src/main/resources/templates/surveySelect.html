@@ -59,7 +59,7 @@
         </form>
 
     </div>
-    <p th:if="${mode == 'participant'}" class="mt-4 text-center" th:text="|(#{student.select.anonymous})|"></p>
+    <h5 th:if="${mode == 'participant'}" class="mt-4 text-center" th:text="#{student.select.anonymous}"></h5>
 </div>
 
 <div th:replace="footer"></div>
