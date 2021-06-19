@@ -22,7 +22,9 @@ import java.io.IOException;
 
 import java.util.Objects;
 
-
+/**
+ * Controller for all miscellaneous functionality. I.e. for methods not relating to courses, responses, admin functions.
+ */
 @Controller
 public class MiscController {
 

@@ -6,6 +6,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * Controller for error processing.
+ */
 @Controller
 public class CustomErrorController implements ErrorController {
     @RequestMapping("/error")
