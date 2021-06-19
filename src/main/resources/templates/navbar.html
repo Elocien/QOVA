@@ -60,7 +60,7 @@
                     <li class="nav-item media" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')"><a class="nav-link link_to_page" th:text="#{navbar.course}" th:href="@{/course/list}">course managment</a></li>
                     <li class="nav-item media" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_STUDENT')"><a class="nav-link link_to_page" th:text="#{navbar.results}" th:href="@{/survey/results/list}">survey results</a></li>
                     <li class="nav-item media" sec:authorize="isAnonymous()"><a class="nav-link link_to_page" th:href="@{/survey/home}">Login</a></li>
-                    <li class="nav-item media" sec:authorize="!isAnonymous()"><a class="nav-link link_to_page" th:href="@{/Shibboleth.sso/Logout?return=https://qova.med.tu-dresden.de/logout}">Logout</a></li>
+                    <li class="nav-item media" sec:authorize="!isAnonymous()"><a class="nav-link link_to_page" th:href="@{/logout}">Logout</a></li>
                     <!--Settings-->
                     <!--<li class="nav-item media dropdown p-0">
                         <a class="btn btn-link align-self-center" href="#" id="dropdownSettings" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -102,7 +102,7 @@
                 <li class="nav-item media" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')"><a class="nav-link link_to_page" th:text="#{navbar.course}" th:href="@{/course/list}">course managment</a></li>
                 <li class="nav-item media" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_STUDENT')"><a class="nav-link link_to_page" th:text="#{navbar.results}" th:href="@{/survey/results/list}">survey results</a></li>
                 <li class="nav-item media" sec:authorize="isAnonymous()"><a class="nav-link link_to_page" th:href="@{/survey/home}">Login</a></li>
-                <li class="nav-item media" sec:authorize="!isAnonymous()"><a class="nav-link link_to_page" th:href="@{/Shibboleth.sso/Logout?return=https://qova.med.tu-dresden.de/logout}">Logout</a></li>
+                <li class="nav-item media" sec:authorize="!isAnonymous()"><a class="nav-link link_to_page" th:href="@{/logout}">Logout</a></li>
                 <!--Settings-->
                 <!--<li class="nav-item media dropdown p-0">
                     <a class="btn btn-link align-self-center" href="#" id="dropdownSettings" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
