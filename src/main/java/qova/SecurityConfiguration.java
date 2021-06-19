@@ -57,7 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").hasAnyRole("STAFF", "ADMIN")
                 .antMatchers("/survey/**").hasAnyRole("STUDENT","STAFF", "ADMIN")
                 .anyRequest().permitAll()
-                .and().formLogin()
+                .and().formLogin().loginProcessingUrl("/survey/home")
                 .and().logout().clearAuthentication(true).deleteCookies("JSESSIONID").invalidateHttpSession(true)
                 .logoutUrl("/logout").logoutSuccessUrl("/");
     }
