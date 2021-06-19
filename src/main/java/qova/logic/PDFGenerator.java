@@ -42,6 +42,11 @@ import qova.objects.SingleChoiceResponse;
 import qova.objects.SurveyResponse;
 import qova.objects.TextResponse;
 
+/**
+ * @deprecated
+ * Old PDF Generator. Not currently functional, would need to be slightly changed to match {@linkplain CSVGenerator} to work.
+ * Current solution is javascript pdf generator.
+ */
 public class PDFGenerator {
 
     // Localization variables
