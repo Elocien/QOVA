@@ -274,6 +274,14 @@ public class CourseManagement {
     }
 
     // Gets the relevant Survey in the course objects, based on the given surveyType
+
+    /**
+     * Gets the relevant Survey (in {@linkplain org.json.JSONArray} form), from the {@linkplain Course} who's id was passed as a method argument,
+     * for the given {@linkplain CourseType}
+     * @param id {@linkplain Course} id
+     * @param type {@linkplain CourseType}
+     * @return {@linkplain org.json.JSONArray}
+     */
     public String getSurveyforType(UUID id, CourseType type) {
         Optional<Course> crs = coursesRepo.findById(id);
         if (crs.isPresent()) {
@@ -297,6 +305,13 @@ public class CourseManagement {
     }
 
     // Sets the relevant Survey in the course objects, based on the given surveyType
+
+    /**
+     * Sets the Survey within a {@linkplain Course}
+     * @param course {@linkplain Course}
+     * @param type {@linkplain CourseType}
+     * @param survey Survey in string form
+     */
     public void setSurveyforType(Course course, String type, String survey) {
         switch (type) {
             case "LECTURE":
@@ -315,7 +330,7 @@ public class CourseManagement {
     }
 
     /**
-     * Duplicates a {@linkplain Course}, only differing from the individual in the given <b>Semester</b>
+     * Duplicates a {@linkplain Course}, only differing from the original in the <b>Semester</b>.
      *
      * @param id The id of the original {@linkplain Course}
      * @param semesterString The new Semester set by the course owner, in the form of a String
@@ -341,6 +356,11 @@ public class CourseManagement {
         return null;
     }
 
+    /**
+     * Helper method for {@linkplain #duplicateCourse(UUID, String)}. Duplicates {@linkplain CourseInstance} Objects
+     * @param oldInstance The given {@linkplain CourseInstance} from the {@linkplain Course} to be duplicated
+     * @return The new {@linkplain CourseInstance}
+     */
     public CourseInstance duplicateCourseInstance(CourseInstance oldInstance) {
         List<String> newInstanceTitles = new ArrayList<>(oldInstance.getInstanceTitles());
         CourseInstance newInstance = new CourseInstance(oldInstance.getCourseType(), oldInstance.getGroupAmount(),
@@ -350,6 +370,12 @@ public class CourseManagement {
     }
 
 
+    /**
+     * Method that calculates the number of missing surveys of a {@linkplain Course} object. Used in the courseDetails.html template
+     * to inform the user which surveys have been edited. Important for the finalisation process.
+     * @param course {@linkplain Course}
+     * @return {@linkplain Integer} for number of missing surveys
+     */
     public Integer getNumberOfSurveysMissing(Course course){
         int numberOfSurveyMissing = 0;
         for (CourseType courseType : CourseType.values()){
@@ -360,6 +386,12 @@ public class CourseManagement {
         return numberOfSurveyMissing;
     }
 
+    /**
+     * Method that evaluates whether there are missing instance titles for a {@linkplain Course} object. Used in the courseDetails.html template.
+     * Important for the finalisation process.
+     * @param course {@linkplain Course}
+     * @return {@linkplain Boolean}
+     */
     public Boolean getInstanceTitlesMissingFlag(Course course){
         for (CourseType courseType : CourseType.values()){
             var instance = course.getInstance(courseType);
