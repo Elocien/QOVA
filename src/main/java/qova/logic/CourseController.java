@@ -636,7 +636,6 @@ public class CourseController {
             // parse JSON to check for correctness (length, special characters)
             Boolean validSurvey = responseManagement.verifyJsonArray(survey);
             if (Boolean.FALSE.equals(validSurvey)) {
-                // TODO: redirect to error page with code 02
                 return questioneditor(model, type, id);
             }
 
@@ -651,7 +650,6 @@ public class CourseController {
 
             return "redirect:../course/previewsurvey?id=" + id + "&type=" + type;
         } else {
-            // TODO: need more feedback here for the user. Change this!
             return "error?code=" + courseNotFound;
         }
     }
