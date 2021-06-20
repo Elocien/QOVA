@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
@@ -21,7 +22,6 @@ import qova.forms.SurveyForm;
 import qova.forms.SurveySelectForm;
 import qova.objects.Course;
 import qova.objects.SurveyResponse;
-import qova.users.CurrentUserDetails;
 
 
 @Controller // This means that this class is a Controller
@@ -44,12 +44,18 @@ public class ResponseController {
         this.adminManagement = Objects.requireNonNull(adminManagement);
     }
 
-    // Error codes
 
-    // Mapping to which one is redirected to by the QRCode. This is where students
-    // enter which group and which topic they are handing their response in for
-    // ---------------------------------------------------------------------------
-
+    /**
+     * <p>Mapping to which one is redirected to by the QRCode</p>
+     * <p>Calls the surveySelect.html page, where students select for which instance and group they are submitting their evaluation for</p>
+     * @param model {@linkplain Model}
+     * @param form {@linkplain SurveySelectForm} which has fields for group and instance
+     * @param mode Used to indicate where the user is redirected upon submission. Can be either participant to go to the survey, or results for surveyResults. 
+     *             This functionality can be viewed in {@linkplain ResponseController#selectSurveySubmission(Model, SurveySelectForm, String, String, UUID)}
+     * @param id {@linkplain Course} id
+     * @param type {@linkplain CourseType}
+     * @return surveySelect.html template
+     */
     @GetMapping("/survey/select")
     @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String selectSurvey(Model model, SurveySelectForm form, @RequestParam String mode, @RequestParam UUID id,
@@ -88,7 +94,16 @@ public class ResponseController {
 
     // ---------------------------------------------------------------------------
 
-    // Validation of entry of surveySelect page, and redirect to the actual survey
+
+    /**
+     * Validation of user entry on the surveySelect page. Redirects the user to the actual survey, or the results for the chosen survey
+     * @param model {@linkplain Model}
+     * @param form {@linkplain SurveySelectForm} which has fields for group and instance
+     * @param mode Used to indicate where the user is redirected upon submission. Can be either participant to go to the survey, or results for surveyResults
+     * @param type {@linkplain CourseType}
+     * @param id {@linkplain Course} id
+     * @return
+     */
     @PostMapping("/survey/select")
     @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String selectSurveySubmission(Model model, @ModelAttribute("form") SurveySelectForm form,
@@ -105,8 +120,6 @@ public class ResponseController {
             return "error";
         }
 
-        // TODO validate that parameters only contain valid characters. E.g. a-zA-Z0-9
-
         else {
 
             if (mode.equals("participant")) {
@@ -121,10 +134,16 @@ public class ResponseController {
         }
     }
 
-    // Get Survey from Server
-    // ---------------------------------------------------------------------------
-
-    // Mapping for Survey HTML
+    /**
+     * Mapping for the survey itself. Calls the survey template and renders the survey from the json string in the frontend
+     *
+     * @param model {@linkplain Model}
+     * @param id {@linkplain Course} id
+     * @param type {@linkplain CourseType}
+     * @param group The number of the group as an integer
+     * @param instance The number of the instance as an integer
+     * @return The survey.html template with the survey rendered in the frontend. Survey is retrieved with a get request after rendering template.
+     */
     @GetMapping("/survey/view")
     @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String surveyView(Model model, @RequestParam(required = false) UUID id,
@@ -168,13 +187,25 @@ public class ResponseController {
         }
     }
 
-    // PostMapping to submit survey and serialize results
-    // ---------------------------------------------------------------------------
+
+    /**
+     * PostMapping to submit survey and save the users responses. Will reject the user response if they have already previously submitted to
+     * the same survey for the given instance and group.
+     *
+     * @param model {@linkplain Model}
+     * @param form {@linkplain SurveyForm} which contains the json string with the user response
+     * @param id {@linkplain Course} id
+     * @param type {@linkplain CourseType}
+     * @param group The number of the group as an integer
+     * @param instance The number of the instance as an integer
+     * @param userDetails Used to retrieve the users credentials
+     * @return surveyCheckout.html template
+     */
     @PostMapping("/survey/view")
     @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String recieveResponseJSON(Model model, SurveyForm form, @RequestParam(required = false) UUID id,
             @RequestParam(required = false) String type, @RequestParam(required = false) String group,
-            @RequestParam(required = false) String instance,  @AuthenticationPrincipal CurrentUserDetails userDetails) {
+            @RequestParam(required = false) String instance,  @AuthenticationPrincipal UserDetails userDetails) {
 
         if (id == null || type == null || group == null || instance == null) {
             return "error";
@@ -210,7 +241,7 @@ public class ResponseController {
                     responseManagement.parseCourseType(type));
 
             // Verify that the sent JSON is not malicious. If malicious, returns false
-            if(!responseManagement.verifyStudentResponseJson(studentResponseJson, fullSurvey)) {
+            if(!responseManagement.verifyStudentResponseJson(studentResponseJson, fullSurvey)){
 
                 //Return to the previous view
                 return surveyView(model, id, type, group, instance);
@@ -240,9 +271,6 @@ public class ResponseController {
 
         }
 
-        // Manager Method
-        // Increment numberOfSubmissions in SurveyResponse
-        // Add stundent ID to SurveyResponse List
 
         // if all goes well
         return "surveyCheckout";
@@ -258,14 +286,14 @@ public class ResponseController {
      * @param id            The Id of the {@linkplain qova.objects.Course}
      * @param group         The groupNumber of the {@linkplain qova.objects.Course}
      * @param instance      The instanceNumber of the {@linkplain qova.objects.Course}
-     * @param userDetails   {@linkplain CurrentUserDetails} used to retrieve the users Authorities
+     * @param userDetails   Used to retrieve the users Authorities
      * @return The surveyResults template, which shows the compiled results of the
      *         requested questionnaire
      */
     @GetMapping("/survey/results")
     @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String surveyResults(Model model, @RequestParam String type, @RequestParam UUID id,
-            @RequestParam String group, @RequestParam String instance, @AuthenticationPrincipal CurrentUserDetails userDetails) {
+            @RequestParam String group, @RequestParam String instance, @AuthenticationPrincipal UserDetails userDetails) {
 
         boolean userIsOwner = courseManagement.findIfUserOwnsCourse(id, userDetails.getUsername());
 
@@ -317,12 +345,23 @@ public class ResponseController {
         return "studentBrowser";
     }
 
+    /**
+     * Page shown to the user after submission of a survey
+     * @return surveyCheckout.html template
+     */
     @GetMapping("/survey/checkout")
-    public String surveyCheckout(Model model) {
+    public String surveyCheckout() {
 
         return "surveyCheckout";
     }
 
+    /**
+     * Page shown to the user after submitting to a survey for which they have submitted results for previously
+     * @param model {@linkplain Model}
+     * @param type {@linkplain CourseType}
+     * @param id {@linkplain Course} id
+     * @return surveyReject.html template
+     */
     @GetMapping("/survey/reject")
     public String surveyReject(Model model, @RequestParam String type, @RequestParam UUID id) {
         model.addAttribute("mode", "participant");
@@ -332,7 +371,7 @@ public class ResponseController {
         return "surveyReject";
     }
 
-    // PDF Generation
+
     @Deprecated
     @GetMapping("/survey/results/generatePDF")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
@@ -369,11 +408,21 @@ public class ResponseController {
         return new HttpEntity<>(pdf, header);
     }
 
-    // CSV Generation
+
+    /**
+     * CSV Generator used to retrieve results in CSV form
+     *
+     * @param id {@linkplain Course} id
+     * @param type {@linkplain CourseType}
+     * @param groupNumber Group as integer
+     * @param instanceNumber Instance as integer
+     * @return {@linkplain HttpEntity} containing the PDF
+     * @throws Exception Writer exception from the pdf library
+     */
     @GetMapping("/survey/results/generateCSV")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public HttpEntity<byte[]> generateCsv(@RequestParam UUID id, @RequestParam String type,
-            @RequestParam String groupNumber, @RequestParam String instanceNumber, HttpServletResponse response)
+            @RequestParam String groupNumber, @RequestParam String instanceNumber)
             throws Exception {
 
         // generate filename
