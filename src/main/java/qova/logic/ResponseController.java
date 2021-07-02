@@ -142,13 +142,14 @@ public class ResponseController {
      * @param type {@linkplain CourseType}
      * @param group The number of the group as an integer
      * @param instance The number of the instance as an integer
+     * @param userDetails Used to retrieve the users credentials
      * @return The survey.html template with the survey rendered in the frontend. Survey is retrieved with a get request after rendering template.
      */
     @GetMapping("/survey/view")
     @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String surveyView(Model model, @RequestParam(required = false) UUID id,
             @RequestParam(required = false) String type, @RequestParam(required = false) String group,
-            @RequestParam(required = false) String instance) {
+            @RequestParam(required = false) String instance, @AuthenticationPrincipal UserDetails userDetails) {
 
 
             // redirect
@@ -159,13 +160,33 @@ public class ResponseController {
         // fetch course and go to details if present
         Optional<Course> course = courseManagement.findById(id);
 
+        // get CourseType
+        CourseType courseType = responseManagement.parseCourseType(type);
+
         // Validate that course exists, and that the survey is not empty
         if (course.isPresent()) {
-            String survey = courseManagement.getSurveyforType(id, responseManagement.parseCourseType(type));
+            String survey = courseManagement.getSurveyforType(id, courseType);
             if (survey.equals("Something went wrong")) {
                 return "redirect:/";
-            } else {
+            }
 
+            // Validate that the student has not already submitted to the given questionnaire
+            Optional<SurveyResponse> survRsp = responseManagement
+                    .findSurveyResponseByCourseAndCourseTypeAndGroupNumberAndInstanceNumber(course.get(), courseType,
+                            Integer.valueOf(group), Integer.valueOf(instance));
+
+            // Get the StudentId, through the authentication object
+            String studentId = userDetails.getUsername();
+
+
+            // If true, redirect the user to SurveyReject, because they have already completed a survey
+            if (survRsp.get().getListOfStudentsThatSubmitted().contains(studentId)) {
+                model.addAttribute("id", id);
+                model.addAttribute("courseType", type);
+                return "redirect:/survey/reject?id=" + id + "&type=" + type;
+            }
+
+            else {
                 // Concatenate the default survey to the course survey
                 survey = adminManagement.concatenateDefaultSurveyToSurveyString(survey,
                         responseManagement.parseCourseType(type));
@@ -205,7 +226,7 @@ public class ResponseController {
     @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String recieveResponseJSON(Model model, SurveyForm form, @RequestParam(required = false) UUID id,
             @RequestParam(required = false) String type, @RequestParam(required = false) String group,
-            @RequestParam(required = false) String instance,  @AuthenticationPrincipal UserDetails userDetails) {
+            @RequestParam(required = false) String instance, @AuthenticationPrincipal UserDetails userDetails) {
 
         if (id == null || type == null || group == null || instance == null) {
             return "error";
@@ -244,7 +265,7 @@ public class ResponseController {
             if(!responseManagement.verifyStudentResponseJson(studentResponseJson, fullSurvey)){
 
                 //Return to the previous view
-                return surveyView(model, id, type, group, instance);
+                return surveyView(model, id, type, group, instance, userDetails);
             }
 
             Optional<SurveyResponse> survRsp = responseManagement
