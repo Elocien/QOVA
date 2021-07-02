@@ -425,9 +425,6 @@ public class ResponseController {
             @RequestParam String groupNumber, @RequestParam String instanceNumber)
             throws Exception {
 
-        // generate filename
-        String filename = "testCsv.csv";
-
         Optional<Course> crs = courseManagement.findById(id);
 
         // verify that course is present
@@ -449,9 +446,12 @@ public class ResponseController {
             return null;
         }
 
+        // generate filename
+        String filename = crs.get().getName() + "_results.csv";
+
         // Set HTTP headers and return HttpEntity
         HttpHeaders header = new HttpHeaders();
-        header.setContentType(MediaType.APPLICATION_PDF);
+        header.setContentType(MediaType.parseMediaType("text/csv"));
         header.set(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
         header.setContentLength(csv.length);
 
