@@ -50,7 +50,7 @@ public class ResponseController {
      * <p>Calls the surveySelect.html page, where students select for which instance and group they are submitting their evaluation for</p>
      * @param model {@linkplain Model}
      * @param form {@linkplain SurveySelectForm} which has fields for group and instance
-     * @param mode Used to indicate where the user is redirected upon submission. Can be either participant to go to the survey, or results for surveyResults. 
+     * @param mode Used to indicate where the user is redirected upon submission. Can be either participant to go to the survey, or results for surveyResults.
      *             This functionality can be viewed in {@linkplain ResponseController#selectSurveySubmission(Model, SurveySelectForm, String, String, UUID)}
      * @param id {@linkplain Course} id
      * @param type {@linkplain CourseType}
@@ -280,7 +280,7 @@ public class ResponseController {
 
     /**
      * Used to retrieve the results for a given questionnaire.
-     * 
+     *
      * @param model         {@link org.springframework.ui.Model}
      * @param type          {@linkplain qova.enums.CourseType}
      * @param id            The Id of the {@linkplain qova.objects.Course}
@@ -333,7 +333,7 @@ public class ResponseController {
     /**
      * The Mapping where students can browse the full set of Courses and View the
      * results of the student evaluations
-     * 
+     *
      * @param model {@link org.springframework.ui.Model}
      * @return studentBrowser template
      */
