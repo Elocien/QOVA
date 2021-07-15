@@ -67,6 +67,13 @@ public class ResponseController {
 
             Course course = crs.get();
 
+            if(courseManagement.getNumberOfActiveCourseTypes(course) == 1){
+                model.addAttribute("singleInstance", true);
+            }
+            else{
+                model.addAttribute("singleInstance", false);
+            }
+
             model.addAttribute("course", course);
             model.addAttribute("courseName", course.getName());
             model.addAttribute("id", course.getId());
@@ -343,7 +350,7 @@ public class ResponseController {
             model.addAttribute("resultsJson", resultsJsonString.toString());
             model.addAttribute("courseName", course.getName());
             model.addAttribute("courseType", courseType);
-            model.addAttribute("pdf_title", (course.getName()+"_"+courseType+"_G="+group.toString()+"_I="+instance+".pdf"));
+            model.addAttribute("pdf_title", (course.getName()+"_"+courseType+"_G="+group+"_I="+instance+".pdf"));
             model.addAttribute("semester", course.getCourseDate());
             model.addAttribute("numberOfSubmissions", totalNumberOfSubmissions);
 

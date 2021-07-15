@@ -471,6 +471,26 @@ public class CourseManagement {
     }
 
 
+    /**
+     * Method which returns the number of active courseTypes for a course
+     * @param course A given {@linkplain Course}
+     * @return Integer with number of active courseTypes
+     */
+    public Integer getNumberOfActiveCourseTypes(Course course){
+
+        Integer totalActiveTypes = 0;
+
+        //iterate through all coursetypes and check if the instance exists
+        for (CourseType courseType : CourseType.values()) {
+            if (course.getInstanceExists(courseType)){
+                totalActiveTypes += 1;
+            }
+        }
+
+        return totalActiveTypes;
+    }
+
+
     // Generates a set amount of semesters which are added to the model, to pick
     // from as course creation dates.
 
