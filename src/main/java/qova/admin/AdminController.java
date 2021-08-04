@@ -1,8 +1,6 @@
 package qova.admin;
 
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -20,6 +18,7 @@ import qova.forms.SurveyForm;
 import qova.logic.CourseManagement;
 import qova.logic.ResponseManagement;
 import qova.objects.Course;
+import qova.users.User;
 
 
 @Controller
@@ -147,6 +146,18 @@ public class AdminController {
     }
 
 
-    
+//    @GetMapping
+//    public String adminList(Model model){
+//
+//
+//        List<User> adminUsers = new ArrayList<>();
+//
+//        model.addAttribute("adminList", );
+//    }
+//
+//    @PostMapping
+//    public String adminList(){
+//
+//    }
 
 }
