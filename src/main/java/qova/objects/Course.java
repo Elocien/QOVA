@@ -118,13 +118,15 @@ public class Course {
         return this.name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getOwnerId(){
         return this.ownerId;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+    public void setOwnerId(String ownerId){this.ownerId = ownerId;}
 
     public Boolean getLectureExists() {
         return (Boolean.TRUE.equals(getLecture().isActive()));

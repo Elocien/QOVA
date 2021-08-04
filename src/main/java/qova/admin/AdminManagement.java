@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import qova.enums.CourseType;
 import qova.forms.SurveyForm;
+import qova.objects.Course;
 
 @Service
 @Transactional
@@ -49,6 +50,7 @@ public class AdminManagement {
         getDefaultSurveyObject(type).setDefaultSurveyJson(form.getQuestionnaireJson());
     }
 
+    // Get Map containing the default survey for each CourseType
     public EnumMap getDefaultSurveyMap(){
 
         EnumMap<CourseType, DefaultSurvey> defaultSurveyMap = new EnumMap<>(CourseType.class);
@@ -57,6 +59,17 @@ public class AdminManagement {
         }
 
         return defaultSurveyMap;
+    }
+
+    //
+    public Boolean setCourseOwner(Course course, String userId){
+        if (userId.length() == 110){
+            if(userId.contains("https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!")){
+                course.setOwnerId(userId);
+                return true;
+            }
+        }
+        return false;
     }
 
 }
