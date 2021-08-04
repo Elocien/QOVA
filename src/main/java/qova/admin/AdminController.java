@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.web.bind.annotation.ResponseBody;
 import qova.enums.CourseType;
+import qova.forms.CourseOwnerForm;
 import qova.forms.SurveyForm;
 import qova.logic.CourseManagement;
 import qova.logic.ResponseManagement;
@@ -82,7 +83,8 @@ public class AdminController {
     }
 
     @GetMapping("/delete")
-    public String deleteCourse(@RequestParam UUID id, @AuthenticationPrincipal CurrentUserDetails userDetails) {
+    @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
+    public String deleteCourse(@RequestParam UUID id, @AuthenticationPrincipal UserDetails userDetails) {
         if(userDetails.getUsername().equals("https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!YA5MO4SfcGmbXRgccVo6IMWfX0k=")){
             courseManagement.deleteCourse(id);
             return "home";
@@ -112,9 +114,10 @@ public class AdminController {
         return "None found";
     }
 
+
     @ResponseBody
     @GetMapping("/course/courseOwner")
-    public String getCourseOwner(Model model, @AuthenticationPrincipal UserDetails userDetails, @RequestParam UUID courseId){
+    public String getCourseOwner(@AuthenticationPrincipal UserDetails userDetails, @RequestParam UUID courseId){
         if(userDetails.getUsername().equals("https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!YA5MO4SfcGmbXRgccVo6IMWfX0k=")) {
             return courseManagement.findById(courseId).get().getOwnerId();
         }
@@ -133,5 +136,38 @@ public class AdminController {
         string.append(userManagement.findAdminUsers().toString());
         return string.toString();
     }
-    
+
+
+    @GetMapping
+    public String setCourseOwnerTemplate(Model model, @AuthenticationPrincipal UserDetails userDetails, @RequestParam UUID courseId, CourseOwnerForm courseOwnerForm){
+        return ""; //TODO: Return some template
+    }
+
+    @PostMapping
+    public String setCourseOwner(Model model, @AuthenticationPrincipal UserDetails userDetails, @RequestParam UUID courseId, CourseOwnerForm courseOwnerForm){
+
+        Optional<Course> crs = courseManagement.findById(courseId);
+
+        if(crs.isPresent()){
+
+            //User is not course owner
+            if(!crs.get().getOwnerId().equals(userDetails.getUsername())){
+                model.addAttribute("status", "notCourseOwner");
+                return setCourseOwnerTemplate(model, userDetails, courseId, courseOwnerForm);
+            }
+
+            Boolean successfulOwnerSet = adminManagement.setCourseOwner(crs.get(), courseOwnerForm.getCourseOwner());
+
+            if (Boolean.TRUE.equals(successfulOwnerSet)){
+                return "courses";
+            } else{
+                model.addAttribute("status", "invalidUsername");
+                return setCourseOwnerTemplate(model, userDetails, courseId, courseOwnerForm);
+            }
+        }
+        else{
+            model.addAttribute("status", "notPresent");
+            return setCourseOwnerTemplate(model, userDetails, courseId, courseOwnerForm);
+        }
+    }
 }
