@@ -57,6 +57,7 @@
 
             <div class="navbar-collapse order-2 ml-auto justify-content-end">
                 <ul class="navbar-nav">
+                    <li class="nav-item media" sec:authorize="hasAnyRole('ROLE_ADMIN')"><a class="nav-link link_to_page" th:text="#{navbar.admin}" th:href="@{/admin/home}">admin panel</a></li>
                     <li class="nav-item media" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF')"><a class="nav-link link_to_page" th:text="#{navbar.course}" th:href="@{/course/list}">course managment</a></li>
                     <li class="nav-item media" sec:authorize="hasAnyRole('ROLE_ADMIN', 'ROLE_STAFF', 'ROLE_STUDENT')"><a class="nav-link link_to_page" th:text="#{navbar.results}" th:href="@{/survey/results/list}">survey results</a></li>
                     <li class="nav-item media" sec:authorize="isAnonymous()"><a class="nav-link link_to_page" th:href="@{/survey/home}">Login</a></li>
