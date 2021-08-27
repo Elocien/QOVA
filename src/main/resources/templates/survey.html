@@ -88,7 +88,7 @@
 			tickboxYes.setAttribute("id", "Yes");
 			tickboxYes.setAttribute("name",index);
 			const descriptionYes = document.createElement("LABEL");
-			descriptionYes.innerText = "Yes";
+			descriptionYes.innerText = /*[[#{Yes}]]*/ "Yes";
 			descriptionYes.setAttribute("for","Yes");
 
 			fullOptionYes.appendChild(tickboxYes);
@@ -104,7 +104,7 @@
 			tickboxNo.setAttribute("id", "No");
 			tickboxNo.setAttribute("name",index);
 			const descriptionNo = document.createElement("LABEL");
-			descriptionNo.innerText = "No";
+			descriptionNo.innerText = /*[[#{No}]]*/ "No";
 			descriptionNo.setAttribute("for","No");
 
 			fullOptionNo.appendChild(tickboxNo);
