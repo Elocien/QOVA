@@ -197,14 +197,14 @@
                                         <!--5th Col-->
                                         <th:block th:if="${__'course.'+${course_type}+'.active'__}" th:switch="!${course.finalisedFlag} and !${__'course.'+${course_type}+'.surveyEditedFlag'__}">
                                             <td th:case="true" class="text-center hide_me">
-                                                <a th:if="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
+                                                <a th:if="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}" type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
                                             </td>
                                             <td th:case="false" class="text-center hide_me">
-                                                <a th:if="!${course.finalisedFlag}" type="button" class="btn btn-link p-0 align-middle hide_me mr-2" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="left" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
-                                                <a th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" type="button" class="btn btn-link p-0 align-middle hide_me" th:href="${'/course/previewsurvey?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.previewSurvey}"><i class="fa fa-eye"></i></a>
+                                                <a th:if="!${course.finalisedFlag}" type="button" class="btn btn-link p-0 align-middle mr-2" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="left" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
+                                                <a th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/previewsurvey?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.previewSurvey}"><i class="fa fa-eye"></i></a>
                                             </td>
                                         </th:block>
-                                        <td th:if="!${__'course.'+${course_type}+'.active'__}"> </td>
+                                        <td th:if="!${__'course.'+${course_type}+'.active'__}" class="hide_me"> </td>
                                         <!--6th Col-->
                                         <th:block th:switch="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}">
                                             <td th:case="true" class="text-center">
@@ -382,20 +382,11 @@
     function disable_inputs(f_element, bool) {
         const all_text_inputs = f_element.querySelectorAll('input[type=text]');
         for (let index = 0; index < all_text_inputs.length; ++index) {
-            if (all_text_inputs[index].className == "form-control") {
-                if (all_text_inputs[index].id == "groupAmountLecture") {
-                    all_text_inputs[index].readOnly = true;
-                }
-                else {
-                    all_text_inputs[index].readOnly = bool;
-                }
+            var text_input = all_text_inputs[index]
+            if (text_input.className == "form-control") {
+                if (text_input.id == "groupAmountLecture") text_input.readOnly = true;
+                else text_input.readOnly = bool;
             }
-        }
-        if (bool == true) {
-            f_element.getElementsByClassName("instance_btn")[0].classList.add("disabled-link");
-        }
-        else {
-            f_element.getElementsByClassName("instance_btn")[0].classList.remove("disabled-link");
         }
     }
 
@@ -413,11 +404,19 @@
         for (let index = 0; index < invis.length; ++index) {
             invis[index].style.display = "";
         }
+        toggle_preperation()
+    }
+
+    function toggle_preperation() {
         const all_types = ["lecture", "tutorial", "seminar", "practical"];
         for (let index = 0; index < all_types.length; ++index) {
             set_hidden_data(all_types[index]);
+            console.log(all_types[index]+" "+document.getElementById(all_types[index] + "Exists").value)
             if (document.getElementById(all_types[index] + "Exists").value == "false") {
                 disable_inputs(document.getElementById(all_types[index] + "Line"), true);
+            }
+            else {
+                disable_inputs(document.getElementById(all_types[index] + "Line"), false);
             }
 
         }
