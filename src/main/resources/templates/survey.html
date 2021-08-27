@@ -22,6 +22,7 @@
 						<button class="btn btn-primary mt-2 center btn-tu" type="submit" th:text="#{question.submit}">SUBMIT</button>
 					</form>
 				</div>
+				<p class="error_message text-danger text-center" style="display: none" th:text="#{error.answers_missing}">ANSWERS MISSING!</p>
 			</div>
 			<div class="col-md-3"></div>
 		</div>
@@ -43,6 +44,7 @@
 	function renderquestion (value,index,array){
 
 		const x = document.createElement("DIV");
+		x.className = "question_container container bg-white border border-secondary rounded mt-4"
 
 		//DIV for Number and Question
 		const row1 = document.createElement("DIV");
@@ -68,7 +70,7 @@
 		x.appendChild(row1);
 
 		if (value.type == "YesNo"){
-			x.className ="container bg-white border border-secondary rounded mt-4 YesNo";
+			x.classList.add("YesNo");
 			x.setAttribute("id",index);
 
 			const selectionOption = document.createElement("DIV");
@@ -118,7 +120,7 @@
 
 		else if (value.type ==="FreeText") {
 
-			x.className = "container bg-white border border-secondary rounded mt-4 FreeText";
+			x.classList.add("FreeText");
 			x.setAttribute("id", index);
 
 			const div = document.createElement("DIV");
@@ -140,7 +142,7 @@
 		}
 		else if (value.type === "OnetoFive") {
 
-			x.className = "container bg-white border border-secondary rounded mt-4 SingleChoice";
+			x.classList.add("SingleChoice");
 			x.setAttribute("id", index);
 
 			const selectionOption = document.createElement("DIV");
@@ -197,7 +199,7 @@
 
 		else if (value.type === "SingleChoice") {
 
-			x.className = "container bg-white border border-secondary rounded mt-4 SingleChoice";
+			x.classList.add("SingleChoice");
 			x.setAttribute("id", index);
 
 			const selectionOption = document.createElement("DIV");
@@ -235,7 +237,7 @@
 		else if (value.type === "MultipleChoice") {
 
 			//Create a html section for a MultipleChoice-Question
-			x.className = "container bg-white border border-secondary rounded mt-4 MultipleChoice";
+			x.classList.add("MultipleChoice");
 			x.setAttribute("id", index);
 
 			const selectionOption = document.createElement("DIV");
@@ -285,16 +287,14 @@
 	$('#submitsurvey').submit(function (e) {
 		const surveyjson = [];
 
-
-		const  questions = document.getElementById("survey").getElementsByClassName("container bg-white border border-secondary rounded mt-4");
+		const  questions = document.getElementById("survey").getElementsByClassName("question_container");
 		for (let i = 0; i<questions.length; i++ ){
-
 
 			const answer = [];
 			const type = questions[i].className;
 
 			// Für FreeText Quesiton
-			if (questions[i].className == "container bg-white border border-secondary rounded mt-4 FreeText"){
+			if (questions[i].classList.contains("FreeText")) {
 				answer.push(questions[i].getElementsByClassName("Options")[0].getElementsByClassName("Textarea")[0].value);
 			}
 
@@ -311,12 +311,15 @@
 			}
 			if (answer.length == 0){
 				questions[i].scrollIntoView();
+				questions[i].getElementsByClassName("index-number")[0].classList.add("red")
+				document.getElementsByClassName("error_message")[0].style.display = ""
 				e.preventDefault();
 				return false;
 			}
 			surveyjson.push(answer);
 		}
-		//Check ob für Jede Frage Antowrt abgegeben
+
+		//Check ob für Jede Frage Antwort abgegeben
 		debugger;
 		document.getElementById("questionnairejson").value = JSON.stringify(surveyjson);
 		console.log(surveyjson);
