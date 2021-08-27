@@ -50,11 +50,13 @@ I read that somewhere ;) */
     flex-direction: row-reverse;
 }
 
-.row.survey {
-}
-
 .tickbox {
+    height: 1.2rem;
+    width: 1.2rem;
     margin-right: 12px;
+}
+.tickbox:hover {
+    cursor: pointer;
 }
 
 .tickbox.OnetoFive{
@@ -66,6 +68,20 @@ I read that somewhere ;) */
 
 .Label.OnetoFive{
     margin: auto;
+}
+
+@media only screen and (max-width: 600px) {
+    .gauge {
+        display: none;
+    }
+    .mobile_gauge {
+        display: block !important;
+        text-align: center;
+    }
+    .tickbox.OnetoFive {
+        height: 2rem;
+        width: 2rem;
+    }
 }
 
 .index-number {
