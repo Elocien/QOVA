@@ -27,6 +27,14 @@
                             <tr>
                                 <th class="border-0" scope="row"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{new.courseName}: |">COURSE NAME: </span><span th:text="${courseName}"></span></h5></th>
                                 <th class="border-0"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{type}: |">TYPE: </span><span th:text="#{${courseType}}"></span></h5></th>
+                                <th class="border-0"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{instance}: |">INSTANCE: </span>
+                                    <span th:if="${instance} == 'all'" th:text="#{${instance}}"></span>
+                                    <span th:if="!(${instance} == 'all')" th:text="${instance}"></span>
+                                </h5></th>
+                                <th class="border-0"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{group}: |">GROUP: </span>
+                                    <span th:if="${group} == 'all'" th:text="#{${group}}"></span>
+                                    <span th:if="!(${group} == 'all')" th:text="${group}"></span>
+                                </h5></th>
                                 <th class="border-0"><h5 class="font-weight-light"><span class="font-weight-normal" th:text="|#{course.courseDate}: |">SEMESTER: </span><span th:text="${semester}"></span></h5></th>
                             </tr>
                         </tbody>
