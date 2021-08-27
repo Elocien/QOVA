@@ -151,7 +151,7 @@
 			const descriptionleft = document.createElement("DIV");
 			descriptionleft.className = "LabelOnetoFive";
 			const description =document.createElement("Label");
-			description.className = "mb-0"
+			description.className = "gauge mb-0"
 			description.innerText = "Nicht zutreffend";
 
 			descriptionleft.appendChild(description);
@@ -182,19 +182,18 @@
 			const descriptionright = document.createElement("DIV");
 			descriptionright.className = "LabelOnetoFive";
 			const descriptionr =document.createElement("Label");
-			descriptionr.className = "mb-0"
+			descriptionr.className = "gauge mb-0"
 			descriptionr.innerText = "Zutreffend";
 
 			descriptionright.appendChild(descriptionr);
 			selectionOption.appendChild(descriptionright);
-
-
 			x.appendChild(selectionOption);
 
-
-
-
-
+			const mobile_gauge = document.createElement("p");
+			mobile_gauge.innerHTML = "1 = Nicht Zutreffend<br>5 = Zutreffend"
+			mobile_gauge.style.display = "none"
+			mobile_gauge.className = "mobile_gauge"
+			x.appendChild(mobile_gauge)
 		}
 
 		else if (value.type === "SingleChoice") {
