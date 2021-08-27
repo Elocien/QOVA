@@ -26,21 +26,21 @@
                 <div class="sticky">
                     <div class="btn-group-vertical float-lg-right border border-dark rounded mt-4 sticky" role="group" aria-label="First group">
                         <button type="button" class="btn btn-head btn-text-right" th:text="#{question.new}">NEW QUESTION</button>
-                        <button type="button" class="btn btn-list btn-text-right" onclick="question_new('MultipleChoice')"><span th:text="#{question.multiple-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                        <button type="button" class="btn btn-list btn-list-first btn-text-right" onclick="question_new('MultipleChoice')"><span th:text="#{question.multiple-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
                         <button type="button" class="btn btn-list btn-text-right" onclick="question_new('SingleChoice')"><span th:text="#{question.single-choice}"></span><i class="fas fa-plus-square ml-2"></i></button>
                         <button type="button" class="btn btn-list btn-text-right" onclick="question_new('YesNo')"><span th:text="#{question.yes-no-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                         <button type="button" class="btn btn-list btn-text-right" onclick="question_new('OnetoFive')"><span th:text="#{question.onetofive-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
-                        <button type="button" class="btn btn-list btn-text-right" onclick="question_new('FreeText')"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
+                        <button type="button" class="btn btn-list btn-list-last btn-text-right" onclick="question_new('FreeText')"><span th:text="#{question.free-text-question}"></span><i class="fas fa-plus-square ml-2"></i></button>
                         <button type="button" class="btn btn-head btn-text-right" th:text="#{question.edit}">OPTIONS</button>
                         <form th:action="@{/course/previewsurvey?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="previewsurvey" style="width:100%">
                             <input type="text" name="questionnairejson" id="questionnairejson2" class="input"></input>
-                            <button class="btn btn-list btn-text-right" type="submit" ><span th:text="#{question.preview}"></span><i class="fa fa-eye ml-2"></i></i></button>
+                            <button class="btn btn-list btn-list-first btn-text-right" type="submit" ><span th:text="#{question.preview}"></span><i class="fa fa-eye ml-2"></i></i></button>
                         </form>
                         <form th:action="@{/course/surveyeditor?type={type}&id={id}(type=${typeID}, id=${id})}" method="post" th:object="${form}" id="submitsurvey" style="width: 100%">
                             <input type="text" name="questionnairejson" id="questionnairejson" class="input"></input>
-                            <button class="btn btn-list-last btn-text-right" type="submit"><span th:text="#{question.save}"></span><i class="fas fa-save custom-save ml-2"></i></button>
+                            <button class="btn btn-list btn-text-right" type="submit"><span th:text="#{question.save}"></span><i class="fas fa-save custom-save ml-2"></i></button>
                         </form>
-                        <a type="button" class="btn btn-list btn-text-right" onclick="history.back()" th:text="#{question.back}"></a>
+                        <a type="button" class="btn btn-list btn-list-last btn-text-right" onclick="history.back()" th:text="#{question.back}"></a>
                     </div>
                 </div>
             </div>
