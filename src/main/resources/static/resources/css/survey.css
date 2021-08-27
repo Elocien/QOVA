@@ -80,6 +80,9 @@ I read that somewhere ;) */
     float: left;
     font-size: 1.75rem;
 }
+.red {
+    background-color: rgb(200, 50, 50) !important;
+}
 
 .Options.SingleChoice{
     flex-direction: column;
