@@ -3,18 +3,15 @@
 <!--Finalize Modal-->
 <div th:fragment="finalizeModal" class="modal fade" id="finalizeModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content text-left">
+        <div class="modal-content text-left">            
             <div class="modal-header">
-            <p class="modal-title m-0 font-weight-bold" th:text="#{finalize.headline}">HERE YOU CAN FINALIZE THE SURVEY. STUDENTS CAN ASNWERE THE SURVEY ONCE IT IS FINALIZED.</p>
+                <p class="modal-title m-0 font-weight-bold" th:text="#{finalize.headline}">FINALISE COURSE</p>
             </div>
             <div class="modal-body">
-                <p class="mb-1 font-weight-bold text-danger" th:text="#{finalize.warning}">THE FOLLOWING THNGS CAN NOT BE CHANGED ANYMORE AFTER FINALIZATION:</p>
-                <p class="m-0 ml-2 font-weight-light" th:text="#{finalize.course}">- THIS Course</p>
-                <p class="m-0 ml-2 font-weight-light" th:text="#{finalize.survey}">- THE SURVEYS</p>
-                <p class="m-0 ml-2 font-weight-light" th:text="#{finalize.courseInstances}">- COURSE INSTANCE</p>
-                <p class="mb-1 ml-2 font-weight-light" th:text="#{finalize.groupAmount}">- GROUP AMOUNT</p>
-                <p class="mb-3" th:text="#{finalize.warning2}">MAKE SURE THESE ARE ASIGNED PROPERLY!</p>
-                <p class="mb-1 font-weight-light" th:text="#{finalize.tip}">IF YOU WANT TO KEEP WORKING ON YOUR SURVEY LATER ON, CHOSE THE "SAVE"-BUTTON INSTEAD.</p>
+                <p class="m-0 text-danger" th:text="#{finalize.warning}">HERE YOU CAN FINALIZE THE SURVEY. STUDENTS CAN ASNWERE THE SURVEY ONCE IT IS FINALIZED.</p>
+                <p class="m-0 ml-2 mt-2" th:text="#{finalize.course}">- THIS Course</p>
+                <p class="m-0 ml-2 mb-2" th:text="#{finalize.survey}">- THE SURVEYS</p>
+                <p class="m-0" th:text="#{finalize.warning2}">MAKE SURE THESE ARE ASIGNED PROPERLY!</p>
             </div>
             <div class="modal-footer text-center">
                 <div class="w-100"></div>
