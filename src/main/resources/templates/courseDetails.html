@@ -134,23 +134,6 @@
                                             </a>
                                         </td>
                                     </tr>
-                                    <!--Survey Status-->
-                                    <tr id="highlight_me_surveys">
-                                        <th class="col-3" scope="row" th:text="#{course.status.surveys}">Surveys:</th>
-                                        <td th:switch="${surveysMissing}">
-                                            <p th:case="0" class="text-success m-0" th:text="#{course.survey.finished}">FINISHED</p>
-                                            <th:block th:case="*">
-                                                <p class="text-warning m-0" th:text="${surveysMissing}">X</p>
-                                                <div id="surveyMissingHelp" style="display: none;">
-                                                    <p class="m-0" th:text="#{course.survey.missing.help}">DO U WANT TO INITILIZE THE REMAINING SURVEYS AS DEFAULT SURVEYS?</p>
-                                                    <div>
-                                                        <a th:href="@{/course/setDefaultSurvey?id=__${course.id}__}" method="get" class="btn btn-sm btn-primary" th:text="#{Yes}"></a>
-                                                        <a class="btn btn-sm btn-secondary text-white" th:text="#{No}" onclick="hide_survey_help()"></a>
-                                                    </div>
-                                                </div>
-                                            </th:block>
-                                        </td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -197,27 +180,21 @@
                                             <input class="form-control" type="text" th:value="${__'course.' + ${course_type} + '.groupAmount'__}" th:name="|groupAmount${#strings.capitalize(course_type)}|" th:id="|groupAmount${#strings.capitalize(course_type)}|">
                                         </td>
                                         <!--5th Col-->
-                                        <th:block th:if="${__'course.'+${course_type}+'.active'__}" th:switch="!${course.finalisedFlag} and !${__'course.'+${course_type}+'.surveyEditedFlag'__}">
+                                        <th:block th:switch="${__'course.'+${course_type}+'.active'__} and !${course.finalisedFlag}">
                                             <td th:case="true" class="text-center hide_me">
-                                                <a th:if="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}" type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" data-toggle="tooltip" data-placement="right" th:title="#{detail.addSurvey}"><i class="fas fa-plus"></i></a>
+                                                <a type="button" class="btn btn-link p-0 align-middle mr-2" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="left" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
+                                                <a type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/previewsurvey?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.previewSurvey}"><i class="fa fa-eye"></i></a>
                                             </td>
-                                            <td th:case="false" class="text-center hide_me">
-                                                <a th:if="!${course.finalisedFlag}" type="button" class="btn btn-link p-0 align-middle mr-2" th:href="${'/course/surveyeditor?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="left" th:title="#{detail.editSurvey}"><i class="far fa-edit"></i></a>
-                                                <a th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" type="button" class="btn btn-link p-0 align-middle" th:href="${'/course/previewsurvey?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.previewSurvey}"><i class="fa fa-eye"></i></a>
+                                            <td th:case="false" class="hide_me">
+                                                <a th:if="${__'course.'+${course_type}+'.active'__}" type="button" class="btn btn-link p-0 align-middle d-block" th:href="${'/course/previewsurvey?type=' + {#strings.toUpperCase(course_type)} + '&id=' + {course.id}}" href="#" data-toggle="tooltip" data-placement="right" th:title="#{detail.previewSurvey}"><i class="fa fa-eye"></i></a>
                                             </td>
                                         </th:block>
-                                        <td th:if="!${__'course.'+${course_type}+'.active'__}" class="hide_me"> </td>
                                         <!--6th Col-->
                                         <th:block th:switch="${__'course.get' + ${#strings.capitalize(course_type)} + 'Exists()'__}">
                                             <td th:case="true" class="text-center">
                                                 <th:block th:switch="!${course.finalisedFlag} and !${__'course.'+${course_type}+'.surveyEditedFlag'__}">
-                                                    <span th:case="true" th:text="#{none}">none</span>
-                                                    <th:block th:case="false">
-                                                        <th:block th:switch="${__'course.'+${course_type}+'.surveyEditedFlag'__}">
-                                                            <span th:case="true" th:text="#{custom}">custom</span>
-                                                            <span th:case="false" th:text="#{default}">default</span>                                                            
-                                                        </th:block>
-                                                    </th:block>
+                                                    <span th:case="true" th:text="#{default}">default</span>
+                                                    <span th:case="false" th:if="${__'course.'+${course_type}+'.surveyEditedFlag'__}" th:text="#{custom}">custom</span>
                                                 </th:block>
                                             </td>
                                             <td th:case="false"></td>
@@ -287,6 +264,11 @@
                             <p id="url-label" class="m-0" th:text="|#{copied}:|" style="display: none;">Copied: </p>
                             <input class="url-input" th:each="course_type: ${type_list}" th:if="${__'course.'+${course_type}+'.active'__}" th:id="|${course_type}Link|" th:name="|${course_type}Link|" th:value="${__${course_type}+'Link'__}" style="display: none;" readonly>
                         </div>
+                        <p class="m-0 mt-3">
+                            <span class="font-weight-bold" th:text="#{detail.participation_period}">Teilnahmezeitraum:</span><span> </span><span th:text="${course.semesterString}"></span><br>
+                            <span class="font-weight-light">SoSe 20XX: 01.04.20XX - 30.09.20XX</span><br>
+                            <span class="font-weight-light">WiSe 20XX/YY: 01.10.20XX - 31.03.20YY</span>
+                        </p>
                     </div>
 
                 </div>
