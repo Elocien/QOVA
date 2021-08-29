@@ -187,8 +187,10 @@
                                         <!--2nd Col-->
                                         <td scope="row" th:text="#{'new.' + ${course_type}}">LECTURE</td>
                                         <!--3rd Col-->
-                                        <td class="text-center" th:text="${__'course.' + ${course_type} + '.instanceAmount'__}">COUNT</td>
-                                        <input type="hidden" th:value="${__'course.' + ${course_type} + '.instanceAmount'__}" th:name="|instanceAmount${#strings.capitalize(course_type)}|"></input>
+                                        <td class="text-center hide_me" th:text="${__'course.' + ${course_type} + '.instanceAmount'__}">COUNT</td>
+                                        <td class="show_me" style="display: none;">
+                                            <input class="form-control" type="text" th:value="${__'course.' + ${course_type} + '.instanceAmount'__}" th:name="|instanceAmount${#strings.capitalize(course_type)}|" th:id="|instanceAmount${#strings.capitalize(course_type)}|">
+                                        </td>
                                         <!--4th Col-->
                                         <td class="text-center hide_me" th:text="${__'course.' + ${course_type} + '.groupAmount'__}">COUNT</td>
                                         <td class="show_me" style="display: none;">
