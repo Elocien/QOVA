@@ -1,7 +1,6 @@
 package qova.admin;
 
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -14,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.web.bind.annotation.ResponseBody;
 import qova.enums.CourseType;
+import qova.forms.CourseOwnerForm;
 import qova.forms.SurveyForm;
 import qova.logic.CourseManagement;
 import qova.logic.ResponseManagement;
 import qova.objects.Course;
+import qova.users.User;
 
 
 @Controller
@@ -73,7 +74,7 @@ public class AdminController {
     @GetMapping("/delete")
     @PreAuthorize("hasAnyRole('STAFF','ADMIN')")
     public String deleteCourse(@RequestParam UUID id, @AuthenticationPrincipal UserDetails userDetails) {
-        if(userDetails.getUsername() == "staff"){
+        if(userDetails.getUsername().equals("https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!YA5MO4SfcGmbXRgccVo6IMWfX0k=")){
             courseManagement.deleteCourse(id);
         }
         return "redirect:../course/list";
@@ -101,15 +102,62 @@ public class AdminController {
         return "home";
     }
 
+
     @ResponseBody
     @GetMapping("/course/courseOwner")
-    public String getCourseOwner(Model model, @AuthenticationPrincipal UserDetails userDetails, @RequestParam UUID courseId){
+    public String getCourseOwner(@AuthenticationPrincipal UserDetails userDetails, @RequestParam UUID courseId){
         if(userDetails.getUsername().equals("https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!YA5MO4SfcGmbXRgccVo6IMWfX0k=")) {
             return courseManagement.findById(courseId).get().getOwnerId();
         }
         return "home";
     }
-    
 
-    
+    @GetMapping
+    public String setCourseOwnerTemplate(Model model, @AuthenticationPrincipal UserDetails userDetails, @RequestParam UUID courseId, CourseOwnerForm courseOwnerForm){
+        return ""; //TODO: Return some template
+    }
+
+    @PostMapping
+    public String setCourseOwner(Model model, @AuthenticationPrincipal UserDetails userDetails, @RequestParam UUID courseId, CourseOwnerForm courseOwnerForm){
+
+        Optional<Course> crs = courseManagement.findById(courseId);
+
+        if(crs.isPresent()){
+
+            //User is not course owner
+            if(!crs.get().getOwnerId().equals(userDetails.getUsername())){
+                model.addAttribute("status", "notCourseOwner");
+                return setCourseOwnerTemplate(model, userDetails, courseId, courseOwnerForm);
+            }
+
+            Boolean successfulOwnerSet = adminManagement.setCourseOwner(crs.get(), courseOwnerForm.getCourseOwner());
+
+            if (Boolean.TRUE.equals(successfulOwnerSet)){
+                return "courses";
+            } else{
+                model.addAttribute("status", "invalidUsername");
+                return setCourseOwnerTemplate(model, userDetails, courseId, courseOwnerForm);
+            }
+        }
+        else{
+            model.addAttribute("status", "notPresent");
+            return setCourseOwnerTemplate(model, userDetails, courseId, courseOwnerForm);
+        }
+    }
+
+
+//    @GetMapping
+//    public String adminList(Model model){
+//
+//
+//        List<User> adminUsers = new ArrayList<>();
+//
+//        model.addAttribute("adminList", );
+//    }
+//
+//    @PostMapping
+//    public String adminList(){
+//
+//    }
+
 }
