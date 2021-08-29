@@ -19,10 +19,14 @@ public class UserManagement {
         this.userRepository = Objects.requireNonNull(userRepository);
     }
 
-//    public String getUsername(UserDetails userDetails){
-//        String usernameReduction = userDetails.getUsername();
-//        return userDetails.getUsername().substring(usernameReduction.length() - 28);
-//    }
+
+    public Boolean setAdminUser(String userId){
+        Optional<User> user = userRepository.findByAjpPersistentId(userId);
+        if(user.isPresent()){
+            user.get().setUserRole("ADMIN");
+        }
+        return false;
+    }
 
     /**
      * Retrieves all {@linkplain User}s from the repository
@@ -31,5 +35,23 @@ public class UserManagement {
      */
     public Iterable<User> findAll() {
         return userRepository.findAll();
+    }
+
+
+    /**
+     * Finds all {@linkplain User}s with the "ADMIN" role
+     * @return Iterable of all admin users
+     */
+    public Iterable<User> findAdminUsers(){
+        return userRepository.findByUserRole("ADMIN");
+    }
+
+    /**
+     * Finds user with a given ID
+     * @param userId User id in form of "https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!____________________________"
+     * @return {@linkplain Optional} encapsulating a {@linkplain User}
+     */
+    public Optional<User> findById(String userId){
+        return userRepository.findByAjpPersistentId(userId);
     }
 }

@@ -58,4 +58,8 @@ public class User {
     public void setHasAcceptedUserPolicyFlag(){
         this.hasAcceptedUserPolicyFlag = true;
     }
+
+    public void setUserRole(String userRole) {
+        this.userRole = userRole;
+    }
 }

@@ -10,4 +10,6 @@ import java.util.UUID;
 public interface UserRepository extends CrudRepository<User, UUID> {
 
     Optional<User> findByAjpPersistentId(String ajpPersistentId);
+
+    Iterable<User> findByUserRole(String role);
 }
