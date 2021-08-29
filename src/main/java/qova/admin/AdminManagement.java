@@ -1,6 +1,7 @@
 package qova.admin;
 
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +10,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 import qova.enums.CourseType;
 import qova.forms.SurveyForm;
+import qova.users.User;
 
 @Service
 @Transactional
 public class AdminManagement {
 
-    private final DefaultSurveyRepository repo;
+    private final DefaultSurveyRepository defaultSurveyRepository;
 
     /**
      * The Constructor checks if the {@linkplain DefaultSurvey} is present and
@@ -25,7 +27,7 @@ public class AdminManagement {
      */
     @Autowired
     public AdminManagement(DefaultSurveyRepository repo) {
-        this.repo = Objects.requireNonNull(repo);
+        this.defaultSurveyRepository = Objects.requireNonNull(repo);
     }
 
     public String concatenateDefaultSurveyToSurveyString(String surveyJson, CourseType type) {
@@ -36,12 +38,12 @@ public class AdminManagement {
 
     // Get Default survey from Repo
     public String getDefaultSurvey(CourseType type) {
-        return repo.findDefaultSurveyForType(type).getDefaultSurveyJson();
+        return defaultSurveyRepository.findDefaultSurveyForType(type).getDefaultSurveyJson();
     }
 
     // Get the DefaultSurvey Object from the repo
     public DefaultSurvey getDefaultSurveyObject(CourseType type) {
-        return repo.findDefaultSurveyForType(type);
+        return defaultSurveyRepository.findDefaultSurveyForType(type);
     }
 
     // Submission of new default survey
