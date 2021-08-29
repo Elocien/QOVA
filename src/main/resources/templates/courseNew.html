@@ -62,10 +62,9 @@
                             </div>
                             <div class="col-md-2">
                                 <label for="semesterOfStudents" th:text="#{course.semesterOfStudents}">SEMESTER OF STUDENTS</label>
-                                <input type="number" class="form-control" id="semesterOfStudents" name="semesterOfStudents" placeholder="1" min="1" max="20" required>
-                                <div class="invalid-feedback">
-                                    Are you a time traveler?
-                                </div>
+                                <select id="semesterOfStudents" class="custom-select form-control" th:field="*{semesterOfStudents}">
+                                    <option class="dropdown-item" th:each="i: ${#numbers.sequence(1, 10)}" th:text="${i}" th:value="${i}">FACULTY</option>
+                                </select>
                             </div>
                             <div class="col-md-2">
                                 <label for="courseInstanceString" th:text="#{course.courseDate}">COURSE SEMESTER</label>
