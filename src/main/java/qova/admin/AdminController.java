@@ -1,6 +1,7 @@
 package qova.admin;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,6 +20,8 @@ import qova.logic.CourseManagement;
 import qova.logic.ResponseManagement;
 import qova.objects.Course;
 import qova.users.CurrentUserDetails;
+import qova.users.User;
+import qova.users.UserManagement;
 
 
 @Controller
@@ -30,10 +33,14 @@ public class AdminController {
 
     private final CourseManagement courseManagement;
 
-    AdminController(AdminManagement adminManagement, ResponseManagement responseManagement, CourseManagement courseManagement){
+    private final UserManagement userManagement;
+
+    AdminController(AdminManagement adminManagement, ResponseManagement responseManagement,
+                    CourseManagement courseManagement, UserManagement userManagement){
         this.adminManagement = Objects.requireNonNull(adminManagement);
         this.responseManagement = Objects.requireNonNull(responseManagement);
         this.courseManagement = Objects.requireNonNull(courseManagement);
+        this.userManagement = Objects.requireNonNull(userManagement);
     }
 
 
@@ -102,7 +109,7 @@ public class AdminController {
             return courseOwnerList;
         }
 
-        return "home";
+        return "None found";
     }
 
     @ResponseBody
@@ -111,9 +118,20 @@ public class AdminController {
         if(userDetails.getUsername().equals("https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!YA5MO4SfcGmbXRgccVo6IMWfX0k=")) {
             return courseManagement.findById(courseId).get().getOwnerId();
         }
-        return "home";
+        return "None found";
     }
     
-
+    @ResponseBody
+    @GetMapping("/admin/management")
+    public String adminUserManagement(){
+        Optional<User> usr = userManagement.findById("https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!YA5MO4SfcGmbXRgccVo6IMWfX0k=");
+        StringBuilder string = new StringBuilder();
+        string.append("UserRole: " + usr.get().getUserRole());
+        Boolean result = userManagement.setAdminUser("https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!YA5MO4SfcGmbXRgccVo6IMWfX0k=");
+        string.append("\n Result: " + result);
+        string.append("\n NewUserRole: " + usr.get().getUserRole());
+        string.append(userManagement.findAdminUsers().toString());
+        return string.toString();
+    }
     
 }
