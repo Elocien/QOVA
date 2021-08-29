@@ -102,7 +102,7 @@ public class ResponseController {
      * @param mode Used to indicate where the user is redirected upon submission. Can be either participant to go to the survey, or results for surveyResults
      * @param type {@linkplain CourseType}
      * @param id {@linkplain Course} id
-     * @return
+     * @return HTML for either selecting results or which survey to participate in. Based on the mode set
      */
     @PostMapping("/survey/select")
     @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
