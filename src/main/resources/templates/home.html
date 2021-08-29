@@ -111,7 +111,7 @@
 
 </div>
 <div class="unsupported-browser" style="display: none; text-align: center;">
-    <b>Unsupported Browser!</b> This website will offer limited functionality in this browser. We only support the recent versions of major browsers like Chrome, Firefox, Safari, and Edge.
+    <b th:text="#{home.old_browser}">Unsupported Browser!</b><br><span th:text="#{home.old_browser_desc}"> This website will offer limited functionality in this browser. We only support the recent versions of major browsers like Chrome, Firefox, Safari, and Edge.</span>
 </div>
 <footer th:replace="footer"></footer>
 </body>
