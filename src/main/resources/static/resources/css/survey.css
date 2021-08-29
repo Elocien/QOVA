@@ -69,13 +69,16 @@ I read that somewhere ;) */
 .Label.OnetoFive{
     margin: auto;
 }
+label {
+    flex-grow: 1;
+}
 
 @media only screen and (max-width: 700px) {
     .gauge {
         display: none;
     }
     .mobile_gauge {
-        display: block !important;
+        display: flex !important;
         text-align: center;
     }
     .tickbox.OnetoFive {

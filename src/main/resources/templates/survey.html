@@ -85,11 +85,11 @@
 			tickboxYes.className ="tickbox";
 			tickboxYes.setAttribute("type","radio");
 			tickboxYes.setAttribute("value", "Yes");
-			tickboxYes.setAttribute("id", "Yes");
+			tickboxYes.setAttribute("id", "Yes"+index);
 			tickboxYes.setAttribute("name",index);
 			const descriptionYes = document.createElement("LABEL");
 			descriptionYes.innerText = /*[[#{Yes}]]*/ "Yes";
-			descriptionYes.setAttribute("for","Yes");
+			descriptionYes.setAttribute("for","Yes"+index);
 
 			fullOptionYes.appendChild(tickboxYes);
 			fullOptionYes.appendChild(descriptionYes);
@@ -101,11 +101,11 @@
 			tickboxNo.className ="tickbox";
 			tickboxNo.setAttribute("type","radio");
 			tickboxNo.setAttribute("value", "No");
-			tickboxNo.setAttribute("id", "No");
+			tickboxNo.setAttribute("id", "No"+index);
 			tickboxNo.setAttribute("name",index);
 			const descriptionNo = document.createElement("LABEL");
 			descriptionNo.innerText = /*[[#{No}]]*/ "No";
-			descriptionNo.setAttribute("for","No");
+			descriptionNo.setAttribute("for","No"+index);
 
 			fullOptionNo.appendChild(tickboxNo);
 			fullOptionNo.appendChild(descriptionNo);
@@ -165,12 +165,12 @@
 				tickbox.className ="tickbox OnetoFive";
 				tickbox.setAttribute("type","radio");
 				tickbox.setAttribute("value", i);
-				tickbox.setAttribute("id",i);
+				tickbox.setAttribute("id",index+"_"+i);
 				tickbox.setAttribute("name",index);
 				const description = document.createElement("LABEL");
 				description.className ="Label OnetoFive";
 				description.innerText = i;
-				description.setAttribute("for",i);
+				description.setAttribute("for",index+"_"+i);
 
 
 				fullOption.appendChild(tickbox);
@@ -189,10 +189,19 @@
 			selectionOption.appendChild(descriptionright);
 			x.appendChild(selectionOption);
 
-			const mobile_gauge = document.createElement("p");
-			mobile_gauge.innerHTML = "1 = Nicht Zutreffend<br>5 = Zutreffend"
+			const mobile_gauge = document.createElement("div");
 			mobile_gauge.style.display = "none"
-			mobile_gauge.className = "mobile_gauge"
+			mobile_gauge.className = "mobile_gauge mb-2"
+			mobile_gauge.style.alignContent = "space-between"
+			const l_gauge = document.createElement("div")
+			l_gauge.innerHTML = "Nicht Zutreffend"
+			mobile_gauge.appendChild(l_gauge)
+			const gauge_spacer = document.createElement("div")
+			gauge_spacer.style.flexGrow = 1
+			mobile_gauge.appendChild(gauge_spacer)
+			const r_gauge = document.createElement("div")
+			r_gauge.innerHTML = "Zutreffend"
+			mobile_gauge.appendChild(r_gauge)
 			x.appendChild(mobile_gauge)
 		}
 
@@ -213,11 +222,11 @@
 				tickbox.className ="tickbox";
 				tickbox.setAttribute("type","radio");
 				tickbox.setAttribute("value", value.answers[i]);
-				tickbox.setAttribute("id",value.answers[i]);
+				tickbox.setAttribute("id",value.answers[i]+index);
 				tickbox.setAttribute("name",index);
 				const description = document.createElement("LABEL");
 				description.innerText = value.answers[i];
-				description.setAttribute("for",value.answers[i]);
+				description.setAttribute("for",value.answers[i]+index);
 
 
 				fullOption.appendChild(tickbox);
@@ -251,11 +260,11 @@
 				tickbox.className ="tickbox";
 				tickbox.setAttribute("type","checkbox");
 				tickbox.setAttribute("value", value.answers[i]);
-				tickbox.setAttribute("id",value.answers[i]);
+				tickbox.setAttribute("id",value.answers[i]+index);
 				tickbox.setAttribute("name",index);
 				const description = document.createElement("LABEL");
 				description.innerText = value.answers[i];
-				description.setAttribute("for",value.answers[i]);
+				description.setAttribute("for",value.answers[i]+index);
 
 
 				fullOption.appendChild(tickbox);
