@@ -369,7 +369,7 @@ public class ResponseController {
     @PreAuthorize("hasAnyRole('STAFF','STUDENT','ADMIN')")
     public String studentBrowser(Model model) {
         model.addAttribute("courseList", courseManagement.findAll());
-
+        
         return "studentBrowser";
     }
 
