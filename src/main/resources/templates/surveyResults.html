@@ -114,6 +114,7 @@
             var answers = [];
             var answer = response_list[i];
             var type = answer["type"];
+            console.log(type)
             if (type == "text") {
                 for (let j = 0; j < answer["answers"].length; ++j) {
                     answers.push(create_answere(type, answer["answers"][j], 0, 0));
@@ -162,7 +163,17 @@
         else {
             var answere = resources.getElementsByClassName("answere-template")[0].cloneNode(true);
             //Text that descripes the picked option by a participant
-            answere.getElementsByClassName("result-text")[0].innerHTML = text;
+            if (type == "binary") {
+                if (text == "yesTotal") answere.getElementsByClassName("result-text")[0].innerHTML = "Ja"
+                else if (text == "noTotal") answere.getElementsByClassName("result-text")[0].innerHTML = "Nein"
+                else answere.getElementsByClassName("result-text")[0].innerHTML = text;
+            }
+            else if (type == "singleChoice") {
+                if (text == "1") answere.getElementsByClassName("result-text")[0].innerHTML = text+" (Nicht zutreffend)"
+                else if (text == "5") answere.getElementsByClassName("result-text")[0].innerHTML = text+" (Zutreffend)"
+                else answere.getElementsByClassName("result-text")[0].innerHTML = text;
+            }
+            else answere.getElementsByClassName("result-text")[0].innerHTML = text;
             //Relative voting result
             var vote_text = answere.getElementsByClassName("result-percent")[0];
             vote_text.innerHTML = Math.round(rel_value*10000)/100+"%";
