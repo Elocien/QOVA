@@ -169,16 +169,16 @@ public class AdminController {
         }
     }
 
-    @GetMapping
-    public String adminList(Model model){
-
-
-        List<User> adminUsers = new ArrayList<>();
-
-        model.addAttribute("adminList", adminUsers);
-
-        return "adminList";
-    }
+//    @GetMapping
+//    public String adminList(Model model){
+//
+//
+//        List<User> adminUsers = new ArrayList<>();
+//
+//        model.addAttribute("adminList", adminUsers);
+//
+//        return "adminList";
+//    }
 
 
 }
