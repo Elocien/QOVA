@@ -127,22 +127,22 @@ public class AdminController {
     @GetMapping("/admin/management")
     public String adminUserManagement() {
         Optional<User> usr = userManagement.findById("https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!YA5MO4SfcGmbXRgccVo6IMWfX0k=");
-        StringBuilder string = new StringBuilder();
-        string.append("UserRole: " + usr.get().getUserRole());
-        Boolean result = userManagement.setAdminUser("https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!YA5MO4SfcGmbXRgccVo6IMWfX0k=");
-        string.append("\n Result: " + result);
-        string.append("\n NewUserRole: " + usr.get().getUserRole());
-        string.append(userManagement.findAdminUsers().toString());
-        return string.toString();
+        StringBuilder admins = new StringBuilder();
+//        admins.append("UserRole: " + usr.get().getUserRole());
+//        Boolean result = userManagement.setAdminUser("https://idp.tu-dresden.de/idp/shibboleth!https://qova.med.tu-dresden.de/shibboleth!YA5MO4SfcGmbXRgccVo6IMWfX0k=");
+//        admins.append("\n Result: " + result);
+        admins.append("\n NewUserRole: " + usr.get().getUserRole());
+        admins.append(userManagement.findAdminUsers().toString());
+        return admins.toString();
     }
 
 
-    @GetMapping
+    @GetMapping("/admin/setCourseOwner")
     public String setCourseOwnerTemplate(Model model, @AuthenticationPrincipal UserDetails userDetails, @RequestParam UUID courseId, CourseOwnerForm courseOwnerForm) {
         return ""; //TODO: Return some template
     }
 
-    @PostMapping
+    @PostMapping("/admin/setCourseOwner")
     public String setCourseOwner(Model model, @AuthenticationPrincipal UserDetails userDetails, @RequestParam UUID courseId, CourseOwnerForm courseOwnerForm) {
 
         Optional<Course> crs = courseManagement.findById(courseId);
@@ -169,16 +169,7 @@ public class AdminController {
         }
     }
 
-//    @GetMapping
-//    public String adminList(Model model){
-//
-//
-//        List<User> adminUsers = new ArrayList<>();
-//
-//        model.addAttribute("adminList", adminUsers);
-//
-//        return "adminList";
-//    }
+
 
 
 }
