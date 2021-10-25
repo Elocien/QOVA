@@ -287,7 +287,7 @@
         </form>
 
         <!--Final Button-->
-        <div class="row justify-content-center mb-4 hide_me" th:if="!${course.finalisedFlag}" th:switch="${titlesMissing or (surveysMissing > 0)}">
+        <div class="row justify-content-center mb-4 hide_me" th:if="!${course.finalisedFlag}" th:switch="${titlesMissing}">
             <a th:case="true" class="status-btn" onclick="highlight_missing()">
                 <span th:text="#{course.status.pending}">WIP</span>
             </a>
