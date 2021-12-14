@@ -85,7 +85,7 @@ public class CourseController {
     public String courses(Model model, @AuthenticationPrincipal UserDetails userDetails) {
 
         //Retrieve username
-        String userId = userDetails.getUsername();
+        String userId = userDetails.getUsername(); 
 
         //Add a list of all Courses, belonging to the user, to the model
         model.addAttribute("courseList", courseManagement.findByOwnerid(userId));
